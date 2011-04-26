@@ -1,0 +1,9 @@
+Thumbs.db
+*.log
+*.bak
+*.ncb
+*.db
+*.dbz
+Debug
+Release
+build

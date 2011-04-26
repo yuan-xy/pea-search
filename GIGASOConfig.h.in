@@ -1,0 +1,5 @@
+// the configured options and settings for GIGASO
+#define GIGASO_VERSION_MAJOR @GIGASO_VERSION_MAJOR@
+#define GIGASO_VERSION_MINOR @GIGASO_VERSION_MINOR@
+#cmakedefine USE_MYMATH
+
