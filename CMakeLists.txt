@@ -1,11 +1,22 @@
 cmake_minimum_required (VERSION 2.6)
 set (CMAKE_BACKWARDS_COMPATIBILITY 2.6)
-set (CMAKE_VERBOSE_MAKEFILE on)
+set (CMAKE_VERBOSE_MAKEFILE off)
+
+#	-DCMAKE_BUILD_TYPE=Release ..
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE RelWithDebInfo  CACHE STRING
+      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+      FORCE)
+	message(STATUS "default build type: ${CMAKE_BUILD_TYPE}")
+ELSE(NOT CMAKE_BUILD_TYPE)
+	message(STATUS "define build type: ${CMAKE_BUILD_TYPE}")
+ENDIF(NOT CMAKE_BUILD_TYPE)
 
 project (GIGASO)
 
 set (GIGASO_VERSION_MAJOR 1)
 set (GIGASO_VERSION_MINOR 0)
+
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/GIGASOConfig.h.in"
