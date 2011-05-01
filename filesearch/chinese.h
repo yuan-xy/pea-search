@@ -7,6 +7,7 @@ extern "C" {
 
 
 #include "env.h"
+#include "fs_common.h"
 
 #define PINYIN_CLASS_LEN 406
 

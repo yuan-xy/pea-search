@@ -82,6 +82,48 @@ extern WCHAR* utf8_to_wchar(const pUTF8 in, int insize, int *out_size);
 )
 
 
+/**
+ * 定义一个变量并在堆上分配空间
+ * type 变量类型
+ * var  变量指针名
+ */
+#define NEW(type,var) type *var = (type *)malloc_safe(sizeof(type))
+/**
+ * 定义一个变量并在堆上分配空间，同时将该内存区域清零。
+ * type 变量类型
+ * var  变量指针名
+ */
+#define NEW0(type,var) NEW(type,var); memset(var,0,sizeof(type));
+
+/**
+ * 在堆上分配大小为len的空间
+ * @param len 以byte计数的内存空间大小
+ */
+extern void * malloc_safe(size_t len);
+extern void * realloc_safe(void *ptr, size_t len);
+/**
+ * 释放由malloc_safe分配的空间
+ * @param ptr 指向待释放的内存的指针
+ */
+extern void free_safe(void *ptr);
+
+
+/**
+ * 将从系统调用中获得的文件大小转换为内部定义的大小
+ */
+extern FSIZE file_size_shorten(ULONGLONG size);
+
+/**
+ * 文件FSIZE的度量单位（byte\KB\MB\GB）,用两位二进制数表示
+ */
+extern int file_size_unit(FSIZE size);
+
+/**
+ * 文件FSIZE的大小，0-1000之间
+ */
+extern int file_size_amount(FSIZE size);
+
+
 extern BOOL WindowsVersionOK (DWORD MajorVerRequired, DWORD MinorVerRequired);
 
 #endif  // FILE_SEARCH_UTIL_H_

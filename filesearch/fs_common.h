@@ -6,7 +6,45 @@ extern "C" {
 #define FILE_SEARCH_FS_COMMON_H_
 
 #include "env.h"
-#include <windows.h>
+
+struct fileEntry{  //表示一个文件
+	KEY FileReferenceNumber;  //NTFS的当前文件FileReferenceNumber
+	union {
+		KEY ParentFileReferenceNumber;  //NTFS的父目录文件FileReferenceNumber
+		struct fileEntry *parent; //父目录
+	} up;
+	void *children; //子文件列表, pointer to std::vector<pFileEntry>
+	union {
+		unsigned int value;
+		struct {
+			unsigned char readonly:1; //是否只读
+			unsigned char hidden:1; //是否隐藏
+			unsigned char system:1; //是否系统文件
+			unsigned char dir:1;    //是否是目录
+			unsigned char size1:4;  //size的高4位
+			unsigned char size2:8;  //size的低8位
+			FILE_NAME_LEN FileNameLength:8; //文件名字节长度
+			FILE_NAME_LEN StrLen:8; //文件名的字符长度
+		} v;
+	} us;
+	union {
+		unsigned int value;
+		struct {
+			unsigned char time1; //时间高字节
+			unsigned char time2; //时间中字节
+			unsigned char time3; //时间低字节
+			unsigned char suffixType; //文件后缀名所属类型
+		} v;
+	} ut;
+    UTF8  FileName[2]; //文件名，不包含\0，不是C语言风格的字符串，Unicode编码
+};
+typedef struct fileEntry FileEntry, *pFileEntry;
+
+#define IsReadonly(pFileEntry) (pFileEntry->us.v.readonly==1)
+#define IsHidden(pFileEntry) (pFileEntry->us.v.hidden==1)
+#define IsSystem(pFileEntry) (pFileEntry->us.v.system==1)
+#define IsDir(pFileEntry) (pFileEntry->us.v.dir==1)
+
 
 #define FILE_ENTRY_SIZE_(name_len_bytes) (sizeof(FileEntry)+(name_len_bytes)-sizeof(int))
 #define FILE_ENTRY_SIZE(file) FILE_ENTRY_SIZE_(file->us.v.FileNameLength)
@@ -52,8 +90,11 @@ extern MINUTE ConvertSystemTimeToMinute(SYSTEMTIME sysTime);
 extern void ConvertMinuteToSystemTime(SYSTEMTIME *sysTime,IN MINUTE time32);
 
 extern void SET_TIME(pFileEntry file, MINUTE time);
-
+extern MINUTE GET_TIME(pFileEntry file);
+extern FSIZE GET_SIZE(pFileEntry file);
 extern void SET_SIZE(pFileEntry file, FSIZE size);
+
+extern void print_full_path(pFileEntry file);
 
 /**
  * 将从文件系统中获得的时间转换为MINUTE赋值给文件

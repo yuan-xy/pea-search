@@ -1,58 +1,45 @@
 #define UNICODE
 #define _UNICODE
 #include "../filesearch/sharelib.h"
-
-#include <windows.h>
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
-void search0(void *name){
-	pFileEntry *result=NULL;
-	int count=0,i;
-		pSearchEnv  sEnv = (pSearchEnv)malloc(sizeof(SearchEnv));
-		sEnv->case_sensitive=0;
-		sEnv->order=0;
-		sEnv->file_type=0;
-		sEnv->path_name = L"c:/windows";
-		sEnv->path_len=0;
-	count = search((WCHAR *)name,sEnv,&result);
-	for(i=0;i<count;i++){
-		pFileEntry file = *(result+i);
-		FSIZE size;
-		//size = GET_SIZE(file);
-		//print_full_path(file);
-		//printf("\n");
-		if(i>60) break;
+#define WIN_ERROR fprintf(stderr,"error code : %d , line %d in '%s'\n",GetLastError(), __LINE__, __FILE__);
+
+static BOOL connect_named_pipe(HANDLE *p){
+	HANDLE handle;
+	WaitNamedPipe(SERVER_PIPE, NMPWAIT_WAIT_FOREVER);
+	handle = CreateFile(SERVER_PIPE, GENERIC_READ | GENERIC_WRITE, 0,
+			NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (handle == INVALID_HANDLE_VALUE) {
+		WIN_ERROR;
+		return 0;
+	}else{
+		*p = handle;
+		return 1;
 	}
-	free(sEnv);
 }
 
-int time_passed_p1(void (*f)(void *),void *p1){
-#ifdef WIN32
-	int end,start = GetTickCount();
-	(*f)(p1);
-	end = GetTickCount();
-	return end-start;
-#else
-	time_t start,end;
-	start = time(NULL);
-	if(start == (time_t)-1) return -1;
-	(*f)(p1);
-	end = time(NULL);
-	return (int)(end-start)*1000;
-#endif
-}
+int main(int argc, LPTSTR argv[]) {
+	HANDLE hNamedPipe;
+	SearchRequest req;
+	SearchResponse resp;
+	DWORD nRead, nWrite;
+	if(connect_named_pipe(&hNamedPipe)){
+		do{
+			fgetws(req.str,63,stdin);
+			if(req.str[0]==L'q') break;
+			if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
+				WIN_ERROR;
+				return 1;
+			}
+			if(ReadFile(hNamedPipe, &resp, sizeof(int), &nRead, NULL)){
+				ReadFile(hNamedPipe, resp.files, resp.len, &nRead, NULL);
+				printf("%d", resp.len);
+			}
 
-int main(){
-	WCHAR ss[64];
-	gigaso_init();
-	do{
-		//wscanf_s(L"%[^\n]",ss,31);
-		fgetws(ss,63,stdin);
-		if(ss[0]==L'q') break;
-		printf("time: %d\n",time_passed_p1(search0,ss));
-	}while(1);
-	gigaso_destory();
+		}while(1);
+		CloseHandle(hNamedPipe);
+	}
 	return 0;
 }
+

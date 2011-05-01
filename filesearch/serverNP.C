@@ -4,7 +4,9 @@
 #include <io.h>
 #include <process.h>
 #include "util.h"
-#include "ClntSrvr.h" /* Defines the resquest and response records */
+#include "sharelib.h"
+#include "search.h"
+#include "serverNP.h"
 
 typedef struct { /* Argument to a server thread. */
 	HANDLE hNamedPipe; /* Named pipe instance. */
@@ -15,8 +17,6 @@ typedef THREAD_ARG *LPTHREAD_ARG;
 volatile static BOOL ShutDown = FALSE;
 static unsigned int WINAPI Server (void *);
 static unsigned int WINAPI Connect (void *);
-static BOOL WINAPI Handler (DWORD);
-static WCHAR ShutRqst[] = L"$ShutDownServer";
 
 static HANDLE hSrvrThread[MAX_CLIENTS];
 static THREAD_ARG ThArgs[MAX_CLIENTS];
@@ -51,17 +51,6 @@ void wait_stop_named_pipe(){
 	ExitProcess(0);
 }
 
-int main(int argc, LPTSTR argv[]) {
-	if (!SetConsoleCtrlHandler(Handler, TRUE)) {
-		WIN_ERROR;
-		return 3;
-	}
-	if(start_named_pipe()){
-		wait_stop_named_pipe();
-	}
-	return 0;
-}
-
 /*  Force the connection thread to shut down if it is still active */
 static void exit_conn_thread(HANDLE hConTh){
 	DWORD ConThStatus;
@@ -79,8 +68,8 @@ static unsigned int WINAPI Server (void *pArg) {
 	HANDLE hNamedPipe= pThArg->hNamedPipe, hConTh = NULL;
 	while (!ShutDown) {
 		DWORD nXfer;
-		REQUEST Request;
-		RESPONSE Response;
+		SearchRequest req;
+		SearchResponse resp;
 		hConTh = (HANDLE)_beginthreadex (NULL, 0, Connect, hNamedPipe, 0, NULL);
 		if (hConTh == NULL) {
 			WIN_ERROR;
@@ -89,13 +78,11 @@ static unsigned int WINAPI Server (void *pArg) {
 		while (!ShutDown && WaitForSingleObject (hConTh, CS_TIMEOUT) == WAIT_TIMEOUT) {};
 		if (ShutDown) continue;
 		CloseHandle (hConTh); hConTh = NULL;
-		while (!ShutDown && ReadFile (hNamedPipe, &Request, RQ_SIZE, &nXfer, NULL)) {
-			Response.Status = 0;
-			strcpy ((char *)Response.Record, (char *)Request.Record);
-			WriteFile (hNamedPipe, &Response, RS_SIZE, &nXfer, NULL);
-
-			Response.Status = 1; strcpy ((char *)Response.Record, "");
-			WriteFile (hNamedPipe, &Response, RS_SIZE, &nXfer, NULL);
+		while (!ShutDown && ReadFile (hNamedPipe, &req, sizeof(SearchRequest), &nXfer, NULL)) {
+			pFileEntry *result=NULL;
+			int count = search(req.str,&req.env,&result);
+			resp.len=sizeof(SearchResponse)-sizeof(int);
+			WriteFile (hNamedPipe, &resp, sizeof(SearchResponse), &nXfer, NULL);
 		} /* Get next command */
 		FlushFileBuffers (hNamedPipe);
 		DisconnectNamedPipe (hNamedPipe);
@@ -113,7 +100,7 @@ static unsigned int WINAPI Connect (void *arg){
 	return 0;
 }
 
-BOOL WINAPI Handler(DWORD CtrlEvent) {
+BOOL WINAPI shutdown_handle(DWORD CtrlEvent) {
 	/* Shutdown the system */
 	printf("In console control handler\n");
 	ShutDown = TRUE;

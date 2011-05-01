@@ -15,6 +15,7 @@
 #include "fs_common.h"
 #include "drive_change.h"
 #include "chinese.h"
+#include "serverNP.h"
 //TODO: 做成服务与进程间通信、log库、win64移植、linux移植、UI部分、首页常用文档、langchy快捷启动程序、Explorer整合、全文检索、文件缩略图、邮件搜索
 //TODO: 数据库过期时异步更新、文件系统监视代码排错、
 //TODO: 支持压缩文件、光盘镜像中的文件查询
@@ -29,7 +30,7 @@ void search0(void *name){
 		sEnv->case_sensitive=0;
 		sEnv->order=0;
 		sEnv->file_type=0;
-		sEnv->path_name = L"E:\\backup";
+		wcscpy(sEnv->path_name, L"E:\\backup");
 		sEnv->path_len=0;
 	count = search((WCHAR *)name,sEnv,&result);
 	for(i=0;i<count;i++){
@@ -105,7 +106,7 @@ void DriveChangeListener(int i, BOOL add){
 	}
 }
 
-SHARELIB_API BOOL gigaso_init(){
+BOOL gigaso_init(){
 	printf("load hz : %d milli-seconds.\n",time_passed(init_chinese));
 	parse_pinyin("fang'an");
 	parse_pinyin("chanzao");
@@ -123,7 +124,7 @@ SHARELIB_API BOOL gigaso_init(){
 	return 1;
 }
 
-SHARELIB_API BOOL gigaso_destory(){
+BOOL gigaso_destory(){
 	save_db_all();
 	ValidDrivesIterator(StopMonitorThread);
 	StopDriveChangeMonitorThread();
@@ -131,15 +132,16 @@ SHARELIB_API BOOL gigaso_destory(){
 	return 1;
 }
 
+
 int main(){
-	WCHAR ss[64];
+	if (!SetConsoleCtrlHandler(shutdown_handle, TRUE)) {
+		WIN_ERROR;
+		return 3;
+	}
 	gigaso_init();
-	do{
-		//wscanf_s(L"%[^\n]",ss,31);
-		fgetws(ss,63,stdin);
-		if(ss[0]==L'q') break;
-		printf("search : %d milli-seconds\n",time_passed_p1(search0,ss));
-	}while(1);
+	if(start_named_pipe()){
+		wait_stop_named_pipe();
+	}
 	gigaso_destory();
 	return 0;
 }
