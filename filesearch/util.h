@@ -81,6 +81,9 @@ extern WCHAR* utf8_to_wchar(const pUTF8 in, int insize, int *out_size);
 (WORD_BIN(0highword)<<16)|WORD_BIN(0lowword) \
 )
 
+
+extern BOOL WindowsVersionOK (DWORD MajorVerRequired, DWORD MinorVerRequired);
+
 #endif  // FILE_SEARCH_UTIL_H_
 
 #ifdef __cplusplus

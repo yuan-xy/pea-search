@@ -15,7 +15,7 @@
 #include "fs_common.h"
 #include "drive_change.h"
 #include "chinese.h"
-//TODO: cmake构建系统、log库、win64移植、linux移植、做成服务与进程间通信、UI部分、首页常用文档、langchy快捷启动程序、Explorer整合、全文检索、文件缩略图、邮件搜索
+//TODO: 做成服务与进程间通信、log库、win64移植、linux移植、UI部分、首页常用文档、langchy快捷启动程序、Explorer整合、全文检索、文件缩略图、邮件搜索
 //TODO: 数据库过期时异步更新、文件系统监视代码排错、
 //TODO: 支持压缩文件、光盘镜像中的文件查询
 //TODO: 所有windows系统调用查看返回值

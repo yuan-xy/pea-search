@@ -150,3 +150,14 @@ WCHAR* utf8_to_wchar(const pUTF8 in, int insize, int *out_size){
     	return wstr;
     }
 }
+
+
+BOOL WindowsVersionOK (DWORD MajorVerRequired, DWORD MinorVerRequired){
+    OSVERSIONINFO OurVersion;
+	OurVersion.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+	if (!GetVersionEx (&OurVersion)) return 0;
+    return ( (OurVersion.dwPlatformId == VER_PLATFORM_WIN32_NT) &&
+		       ((OurVersion.dwMajorVersion > MajorVerRequired) ||
+                (OurVersion.dwMajorVersion >= MajorVerRequired && 
+			     OurVersion.dwMinorVersion >= MinorVerRequired) ));
+}

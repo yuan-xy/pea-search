@@ -35,6 +35,10 @@ target_link_libraries (GIGASO "${PROJECT_SOURCE_DIR}/libs/libtcmalloc_minimal.li
 set_target_properties(GIGASO PROPERTIES LINK_FLAGS "/include:__tcmalloc") 
 set_target_properties(GIGASO PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\"") 
 
+add_executable ( "servernp" "serverNP.C" )
+add_executable ( "clientnp" "clientNP.C" )
+
+
 install (TARGETS GIGASO  DESTINATION .)
 install (FILES "${PROJECT_SOURCE_DIR}/libs/libtcmalloc_minimal.dll"   DESTINATION .)
 install (FILES "${PROJECT_SOURCE_DIR}/libs/hz.lib"   DESTINATION .)
