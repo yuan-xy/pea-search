@@ -38,9 +38,10 @@ __forceinline ULONGLONG RunCount(PUCHAR run)
 }
 
 BOOL init_size_time(pFileEntry file, void *data){
-	try{
+	__try{
 		if(IsRoot(file->FileReferenceNumber)) return 1;
-		int i = getDrive(file);
+		//int i = getDrive(file);
+		int i = *(int *)data;
 		DWORD FileNameLength = file->us.v.FileNameLength;
 		HANDLE hVol=g_hVols[i];
 		DWORD dwBytesPerCluster=g_BytesPerCluster[i];
@@ -169,8 +170,7 @@ BOOL init_size_time(pFileEntry file, void *data){
 		SET_SIZE(file,file_size_shorten(outSize));
 		my_assert( FileNameLength == file->us.v.FileNameLength, 0);
 		return 1;
-	}catch(...){
-		CPP_ERROR;
+	} __finally{
 		return 0;
 	}
 }
@@ -179,7 +179,7 @@ DWORD WINAPI init_size_time_all(pFileEntry root){
 	//pFileEntry root = (pFileEntry)param;
 	int i = getDrive(root);
 	my_assert(IsNtfs(i),1);
-	FilesIterate(root,(void (*)(pFileEntry , void *))init_size_time,NULL);
+	FilesIterate(root,(void (*)(pFileEntry , void *))init_size_time,&i);
 	printf("init size/time finish for drive %c .\n", i+'A');
 	return 0;
 }

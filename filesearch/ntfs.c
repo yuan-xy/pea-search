@@ -157,7 +157,7 @@ static void genFileEntryOne(PUSN_RECORD r,int i){
     	pFileEntry file = initFileEntry(r,i);
     	if(attachParent(file,i)){
     		SuffixProcess(file,NULL);
-    		init_size_time(file,NULL);
+    		init_size_time(file,&i);
     	}
 }
 
