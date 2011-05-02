@@ -48,7 +48,6 @@ void wait_stop_named_pipe(){
 	for (i = 0; i < MAX_CLIENTS; i++) {
 		CloseHandle(hSrvrThread[i]);
 	}
-	ExitProcess(0);
 }
 
 /*  Force the connection thread to shut down if it is still active */
@@ -63,13 +62,41 @@ static void exit_conn_thread(HANDLE hConTh){
 	}
 }
 
+static BYTE * write(BYTE *buffer, void *data, int size){
+	BYTE *p = (BYTE *)data;
+	int i;
+	for(i=0;i<size;i++){
+		*buffer = *p;
+		buffer++; p++;
+	}
+	return buffer;
+}
+static void send_response(HANDLE hNamedPipe, pSearchRequest req, pFileEntry *result, int count){
+	BYTE buffer[102400], *p=buffer+sizeof(int);
+	DWORD nXfer;
+	pSearchResponse resp = (pSearchResponse)buffer;
+	int len=0;
+	int i;
+	pFileEntry *start = result+req->from;
+	for(i=0;i<req->len && i<count;i++){
+		pFileEntry file = *start;
+		int namelen = file->us.v.FileNameLength;
+		p = write(p,&namelen, sizeof(FILE_NAME_LEN));
+		len += sizeof(FILE_NAME_LEN);
+		p = write(p,file->FileName, file->us.v.FileNameLength);
+		len += file->us.v.FileNameLength;
+		start +=1;
+	}
+	resp->len = len;
+	WriteFile (hNamedPipe, resp, sizeof(int)+len, &nXfer, NULL);
+}
+
 static unsigned int WINAPI Server (void *pArg) {
 	LPTHREAD_ARG pThArg = (LPTHREAD_ARG)pArg;
 	HANDLE hNamedPipe= pThArg->hNamedPipe, hConTh = NULL;
 	while (!ShutDown) {
 		DWORD nXfer;
 		SearchRequest req;
-		SearchResponse resp;
 		hConTh = (HANDLE)_beginthreadex (NULL, 0, Connect, hNamedPipe, 0, NULL);
 		if (hConTh == NULL) {
 			WIN_ERROR;
@@ -81,8 +108,7 @@ static unsigned int WINAPI Server (void *pArg) {
 		while (!ShutDown && ReadFile (hNamedPipe, &req, sizeof(SearchRequest), &nXfer, NULL)) {
 			pFileEntry *result=NULL;
 			int count = search(req.str,&req.env,&result);
-			resp.len=sizeof(SearchResponse)-sizeof(int);
-			WriteFile (hNamedPipe, &resp, sizeof(SearchResponse), &nXfer, NULL);
+			send_response(hNamedPipe,&req,result,count);
 		} /* Get next command */
 		FlushFileBuffers (hNamedPipe);
 		DisconnectNamedPipe (hNamedPipe);
