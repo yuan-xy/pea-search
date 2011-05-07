@@ -62,8 +62,8 @@ static void exit_conn_thread(HANDLE hConTh){
 	}
 }
 
-static BYTE * write(BYTE *buffer, void *data, int size){
-	BYTE *p = (BYTE *)data;
+static char * write(char *buffer, void *data, int size){
+	char *p = (char *)data;
 	int i;
 	for(i=0;i<size;i++){
 		*buffer = *p;
@@ -71,24 +71,72 @@ static BYTE * write(BYTE *buffer, void *data, int size){
 	}
 	return buffer;
 }
-static void send_response(HANDLE hNamedPipe, pSearchRequest req, pFileEntry *result, int count){
-	BYTE buffer[102400], *p=buffer+sizeof(int);
-	DWORD nXfer;
-	pSearchResponse resp = (pSearchResponse)buffer;
-	int len=0;
-	int i;
-	pFileEntry *start = result+req->from;
-	for(i=0;i<req->len && i<count;i++){
-		pFileEntry file = *start;
-		int namelen = file->us.v.FileNameLength;
-		p = write(p,&namelen, sizeof(FILE_NAME_LEN));
-		len += sizeof(FILE_NAME_LEN);
-		p = write(p,file->FileName, file->us.v.FileNameLength);
-		len += file->us.v.FileNameLength;
-		start +=1;
+
+
+static char * write_file(char *buffer, pFileEntry file){
+	char *p = buffer;
+	*p++ = '{';
+	{
+		memcpy(p,"'name':'",8);
+		p += 8;
+		memcpy(p,file->FileName,file->us.v.FileNameLength);
+		p += file->us.v.FileNameLength;
+		*p++ ='\'';
+		*p++ =',';
 	}
-	resp->len = len;
-	WriteFile (hNamedPipe, resp, sizeof(int)+len, &nXfer, NULL);
+	{
+		memcpy(p,"'path':'",8);
+		p += 8;
+		p += print_path_str(file, p);
+		*p++ ='\'';
+		*p++ =',';
+	}
+	if(!IsDir(file)){
+		FSIZE size = GET_SIZE(file);
+		int sizea = file_size_amount(size);
+		int sizeu = file_size_unit(size);
+		memcpy(p,"'size':'",8);
+		p += 8;
+		p += sprintf(p,"%d",sizea);
+		switch(sizeu){
+			case 1: memcpy(p," KB", 3);break;
+			case 2: memcpy(p," MB", 3);break;
+			case 3: memcpy(p," GB", 3);break;
+			default:memcpy(p,"  B", 3);break;
+		}
+		p +=3;
+		*p++ ='\'';
+		*p++ =',';
+	}
+	{
+		memcpy(p,"'time':'",8);
+		p += 8;
+		p += print_time_str(file,p);
+		*p++ ='\'';
+	}
+	*p++ = '}';
+	return p;
+}
+
+
+static void send_response(HANDLE hNamedPipe, pSearchRequest req, pFileEntry *result, int count){
+	char buffer[409600], *p1=buffer+sizeof(int), *p=p1;
+	pFileEntry *start = result+req->from;
+	int i;
+	*p++ = '[';
+	for(i=0;i<req->len && i<count;i++){
+		pFileEntry file = *(start+i);
+		p = write_file(p,file);
+		*p++ = ',';
+	}
+	if(*(p-1)==',') p--;
+	*p++ = ']';
+	{
+		DWORD nXfer;
+		pSearchResponse resp = (pSearchResponse)buffer;
+		resp->len = (p-p1);
+		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+	}
 }
 
 static unsigned int WINAPI Server (void *pArg) {
@@ -107,6 +155,7 @@ static unsigned int WINAPI Server (void *pArg) {
 		CloseHandle (hConTh); hConTh = NULL;
 		while (!ShutDown && ReadFile (hNamedPipe, &req, sizeof(SearchRequest), &nXfer, NULL)) {
 			pFileEntry *result=NULL;
+			printf("%ls \n",req.str);
 			int count = search(req.str,&req.env,&result);
 			send_response(hNamedPipe,&req,result,count);
 		} /* Get next command */

@@ -26,7 +26,7 @@ int main(int argc, LPTSTR argv[]) {
 	DWORD nRead, nWrite;
 	memset(&req,0,sizeof(SearchRequest));
 	req.from = 0;
-	req.len = 10;
+	req.len = 3;
 	if(connect_named_pipe(&hNamedPipe)){
 		do{
 			fgetws(req.str,63,stdin);
@@ -36,15 +36,16 @@ int main(int argc, LPTSTR argv[]) {
 				return 1;
 			}
 			if(ReadFile(hNamedPipe, &resp, sizeof(int), &nRead, NULL)){
-				BYTE buffer[512];
-				printf("%d,", resp.len);
-				ReadFile(hNamedPipe, buffer, resp.len, &nRead, NULL);
-				if(nRead!=resp.len){
+				char buffer[256];
+				DWORD len = resp.len;
+				printf("%d,", len);
+				memset(buffer,(char)0,256);
+				ReadFile(hNamedPipe, buffer, len, &nRead, NULL);
+				if(nRead!=len){
 					printf("error\n");
 				}
 				printf("%s\n", buffer);
 			}
-
 		}while(1);
 		CloseHandle(hNamedPipe);
 	}

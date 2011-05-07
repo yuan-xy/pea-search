@@ -19,7 +19,7 @@ typedef struct searchRequest SearchRequest, *pSearchRequest;
 
 struct searchResponse{
 	int len;	/* Total length of response, not including this field */
-	BYTE json[1];
+	char json[1];
 };
 typedef struct searchResponse SearchResponse, *pSearchResponse;
 

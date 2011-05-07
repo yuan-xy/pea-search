@@ -79,6 +79,19 @@ void print_full_path(pFileEntry pf){
 	PrintFilenameMB(pf);
 }
 
+int print_path_str(pFileEntry file, char *p){
+	char *buffer = p;
+	if(file->up.parent!=NULL){
+		int size = print_path_str(file->up.parent,buffer);
+		buffer += size;
+	}
+	memcpy(buffer,file->FileName,file->us.v.FileNameLength);
+	buffer += file->us.v.FileNameLength;
+	*buffer++ ='\\';
+	*buffer++ ='\\';
+	return buffer-p;
+}
+
 //年5b    月4b    日5b     时5b   分5b
 //00000   0000   00000  00000    00000
 #ifndef YEAR_START
@@ -118,6 +131,15 @@ void print_time(pFileEntry file){
 	SYSTEMTIME st;
 	ConvertMinuteToSystemTime(&st,GET_TIME(file));
 	printf("%d年%d月%d日 %d时%d分"
+		,st.wYear,st.wMonth,st.wDay
+		,st.wHour,st.wMinute
+		);
+}
+
+int print_time_str(pFileEntry file, char *buffer){
+	SYSTEMTIME st;
+	ConvertMinuteToSystemTime(&st,GET_TIME(file));
+	return sprintf(buffer,"%d-%d-%d %d:%d"
 		,st.wYear,st.wMonth,st.wDay
 		,st.wHour,st.wMinute
 		);

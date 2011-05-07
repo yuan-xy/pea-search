@@ -74,6 +74,12 @@ extern void PrintFilenameMB(pFileEntry file);
  * 打印该文件的日期
  */
 extern void print_time(pFileEntry file);
+/*
+ * 打印该文件的日期到buffer中
+ * @return 打印的日期字符串的长度
+ */
+extern int print_time_str(pFileEntry file, char *buffer);
+extern int print_path_str(pFileEntry file, char *buffer);
 
 #define is_readonly(x) x->FileAttributes&FILE_ATTRIBUTE_READONLY
 #define is_hidden(x)  x->FileAttributes&FILE_ATTRIBUTE_HIDDEN

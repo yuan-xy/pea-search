@@ -5,10 +5,6 @@ extern "C" {
 #ifndef FILE_SEARCH_ENV_H_
 #define FILE_SEARCH_ENV_H_
 
-#ifndef __GNUC__
-#define __inline__  /* */
-#endif
-
 #ifdef _MSC_VER
   #define INLINE __forceinline /* use __forceinline (VC++ specific) */
 #else
