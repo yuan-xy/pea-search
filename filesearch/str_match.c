@@ -34,7 +34,7 @@ void preQsBc(pUTF8 x, int m, char qsBc[],BOOL case_sensitive) {
 }
 
 
-__forceinline BOOL QS(pUTF8 x, int m, pUTF8 y, int n,char qsBc[], BOOL case_sensitive) {
+INLINE BOOL QS(pUTF8 x, int m, pUTF8 y, int n,char qsBc[], BOOL case_sensitive) {
    int j=0;
    while (j <= n - m) {   /* Searching */
 		STR_CMP(x,y + j,m,case_sensitive);
@@ -43,7 +43,7 @@ __forceinline BOOL QS(pUTF8 x, int m, pUTF8 y, int n,char qsBc[], BOOL case_sens
    return 0;
 }
 
-__forceinline BOOL brute_force(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive) {
+INLINE BOOL brute_force(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive) {
 	int i=0;
 	pUTF8 pos=y;
 	for(i=0;i<=n-m;i++){
@@ -55,7 +55,7 @@ __forceinline BOOL brute_force(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensiti
 
 #define isalpha_utf8(x) (isalpha((x)) || (x) >= 0xC0)
 
-__forceinline BOOL word_match(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive) {
+INLINE BOOL word_match(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive) {
 	int i=0;
 	pUTF8 pos=y;
 	for(i=0;i<=n-m;i++){
@@ -77,12 +77,12 @@ __forceinline BOOL word_match(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitiv
 	return 0;
 }
 
-__forceinline BOOL begin_match(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive) {
+INLINE BOOL begin_match(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive) {
 	STR_CMP(y,x,m,case_sensitive);
 	return 0;
 }
 
-__forceinline BOOL end_match(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive) {
+INLINE BOOL end_match(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive) {
 	STR_CMP(y+(n-m),x,m,case_sensitive);
 	return 0;
 }
@@ -246,7 +246,7 @@ void pre_bndm_hz_multi(pUTF8 x, int m, int *prestr){
 	}
 }
 
-__forceinline int gen_shift(int M,int r){
+INLINE int gen_shift(int M,int r){
 	int mask = ((1<<(M-1)) -1)<<1;
 	int tmp = (mask << M);
 	int i;
@@ -257,7 +257,7 @@ __forceinline int gen_shift(int M,int r){
 	return mask;
 }
 
-__forceinline int gen_mask(int M,int r){
+INLINE int gen_mask(int M,int r){
 	int mask = 1<<(M-1);
 	int tmp = (mask << M);
 	int i;

@@ -83,7 +83,7 @@ void initUSN(int i){
 	g_curNextUSN[i]=ujd.NextUsn;
 }
 
-__forceinline pFileEntry initFileEntry(PUSN_RECORD r,int i){
+INLINE pFileEntry initFileEntry(PUSN_RECORD r,int i){
 	int str_len = (int) r->FileNameLength/sizeof(WCHAR);
 	int len = WCHAR_TO_UTF8_LEN(r->FileName,str_len);
 	NEW0_FILE(ret,len);
@@ -133,7 +133,7 @@ DWORD ScanMFT(int i){
 	return count;
 }
 
-__forceinline BOOL CreateUsnJournal(HANDLE hVolume)
+INLINE BOOL CreateUsnJournal(HANDLE hVolume)
 {
     DWORD cb;
     CREATE_USN_JOURNAL_DATA cujd;
@@ -143,7 +143,7 @@ __forceinline BOOL CreateUsnJournal(HANDLE hVolume)
         &cujd, sizeof(cujd), NULL, 0, &cb, NULL);
 }
 
-__forceinline BOOL QueryUsnJournal(HANDLE hVolume,PUSN_JOURNAL_DATA pUsnJournalData)
+INLINE BOOL QueryUsnJournal(HANDLE hVolume,PUSN_JOURNAL_DATA pUsnJournalData)
 {
     DWORD cb;
     return DeviceIoControl(hVolume

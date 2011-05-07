@@ -54,7 +54,7 @@ typedef struct{
 	int cur_len;
 } Strlen, *pStrlen;
 
-__forceinline static BOOL match(pFileEntry file, void *data){
+INLINE static BOOL match(pFileEntry file, void *data){
 	pStrlen strlen = (pStrlen)data;
 	return (strnicmp(file->FileName,strlen->name,strlen->cur_len)==0);
 }
@@ -190,7 +190,7 @@ no_match:
 	count++;
 }
 
-__forceinline int file_len_cmp(pFileEntry a, pFileEntry b){
+INLINE int file_len_cmp(pFileEntry a, pFileEntry b){
 	if(a==b) return 0;
 	if(a==NULL) return -1;
 	if(b==NULL) return 1;
@@ -217,7 +217,7 @@ int file_name_cmpUTF8(pFileEntry a, pFileEntry b){
 	return a->us.v.FileNameLength - b->us.v.FileNameLength;
 }
 
-__forceinline int file_name_cmp(pFileEntry a, pFileEntry b){
+INLINE int file_name_cmp(pFileEntry a, pFileEntry b){
 	int ret;
 	if(a==b) return 0;
 	if(a==NULL) return -1;

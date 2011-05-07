@@ -142,7 +142,7 @@ unsigned char suffix_type0(char copy[], int len){
 static char last_str[7];
 static unsigned char last_type;
 
-__forceinline unsigned char suffix_type(pUTF8 suffix, int len){
+INLINE unsigned char suffix_type(pUTF8 suffix, int len){
 	char copy[7];
 	int i=0;
 	if(len==0) return SF_NONE;

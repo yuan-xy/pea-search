@@ -5,7 +5,7 @@ extern "C" {
 #ifndef FILE_SEARCH_SHARELIB_H_
 #define FILE_SEARCH_SHARELIB_H_
 
-#include "search.h"
+#include "env.h"
 
 struct searchRequest{
 	int len;	/* Total length of request, not including this field */
@@ -16,19 +16,10 @@ struct searchRequest{
 };
 typedef struct searchRequest SearchRequest, *pSearchRequest;
 
-struct searchFile{
-	MINUTE time;
-	FSIZE size;
-	FILE_NAME_LEN FileNameLength;
-    UTF8  FileName[MAX_PATH]; //文件名，不包含\0，不是C语言风格的字符串，Unicode编码
-	int pathLen;
-    UTF8  path[1]; //文件名，不包含\0，不是C语言风格的字符串，Unicode编码
-};
-typedef struct searchFile SearchFile, *pSearchFile;
 
 struct searchResponse{
 	int len;	/* Total length of response, not including this field */
-	SearchFile files[1];
+	BYTE json[1];
 };
 typedef struct searchResponse SearchResponse, *pSearchResponse;
 

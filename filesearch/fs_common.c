@@ -19,7 +19,7 @@ BOOL attachParent(pFileEntry file, int i){
 	return 1;
 }
 
-__forceinline static BOOL match(pFileEntry file, void *data){
+INLINE static BOOL match(pFileEntry file, void *data){
 	return file->FileReferenceNumber == *(KEY *)data;
 }
 
@@ -85,7 +85,7 @@ void print_full_path(pFileEntry pf){
 #define YEAR_START 1990
 #endif
 
-__forceinline MINUTE ConvertSystemTimeToMinute(SYSTEMTIME sysTime)
+INLINE MINUTE ConvertSystemTimeToMinute(SYSTEMTIME sysTime)
 {
     MINUTE time32=0;
 	if(sysTime.wYear<YEAR_START) return 0;
@@ -97,7 +97,7 @@ __forceinline MINUTE ConvertSystemTimeToMinute(SYSTEMTIME sysTime)
     return time32;
 }
 
-__forceinline void ConvertMinuteToSystemTime(SYSTEMTIME *sysTime,IN MINUTE time32)
+INLINE void ConvertMinuteToSystemTime(SYSTEMTIME *sysTime,IN MINUTE time32)
 {
     sysTime->wMinute=(time32&0x1f)*2;time32>>=5;
     sysTime->wHour=time32&0x1f;time32>>=5;

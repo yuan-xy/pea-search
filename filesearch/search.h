@@ -8,26 +8,6 @@ extern "C" {
 #include "env.h"
 #include "fs_common.h"
 
-//排序方式常量定义
-#define NO_ORDER 0
-#define NAME_ORDER_ASC 1
-#define NAME_ORDER_DESC 2
-#define PATH_ORDER_ASC 3
-#define PATH_ORDER_DESC 4
-#define SIZE_ORDER_ASC 5
-#define SIZE_ORDER_DESC 6
-#define DATE_ORDER_ASC 7
-#define DATE_ORDER_DESC 8
-
-struct searchEnv{ //搜索的环境配置
-	unsigned char order; //排序方式，缺省按名称排序
-	BOOL case_sensitive; //是否大小写敏感，缺省不敏感
-	unsigned char file_type;//指定搜索的类型
-	int path_len; //如果指定了搜索的路径，该路径名得byte长度
-	WCHAR path_name[MAX_PATH]; ////指定搜索的路径
-};
-typedef struct searchEnv SearchEnv, *pSearchEnv;
-
 
 /**
 * 根据查询要求搜索所有符合要求的文件
