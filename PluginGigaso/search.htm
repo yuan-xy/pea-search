@@ -75,7 +75,7 @@
 		{#foreach $T as record}
         <tr>
             <td nowrap>
-				{$T.record.name}
+				<img width="16" height="16" src="images/{$T.record.type}.ico" /> {$T.record.name}
             </td>
             <td nowrap>
 				{$T.record.path}
@@ -89,39 +89,6 @@
         </tr>
 		{#/for}
 </textarea> 
-
-<script type="text/javascript">
-
-/*
-none        
-unknown     
-dir         
-disk        
-zip         
-rar         
-other_zip   
-exe         
-lnk         
-script      
-lib         
-music       
-photo       
-vedio       
-animation   
-word        
-excel       
-ppt         
-other_office
-pdf         
-chm         
-other_ebook 
-htm         
-txt         
-source      
-other_text  
-*/
-
-</script>
 
 </body>
 
