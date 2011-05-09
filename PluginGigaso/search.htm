@@ -15,30 +15,30 @@
         function plugin0(){
             return document.getElementById('plugin0');
         }
-        function addEvent(obj, name, func){
-            if (window.addEventListener) {
-                obj.addEventListener(name, func, false); 
-            } else {
-                obj.attachEvent("on"+name, func);
-            }
-        }
-        function pluginLoaded() {
-            alert("Plugin loaded!");
-        }
+		function ieTrOver(){this.oldClassName=this.className;this.className="hovered"}
+		function ieTrOut(){this.className=this.oldClassName}
         function searchf(value){
-            var s = plugin0().echo(value);
-			var files = eval(s);
-			// attach the template
-			$("#result1").setTemplateElement("template");
-			$("#result1").processTemplate(files);
+			function searchf0(){
+				var s = plugin0().echo(value);
+				var files = eval(s);
+				$("#result1").setTemplateElement("template");
+				$("#result1").processTemplate(files);
+				$("table tr:nth-child(even)").addClass("d");
+				if(window.ActiveXObject){
+					$('tr').each(function(n){
+						this.onmouseover = ieTrOver;
+						this.onmouseout = ieTrOut;
+					});
+				}
+			}
+			setTimeout(searchf0,0);
         }
     </script>
 </head>
 
 <body>
 <object id="plugin0" type="application/x-plugingigaso" width="10" height="10">
-    <param name="onload" value="pluginLoaded" />
-</object><br />
+</object>
 
     <table>
         <tr>
@@ -91,21 +91,6 @@
 </textarea> 
 
 <script type="text/javascript">
-function ieTrOver(){this.oldClassName=this.className;this.className="hovered"}
-function ieTrOut(){this.className=this.oldClassName}
-if(window.ActiveXObject&&!window.XMLHttpRequest){
-	var tables=document.getElementsByTagName("table");
-	for(var i=0;i<tables.length;i++){
-		if(tables[i].className=="maintable"){
-			var trs=tables[i].getElementsByTagName("tr");
-			for(var j=0;j<trs.length;j++){
-				if(trs[j].getElementsByTagName("th").length==0){
-					trs[j].onmouseover=ieTrOver;trs[j].onmouseout=ieTrOut;
-				}
-			}
-		}
-	}
-}
 
 /*
 none        
