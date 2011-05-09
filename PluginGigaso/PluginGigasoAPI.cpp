@@ -10,6 +10,29 @@
 
 #include "PluginGigasoAPI.h"
 
+#include "sharelib.h"
+#include <stdlib.h>   
+#include <stdio.h>
+
+#define WIN_ERROR fprintf(stderr,"error code : %d , line %d in '%s'\n",GetLastError(), __LINE__, __FILE__);
+
+static HANDLE hNamedPipe;
+
+static BOOL connect_named_pipe(HANDLE *p){
+	HANDLE handle;
+	WaitNamedPipe(SERVER_PIPE, NMPWAIT_WAIT_FOREVER);
+	handle = CreateFile(SERVER_PIPE, GENERIC_READ | GENERIC_WRITE, 0,
+			NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (handle == INVALID_HANDLE_VALUE) {
+		WIN_ERROR;
+		return 0;
+	}else{
+		*p = handle;
+		return 1;
+	}
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 /// @fn PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr host)
 ///
@@ -38,6 +61,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
     
     
     registerEvent("onfired");    
+	connect_named_pipe(&hNamedPipe);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -49,6 +73,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 ///////////////////////////////////////////////////////////////////////////////
 PluginGigasoAPI::~PluginGigasoAPI()
 {
+		CloseHandle(hNamedPipe);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,6 +114,31 @@ std::string PluginGigasoAPI::get_version()
 // Method echo
 FB::variant PluginGigasoAPI::echo(const FB::variant& msg)
 {
+	SearchRequest req;
+	SearchResponse resp;
+	DWORD nRead, nWrite;
+	memset(&req,0,sizeof(SearchRequest));
+	req.from = 0;
+	req.len = 10;
+	std::wstring s = msg.convert_cast<std::wstring>();
+	wcscpy(req.str,s.c_str());
+	if(wcsncmp(L"er",s.c_str(),2)==0) return "error";
+			if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
+				WIN_ERROR;
+				return "error";
+			}
+			if(ReadFile(hNamedPipe, &resp, sizeof(int), &nRead, NULL)  && resp.len>0){
+				char buffer[40960];
+				printf("%d,", resp.len);
+				ReadFile(hNamedPipe, buffer, resp.len, &nRead, NULL);
+				if(nRead!=resp.len){
+					return "error";
+				}
+				std::string ret(buffer,resp.len) ;
+				FB::variant var(ret);
+				return var;
+			}
+
     return msg;
 }
 

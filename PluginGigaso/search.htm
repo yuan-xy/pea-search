@@ -1,0 +1,143 @@
+	<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>gigaso</title>
+    <link rel="stylesheet" href="./main.css" type="text/css" />
+    <link rel="shortcut icon" href="./favicon.ico" type="image/ico" />
+    <link rel="icon" href="./favicon.ico" type="image/ico" />
+
+	<script type="text/javascript" src="jquery-1.6.min.js"></script>
+	<script type="text/javascript" src="jquery-jtemplates.js"></script>
+
+
+
+    <script type="text/javascript">
+        function plugin0(){
+            return document.getElementById('plugin0');
+        }
+        function addEvent(obj, name, func){
+            if (window.addEventListener) {
+                obj.addEventListener(name, func, false); 
+            } else {
+                obj.attachEvent("on"+name, func);
+            }
+        }
+        function pluginLoaded() {
+            alert("Plugin loaded!");
+        }
+        function searchf(value){
+            var s = plugin0().echo(value);
+			var files = eval(s);
+			// attach the template
+			$("#result1").setTemplateElement("template");
+			$("#result1").processTemplate(files);
+        }
+    </script>
+</head>
+
+<body>
+<object id="plugin0" type="application/x-plugingigaso" width="10" height="10">
+    <param name="onload" value="pluginLoaded" />
+</object><br />
+
+    <table>
+        <tr>
+            <td>
+                <a href="/">
+                    <img src="./everything.png" alt="Everything" width="164" height="40" /></a>
+            </td>
+            <td nowrap>
+                <input id="search" name="s" type="text" size="35" title="Search Everything" value="" onpropertychange="searchf(this.value)" onchange="searchf(this.value)">
+            </td>
+        </tr>
+    </table>
+
+    <table  id="maintable" class="maintable" width="100%" cellspacing="0">
+        <tr>
+            <th>
+                文件名
+            </th>
+            <th>
+                文件夹
+            </th>
+            <th align="right">
+                文件大小
+            </th>
+            <th align="right">
+                修改日期
+            </th>
+        </tr>
+	<tbody id="result1"> 
+	</tbody> 
+    </table>
+
+<textarea id="template" style="display:none"> 
+		{#foreach $T as record}
+        <tr>
+            <td nowrap>
+				{$T.record.name}
+            </td>
+            <td nowrap>
+				{$T.record.path}
+            </td>
+            <td align="right" nowrap>
+				{$T.record.size}
+            </td>
+            <td align="right" nowrap>
+				{$T.record.time}
+            </td>
+        </tr>
+		{#/for}
+</textarea> 
+
+<script type="text/javascript">
+function ieTrOver(){this.oldClassName=this.className;this.className="hovered"}
+function ieTrOut(){this.className=this.oldClassName}
+if(window.ActiveXObject&&!window.XMLHttpRequest){
+	var tables=document.getElementsByTagName("table");
+	for(var i=0;i<tables.length;i++){
+		if(tables[i].className=="maintable"){
+			var trs=tables[i].getElementsByTagName("tr");
+			for(var j=0;j<trs.length;j++){
+				if(trs[j].getElementsByTagName("th").length==0){
+					trs[j].onmouseover=ieTrOver;trs[j].onmouseout=ieTrOut;
+				}
+			}
+		}
+	}
+}
+
+/*
+none        
+unknown     
+dir         
+disk        
+zip         
+rar         
+other_zip   
+exe         
+lnk         
+script      
+lib         
+music       
+photo       
+vedio       
+animation   
+word        
+excel       
+ppt         
+other_office
+pdf         
+chm         
+other_ebook 
+htm         
+txt         
+source      
+other_text  
+*/
+
+</script>
+
+</body>
+
+</html>
