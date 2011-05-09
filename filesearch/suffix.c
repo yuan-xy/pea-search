@@ -192,3 +192,38 @@ find_dot:
 		file->ut.v.suffixType = suffix_type(file->FileName+OnlyNameLen+1,len-OnlyNameLen-1);
 	}
 }
+
+
+int print_suffix_type(pFileEntry file, char *buffer){
+	unsigned char clazz = file->ut.v.suffixType;
+	switch(clazz){
+		case SF_NONE: 			strcpy(buffer,"unknown");return 7;
+		case SF_UNKNOWN: 		strcpy(buffer,"unknown");return 7;
+		case SF_DIR	: 		strcpy(buffer,"dir");return 3;
+		case SF_DISK	: 		strcpy(buffer,"disk");return 4;
+		case SF_ZIP	: 		strcpy(buffer,"zip");return 3;
+		case SF_RAR	: 		strcpy(buffer,"rar");return 3;
+		case SF_OTHER_ZIP: 		strcpy(buffer,"other_zip");return 9;
+		case SF_EXE	: 		strcpy(buffer,"exe");return 3;
+		case SF_LNK	: 		strcpy(buffer,"lnk");return 3;
+		case SF_SCRIPT: 		strcpy(buffer,"script");return 6;
+		case SF_LIB	: 		strcpy(buffer,"lib");return 3;
+		case SF_MUSIC: 			strcpy(buffer,"music");return 5;
+		case SF_PHOTO: 			strcpy(buffer,"photo");return 5;
+		case SF_VEDIO: 			strcpy(buffer,"vedio");return 5;
+		case SF_ANIMATION: 		strcpy(buffer,"animation");return 9;
+		case SF_WORD	: 		strcpy(buffer,"word");return 4;
+		case SF_EXCEL: 			strcpy(buffer,"excel");return 5;
+		case SF_PPT	: 		strcpy(buffer,"ppt");return 3;
+		case SF_OTHER_OFFICE: 		strcpy(buffer,"other_office");return 12;
+		case SF_PDF	: 		strcpy(buffer,"pdf");return 3;
+		case SF_CHM	: 		strcpy(buffer,"chm");return 3;
+		case SF_OTHER_EBOOK: 		strcpy(buffer,"other_ebook");return 11;
+		case SF_HTM	: 		strcpy(buffer,"htm");return 3;
+		case SF_TXT	: 		strcpy(buffer,"txt");return 3;
+		case SF_SOURCE : 		strcpy(buffer,"source");return 6;
+		case SF_OTHER_TEXT : 		strcpy(buffer,"other_text");return 10;
+		default:		strcpy(buffer,"unknown");return 7;
+	}
+	return 0;
+}

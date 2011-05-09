@@ -113,6 +113,8 @@ extern BOOL include_type(unsigned char clazz, unsigned char file_type);
  */
 extern void SuffixProcess(pFileEntry file, void *data);
 
+extern int print_suffix_type(pFileEntry file, char *p);
+
 #endif  // FILE_SEARCH_SUFFIX_H_
 
 #ifdef __cplusplus

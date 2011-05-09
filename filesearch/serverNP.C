@@ -6,6 +6,7 @@
 #include "util.h"
 #include "sharelib.h"
 #include "search.h"
+#include "suffix.h"
 #include "serverNP.h"
 
 typedef struct { /* Argument to a server thread. */
@@ -88,6 +89,13 @@ static char * write_file(char *buffer, pFileEntry file){
 		memcpy(p,"'path':'",8);
 		p += 8;
 		p += print_path_str(file, p);
+		*p++ ='\'';
+		*p++ =',';
+	}
+	{
+		memcpy(p,"'type':'",8);
+		p += 8;
+		p += print_suffix_type(file, p);
 		*p++ ='\'';
 		*p++ =',';
 	}
