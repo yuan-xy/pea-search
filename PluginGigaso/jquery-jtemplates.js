@@ -989,7 +989,21 @@ if(window.jQuery && !window.jQuery.createTemplate) {(function(jQuery) {
 			jQuery(this).html(t.get(d, param, this, 0));
 		});
 	};
-	
+
+	jQuery.fn.processTemplateAppend = function(d, param) {
+		return jQuery(this).each(function() {
+			var t = jQuery.getTemplate(this);
+			if(t === undefined) {
+				if(Template.DEBUG_MODE)
+					throw new Error('jTemplates: Template is not defined.');
+				else
+					return;
+			}
+			jQuery.data(this, 'jTemplateSID', jQuery.data(this, 'jTemplateSID') + 1);
+			var htm = t.get(d, param, this, 0);
+			jQuery(this).append(htm);
+		});
+	};	
 	/**
 	 * Process template using data from URL 'url_' (only format JSON) and parameters 'param'. Update HTML code.
 	 * @param {string} url_ URL to data (in JSON)
