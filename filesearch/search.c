@@ -42,7 +42,7 @@ typedef struct searchOpt SearchOpt, *pSearchOpt;
 
 static int count=0,matched=0; //所有查询的文件总数、最终符合条件的总数
 static pFileEntry *list; //保存搜索结果列表
-static SearchEnv defaultEnv={NAME_ORDER_ASC,0,0,0,0}; //缺省查询环境
+static SearchEnv defaultEnv={0}; //缺省查询环境
 static pSearchEnv sEnv; //当前查询环境
 
 static BOOL allowPinyin(pSearchOpt opt){ //大小写不敏感、一般匹配模式，模式串不包含中文
@@ -639,8 +639,10 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 			AllFilesIterate(FileSearchVisitor,sOpt);
 		}
 		freeSearchOpt(sOpt);
-		if(sEnv->order==0) sEnv->order=NAME_ORDER_ASC;
-		qsort(*result,matched,sizeof(pFileEntry),order_compare);
+		if(sEnv->order>0 || matched<1000){
+			if(sEnv->order==0 ) sEnv->order=NAME_ORDER_ASC;
+			qsort(*result,matched,sizeof(pFileEntry),order_compare);
+		}
 		printf("all: %d, matched:%d\n",count,matched);
 		return matched;
 	}

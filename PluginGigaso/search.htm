@@ -63,14 +63,7 @@
         }
 		function ieTrOver(){this.oldClassName=this.className;this.className="hovered"}
 		function ieTrOut(){this.className=this.oldClassName}
-        function searchf(value){
-			function searchf0(){
-				var s = plugin0().search(value);
-				if($("#search").val()!=value) return; //查询已过期
-				var files = eval(s);
-				if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
-				$("#result1").setTemplateElement("template");
-				$("#result1").processTemplate(files);
+		function table_over(){
 				$("table tr:nth-child(even)").addClass("d");
 				if(window.ActiveXObject){
 					$('tr').each(function(n){
@@ -78,6 +71,26 @@
 						this.onmouseout = ieTrOut;
 					});
 				}
+		}
+        function searchf(value){
+			var files = [];
+			function page(data){
+				if($("#search").val()!=value) return; //查询已过期
+				$("#result1").setTemplateElement("template");
+				$("#result1").processTemplate(files);
+				table_over();
+			}
+			function searchf0(){
+				var s = plugin0().search(value);
+				if($("#search").val()!=value) return; //查询已过期
+				files = eval(s);
+				if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
+				$("#result1").setTemplateElement("template");
+				$("#result1").processTemplate(files.slice(0,30));
+				if(files.length>30){
+					setTimeout(page,1);
+				}
+				table_over();
 			}
 			setTimeout(searchf0,1);
         }

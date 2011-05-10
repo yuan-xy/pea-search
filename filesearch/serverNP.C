@@ -78,32 +78,32 @@ static char * write_file(char *buffer, pFileEntry file){
 	char *p = buffer;
 	*p++ = '{';
 	{
-		memcpy(p,"'name':'",8);
+		memcpy(p,"\"name\":\"",8);
 		p += 8;
 		memcpy(p,file->FileName,file->us.v.FileNameLength);
 		p += file->us.v.FileNameLength;
-		*p++ ='\'';
+		*p++ ='"';
 		*p++ =',';
 	}
 	{
-		memcpy(p,"'path':'",8);
+		memcpy(p,"\"path\":\"",8);
 		p += 8;
 		p += print_path_str(file, p);
-		*p++ ='\'';
+		*p++ ='"';
 		*p++ =',';
 	}
 	{
-		memcpy(p,"'type':'",8);
+		memcpy(p,"\"type\":\"",8);
 		p += 8;
 		p += print_suffix_type(file, p);
-		*p++ ='\'';
+		*p++ ='"';
 		*p++ =',';
 	}
 	if(!IsDir(file)){
 		FSIZE size = GET_SIZE(file);
 		int sizea = file_size_amount(size);
 		int sizeu = file_size_unit(size);
-		memcpy(p,"'size':'",8);
+		memcpy(p,"\"size\":\"",8);
 		p += 8;
 		p += sprintf(p,"%d",sizea);
 		switch(sizeu){
@@ -113,14 +113,14 @@ static char * write_file(char *buffer, pFileEntry file){
 			default:memcpy(p,"  B", 3);break;
 		}
 		p +=3;
-		*p++ ='\'';
+		*p++ ='"';
 		*p++ =',';
 	}
 	{
-		memcpy(p,"'time':'",8);
+		memcpy(p,"\"time\":\"",8);
 		p += 8;
 		p += print_time_str(file,p);
-		*p++ ='\'';
+		*p++ ='"';
 	}
 	*p++ = '}';
 	return p;
