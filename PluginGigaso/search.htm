@@ -72,23 +72,29 @@
 					});
 				}
 		}
+		var last_search;
+		var page_timeout;
+		var search_timeout;
         function searchf(value){
-			var pagerow = 2;
+			if(last_search == value) return;
+			clearTimeout(page_timeout);
+			clearTimeout(search_timeout);
+			var pagerow = 50;
 			var files = [];
 			var first = true;
 			$("#result1").setTemplateElement("template");
 			function page(){
 				if($("#search").val()!=value) return; //查询已过期
 				if(first){
-					$("#result1").processTemplate(files.slice(0,10));
+					$("#result1").processTemplate(files.slice(0,pagerow));
 					first = false;
 				}
 				else{
-					$("#result1").processTemplateAppend(files.slice(0,10));
+					$("#result1").processTemplateAppend(files.slice(0,pagerow));
 				}
-				if(files.length>10){
-					files = files.slice(10,files.length);
-					setTimeout(page,1);
+				if(files.length>pagerow){
+					files = files.slice(pagerow,files.length);
+					page_timeout = setTimeout(page,100);
 				}
 				table_over();
 			}
@@ -98,9 +104,15 @@
 				files = eval(s);
 				if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
 				page();
+				last_search = value;
 			}
-			setTimeout(searchf0,1);
-        }
+			if(value.length<3){
+				search_timeout = setTimeout(searchf0,300);
+			}else if(value.length<5){
+				search_timeout = setTimeout(searchf0,150);
+			}else{
+				search_timeout = setTimeout(searchf0,50);
+			}        }
 		$(function() {
 			$("#search").focus();
 			$("#search").bind('keyup',function(event){searchf($("#search").val())});
