@@ -1,39 +1,12 @@
-	<html>
+<html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>gigaso</title>
     <link rel="stylesheet" href="./main.css" type="text/css" />
     <link rel="shortcut icon" href="./favicon.ico" type="image/ico" />
     <link rel="icon" href="./favicon.ico" type="image/ico" />
-
 	<script type="text/javascript" src="jquery-1.6.min.js"></script>
 	<script type="text/javascript" src="jquery-jtemplates.js"></script>
-
-
-
-    <script type="text/javascript">
-        function plugin0(){
-            return document.getElementById('plugin0');
-        }
-		function ieTrOver(){this.oldClassName=this.className;this.className="hovered"}
-		function ieTrOut(){this.className=this.oldClassName}
-        function searchf(value){
-			function searchf0(){
-				var s = plugin0().echo(value);
-				var files = eval(s);
-				$("#result1").setTemplateElement("template");
-				$("#result1").processTemplate(files);
-				$("table tr:nth-child(even)").addClass("d");
-				if(window.ActiveXObject){
-					$('tr').each(function(n){
-						this.onmouseover = ieTrOver;
-						this.onmouseout = ieTrOut;
-					});
-				}
-			}
-			setTimeout(searchf0,0);
-        }
-    </script>
 </head>
 
 <body>
@@ -43,11 +16,10 @@
     <table>
         <tr>
             <td>
-                <a href="/">
-                    <img src="./everything.png" alt="Everything" width="164" height="40" /></a>
+                <img src="./everything.png" alt="Everything" width="164" height="40" />
             </td>
             <td nowrap>
-                <input id="search" name="s" type="text" size="35" title="Search Everything" value="" onpropertychange="searchf(this.value)" onchange="searchf(this.value)">
+                <input id="search" name="s" type="text" size="35" title="Search Everything" value="">
             </td>
         </tr>
     </table>
@@ -89,6 +61,36 @@
         </tr>
 		{#/for}
 </textarea> 
+
+
+    <script type="text/javascript">
+        function plugin0(){
+            return document.getElementById('plugin0');
+        }
+		function ieTrOver(){this.oldClassName=this.className;this.className="hovered"}
+		function ieTrOut(){this.className=this.oldClassName}
+        function searchf(value){
+			function searchf0(){
+				var s = plugin0().echo(value);
+				if($("#search").val()!=value) return; //查询已过期
+				var files = eval(s);
+				$("#result1").setTemplateElement("template");
+				$("#result1").processTemplate(files);
+				$("table tr:nth-child(even)").addClass("d");
+				if(window.ActiveXObject){
+					$('tr').each(function(n){
+						this.onmouseover = ieTrOver;
+						this.onmouseout = ieTrOut;
+					});
+				}
+			}
+			setTimeout(searchf0,1);
+        }
+		$(function() {
+			$("#search").focus();
+			$("#search").bind('keyup',function(event){searchf($("#search").val())});
+		});
+    </script>
 
 </body>
 

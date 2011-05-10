@@ -4,7 +4,7 @@ set (CMAKE_VERBOSE_MAKEFILE off)
 
 #	-DCMAKE_BUILD_TYPE=Release ..
 IF(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE RelWithDebInfo  CACHE STRING
+  SET(CMAKE_BUILD_TYPE Release  CACHE STRING
       "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
       FORCE)
 	message(STATUS "default build type: ${CMAKE_BUILD_TYPE}")
