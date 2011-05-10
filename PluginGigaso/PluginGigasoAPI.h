@@ -29,8 +29,7 @@ public:
     // Read-only property ${PROPERTY.ident}
     std::string get_version();
 
-    // Method echo
-    FB::variant echo(const FB::variant& msg);
+    FB::variant search(const FB::variant& msg);
     
     // Method test-event
     void testEvent(const FB::variant& s);

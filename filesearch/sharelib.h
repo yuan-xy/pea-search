@@ -23,6 +23,8 @@ struct searchResponse{
 };
 typedef struct searchResponse SearchResponse, *pSearchResponse;
 
+#define MAX_RESPONSE_LEN 409600
+
 #define CS_TIMEOUT 5000
 
 #define MAX_CLIENTS  5 /* Maximum number of clients for serverNP */

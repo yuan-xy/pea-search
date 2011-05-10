@@ -25,20 +25,14 @@
     </table>
 
     <table  id="maintable" class="maintable" width="100%" cellspacing="0">
+	<thead>
         <tr>
-            <th>
-                文件名
-            </th>
-            <th>
-                文件夹
-            </th>
-            <th align="right">
-                文件大小
-            </th>
-            <th align="right">
-                修改日期
-            </th>
+            <th>文件名</th>
+            <th>文件夹</th>
+            <th align="right">大小</th>
+            <th align="right">修改日期</th>
         </tr>
+	</thead>
 	<tbody id="result1"> 
 	</tbody> 
     </table>
@@ -47,7 +41,7 @@
 		{#foreach $T as record}
         <tr>
             <td nowrap>
-				<img width="16" height="16" src="images/{$T.record.type}.ico" /> {$T.record.name}
+				<img width="16" height="16" src="icons/{$T.record.type}.ico" /> {$T.record.name}
             </td>
             <td nowrap>
 				{$T.record.path}
@@ -71,9 +65,10 @@
 		function ieTrOut(){this.className=this.oldClassName}
         function searchf(value){
 			function searchf0(){
-				var s = plugin0().echo(value);
+				var s = plugin0().search(value);
 				if($("#search").val()!=value) return; //查询已过期
 				var files = eval(s);
+				if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
 				$("#result1").setTemplateElement("template");
 				$("#result1").processTemplate(files);
 				$("table tr:nth-child(even)").addClass("d");
@@ -89,6 +84,7 @@
 		$(function() {
 			$("#search").focus();
 			$("#search").bind('keyup',function(event){searchf($("#search").val())});
+			$("#maintable thead tr th:first").append("<img src='images/s_asc.png' />");
 		});
     </script>
 

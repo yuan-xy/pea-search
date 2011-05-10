@@ -128,7 +128,7 @@ static char * write_file(char *buffer, pFileEntry file){
 
 
 static void send_response(HANDLE hNamedPipe, pSearchRequest req, pFileEntry *result, int count){
-	char buffer[409600], *p1=buffer+sizeof(int), *p=p1;
+	char buffer[MAX_RESPONSE_LEN], *p1=buffer+sizeof(int), *p=p1;
 	pFileEntry *start = result+req->from;
 	int i;
 	*p++ = '[';

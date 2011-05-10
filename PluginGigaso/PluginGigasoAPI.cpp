@@ -32,20 +32,9 @@ static BOOL connect_named_pipe(HANDLE *p){
 	}
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-/// @fn PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr host)
-///
-/// @brief  Constructor for your JSAPI object.  You should register your methods, properties, and events
-///         that should be accessible to Javascript from here.
-///
-/// @see FB::JSAPIAuto::registerMethod
-/// @see FB::JSAPIAuto::registerProperty
-/// @see FB::JSAPIAuto::registerEvent
-///////////////////////////////////////////////////////////////////////////////
 PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr& host) : m_plugin(plugin), m_host(host)
 {
-    registerMethod("echo",      make_method(this, &PluginGigasoAPI::echo));
+    registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
     registerMethod("testEvent", make_method(this, &PluginGigasoAPI::testEvent));
 
     // Read-write property
@@ -64,28 +53,11 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	connect_named_pipe(&hNamedPipe);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// @fn PluginGigasoAPI::~PluginGigasoAPI()
-///
-/// @brief  Destructor.  Remember that this object will not be released until
-///         the browser is done with it; this will almost definitely be after
-///         the plugin is released.
-///////////////////////////////////////////////////////////////////////////////
-PluginGigasoAPI::~PluginGigasoAPI()
-{
+PluginGigasoAPI::~PluginGigasoAPI(){
 		CloseHandle(hNamedPipe);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// @fn PluginGigasoPtr PluginGigasoAPI::getPlugin()
-///
-/// @brief  Gets a reference to the plugin that was passed in when the object
-///         was created.  If the plugin has already been released then this
-///         will throw a FB::script_error that will be translated into a
-///         javascript exception in the page.
-///////////////////////////////////////////////////////////////////////////////
-PluginGigasoPtr PluginGigasoAPI::getPlugin()
-{
+PluginGigasoPtr PluginGigasoAPI::getPlugin(){
     PluginGigasoPtr plugin(m_plugin.lock());
     if (!plugin) {
         throw FB::script_error("The plugin is invalid");
@@ -111,35 +83,32 @@ std::string PluginGigasoAPI::get_version()
     return "CURRENT_VERSION";
 }
 
-// Method echo
-FB::variant PluginGigasoAPI::echo(const FB::variant& msg)
-{
+FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 	SearchRequest req;
 	SearchResponse resp;
 	DWORD nRead, nWrite;
 	memset(&req,0,sizeof(SearchRequest));
 	req.from = 0;
-	req.len = 10;
+	req.len = 1000;
 	std::wstring s = msg.convert_cast<std::wstring>();
 	wcscpy(req.str,s.c_str());
-	if(wcsncmp(L"er",s.c_str(),2)==0) return "error";
-			if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
-				WIN_ERROR;
-				return "error";
-			}
-			if(ReadFile(hNamedPipe, &resp, sizeof(int), &nRead, NULL)  && resp.len>0){
-				char buffer[40960];
-				printf("%d,", resp.len);
-				ReadFile(hNamedPipe, buffer, resp.len, &nRead, NULL);
-				if(nRead!=resp.len){
-					return "error";
-				}
-				std::string ret(buffer,resp.len) ;
-				FB::variant var(ret);
-				return var;
-			}
+	if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
+		WIN_ERROR;
+		return "error";
+	}
+	if(ReadFile(hNamedPipe, &resp, sizeof(int), &nRead, NULL)  && resp.len>0){
+		char buffer[MAX_RESPONSE_LEN];
+		printf("%d,", resp.len);
+		ReadFile(hNamedPipe, buffer, resp.len, &nRead, NULL);
+		if(nRead!=resp.len){
+			return "error";
+		}
+		std::string ret(buffer,resp.len) ;
+		FB::variant var(ret);
+		return var;
+	}
 
-    return msg;
+	return msg;
 }
 
 void PluginGigasoAPI::testEvent(const FB::variant& var)
