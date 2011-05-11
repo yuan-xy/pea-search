@@ -150,6 +150,7 @@
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
+						var type = tmp.find("td input")[0].value;
 						if(type=="dir"){
 							ret = plugin0().shell2(path+file, "paste");
 							if(!ret) alert(ret);
