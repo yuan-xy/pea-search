@@ -35,6 +35,12 @@ static BOOL connect_named_pipe(HANDLE *p){
 PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr& host) : m_plugin(plugin), m_host(host)
 {
     registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
+    registerMethod("shell_open",      make_method(this, &PluginGigasoAPI::shell_open));
+	registerMethod("shell_edit",      make_method(this, &PluginGigasoAPI::shell_edit));
+	registerMethod("shell_explore",      make_method(this, &PluginGigasoAPI::shell_explore));
+	registerMethod("shell_find",      make_method(this, &PluginGigasoAPI::shell_find));
+	registerMethod("shell_print",      make_method(this, &PluginGigasoAPI::shell_print));
+	registerMethod("shell_default",      make_method(this, &PluginGigasoAPI::shell_default));
     registerMethod("testEvent", make_method(this, &PluginGigasoAPI::testEvent));
 
     // Read-write property
@@ -116,3 +122,35 @@ void PluginGigasoAPI::testEvent(const FB::variant& var)
     FireEvent("onfired", FB::variant_list_of(var)(true)(1));
 }
 
+static int shell_exec(const FB::variant& msg, const wchar_t *verb){
+	std::wstring s = msg.convert_cast<std::wstring>();
+	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+    HINSTANCE ret = ShellExecuteW(NULL,verb,s.c_str(),NULL,NULL,SW_SHOWNORMAL);
+	return (int)ret;
+}
+
+FB::variant PluginGigasoAPI::shell_default(const FB::variant& msg){
+	return shell_exec(msg,NULL);
+}
+
+FB::variant PluginGigasoAPI::shell_open(const FB::variant& msg){
+	return shell_exec(msg,L"open");
+}
+
+FB::variant PluginGigasoAPI::shell_edit(const FB::variant& msg){
+	return shell_exec(msg,L"edit");
+}
+
+
+FB::variant PluginGigasoAPI::shell_explore(const FB::variant& msg){
+	return shell_exec(msg,L"explore");
+}
+
+
+FB::variant PluginGigasoAPI::shell_find(const FB::variant& msg){
+	return shell_exec(msg,L"find");
+}
+
+FB::variant PluginGigasoAPI::shell_print(const FB::variant& msg){
+	return shell_exec(msg,L"print");
+}

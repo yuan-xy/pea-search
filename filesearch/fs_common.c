@@ -79,10 +79,10 @@ void print_full_path(pFileEntry pf){
 	PrintFilenameMB(pf);
 }
 
-int print_path_str(pFileEntry file, char *p){
+int print_fullpath_str(pFileEntry file, char *p){
 	char *buffer = p;
 	if(file->up.parent!=NULL){
-		int size = print_path_str(file->up.parent,buffer);
+		int size = print_fullpath_str(file->up.parent,buffer);
 		buffer += size;
 	}
 	memcpy(buffer,file->FileName,file->us.v.FileNameLength);
@@ -90,6 +90,14 @@ int print_path_str(pFileEntry file, char *p){
 	*buffer++ ='\\';
 	*buffer++ ='\\';
 	return buffer-p;
+}
+
+int print_path_str(pFileEntry file, char *p){
+	char *buffer = p;
+	if(file->up.parent!=NULL){
+		return print_fullpath_str(file->up.parent,buffer);
+	}
+	return 0;
 }
 
 //年5b    月4b    日5b     时5b   分5b

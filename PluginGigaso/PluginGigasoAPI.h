@@ -30,7 +30,13 @@ public:
     std::string get_version();
 
     FB::variant search(const FB::variant& msg);
-    
+    FB::variant shell_open(const FB::variant& msg);
+    FB::variant shell_edit(const FB::variant& msg);
+    FB::variant shell_explore(const FB::variant& msg);
+    FB::variant shell_find(const FB::variant& msg);
+    FB::variant shell_print(const FB::variant& msg);
+    FB::variant shell_default(const FB::variant& msg);
+
     // Method test-event
     void testEvent(const FB::variant& s);
 

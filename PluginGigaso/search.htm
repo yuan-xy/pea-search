@@ -7,6 +7,7 @@
     <link rel="icon" href="./favicon.ico" type="image/ico" />
 	<script type="text/javascript" src="jquery-1.6.min.js"></script>
 	<script type="text/javascript" src="jquery-jtemplates.js"></script>
+    <script type="text/javascript" src="jquery.contextmenu.r2.js"></script>
 </head>
 
 <body>
@@ -41,21 +42,31 @@
 		{#foreach $T as record}
         <tr>
             <td nowrap>
-				<img width="16" height="16" src="icons/{$T.record.type}.ico" /> {$T.record.name}
+				<img width="16" height="16" src="icons/{$T.record.type}.ico" />
+				<input type="hidden" value="{$T.record.type}">
+				<span>{$T.record.name}</span>
             </td>
             <td nowrap>
-				{$T.record.path}
+				<span>{$T.record.path}</span>
             </td>
             <td align="right" nowrap>
-				{$T.record.size}
+				<span>{$T.record.size}</span>
             </td>
             <td align="right" nowrap>
-				{$T.record.time}
+				<span>{$T.record.time}</span>
             </td>
         </tr>
 		{#/for}
 </textarea> 
 
+  <div id="myMenu1" style="display: none; ">
+    <ul style="font-size:10pt">
+      <li id="default"><img width="16" height="16" src="./images/default.ico"> 打开</li>
+      <li id="explore"><img  width="16" height="16" src="./images/explore.ico"> 资源管理器</li>
+      <li id="edit"><img  width="16" height="16" src="./images/default.ico"> 编辑</li>
+      <li id="delete"><img  width="16" height="16" src="./images/delete.ico"> 删除</li>
+    </ul>
+  </div>
 
     <script type="text/javascript">
         function plugin0(){
@@ -71,7 +82,46 @@
 						this.onmouseout = ieTrOut;
 					});
 				}
-		}
+				$("table tbody tr").contextMenu('myMenu1', {
+				  menuStyle: {
+				  },
+				  itemStyle: {
+				  },
+				  itemHoverStyle: {
+				  },
+				  bindings: {
+					  'default': function(t) {
+					    var tmp = $(t);
+						var file = tmp.find("td span")[0].innerHTML;
+						var path = tmp.find("td span")[1].innerHTML;
+						var ret = plugin0().shell_default(path+file);
+						if(ret<33) alert(ret);
+					  },
+					  'edit': function(t) {
+					    var tmp = $(t);
+						var file = tmp.find("td span")[0].innerHTML;
+						var path = tmp.find("td span")[1].innerHTML;
+						var ret = plugin0().shell_edit(path+file);
+						if(ret<33) alert(ret);
+					  },
+					  'explore': function(t) {
+					    var tmp = $(t);
+						var file = tmp.find("td span")[0].innerHTML;
+						var path = tmp.find("td span")[1].innerHTML;
+						var type = tmp.find("td input")[0].value;
+						if(type=="dir") plugin0().shell_explore(path+file);
+						else  plugin0().shell_explore(path);
+					  },
+					  'delete': function(t) {
+					    var tmp = $(t);
+						var file = tmp.find("td span")[0].innerHTML;
+						var path = tmp.find("td span")[1].innerHTML;
+						var ret = plugin0().shell_delete(path+file);
+						if(ret<33) alert(ret);
+					  }
+					}
+				  });
+		  }
 		var last_search;
 		var page_timeout;
 		var search_timeout;
