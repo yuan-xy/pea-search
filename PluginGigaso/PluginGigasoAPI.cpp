@@ -41,6 +41,10 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	registerMethod("shell_find",      make_method(this, &PluginGigasoAPI::shell_find));
 	registerMethod("shell_print",      make_method(this, &PluginGigasoAPI::shell_print));
 	registerMethod("shell_default",      make_method(this, &PluginGigasoAPI::shell_default));
+	registerMethod("shell2_prop",      make_method(this, &PluginGigasoAPI::shell2_prop));
+	registerMethod("shell2_openas",      make_method(this, &PluginGigasoAPI::shell2_openas));
+	registerMethod("shell2_default",      make_method(this, &PluginGigasoAPI::shell2_default));
+
     registerMethod("testEvent", make_method(this, &PluginGigasoAPI::testEvent));
 
     // Read-write property
@@ -129,6 +133,21 @@ static int shell_exec(const FB::variant& msg, const wchar_t *verb){
 	return (int)ret;
 }
 
+static int shell2_exec(const FB::variant& msg, const wchar_t *verb){
+	std::wstring s = msg.convert_cast<std::wstring>();
+	SHELLEXECUTEINFO ShExecInfo ={0};
+	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+	ShExecInfo.fMask = SEE_MASK_INVOKEIDLIST ;
+	ShExecInfo.hwnd = NULL;
+	ShExecInfo.lpVerb = verb;
+	ShExecInfo.lpFile = s.c_str();
+	ShExecInfo.lpParameters = NULL; 
+	ShExecInfo.lpDirectory = NULL;
+	ShExecInfo.nShow = SW_SHOW;
+	ShExecInfo.hInstApp = NULL; 
+	return ShellExecuteEx(&ShExecInfo);
+}
+
 FB::variant PluginGigasoAPI::shell_default(const FB::variant& msg){
 	return shell_exec(msg,NULL);
 }
@@ -153,4 +172,16 @@ FB::variant PluginGigasoAPI::shell_find(const FB::variant& msg){
 
 FB::variant PluginGigasoAPI::shell_print(const FB::variant& msg){
 	return shell_exec(msg,L"print");
+}
+
+FB::variant PluginGigasoAPI::shell2_prop(const FB::variant& msg){
+	return shell2_exec(msg, L"properties");
+}
+
+FB::variant PluginGigasoAPI::shell2_openas(const FB::variant& msg){
+	return shell2_exec(msg, L"openas");
+}
+
+FB::variant PluginGigasoAPI::shell2_default(const FB::variant& msg){
+	return shell2_exec(msg, NULL);
 }

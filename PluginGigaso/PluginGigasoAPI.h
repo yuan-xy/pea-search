@@ -36,6 +36,9 @@ public:
     FB::variant shell_find(const FB::variant& msg);
     FB::variant shell_print(const FB::variant& msg);
     FB::variant shell_default(const FB::variant& msg);
+    FB::variant shell2_prop(const FB::variant& msg);
+    FB::variant shell2_openas(const FB::variant& msg);
+    FB::variant shell2_default(const FB::variant& msg);
 
     // Method test-event
     void testEvent(const FB::variant& s);

@@ -61,10 +61,15 @@
 
   <div id="myMenu1" style="display: none; ">
     <ul style="font-size:10pt">
-      <li id="default"><img width="16" height="16" src="./images/default.ico"> 打开</li>
+      <li id="default"><img width="16" height="16" src="./images/win.png"> 打开</li>
+      <li id="openas"><img width="16" height="16" src="./images/openas.ico"> 打开方式</li>
       <li id="explore"><img  width="16" height="16" src="./images/explore.ico"> 资源管理器</li>
-      <li id="edit"><img  width="16" height="16" src="./images/default.ico"> 编辑</li>
+      <li id="edit"><img  width="16" height="16" src="./images/edit.ico"> 编辑</li>
+      <li id="copy"><img  width="16" height="16" src="./images/copy.ico"> 复制</li>
+      <li id="cut"><img  width="16" height="16" src="./images/cut.ico"> 剪切</li>
+      <li id="paste"><img  width="16" height="16" src="./images/paste.ico"> 粘贴</li>
       <li id="delete"><img  width="16" height="16" src="./images/delete.ico"> 删除</li>
+      <li id="prop"><img  width="16" height="16" src="./images/prop.ico"> 属性</li>
     </ul>
   </div>
 
@@ -94,8 +99,15 @@
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
-						var ret = plugin0().shell_default(path+file);
-						if(ret<33) alert(ret);
+						var ret = plugin0().shell2_default(path+file);
+						if(!ret) alert(ret);
+					  },
+					  'openas': function(t) {
+					    var tmp = $(t);
+						var file = tmp.find("td span")[0].innerHTML;
+						var path = tmp.find("td span")[1].innerHTML;
+						var ret = plugin0().shell2_openas(path+file);
+						if(!ret) alert(ret);
 					  },
 					  'edit': function(t) {
 					    var tmp = $(t);
@@ -118,6 +130,13 @@
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell_delete(path+file);
 						if(ret<33) alert(ret);
+					  },
+					  'prop': function(t) {
+					    var tmp = $(t);
+						var file = tmp.find("td span")[0].innerHTML;
+						var path = tmp.find("td span")[1].innerHTML;
+						var ret = plugin0().shell2_prop(path+file);
+						if(!ret) alert(ret);
 					  }
 					}
 				  });
