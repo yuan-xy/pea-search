@@ -94,6 +94,14 @@
 				  },
 				  itemHoverStyle: {
 				  },
+/* 
+				  onShowMenu: function(e, menu) {
+					if ($(e.target).parents().find("input")[0].value != 'dir') { //性能有问题
+					  $('#paste', menu).remove();
+					}
+					return menu;
+				  },
+*/
 				  bindings: {
 					  'default': function(t) {
 					    var tmp = $(t);
@@ -109,13 +117,6 @@
 						var ret = plugin0().shell2_openas(path+file);
 						if(!ret) alert(ret);
 					  },
-					  'edit': function(t) {
-					    var tmp = $(t);
-						var file = tmp.find("td span")[0].innerHTML;
-						var path = tmp.find("td span")[1].innerHTML;
-						var ret = plugin0().shell_edit(path+file);
-						if(ret<33) alert(ret);
-					  },
 					  'explore': function(t) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
@@ -124,12 +125,42 @@
 						if(type=="dir") plugin0().shell_explore(path+file);
 						else  plugin0().shell_explore(path);
 					  },
+					  'edit': function(t) {
+					    var tmp = $(t);
+						var file = tmp.find("td span")[0].innerHTML;
+						var path = tmp.find("td span")[1].innerHTML;
+						var ret = plugin0().shell_edit(path+file);
+						if(ret<33) alert(ret);
+					  },
+					  'copy': function(t) {
+					    var tmp = $(t);
+						var file = tmp.find("td span")[0].innerHTML;
+						var path = tmp.find("td span")[1].innerHTML;
+						var ret = plugin0().shell2(path+file, "copy");
+						if(!ret) alert(ret);
+					  },
+					  'cut': function(t) {
+					    var tmp = $(t);
+						var file = tmp.find("td span")[0].innerHTML;
+						var path = tmp.find("td span")[1].innerHTML;
+						var ret = plugin0().shell2(path+file, "cut");
+						if(!ret) alert(ret);
+					  },
+					  'paste': function(t) {
+					    var tmp = $(t);
+						var file = tmp.find("td span")[0].innerHTML;
+						var path = tmp.find("td span")[1].innerHTML;
+						if(type=="dir"){
+							ret = plugin0().shell2(path+file, "paste");
+							if(!ret) alert(ret);
+						}
+					  },
 					  'delete': function(t) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
-						var ret = plugin0().shell_delete(path+file);
-						if(ret<33) alert(ret);
+						var ret = plugin0().shell2(path+file, "delete");
+						if(!ret) alert(ret);
 					  },
 					  'prop': function(t) {
 					    var tmp = $(t);

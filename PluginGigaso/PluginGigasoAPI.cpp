@@ -44,6 +44,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	registerMethod("shell2_prop",      make_method(this, &PluginGigasoAPI::shell2_prop));
 	registerMethod("shell2_openas",      make_method(this, &PluginGigasoAPI::shell2_openas));
 	registerMethod("shell2_default",      make_method(this, &PluginGigasoAPI::shell2_default));
+	registerMethod("shell2",      make_method(this, &PluginGigasoAPI::shell2));
 
     registerMethod("testEvent", make_method(this, &PluginGigasoAPI::testEvent));
 
@@ -184,4 +185,9 @@ FB::variant PluginGigasoAPI::shell2_openas(const FB::variant& msg){
 
 FB::variant PluginGigasoAPI::shell2_default(const FB::variant& msg){
 	return shell2_exec(msg, NULL);
+}
+
+FB::variant PluginGigasoAPI::shell2(const FB::variant& msg, const FB::variant& verb){
+	std::wstring s = verb.convert_cast<std::wstring>();
+	return shell2_exec(msg, s.c_str());
 }
