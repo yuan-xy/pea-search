@@ -1,17 +1,8 @@
-body {font-family:tahoma,arial,sans-serif; padding:.5em 1em; margin:0; }
-
-/* GLOBAL STYLES */
-
-a { color:#000; text-decoration:none; }
-a:hover { text-decoration:underline; }
-input { margin-left:.3em; margin-right:.3em; }
-img { border-style:none; vertical-align:middle; }
-form { margin:0; }
-
-/* MAIN TABLE */
+#search {padding:0px; margin:0px; height:30px; width:400px; font: 16px arial;}
+#search_img {padding:0px; margin:0px; height:16px; width:16px; position:Relative;top:8px;}
 
 .maintable { font-size:84%; line-height:1.5em; text-align:left; border-bottom:1px solid #888; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
-.maintable th, .maintable td { padding:0 .3em; }
+.maintable th, .maintable td { padding:0 .3em;}
 .maintable th { line-height:1.8em; background-color:#ECE9D8; border:1px solid #888;
 	background-image: url(./images/header.png);
 	background-repeat: repeat-x;
@@ -20,19 +11,16 @@ form { margin:0; }
 .maintable tr.d:hover, .maintable tr:hover, .maintable tr.hovered { background-color:#D0D8E0; }
 .maintable td { border-left:1px solid #888; border-right:1px solid #888; }
 
-.maintable .dl { margin-top:.1em; margin-right:.3em; }
-.maintable .dr { margin-top:.2em; margin-bottom:.2em; margin-left:.3em; margin-right:.3em; }
-
 #message-area {
 	font-size: 12px;
 	font-family: Arial,sans-serif;
 	font-weight: bold;
 	padding: 3px;
-	margin: 2px;
+	margin: 0;
 	text-align: center;
 	overflow: hidden;
 	white-space: nowrap;
-	position: absolute;
+	position: Fixed;
 	z-index: 10000;
 	top: 0;
 	left: 40%;

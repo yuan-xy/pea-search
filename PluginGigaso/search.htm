@@ -15,45 +15,38 @@
 <object id="plugin0" type="application/x-plugingigaso" width="10" height="10">
 </object>
 
-    <table>
-        <tr>
-            <td>
-                <img src="./everything.png" alt="Everything" width="164" height="40" />
-            </td>
-            <td nowrap>
-                <input id="search" name="s" type="text" size="35" title="Search Everything" value="">
-            </td>
-        </tr>
-    </table>
+<center style="margin:10px;">
+搜索：<input id="search" name="s" type="text" size="35" value="" title="查询条件"><img id="search_img" src="images/find.ico"/>
+</center>
 
-    <table  id="maintable" class="maintable" width="100%" cellspacing="0">
+<table  id="maintable" class="maintable" width="100%" cellspacing="0">
 	<thead>
         <tr>
-            <th>文件名</th>
-            <th>文件夹</th>
-            <th align="right">大小</th>
-            <th align="right">修改日期</th>
+            <th style="width:33%" colid="0" nowrap>文件名</th>
+            <th style="width:50%" colid="1" nowrap>文件夹</th>
+            <th style="width:5%" align="right" colid="2" nowrap>大小</th>
+            <th style="width:12%" align="right" colid="3" nowrap>修改日期</th>
         </tr>
 	</thead>
 	<tbody id="result1"> 
 	</tbody> 
-    </table>
+</table>
 
 <textarea id="template" style="display:none"> 
 		{#foreach $T as record}
         <tr>
-            <td nowrap>
+            <td colid="0">
 				<img width="16" height="16" src="icons/{$T.record.type}.ico" />
 				<input type="hidden" value="{$T.record.type}">
 				<span>{$T.record.name}</span>
             </td>
-            <td nowrap>
+            <td colid="1">
 				<span>{$T.record.path}</span>
             </td>
-            <td align="right" nowrap>
+            <td align="right" colid="2">
 				<span>{$T.record.size}</span>
             </td>
-            <td align="right" nowrap>
+            <td align="right" colid="3">
 				<span>{$T.record.time}</span>
             </td>
         </tr>
@@ -98,7 +91,7 @@
 						this.onmouseout = ieTrOut;
 					});
 				}
-				$("table tbody tr").contextMenu('myMenu1', {
+				$("#maintable tbody tr").contextMenu('myMenu1', {
 				  menuStyle: {
 					width : "150px"
 				  },
@@ -259,6 +252,9 @@
 			$("#search").bind('keyup',function(event){searchf($("#search").val())});
 			$("#maintable thead tr th:first").append("<img src='images/s_asc.png' />");
 			$("#message-area").corner("bottom 3px");
+			$(document).bind("contextmenu", function(e){
+				//return false;
+			});
 		});
     </script>
 
