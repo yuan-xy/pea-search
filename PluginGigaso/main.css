@@ -22,3 +22,26 @@ form { margin:0; }
 
 .maintable .dl { margin-top:.1em; margin-right:.3em; }
 .maintable .dr { margin-top:.2em; margin-bottom:.2em; margin-left:.3em; margin-right:.3em; }
+
+#message-area {
+	font-size: 12px;
+	font-family: Arial,sans-serif;
+	font-weight: bold;
+	padding: 3px;
+	margin: 2px;
+	text-align: center;
+	overflow: hidden;
+	white-space: nowrap;
+	position: absolute;
+	z-index: 10000;
+	top: 0;
+	left: 40%;
+}
+
+.info {
+background-color: #FFF1A8;
+}
+
+.error {
+background-color: #FFDDDD;
+}

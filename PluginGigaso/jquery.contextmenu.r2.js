@@ -111,7 +111,7 @@
     $.each(cur.bindings, function(id, func) {
       $('#'+id, menu).bind('click', function(e) {
         hide();
-        func(trigger, currentTarget);
+        func(trigger, this);
       });
     });
 

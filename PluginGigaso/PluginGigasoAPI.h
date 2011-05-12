@@ -40,7 +40,7 @@ public:
     FB::variant shell2_openas(const FB::variant& msg);
     FB::variant shell2_default(const FB::variant& msg);
     FB::variant shell2(const FB::variant& msg, const FB::variant& verb);
-
+	FB::variant copy_str(const FB::variant& msg);
     // Method test-event
     void testEvent(const FB::variant& s);
 

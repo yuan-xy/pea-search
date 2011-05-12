@@ -45,6 +45,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	registerMethod("shell2_openas",      make_method(this, &PluginGigasoAPI::shell2_openas));
 	registerMethod("shell2_default",      make_method(this, &PluginGigasoAPI::shell2_default));
 	registerMethod("shell2",      make_method(this, &PluginGigasoAPI::shell2));
+	registerMethod("copy_str",      make_method(this, &PluginGigasoAPI::copy_str));
 
     registerMethod("testEvent", make_method(this, &PluginGigasoAPI::testEvent));
 
@@ -131,7 +132,7 @@ static int shell_exec(const FB::variant& msg, const wchar_t *verb){
 	std::wstring s = msg.convert_cast<std::wstring>();
 	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
     HINSTANCE ret = ShellExecuteW(NULL,verb,s.c_str(),NULL,NULL,SW_SHOWNORMAL);
-	return (int)ret;
+	return (int)ret > 32;
 }
 
 static int shell2_exec(const FB::variant& msg, const wchar_t *verb){
@@ -190,4 +191,19 @@ FB::variant PluginGigasoAPI::shell2_default(const FB::variant& msg){
 FB::variant PluginGigasoAPI::shell2(const FB::variant& msg, const FB::variant& verb){
 	std::wstring s = verb.convert_cast<std::wstring>();
 	return shell2_exec(msg, s.c_str());
+}
+
+FB::variant PluginGigasoAPI::copy_str(const FB::variant& msg){
+	std::wstring s = msg.convert_cast<std::wstring>();
+	HGLOBAL hGlobal  = GlobalAlloc (GHND | GMEM_SHARE, (wcslen(s.c_str())+1)*sizeof(wchar_t));
+	LPVOID pGlobal = GlobalLock (hGlobal) ;
+	wcscpy ( (wchar_t *)pGlobal, s.c_str()) ;
+	GlobalUnlock (hGlobal) ;
+	if(OpenClipboard (NULL)){
+		EmptyClipboard () ;
+		SetClipboardData (CF_UNICODETEXT, hGlobal) ;
+		CloseClipboard () ;
+		return 1;
+	}
+	return 0;
 }

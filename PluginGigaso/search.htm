@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="jquery-1.6.min.js"></script>
 	<script type="text/javascript" src="jquery-jtemplates.js"></script>
     <script type="text/javascript" src="jquery.contextmenu.r2.js"></script>
+    <script type="text/javascript" src="jquery.corner.js"></script>
 </head>
 
 <body>
@@ -59,11 +60,14 @@
 		{#/for}
 </textarea> 
 
-  <div id="myMenu1" style="display: none; ">
+<div id="message-area" style="opacity: 0;">no message.</div> 
+
+  <div id="myMenu1" style="display:none;">
     <ul style="font-size:10pt">
       <li id="default"><img width="16" height="16" src="./images/win.png"> 打开</li>
       <li id="openas"><img width="16" height="16" src="./images/openas.ico"> 打开方式</li>
       <li id="explore"><img  width="16" height="16" src="./images/explore.ico"> 资源管理器</li>
+      <li id="copypath"><img  width="16" height="16" src="./images/explore.ico"> 复制全路径到剪贴板</li>
       <li id="edit"><img  width="16" height="16" src="./images/edit.ico"> 编辑</li>
       <li id="copy"><img  width="16" height="16" src="./images/copy.ico"> 复制</li>
       <li id="cut"><img  width="16" height="16" src="./images/cut.ico"> 剪切</li>
@@ -79,6 +83,13 @@
         }
 		function ieTrOver(){this.oldClassName=this.className;this.className="hovered"}
 		function ieTrOut(){this.className=this.oldClassName}
+		function info_or_error(ret,file, action){
+						if(ret){
+							show_info("执行成功! 文件:'"+file+"', 操作:'"+action+"'.");
+						}else{
+							show_error("执行失败! 文件:'"+file+"', 操作:'"+action+"'.");
+						}
+		}
 		function table_over(){
 				$("table tr:nth-child(even)").addClass("d");
 				if(window.ActiveXObject){
@@ -89,6 +100,7 @@
 				}
 				$("table tbody tr").contextMenu('myMenu1', {
 				  menuStyle: {
+					width : "150px"
 				  },
 				  itemStyle: {
 				  },
@@ -103,21 +115,21 @@
 				  },
 */
 				  bindings: {
-					  'default': function(t) {
+					  'default': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2_default(path+file);
-						if(!ret) alert(ret);
+						info_or_error(ret, path+file, menuitem.lastChild.data);
 					  },
-					  'openas': function(t) {
+					  'openas': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2_openas(path+file);
-						if(!ret) alert(ret);
+						info_or_error(ret, path+file, menuitem.lastChild.data);
 					  },
-					  'explore': function(t) {
+					  'explore': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
@@ -125,50 +137,59 @@
 						if(type=="dir") plugin0().shell_explore(path+file);
 						else  plugin0().shell_explore(path);
 					  },
-					  'edit': function(t) {
+					  'copypath': function(t,menuitem) {
+					    var tmp = $(t);
+						var file = tmp.find("td span")[0].innerHTML;
+						var path = tmp.find("td span")[1].innerHTML;
+						var ret = plugin0().copy_str(path+file);
+						info_or_error(ret, path+file, menuitem.lastChild.data);
+					  },
+					  'edit': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell_edit(path+file);
-						if(ret<33) alert(ret);
+						info_or_error(ret, path+file, menuitem.lastChild.data);
 					  },
-					  'copy': function(t) {
+					  'copy': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2(path+file, "copy");
-						if(!ret) alert(ret);
+						info_or_error(ret, path+file, menuitem.lastChild.data);
 					  },
-					  'cut': function(t) {
+					  'cut': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2(path+file, "cut");
-						if(!ret) alert(ret);
+						info_or_error(ret, path+file, menuitem.lastChild.data);
 					  },
-					  'paste': function(t) {
+					  'paste': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var type = tmp.find("td input")[0].value;
 						if(type=="dir"){
 							ret = plugin0().shell2(path+file, "paste");
-							if(!ret) alert(ret);
+							info_or_error(ret, path+file, menuitem.lastChild.data);
+						}else{
+							show_error("粘贴的目标必须是文件夹，不能是文件.");
 						}
 					  },
-					  'delete': function(t) {
+					  'delete': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2(path+file, "delete");
-						if(!ret) alert(ret);
+						info_or_error(ret, path+file, menuitem.lastChild.data);
 					  },
-					  'prop': function(t) {
+					  'prop': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2_prop(path+file);
-						if(!ret) alert(ret);
+						info_or_error(ret, path+file, menuitem.lastChild.data);
 					  }
 					}
 				  });
@@ -213,11 +234,30 @@
 				search_timeout = setTimeout(searchf0,150);
 			}else{
 				search_timeout = setTimeout(searchf0,50);
-			}        }
+			}        
+		}
+		function hide_message(){
+			$("#message-area").fadeTo(2500,0.0);
+		}
+        function show_error(msg){
+			$("#message-area").addClass("error");
+			$("#message-area").removeClass("info");
+			$("#message-area").html(msg);
+			$("#message-area").css("opacity", 1);
+			setTimeout(hide_message,3000);
+        }
+        function show_info(msg){
+			$("#message-area").addClass("info");
+			$("#message-area").removeClass("error");
+			$("#message-area").html(msg);
+			$("#message-area").css("opacity", 1);
+			setTimeout(hide_message,3000);
+        }
 		$(function() {
 			$("#search").focus();
 			$("#search").bind('keyup',function(event){searchf($("#search").val())});
 			$("#maintable thead tr th:first").append("<img src='images/s_asc.png' />");
+			$("#message-area").corner("bottom 3px");
 		});
     </script>
 

@@ -140,10 +140,10 @@ void deleteFile(pFileEntry file){
 	if(file->up.parent!=NULL){
 		delete_file_from_parent_vector(file,file->up.parent);
 	}
-	if(IsDir(file)){
-		pFileList children = (pFileList)file->children;
-		my_assert(children == NULL || children->size()==0, );
-	}
+	//if(IsDir(file)){
+	//	pFileList children = (pFileList)file->children;
+	//	my_assert(children == NULL || children->size()==0, );
+	//}
 	free_safe(file);
 	ALL_FILE_COUNT--;
 }
