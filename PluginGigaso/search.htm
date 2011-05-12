@@ -67,7 +67,7 @@
       <li id="default"><img width="16" height="16" src="./images/win.png"> 打开</li>
       <li id="openas"><img width="16" height="16" src="./images/openas.ico"> 打开方式</li>
       <li id="explore"><img  width="16" height="16" src="./images/explore.ico"> 资源管理器</li>
-      <li id="copypath"><img  width="16" height="16" src="./images/explore.ico"> 复制全路径到剪贴板</li>
+      <li id="copypath"><img  width="16" height="16" src="./images/copypath.ico"> 复制全路径到剪贴板</li>
       <li id="edit"><img  width="16" height="16" src="./images/edit.ico"> 编辑</li>
       <li id="copy"><img  width="16" height="16" src="./images/copy.ico"> 复制</li>
       <li id="cut"><img  width="16" height="16" src="./images/cut.ico"> 剪切</li>
@@ -85,9 +85,9 @@
 		function ieTrOut(){this.className=this.oldClassName}
 		function info_or_error(ret,file, action){
 						if(ret){
-							show_info("执行成功! 文件:'"+file+"', 操作:'"+action+"'.");
+							show_info("执行成功! &nbsp;&nbsp;"+action+'"'+file+'".');
 						}else{
-							show_error("执行失败! 文件:'"+file+"', 操作:'"+action+"'.");
+							show_error("执行失败! &nbsp;&nbsp;"+action+'"'+file+'".');
 						}
 		}
 		function table_over(){
@@ -120,22 +120,23 @@
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2_default(path+file);
-						info_or_error(ret, path+file, menuitem.lastChild.data);
+						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'openas': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2_openas(path+file);
-						info_or_error(ret, path+file, menuitem.lastChild.data);
+						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'explore': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var type = tmp.find("td input")[0].value;
-						if(type=="dir") plugin0().shell_explore(path+file);
-						else  plugin0().shell_explore(path);
+						if(type=="dir") ret = plugin0().shell_explore(path+file);
+						else  ret = plugin0().shell_explore(path);
+						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'copypath': function(t,menuitem) {
 					    var tmp = $(t);
@@ -149,21 +150,21 @@
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell_edit(path+file);
-						info_or_error(ret, path+file, menuitem.lastChild.data);
+						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'copy': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2(path+file, "copy");
-						info_or_error(ret, path+file, menuitem.lastChild.data);
+						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'cut': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2(path+file, "cut");
-						info_or_error(ret, path+file, menuitem.lastChild.data);
+						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'paste': function(t,menuitem) {
 					    var tmp = $(t);
@@ -172,7 +173,7 @@
 						var type = tmp.find("td input")[0].value;
 						if(type=="dir"){
 							ret = plugin0().shell2(path+file, "paste");
-							info_or_error(ret, path+file, menuitem.lastChild.data);
+							info_or_error(ret, file, menuitem.lastChild.data);
 						}else{
 							show_error("粘贴的目标必须是文件夹，不能是文件.");
 						}
@@ -182,14 +183,14 @@
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2(path+file, "delete");
-						info_or_error(ret, path+file, menuitem.lastChild.data);
+						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'prop': function(t,menuitem) {
 					    var tmp = $(t);
 						var file = tmp.find("td span")[0].innerHTML;
 						var path = tmp.find("td span")[1].innerHTML;
 						var ret = plugin0().shell2_prop(path+file);
-						info_or_error(ret, path+file, menuitem.lastChild.data);
+						info_or_error(ret, file, menuitem.lastChild.data);
 					  }
 					}
 				  });
