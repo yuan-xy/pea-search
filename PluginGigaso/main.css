@@ -1,5 +1,12 @@
 #search {padding:0px; margin:0px; height:30px; width:400px; font: 16px arial;}
-#search_img {padding:0px; margin:0px; height:16px; width:16px; position:Relative;top:8px;}
+#search_img {
+		width: 16px;
+		height: 16px;
+		position: absolute;
+		display: block;
+		right: 0;
+		bottom: 0;
+}
 
 .maintable { font-size:84%; line-height:1.5em; text-align:left; border-bottom:1px solid #888; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
 .maintable th, .maintable td { padding:0 .3em;}

@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="jquery-jtemplates.js"></script>
     <script type="text/javascript" src="jquery.contextmenu.r2.js"></script>
     <script type="text/javascript" src="jquery.corner.js"></script>
+    <script type="text/javascript" src="jquery-ui-1.8.12.custom.min.js"></script>
 </head>
 
 <body>
@@ -254,6 +255,12 @@
 			$("#message-area").corner("bottom 3px");
 			$(document).bind("contextmenu", function(e){
 				//return false;
+			});
+			$( "#search_img").position({
+				of: $( "#search" ),
+				my: "right top",
+				at: "right center",
+				offset: "0px"
 			});
 		});
     </script>
