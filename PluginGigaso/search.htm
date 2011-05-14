@@ -10,6 +10,8 @@
     <script type="text/javascript" src="jquery.contextmenu.r2.js"></script>
     <script type="text/javascript" src="jquery.corner.js"></script>
     <script type="text/javascript" src="jquery-ui-1.8.12.custom.min.js"></script>
+    <script type="text/javascript" src="message.js"></script>
+    <script type="text/javascript" src="context.js"></script>
 </head>
 
 <body>
@@ -24,7 +26,7 @@
 	<thead>
         <tr>
             <th style="width:33%" colid="0" nowrap>文件名</th>
-            <th style="width:50%" colid="1" nowrap>文件夹</th>
+            <th style="width:50%" colid="1">文件夹</th>
             <th style="width:5%" align="right" colid="2" nowrap>大小</th>
             <th style="width:12%" align="right" colid="3" nowrap>修改日期</th>
         </tr>
@@ -36,18 +38,18 @@
 <textarea id="template" style="display:none"> 
 		{#foreach $T as record}
         <tr>
-            <td colid="0">
+            <td colid="0" nowrap>
 				<img width="16" height="16" src="icons/{$T.record.type}.ico" />
 				<input type="hidden" value="{$T.record.type}">
-				<span>{$T.record.name}</span>
+				<span title="{$T.record.name2}">{$T.record.name}</span>
             </td>
             <td colid="1">
-				<span>{$T.record.path}</span>
+				<span title="{$T.record.path2}">{$T.record.path}</span>
             </td>
-            <td align="right" colid="2">
+            <td align="right" colid="2" nowrap>
 				<span>{$T.record.size}</span>
             </td>
-            <td align="right" colid="3">
+            <td align="right" colid="3" nowrap>
 				<span>{$T.record.time}</span>
             </td>
         </tr>
@@ -62,7 +64,6 @@
       <li id="openas"><img width="16" height="16" src="./images/openas.ico"> 打开方式</li>
       <li id="explore"><img  width="16" height="16" src="./images/explore.ico"> 资源管理器</li>
       <li id="copypath"><img  width="16" height="16" src="./images/copypath.ico"> 复制全路径到剪贴板</li>
-      <li id="edit"><img  width="16" height="16" src="./images/edit.ico"> 编辑</li>
       <li id="copy"><img  width="16" height="16" src="./images/copy.ico"> 复制</li>
       <li id="cut"><img  width="16" height="16" src="./images/cut.ico"> 剪切</li>
       <li id="paste"><img  width="16" height="16" src="./images/paste.ico"> 粘贴</li>
@@ -77,13 +78,6 @@
         }
 		function ieTrOver(){this.oldClassName=this.className;this.className="hovered"}
 		function ieTrOut(){this.className=this.oldClassName}
-		function info_or_error(ret,file, action){
-						if(ret){
-							show_info("执行成功! &nbsp;&nbsp;"+action+'"'+file+'".');
-						}else{
-							show_error("执行失败! &nbsp;&nbsp;"+action+'"'+file+'".');
-						}
-		}
 		function table_over(){
 				$("table tr:nth-child(even)").addClass("d");
 				if(window.ActiveXObject){
@@ -92,104 +86,12 @@
 						this.onmouseout = ieTrOut;
 					});
 				}
-				$("#maintable tbody tr").contextMenu('myMenu1', {
-				  menuStyle: {
-					width : "150px"
-				  },
-				  itemStyle: {
-				  },
-				  itemHoverStyle: {
-				  },
-/* 
-				  onShowMenu: function(e, menu) {
-					if ($(e.target).parents().find("input")[0].value != 'dir') { //性能有问题
-					  $('#paste', menu).remove();
-					}
-					return menu;
-				  },
-*/
-				  bindings: {
-					  'default': function(t,menuitem) {
-					    var tmp = $(t);
-						var file = tmp.find("td span")[0].innerHTML;
-						var path = tmp.find("td span")[1].innerHTML;
-						var ret = plugin0().shell2_default(path+file);
-						info_or_error(ret, file, menuitem.lastChild.data);
-					  },
-					  'openas': function(t,menuitem) {
-					    var tmp = $(t);
-						var file = tmp.find("td span")[0].innerHTML;
-						var path = tmp.find("td span")[1].innerHTML;
-						var ret = plugin0().shell2_openas(path+file);
-						info_or_error(ret, file, menuitem.lastChild.data);
-					  },
-					  'explore': function(t,menuitem) {
-					    var tmp = $(t);
-						var file = tmp.find("td span")[0].innerHTML;
-						var path = tmp.find("td span")[1].innerHTML;
-						var type = tmp.find("td input")[0].value;
-						if(type=="dir") ret = plugin0().shell_explore(path+file);
-						else  ret = plugin0().shell_explore(path);
-						info_or_error(ret, file, menuitem.lastChild.data);
-					  },
-					  'copypath': function(t,menuitem) {
-					    var tmp = $(t);
-						var file = tmp.find("td span")[0].innerHTML;
-						var path = tmp.find("td span")[1].innerHTML;
-						var ret = plugin0().copy_str(path+file);
-						info_or_error(ret, path+file, menuitem.lastChild.data);
-					  },
-					  'edit': function(t,menuitem) {
-					    var tmp = $(t);
-						var file = tmp.find("td span")[0].innerHTML;
-						var path = tmp.find("td span")[1].innerHTML;
-						var ret = plugin0().shell_edit(path+file);
-						info_or_error(ret, file, menuitem.lastChild.data);
-					  },
-					  'copy': function(t,menuitem) {
-					    var tmp = $(t);
-						var file = tmp.find("td span")[0].innerHTML;
-						var path = tmp.find("td span")[1].innerHTML;
-						var ret = plugin0().shell2(path+file, "copy");
-						info_or_error(ret, file, menuitem.lastChild.data);
-					  },
-					  'cut': function(t,menuitem) {
-					    var tmp = $(t);
-						var file = tmp.find("td span")[0].innerHTML;
-						var path = tmp.find("td span")[1].innerHTML;
-						var ret = plugin0().shell2(path+file, "cut");
-						info_or_error(ret, file, menuitem.lastChild.data);
-					  },
-					  'paste': function(t,menuitem) {
-					    var tmp = $(t);
-						var file = tmp.find("td span")[0].innerHTML;
-						var path = tmp.find("td span")[1].innerHTML;
-						var type = tmp.find("td input")[0].value;
-						if(type=="dir"){
-							ret = plugin0().shell2(path+file, "paste");
-							info_or_error(ret, file, menuitem.lastChild.data);
-						}else{
-							show_error("粘贴的目标必须是文件夹，不能是文件.");
-						}
-					  },
-					  'delete': function(t,menuitem) {
-					    var tmp = $(t);
-						var file = tmp.find("td span")[0].innerHTML;
-						var path = tmp.find("td span")[1].innerHTML;
-						var ret = plugin0().shell2(path+file, "delete");
-						info_or_error(ret, file, menuitem.lastChild.data);
-					  },
-					  'prop': function(t,menuitem) {
-					    var tmp = $(t);
-						var file = tmp.find("td span")[0].innerHTML;
-						var path = tmp.find("td span")[1].innerHTML;
-						var ret = plugin0().shell2_prop(path+file);
-						info_or_error(ret, file, menuitem.lastChild.data);
-					  }
-					}
-				  });
+				$("#maintable tbody tr").contextMenu('myMenu1', context_menu_obj);
 		  }
+    </script>
+    <script type="text/javascript">
 		var last_search;
+		var files = [];
 		var page_timeout;
 		var search_timeout;
         function searchf(value){
@@ -197,7 +99,6 @@
 			clearTimeout(page_timeout);
 			clearTimeout(search_timeout);
 			var pagerow = 50;
-			var files = [];
 			var first = true;
 			$("#result1").setTemplateElement("template");
 			function page(){
@@ -212,6 +113,8 @@
 				if(files.length>pagerow){
 					files = files.slice(pagerow,files.length);
 					page_timeout = setTimeout(page,100);
+				}else{
+					show_info("分页完成");
 				}
 				table_over();
 			}
@@ -219,6 +122,16 @@
 				var s = plugin0().search(value);
 				if($("#search").val()!=value) return; //查询已过期
 				files = eval(s);
+				$(files).each( function sub(i,obj){
+					if(obj.name.length>36){
+						obj.name2 = obj.name;
+						obj.name = obj.name2.substring(0, 16)+"..."+obj.name2.substring(obj.name2.length-17, obj.name2.length);
+					}
+					if(obj.path.length>55){
+						obj.path2 = obj.path;
+						obj.path = obj.path2.substring(0, 26)+"..."+obj.path2.substring(obj.path2.length-26, obj.path2.length);
+					}
+				});
 				if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
 				page();
 				last_search = value;
@@ -231,23 +144,6 @@
 				search_timeout = setTimeout(searchf0,50);
 			}        
 		}
-		function hide_message(){
-			$("#message-area").fadeTo(2500,0.0);
-		}
-        function show_error(msg){
-			$("#message-area").addClass("error");
-			$("#message-area").removeClass("info");
-			$("#message-area").html(msg);
-			$("#message-area").css("opacity", 1);
-			setTimeout(hide_message,3000);
-        }
-        function show_info(msg){
-			$("#message-area").addClass("info");
-			$("#message-area").removeClass("error");
-			$("#message-area").html(msg);
-			$("#message-area").css("opacity", 1);
-			setTimeout(hide_message,3000);
-        }
 		$(function() {
 			$("#search").focus();
 			$("#search").bind('keyup',function(event){searchf($("#search").val())});
