@@ -12,6 +12,7 @@
     <script type="text/javascript" src="jquery-ui-1.8.12.custom.min.js"></script>
     <script type="text/javascript" src="message.js"></script>
     <script type="text/javascript" src="context.js"></script>
+    <script type="text/javascript" src="scroll.js"></script>
 </head>
 
 <body>
@@ -88,32 +89,37 @@
 				}
 				$("#maintable tbody tr").contextMenu('myMenu1', context_menu_obj);
 		  }
-    </script>
+</script>
     <script type="text/javascript">
 		var last_search;
 		var files = [];
-		var page_timeout;
 		var search_timeout;
         function searchf(value){
 			if(last_search == value) return;
-			clearTimeout(page_timeout);
 			clearTimeout(search_timeout);
-			var pagerow = 50;
+			var pagerow = 200;
+			var page_from = 0;
 			var first = true;
 			$("#result1").setTemplateElement("template");
+
+			$(window).bind('scroll',function(e){
+				if(files.length > page_from){
+					show_info(page_from);
+					if(reachBottom()) page();
+				}
+			});
+
 			function page(){
+				var to = page_from + pagerow;
 				if($("#search").val()!=value) return; //查询已过期
-				if(first){
-					$("#result1").processTemplate(files.slice(0,pagerow));
-					first = false;
-				}
-				else{
-					$("#result1").processTemplateAppend(files.slice(0,pagerow));
-				}
-				if(files.length>pagerow){
-					files = files.slice(pagerow,files.length);
-					page_timeout = setTimeout(page,100);
+				if(page_from==0){
+					$("#result1").processTemplate(files.slice(page_from,to));
 				}else{
+					if(files.length<=page_from) return;
+					$("#result1").processTemplateAppend(files.slice(page_from,to));
+				}
+				page_from=to;
+				if(files.length<=to){
 					show_info("分页完成");
 				}
 				table_over();
