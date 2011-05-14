@@ -40,3 +40,8 @@ background-color: #FFF1A8;
 .error {
 background-color: #FFDDDD;
 }
+
+.highlight-match {
+	font-weight: bold;
+	background-color: #FFF8DC;
+}

@@ -1,10 +1,10 @@
 function get_file_path(tr){
-					    var tmp = $(tr).find("td span");
-						file = tmp[0].title;
-						if(file=="") file = tmp[0].innerHTML;
-						path = tmp[1].title;
-						if(path=="") path = tmp[1].innerHTML;
-						type = $(tr).find("td input")[0].value;
+						var inputs = $(tr).find("td input");
+						type = inputs[0].value;
+						file = $(tr).find("td[colid=0] span")[0].title;
+						if(file=="") file = inputs[1].value;
+						path = $(tr).find("td[colid=1] span")[0].title;
+						if(path=="") path = inputs[2].value;
 				}
 
 var context_menu_obj = {

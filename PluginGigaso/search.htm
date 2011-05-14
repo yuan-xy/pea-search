@@ -42,6 +42,8 @@
             <td colid="0" nowrap>
 				<img width="16" height="16" src="icons/{$T.record.type}.ico" />
 				<input type="hidden" value="{$T.record.type}">
+				<input type="hidden" value="{$T.record.name}">
+				<input type="hidden" value="{$T.record.path}">
 				<span title="{$T.record.name2}">{$T.record.name}</span>
             </td>
             <td colid="1">
@@ -80,7 +82,7 @@
 		function ieTrOver(){this.oldClassName=this.className;this.className="hovered"}
 		function ieTrOut(){this.className=this.oldClassName}
 		function table_over(){
-				$("table tr:nth-child(even)").addClass("d");
+				$("#maintable tr:nth-child(even)").addClass("d");
 				if(window.ActiveXObject){
 					$('tr').each(function(n){
 						this.onmouseover = ieTrOver;
@@ -88,15 +90,28 @@
 					});
 				}
 				$("#maintable tbody tr").contextMenu('myMenu1', context_menu_obj);
+				highlight_timeout = setTimeout(highlight,0);
+		  }
+		  function highlight(){
+				$("#maintable tbody td[colid=0] span").each(function(i,o){
+					var html = o.innerHTML;
+					var fi = html.toLowerCase().indexOf($("#search").val().toLowerCase());
+					if(fi==-1) return;
+					o.innerHTML = html.substring(0, fi) + 
+						"<span class='highlight-match'>"+html.substring(fi, fi+$("#search").val().length)+"</span>" + 
+						html.substring(fi+$("#search").val().length, html.length);
+				});
 		  }
 </script>
     <script type="text/javascript">
 		var last_search;
 		var files = [];
 		var search_timeout;
+		var highlight_timeout;
         function searchf(value){
 			if(last_search == value) return;
 			clearTimeout(search_timeout);
+			clearTimeout(highlight_timeout);
 			var pagerow = 200;
 			var page_from = 0;
 			var first = true;
@@ -133,9 +148,9 @@
 						obj.name2 = obj.name;
 						obj.name = obj.name2.substring(0, 16)+"..."+obj.name2.substring(obj.name2.length-17, obj.name2.length);
 					}
-					if(obj.path.length>55){
+					if(obj.path.length>63){
 						obj.path2 = obj.path;
-						obj.path = obj.path2.substring(0, 26)+"..."+obj.path2.substring(obj.path2.length-26, obj.path2.length);
+						obj.path = obj.path2.substring(0, 30)+"..."+obj.path2.substring(obj.path2.length-30, obj.path2.length);
 					}
 				});
 				if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
