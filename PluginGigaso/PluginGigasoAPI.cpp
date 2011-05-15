@@ -55,7 +55,14 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
                      make_property(this,
                         &PluginGigasoAPI::get_order,
                         &PluginGigasoAPI::set_order));
-
+    registerProperty("file_type",
+                     make_property(this,
+                        &PluginGigasoAPI::get_file_type,
+                        &PluginGigasoAPI::set_file_type));
+    registerProperty("case",
+                     make_property(this,
+                        &PluginGigasoAPI::get_case,
+                        &PluginGigasoAPI::set_case));
     // Read-only property
     registerProperty("version",
                      make_property(this,
@@ -65,6 +72,8 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
     registerEvent("onfired");    
 	connect_named_pipe(&hNamedPipe);
 	m_order=0;
+	m_case=0;
+	m_file_type=0;
 }
 
 PluginGigasoAPI::~PluginGigasoAPI(){
@@ -85,6 +94,18 @@ int PluginGigasoAPI::get_order(){
 void PluginGigasoAPI::set_order(int val){
     m_order = val;
 }
+int PluginGigasoAPI::get_file_type(){
+    return m_file_type;
+}
+void PluginGigasoAPI::set_file_type(int val){
+    m_file_type = val;
+}
+bool PluginGigasoAPI::get_case(){
+    return m_case;
+}
+void PluginGigasoAPI::set_case(bool val){
+    m_case = val;
+}
 
 // Read-only property version
 std::string PluginGigasoAPI::get_version()
@@ -102,6 +123,8 @@ FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 	req.from = 0;
 	req.rows = MAX_ROW;
 	req.env.order = m_order;
+	req.env.case_sensitive = m_case;
+	req.env.file_type = m_file_type;
 	std::wstring s = msg.convert_cast<std::wstring>();
 	wcscpy(req.str,s.c_str());
 	if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {

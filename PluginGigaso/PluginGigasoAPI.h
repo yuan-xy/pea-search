@@ -25,6 +25,12 @@ public:
     int get_order();
     void set_order(int val);
 
+	int get_file_type();
+    void set_file_type(int val);
+
+	bool get_case();
+    void set_case(bool val);
+
     // Read-only property ${PROPERTY.ident}
     std::string get_version();
 
@@ -48,6 +54,8 @@ private:
     FB::BrowserHostPtr m_host;
 
     int m_order;
+	int m_file_type;
+	bool m_case;
 };
 
 #endif // H_PluginGigasoAPI

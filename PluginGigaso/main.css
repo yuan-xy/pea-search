@@ -1,3 +1,5 @@
+body {font-size:12px}
+
 #search {padding:0px; margin:0px; height:30px; width:400px; font: 16px arial;}
 #search_img {
 		width: 16px;
@@ -8,7 +10,7 @@
 		bottom: 0;
 }
 
-#maintable { font-size:84%; line-height:1.5em; text-align:left; border-bottom:1px solid #888; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
+#maintable {font-size:84%; line-height:1.5em; text-align:left; border-bottom:1px solid #888; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
 #maintable th, #maintable td { padding:0 .3em; white-space:nowrap;}
 #maintable th { line-height:1.8em; background-color:#ECE9D8; border:1px solid #888;
 	background-image: url(./images/header.png);
@@ -16,6 +18,7 @@
 }
 #maintable th:hover{
 	background-image: url(./images/header-hover.png);
+	border-bottom: 2px solid #FF9C08;
 }
 #maintable tr.d { background-color:#F4F4F4; }
 #maintable tr.d:hover, #maintable tr:hover, #maintable tr.hovered { background-color:#D0D8E0; }
@@ -66,4 +69,8 @@ background-color: #FFDDDD;
    -o-user-select: none;
    user-select: none;
    cursor: default;
+}
+
+.icon {
+	width:16px; height:16px; border:0;
 }

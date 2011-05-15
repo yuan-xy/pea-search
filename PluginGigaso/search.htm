@@ -10,6 +10,7 @@
     <script type="text/javascript" src="jquery.contextmenu.r2.js"></script>
     <script type="text/javascript" src="jquery.corner.js"></script>
     <script type="text/javascript" src="jquery-ui-1.8.12.custom.min.js"></script>
+	<link type="text/css" href="jquery-ui-1.8.12.custom.css" rel="stylesheet" />	
     <script type="text/javascript" src="message.js"></script>
     <script type="text/javascript" src="context.js"></script>
     <script type="text/javascript" src="scroll.js"></script>
@@ -23,18 +24,33 @@
 搜索：<input id="search" name="s" type="text" size="35" value="" title="查询条件"><img id="search_img" src="images/find.ico"/>
 </center>
 
-<table id="maintable" width="100%" cellspacing="0">
-	<thead>
-        <tr unselectable="on" class="unselectable">
-            <th style="width:33%" colid="0">文件名<span id="orderspan0"></span></th>
-            <th style="width:50%" colid="1">文件夹<span id="orderspan1"></span></th>
-            <th style="width:5%" align="right" colid="2">大小<span id="orderspan2"></span></th>
-            <th style="width:12%" align="right" colid="3">修改日期<span id="orderspan3"></span></th>
-        </tr>
-	</thead>
-	<tbody id="result1"> 
-	</tbody> 
-</table>
+
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tab-1" onclick="file_type_search(0);return true;"><img src="icons/unknown.ico" class="icon"/>全部(<span id="filetype0">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(2);return true;"><img src="icons/dir.ico" class="icon"/>文件夹(<span id="filetype0">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(129);return true;"><img src="icons/zip.ico" class="icon"/>压缩文件(<span id="filetype0">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(130);return true;"><img src="icons/exe.ico" class="icon"/>程序(<span id="filetype0">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(131);return true;"><img src="icons/vedio.ico" class="icon"/>多媒体(<span id="filetype0">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(132);return true;"><img src="icons/txt.ico" class="icon"/>文档(<span id="filetype0">0</span>)</a></li>
+	</ul>
+	<div id="tab-1">
+		<table id="maintable" width="100%" cellspacing="0">
+			<thead>
+				<tr unselectable="on" class="unselectable">
+					<th style="width:33%" colid="0">文件名<span id="orderspan0"></span></th>
+					<th style="width:50%" colid="1">文件夹<span id="orderspan1"></span></th>
+					<th style="width:5%" align="right" colid="2">大小<span id="orderspan2"></span></th>
+					<th style="width:12%" align="right" colid="3">修改日期<span id="orderspan3"></span></th>
+				</tr>
+			</thead>
+			<tbody id="result1"> 
+			</tbody> 
+		</table>
+	</div>
+</div>
+
 
 <textarea id="template" style="display:none"> 
 		{#foreach $T as record}
@@ -94,7 +110,7 @@
 				}
 				$("#maintable tbody tr").contextMenu('myMenu1', context_menu_obj);
 				$("#maintable tbody td[colid=0]").bind('dblclick',function(e){
-					dblclick_file(e.target);
+					dblclick_file(e.currentTarget);
 				});
 				$("#maintable tbody td[colid=1]").bind('dblclick',function(e){
 					dblclick_path(e.currentTarget);
@@ -188,6 +204,12 @@
 				search_timeout = setTimeout(searchf0,0);
 			}
 		}
+		function file_type_search(ft){
+			plugin.file_type=ft;
+			if($("#search").val()=="") return;
+			clearTimeout(search_timeout);
+			search_timeout = setTimeout(searchf0,0);
+		}
 		$(function() {
 			$("#search").focus();
 			$("#search").bind('keyup',function(event){searchf($("#search").val())});
@@ -211,6 +233,7 @@
 					if(reachBottom()) page();
 				}
 			});
+			$('#tabs').tabs();
 			$( "#search_img").position({
 				of: $( "#search" ),
 				my: "right top",
