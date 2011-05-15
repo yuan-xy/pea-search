@@ -132,10 +132,11 @@ static void send_response(HANDLE hNamedPipe, pSearchRequest req, pFileEntry *res
 	pFileEntry *start = result+req->from;
 	int i;
 	*p++ = '[';
-	for(i=0;i<req->len && i<count;i++){
+	for(i=0;i<req->rows && i<count;i++){
 		pFileEntry file = *(start+i);
 		p = write_file(p,file);
 		*p++ = ',';
+		if((p-p1)>MAX_RESPONSE_LEN-100) break; //prevent buffer overflow
 	}
 	if(*(p-1)==',') p--;
 	*p++ = ']';

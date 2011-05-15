@@ -35,6 +35,7 @@ static BOOL connect_named_pipe(HANDLE *p){
 PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr& host) : m_plugin(plugin), m_host(host)
 {
     registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
+
     registerMethod("shell_open",      make_method(this, &PluginGigasoAPI::shell_open));
 	registerMethod("shell_edit",      make_method(this, &PluginGigasoAPI::shell_edit));
 	registerMethod("shell_explore",      make_method(this, &PluginGigasoAPI::shell_explore));
@@ -50,10 +51,10 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
     registerMethod("testEvent", make_method(this, &PluginGigasoAPI::testEvent));
 
     // Read-write property
-    registerProperty("testString",
+    registerProperty("order",
                      make_property(this,
-                        &PluginGigasoAPI::get_testString,
-                        &PluginGigasoAPI::set_testString));
+                        &PluginGigasoAPI::get_order,
+                        &PluginGigasoAPI::set_order));
 
     // Read-only property
     registerProperty("version",
@@ -63,6 +64,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
     
     registerEvent("onfired");    
 	connect_named_pipe(&hNamedPipe);
+	m_order=0;
 }
 
 PluginGigasoAPI::~PluginGigasoAPI(){
@@ -77,16 +79,11 @@ PluginGigasoPtr PluginGigasoAPI::getPlugin(){
     return plugin;
 }
 
-
-
-// Read/Write property testString
-std::string PluginGigasoAPI::get_testString()
-{
-    return m_testString;
+int PluginGigasoAPI::get_order(){
+    return m_order;
 }
-void PluginGigasoAPI::set_testString(const std::string& val)
-{
-    m_testString = val;
+void PluginGigasoAPI::set_order(int val){
+    m_order = val;
 }
 
 // Read-only property version
@@ -95,13 +92,16 @@ std::string PluginGigasoAPI::get_version()
     return "CURRENT_VERSION";
 }
 
+static int MAX_ROW = 1000;
+
 FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 	SearchRequest req;
 	SearchResponse resp;
 	DWORD nRead, nWrite;
 	memset(&req,0,sizeof(SearchRequest));
 	req.from = 0;
-	req.len = 1000;
+	req.rows = MAX_ROW;
+	req.env.order = m_order;
 	std::wstring s = msg.convert_cast<std::wstring>();
 	wcscpy(req.str,s.c_str());
 	if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
@@ -119,7 +119,6 @@ FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 		FB::variant var(ret);
 		return var;
 	}
-
 	return msg;
 }
 

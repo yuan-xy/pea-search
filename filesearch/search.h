@@ -16,6 +16,9 @@ extern "C" {
 * @param result 返回的所有文件的列表的地址
 */
 extern DWORD search(WCHAR *str, pSearchEnv env,OUT pFileEntry **result);
+extern void free_search();
+
+
 /**
 * 根据文件名查找到对应的pFileEntry。非精确路径匹配，支持部分模糊查询。
 * @param name 待查找文件的全路径名

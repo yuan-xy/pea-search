@@ -632,6 +632,7 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 		preProcessSearchOpt(sOpt);
 		preProcessPinyin(sOpt);
 		list = (pFileEntry *)malloc_safe(sizeof(pFileEntry)*ALL_FILE_COUNT);
+		//TODO: 何时释放内存
 		*result = list;
 		if(dir != NULL){
 			FilesIterate(dir,FileSearchVisitor,sOpt);
@@ -646,4 +647,8 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 		printf("all: %d, matched:%d\n",count,matched);
 		return matched;
 	}
+}
+
+void free_search(){
+	free_safe(list);
 }

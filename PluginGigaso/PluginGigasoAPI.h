@@ -22,9 +22,8 @@ public:
 
     PluginGigasoPtr getPlugin();
 
-    // Read/Write property ${PROPERTY.ident}
-    std::string get_testString();
-    void set_testString(const std::string& val);
+    int get_order();
+    void set_order(int val);
 
     // Read-only property ${PROPERTY.ident}
     std::string get_version();
@@ -48,7 +47,7 @@ private:
     PluginGigasoWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
 
-    std::string m_testString;
+    int m_order;
 };
 
 #endif // H_PluginGigasoAPI

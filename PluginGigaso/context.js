@@ -26,39 +26,39 @@ var context_menu_obj = {
 				  bindings: {
 					  'default': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = plugin0().shell2_default(path+file);
+						var ret = document.getElementById('plugin0').shell2_default(path+file);
 						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'openas': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = plugin0().shell2_openas(path+file);
+						var ret = document.getElementById('plugin0').shell2_openas(path+file);
 						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'explore': function(t,menuitem) {
 					    get_file_path(t);
-						if(type=="dir") ret = plugin0().shell_explore(path+file);
-						else  ret = plugin0().shell_explore(path);
+						if(type=="dir") ret = document.getElementById('plugin0').shell_explore(path+file);
+						else  ret = document.getElementById('plugin0').shell_explore(path);
 						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'copypath': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = plugin0().copy_str(path+file);
+						var ret = document.getElementById('plugin0').copy_str(path+file);
 						info_or_error(ret, path+file, menuitem.lastChild.data);
 					  },
 					  'copy': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = plugin0().shell2(path+file, "copy");
+						var ret = document.getElementById('plugin0').shell2(path+file, "copy");
 						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'cut': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = plugin0().shell2(path+file, "cut");
+						var ret = document.getElementById('plugin0').shell2(path+file, "cut");
 						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'paste': function(t,menuitem) {
 					    get_file_path(t);
 						if(type=="dir"){
-							ret = plugin0().shell2(path+file, "paste");
+							ret = document.getElementById('plugin0').shell2(path+file, "paste");
 							info_or_error(ret, file, menuitem.lastChild.data);
 						}else{
 							show_error("粘贴的目标必须是文件夹，不能是文件.");
@@ -66,12 +66,12 @@ var context_menu_obj = {
 					  },
 					  'delete': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = plugin0().shell2(path+file, "delete");
+						var ret = document.getElementById('plugin0').shell2(path+file, "delete");
 						info_or_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'prop': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = plugin0().shell2_prop(path+file);
+						var ret = document.getElementById('plugin0').shell2_prop(path+file);
 						info_or_error(ret, file, menuitem.lastChild.data);
 					  }
 					}

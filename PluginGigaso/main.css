@@ -8,15 +8,18 @@
 		bottom: 0;
 }
 
-.maintable { font-size:84%; line-height:1.5em; text-align:left; border-bottom:1px solid #888; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
-.maintable th, .maintable td { padding:0 .3em;}
-.maintable th { line-height:1.8em; background-color:#ECE9D8; border:1px solid #888;
+#maintable { font-size:84%; line-height:1.5em; text-align:left; border-bottom:1px solid #888; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
+#maintable th, #maintable td { padding:0 .3em; white-space:nowrap;}
+#maintable th { line-height:1.8em; background-color:#ECE9D8; border:1px solid #888;
 	background-image: url(./images/header.png);
 	background-repeat: repeat-x;
 }
-.maintable tr.d { background-color:#F4F4F4; }
-.maintable tr.d:hover, .maintable tr:hover, .maintable tr.hovered { background-color:#D0D8E0; }
-.maintable td { border-left:1px solid #888; border-right:1px solid #888; }
+#maintable th:hover{
+	background-image: url(./images/header-hover.png);
+}
+#maintable tr.d { background-color:#F4F4F4; }
+#maintable tr.d:hover, #maintable tr:hover, #maintable tr.hovered { background-color:#D0D8E0; }
+#maintable td { border-left:1px solid #888; border-right:1px solid #888; }
 
 #message-area {
 	font-size: 12px;
@@ -44,4 +47,11 @@ background-color: #FFDDDD;
 .highlight-match {
 	font-weight: bold;
 	background-color: #FFF8DC;
+}
+
+.order_asc {
+	background-image: url(./images/s_asc.png);
+}
+.order_desc {
+	background-image: url(./images/s_desc.png);
 }
