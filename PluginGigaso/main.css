@@ -21,6 +21,9 @@
 #maintable tr.d:hover, #maintable tr:hover, #maintable tr.hovered { background-color:#D0D8E0; }
 #maintable td { border-left:1px solid #888; border-right:1px solid #888; }
 
+#maintable td:hover, #maintable td.hovered { background-color:#c0c8d0; }
+
+
 #message-area {
 	font-size: 12px;
 	font-family: Arial,sans-serif;
@@ -54,4 +57,13 @@ background-color: #FFDDDD;
 }
 .order_desc {
 	background-image: url(./images/s_desc.png);
+}
+
+.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -o-user-select: none;
+   user-select: none;
+   cursor: default;
 }
