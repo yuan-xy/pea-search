@@ -35,6 +35,7 @@ static BOOL connect_named_pipe(HANDLE *p){
 PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr& host) : m_plugin(plugin), m_host(host)
 {
     registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
+    registerMethod("stat",      make_method(this, &PluginGigasoAPI::stat));
 
     registerMethod("shell_open",      make_method(this, &PluginGigasoAPI::shell_open));
 	registerMethod("shell_edit",      make_method(this, &PluginGigasoAPI::shell_edit));
@@ -122,6 +123,36 @@ FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 	memset(&req,0,sizeof(SearchRequest));
 	req.from = 0;
 	req.rows = MAX_ROW;
+	req.env.order = m_order;
+	req.env.case_sensitive = m_case;
+	req.env.file_type = m_file_type;
+	std::wstring s = msg.convert_cast<std::wstring>();
+	wcscpy(req.str,s.c_str());
+	if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
+		WIN_ERROR;
+		return "error";
+	}
+	if(ReadFile(hNamedPipe, &resp, sizeof(int), &nRead, NULL)  && resp.len>0){
+		char buffer[MAX_RESPONSE_LEN];
+		printf("%d,", resp.len);
+		ReadFile(hNamedPipe, buffer, resp.len, &nRead, NULL);
+		if(nRead!=resp.len){
+			return "error";
+		}
+		std::string ret(buffer,resp.len) ;
+		FB::variant var(ret);
+		return var;
+	}
+	return msg;
+}
+
+FB::variant PluginGigasoAPI::stat(const FB::variant& msg){
+	SearchRequest req;
+	SearchResponse resp;
+	DWORD nRead, nWrite;
+	memset(&req,0,sizeof(SearchRequest));
+	req.from = 0;
+	req.rows = -1;
 	req.env.order = m_order;
 	req.env.case_sensitive = m_case;
 	req.env.file_type = m_file_type;

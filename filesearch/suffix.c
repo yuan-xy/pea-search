@@ -164,6 +164,7 @@ BOOL include_type(unsigned char clazz, unsigned char file_type){
 		case SFV_PROGRAM: return IS_PROGRAM(file_type);
 		case SFV_TEXT: return IS_TEXT(file_type);
 		case SFV_MEDIA: return IS_MEDIA(file_type);
+		case SFV_OTHER: return IS_OTHER(file_type);
 		default:		return clazz==file_type;
 	}
 }
@@ -197,7 +198,7 @@ find_dot:
 int print_suffix_type(pFileEntry file, char *buffer){
 	unsigned char clazz = file->ut.v.suffixType;
 	switch(clazz){
-		case SF_NONE: 			strcpy(buffer,"unknown");return 7;
+		case SF_NONE: 			strcpy(buffer,"none");return 4;
 		case SF_UNKNOWN: 		strcpy(buffer,"unknown");return 7;
 		case SF_DIR	: 		strcpy(buffer,"dir");return 3;
 		case SF_DISK	: 		strcpy(buffer,"disk");return 4;
@@ -223,6 +224,39 @@ int print_suffix_type(pFileEntry file, char *buffer){
 		case SF_TXT	: 		strcpy(buffer,"txt");return 3;
 		case SF_SOURCE : 		strcpy(buffer,"source");return 6;
 		case SF_OTHER_TEXT : 		strcpy(buffer,"other_text");return 10;
+		default:		strcpy(buffer,"unknown");return 7;
+	}
+	return 0;
+}
+
+int print_suffix_type2(int index, char *buffer){
+	switch(index){
+		case 0: 	strcpy(buffer,"none");return 4;
+		case 1: 	strcpy(buffer,"unknown");return 7;
+		case 2: 	strcpy(buffer,"dir");return 3;
+		case 3: 	strcpy(buffer,"disk");return 4;
+		case 4: 	strcpy(buffer,"zip");return 3;
+		case 5: 	strcpy(buffer,"rar");return 3;
+		case 6: 	strcpy(buffer,"other_zip");return 9;
+		case 7: 	strcpy(buffer,"exe");return 3;
+		case 8: 	strcpy(buffer,"lnk");return 3;
+		case 9: 	strcpy(buffer,"script");return 6;
+		case 10:	strcpy(buffer,"lib");return 3;
+		case 11:	strcpy(buffer,"music");return 5;
+		case 12:	strcpy(buffer,"photo");return 5;
+		case 13:	strcpy(buffer,"vedio");return 5;
+		case 14:	strcpy(buffer,"animation");return 9;
+		case 15:	strcpy(buffer,"word");return 4;
+		case 16:	strcpy(buffer,"excel");return 5;
+		case 17:	strcpy(buffer,"ppt");return 3;
+		case 18:	strcpy(buffer,"other_office");return 12;
+		case 19:	strcpy(buffer,"pdf");return 3;
+		case 20:	strcpy(buffer,"chm");return 3;
+		case 21:	strcpy(buffer,"other_ebook");return 11;
+		case 22:	strcpy(buffer,"htm");return 3;
+		case 23:	strcpy(buffer,"txt");return 3;
+		case 24:	strcpy(buffer,"source");return 6;
+		case 25:	strcpy(buffer,"other_text");return 10;
 		default:		strcpy(buffer,"unknown");return 7;
 	}
 	return 0;

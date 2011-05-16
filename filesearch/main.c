@@ -132,6 +132,11 @@ BOOL gigaso_destory(){
 	return 1;
 }
 
+static void print_all_stat(WCHAR *str){
+	char buffer[1024];
+	print_stat(stat(str,NULL),buffer);
+	printf("%s\n",buffer);
+}
 
 int main(){
 	setlocale (LC_ALL, "");
@@ -141,6 +146,7 @@ int main(){
 		return 3;
 	}
 	gigaso_init();
+	printf(" \nstat *, time:%d\n",time_passed_p1(print_all_stat, L"*"));
 	if(start_named_pipe()){
 		wait_stop_named_pipe();
 	}

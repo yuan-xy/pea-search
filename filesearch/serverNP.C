@@ -127,7 +127,7 @@ static char * write_file(char *buffer, pFileEntry file){
 }
 
 
-static void send_response(HANDLE hNamedPipe, pSearchRequest req, pFileEntry *result, int count){
+static void send_response_search(HANDLE hNamedPipe, pSearchRequest req, pFileEntry *result, int count){
 	char buffer[MAX_RESPONSE_LEN], *p1=buffer+sizeof(int), *p=p1;
 	pFileEntry *start = result+req->from;
 	int i;
@@ -140,6 +140,18 @@ static void send_response(HANDLE hNamedPipe, pSearchRequest req, pFileEntry *res
 	}
 	if(*(p-1)==',') p--;
 	*p++ = ']';
+	{
+		DWORD nXfer;
+		pSearchResponse resp = (pSearchResponse)buffer;
+		resp->len = (p-p1);
+		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+	}
+}
+
+static void send_response_stat(HANDLE hNamedPipe, pSearchRequest req){
+	char buffer[4096], *p1=buffer+sizeof(int), *p=p1;
+	int *stats = stat(req->str, &(req->env) );
+	p += print_stat(stats,p);
 	{
 		DWORD nXfer;
 		pSearchResponse resp = (pSearchResponse)buffer;
@@ -163,10 +175,14 @@ static unsigned int WINAPI Server (void *pArg) {
 		if (ShutDown) continue;
 		CloseHandle (hConTh); hConTh = NULL;
 		while (!ShutDown && ReadFile (hNamedPipe, &req, sizeof(SearchRequest), &nXfer, NULL)) {
-			pFileEntry *result=NULL;
-			printf("%ls \n",req.str);
-			int count = search(req.str,&req.env,&result);
-			send_response(hNamedPipe,&req,result,count);
+			if(req.rows==-1){
+				send_response_stat(hNamedPipe, &req);
+			}else{
+				pFileEntry *result=NULL;
+				printf("%ls \n",req.str);
+				int count = search(req.str,&(req.env),&result);
+				send_response_search(hNamedPipe,&req,result,count);
+			}
 		} /* Get next command */
 		FlushFileBuffers (hNamedPipe);
 		DisconnectNamedPipe (hNamedPipe);

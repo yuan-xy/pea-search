@@ -28,12 +28,14 @@
 
 <div id="tabs">
 	<ul>
-		<li><a href="#tab-1" onclick="file_type_search(0);return true;"><img src="icons/unknown.ico" class="icon"/>全部(<span id="filetype0">0</span>)</a></li>
-		<li><a href="#tab-1" onclick="file_type_search(2);return true;"><img src="icons/dir.ico" class="icon"/>文件夹(<span id="filetype0">0</span>)</a></li>
-		<li><a href="#tab-1" onclick="file_type_search(129);return true;"><img src="icons/zip.ico" class="icon"/>压缩文件(<span id="filetype0">0</span>)</a></li>
-		<li><a href="#tab-1" onclick="file_type_search(130);return true;"><img src="icons/exe.ico" class="icon"/>程序(<span id="filetype0">0</span>)</a></li>
-		<li><a href="#tab-1" onclick="file_type_search(131);return true;"><img src="icons/vedio.ico" class="icon"/>多媒体(<span id="filetype0">0</span>)</a></li>
-		<li><a href="#tab-1" onclick="file_type_search(132);return true;"><img src="icons/txt.ico" class="icon"/>文档(<span id="filetype0">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(0);return true;"><img src="icons/file.ico" class="icon"/>全部(<span id="all_file">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(2);return true;"><img src="icons/dir.ico" class="icon"/>文件夹(<span id="dir_file">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(129);return true;"><img src="icons/zip.ico" class="icon"/>压缩文件(<span id="compress_file">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(130);return true;"><img src="icons/exe.ico" class="icon"/>程序(<span id="program_file">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(131);return true;"><img src="icons/vedio.ico" class="icon"/>多媒体(<span id="media_file">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(132);return true;"><img src="icons/txt.ico" class="icon"/>文档(<span id="archive_file">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(143);return true;"><img src="icons/unknown.ico" class="icon"/>其它(<span id="other_file">0</span>)</a></li>
+
 	</ul>
 	<div id="tab-1">
 		<table id="maintable" width="100%" cellspacing="0">
@@ -175,6 +177,7 @@
 				if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
 				page_from = 0;
 				page();
+				stat_timeout = setTimeout(stat_search,100);
 			}
         function searchf(value){
 			if(cur_search == value) return;
@@ -209,6 +212,18 @@
 			if($("#search").val()=="") return;
 			clearTimeout(search_timeout);
 			search_timeout = setTimeout(searchf0,0);
+		}
+		function stat_search(){
+			if($("#search").val()!=cur_search) return; //查询已过期
+			var s = plugin.stat(cur_search);
+			var stats = eval("("+s+")");
+			$("#all_file").html(stats.all);
+			$("#dir_file").html(stats.dir);
+			$("#compress_file").html(stats.compress);
+			$("#program_file").html(stats.program);
+			$("#media_file").html(stats.media);
+			$("#archive_file").html(stats.archive);
+			$("#other_file").html(stats.other);
 		}
 		$(function() {
 			$("#search").focus();

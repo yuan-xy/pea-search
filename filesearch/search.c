@@ -44,6 +44,7 @@ static int count=0,matched=0; //所有查询的文件总数、最终符合条件的总数
 static pFileEntry *list; //保存搜索结果列表
 static SearchEnv defaultEnv={0}; //缺省查询环境
 static pSearchEnv sEnv; //当前查询环境
+static int stats_local[NON_VIRTUAL_TYPE_SIZE] = {0}; //查询统计信息
 
 static BOOL allowPinyin(pSearchOpt opt){ //大小写不敏感、一般匹配模式，模式串不包含中文
 	return !sEnv->case_sensitive && opt->match_t==NORMAL_MATCH && opt->len==opt->wlen;
@@ -188,6 +189,66 @@ void FileSearchVisitor(pFileEntry file, void *data){
 	}
 no_match:
 	count++;
+}
+
+static void stat_count(int stats[], pFileEntry file){
+	switch(file->ut.v.suffixType){
+		case  SF_NONE		:	stats[0]+=1;break;
+		case  SF_UNKNOWN	:	stats[1]+=1;break;
+		case  SF_DIR		:	stats[2]+=1;break;
+		case  SF_DISK		:	stats[3]+=1;break;
+		case  SF_ZIP		:	stats[4]+=1;break;
+		case  SF_RAR		:	stats[5]+=1;break;
+		case  SF_OTHER_ZIP:		stats[6]+=1;break;
+		case  SF_EXE		:	stats[7]+=1;break;
+		case  SF_LNK		:	stats[8]+=1;break;
+		case  SF_SCRIPT	:		stats[9]+=1;break;
+		case  SF_LIB		:	stats[10]+=1;break;
+		case  SF_MUSIC	:		stats[11]+=1;break;
+		case  SF_PHOTO	:		stats[12]+=1;break;
+		case  SF_VEDIO	:		stats[13]+=1;break;
+		case  SF_ANIMATION	:	stats[14]+=1;break;
+		case  SF_WORD		:	stats[15]+=1;break;
+		case  SF_EXCEL	:		stats[16]+=1;break;
+		case  SF_PPT		:	stats[17]+=1;break;
+		case  SF_OTHER_OFFICE :		stats[18]+=1;break;
+		case  SF_PDF		:	stats[19]+=1;break;
+		case  SF_CHM		:	stats[20]+=1;break;
+		case  SF_OTHER_EBOOK	:	stats[21]+=1;break;
+		case  SF_HTM		:	stats[22]+=1;break;
+		case  SF_TXT		:	stats[23]+=1;break;
+		case  SF_SOURCE	:		stats[24]+=1;break;
+		case  SF_OTHER_TEXT	:	stats[25]+=1;break;
+		default	:	stats[1]+=1;break;
+	}
+}
+
+static void FileStatVisitor(pFileEntry file, void *data){
+	pSearchOpt opt = (pSearchOpt)data;
+	BOOL flag=1;
+	do{
+		BOOL match = match_opt(file, opt);
+		if(match && opt->subdir!=NULL){
+			if(IsDir(file)){
+				pFileEntry tmp = find_file_in(file,opt->subdir->name, opt->subdir->len);
+				if(tmp!=NULL){
+					stat_count(stats_local,tmp);
+				}
+				return;
+			}else{
+				match = 0;
+			}
+		}
+		switch(opt->logic){
+			case AND_LOGIC: flag = flag && match;break;
+			case OR_LOGIC: flag = flag || match;break;
+			case NOT_LOGIC: flag = flag && (!match);break;
+			default:		flag &=match;break;
+		}
+	}while((opt = opt->next)!=NULL);
+	if(flag){
+		stat_count(stats_local,file);
+	}
 }
 
 INLINE int file_len_cmp(pFileEntry a, pFileEntry b){
@@ -650,4 +711,56 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 
 void free_search(){
 	free_safe(list);
+}
+
+int * stat(WCHAR *str, pSearchEnv env){
+	memset(stats_local,0,sizeof(stats_local));
+	if(nullString(str)){
+		return 0;
+	}else{
+		pFileEntry dir=NULL;
+		NEW0(SearchOpt,sOpt);
+		genSearchOpt(sOpt,str);
+		if(env==NULL){
+			sEnv = &defaultEnv;
+		}else{
+			sEnv = env;
+			dir = find_file(env->path_name,env->path_len);
+		}
+		preProcessSearchOpt(sOpt);
+		preProcessPinyin(sOpt);
+		if(dir != NULL){
+			FilesIterate(dir,FileStatVisitor,sOpt);
+		}else{
+			AllFilesIterate(FileStatVisitor,sOpt);
+		}
+		freeSearchOpt(sOpt);
+		return stats_local;
+	}
+}
+
+static int sum_stat(int stats[], int from, int to){
+	int i=0,sum=0;
+	for(i=from;i<to;i++) sum+=stats[i];
+	return sum;
+}
+int print_stat(int * stats, char *buffer){
+	int i;
+	char *p=buffer;
+	*p++ = '{';
+	for(i=0;i<NON_VIRTUAL_TYPE_SIZE;i++){
+		*p++ ='"';
+		p += print_suffix_type2(i,p);
+		p += sprintf(p,"\":%d,",stats[i]);
+	}
+	p += sprintf(p,"\"all\":%d,", sum_stat(stats,0,NON_VIRTUAL_TYPE_SIZE));
+	p += sprintf(p,"\"other\":%d,", sum_stat(stats,0,2));
+	p += sprintf(p,"\"compress\":%d,",sum_stat(stats,3,7));
+	p += sprintf(p,"\"program\":%d,", sum_stat(stats,7,11));
+	p += sprintf(p,"\"media\":%d,", sum_stat(stats,11,15));
+	p += sprintf(p,"\"archive\":%d,", sum_stat(stats,15,NON_VIRTUAL_TYPE_SIZE));
+	p += sprintf(p,"\"office\":%d,", sum_stat(stats,15,19));
+	p += sprintf(p,"\"ebook\":%d,", sum_stat(stats,19,22));
+	p += sprintf(p,"\"text\":%d}", sum_stat(stats,22,NON_VIRTUAL_TYPE_SIZE));
+	return p-buffer;
 }

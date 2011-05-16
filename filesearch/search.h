@@ -18,6 +18,8 @@ extern "C" {
 extern DWORD search(WCHAR *str, pSearchEnv env,OUT pFileEntry **result);
 extern void free_search();
 
+extern int * stat(WCHAR *str, pSearchEnv env);
+extern int print_stat(int * stats, char *p);
 
 /**
 * 根据文件名查找到对应的pFileEntry。非精确路径匹配，支持部分模糊查询。

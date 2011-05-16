@@ -83,7 +83,9 @@ extern "C" {
 #define SFV_OFFICE	BYTE_BIN(10000101)
 #define SFV_EBOOK	BYTE_BIN(10000110)
 #define SFV_TEXT	BYTE_BIN(10000111)
+#define SFV_OTHER	BYTE_BIN(10001111)
 
+#define IS_OTHER(x) (x==0 || x==1)
 #define IS_COMPRESS(x) (x >> 3)==1
 #define IS_PROGRAM(x)  (x >> 4)==1
 #define IS_MEDIA(x)		(x >> 4)==3
@@ -91,6 +93,8 @@ extern "C" {
 #define IS_OFFICE(x)		(x >> 3)==015
 #define IS_EBOOK(x)			(x >> 3)==016
 #define IS_TEXT(x)			(x >> 3)==017
+
+#define NON_VIRTUAL_TYPE_SIZE 26
 
 /**
  * 根据后缀名得到文件的类型
@@ -114,6 +118,7 @@ extern BOOL include_type(unsigned char clazz, unsigned char file_type);
 extern void SuffixProcess(pFileEntry file, void *data);
 
 extern int print_suffix_type(pFileEntry file, char *p);
+extern int print_suffix_type2(int index, char *buffer);
 
 #endif  // FILE_SEARCH_SUFFIX_H_
 

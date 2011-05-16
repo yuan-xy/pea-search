@@ -35,6 +35,8 @@ public:
     std::string get_version();
 
     FB::variant search(const FB::variant& msg);
+    FB::variant stat(const FB::variant& msg);
+
     FB::variant shell_open(const FB::variant& msg);
     FB::variant shell_edit(const FB::variant& msg);
     FB::variant shell_explore(const FB::variant& msg);

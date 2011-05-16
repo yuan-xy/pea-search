@@ -10,8 +10,8 @@ extern "C" {
 struct searchRequest{
 	int len;	/* Total length of request, not including this field */
 	SearchEnv env;
-	int from;
-	int rows;
+	int from; /*分页时从第几条数据开始*/
+	int rows; /*最多返回多少行数据*/
 	WCHAR str[MAX_PATH];
 };
 typedef struct searchRequest SearchRequest, *pSearchRequest;
