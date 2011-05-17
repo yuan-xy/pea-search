@@ -179,7 +179,6 @@ static unsigned int WINAPI Server (void *pArg) {
 				send_response_stat(hNamedPipe, &req);
 			}else{
 				pFileEntry *result=NULL;
-				printf("%ls \n",req.str);
 				int count = search(req.str,&(req.env),&result);
 				send_response_search(hNamedPipe,&req,result,count);
 			}

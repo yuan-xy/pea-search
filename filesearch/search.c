@@ -680,6 +680,9 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 	if(nullString(str)){
 		return 0;
 	}else{
+#ifdef MY_DEBUG
+		int start = GetTickCount();
+#endif
 		pFileEntry dir=NULL;
 		NEW0(SearchOpt,sOpt);
 		genSearchOpt(sOpt,str);
@@ -704,7 +707,11 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 			if(sEnv->order==0 ) sEnv->order=NAME_ORDER_ASC;
 			qsort(*result,matched,sizeof(pFileEntry),order_compare);
 		}
-		printf("all: %d, matched:%d\n",count,matched);
+#ifdef MY_DEBUG
+		printf("search : %ls\n", str);
+		printf("time :%d ms\n",GetTickCount()-start);
+		printf("all: %d, matched:%d\n\n",count,matched);
+#endif
 		return matched;
 	}
 }
@@ -718,6 +725,9 @@ int * stat(WCHAR *str, pSearchEnv env){
 	if(nullString(str)){
 		return 0;
 	}else{
+#ifdef MY_DEBUG
+		int start = GetTickCount();
+#endif
 		pFileEntry dir=NULL;
 		NEW0(SearchOpt,sOpt);
 		genSearchOpt(sOpt,str);
@@ -735,6 +745,10 @@ int * stat(WCHAR *str, pSearchEnv env){
 			AllFilesIterate(FileStatVisitor,sOpt);
 		}
 		freeSearchOpt(sOpt);
+#ifdef MY_DEBUG
+		printf("stat : %ls\n", str);
+		printf("time :%d ms\n\n",GetTickCount()-start);
+#endif
 		return stats_local;
 	}
 }
@@ -747,6 +761,7 @@ static int sum_stat(int stats[], int from, int to){
 int print_stat(int * stats, char *buffer){
 	int i;
 	char *p=buffer;
+	if(stats==NULL) return 0;
 	*p++ = '{';
 	for(i=0;i<NON_VIRTUAL_TYPE_SIZE;i++){
 		*p++ ='"';

@@ -30,14 +30,33 @@
 	<ul>
 		<li><a href="#tab-1" onclick="file_type_search(0);return true;"><img src="icons/file.ico" class="icon"/>全部(<span id="all_file">0</span>)</a></li>
 		<li><a href="#tab-1" onclick="file_type_search(2);return true;"><img src="icons/dir.ico" class="icon"/>文件夹(<span id="dir_file">0</span>)</a></li>
-		<li><a href="#tab-1" onclick="file_type_search(129);return true;"><img src="icons/zip.ico" class="icon"/>压缩文件(<span id="compress_file">0</span>)</a></li>
-		<li><a href="#tab-1" onclick="file_type_search(130);return true;"><img src="icons/exe.ico" class="icon"/>程序(<span id="program_file">0</span>)</a></li>
-		<li><a href="#tab-1" onclick="file_type_search(131);return true;"><img src="icons/vedio.ico" class="icon"/>多媒体(<span id="media_file">0</span>)</a></li>
-		<li><a href="#tab-1" onclick="file_type_search(132);return true;"><img src="icons/txt.ico" class="icon"/>文档(<span id="archive_file">0</span>)</a></li>
+		<li><a href="#tab-1" onclick="file_type_search(129);return true;"><img src="icons/zip.ico" class="icon"/>压缩包(<span id="compress_file">0</span>)</a></li>
+		<li><a id="program-a" href="#tab-1" onclick="file_type_search(130);return true;"><img src="icons/exe.ico" class="icon"/>程序(<span id="program_file">0</span>)<img src="images/arrow-asc.png" valign="center" border="0"/></a></li>
+		<li><a id="media-a" href="#tab-1" onclick="file_type_search(131);return true;"><img src="icons/media.ico" class="icon"/>多媒体(<span id="media_file">0</span>)<img src="images/arrow-asc.png" valign="center" border="0"/></a></li>
+		<li>
+		<a id="archive-a" href="#tab-1" onclick="file_type_search(132);return true;"><img src="icons/txt.ico" class="icon"/>文档(<span id="archive_file">0</span>)<img src="images/arrow-asc.png" valign="center" border="0"/></a><br/>
+		<div style="display:none;" id="archive-div">
+			<a href="#tab-1" onclick="file_type_search(133);return true;"><img src="icons/word.ico" class="icon"/>office文档(<span id="office_file">0</span>)</a>
+			<a href="#tab-1" onclick="file_type_search(134);return true;"><img src="icons/pdf.ico" class="icon"/>电子书(<span id="ebook_file">0</span>)</a>
+			<a href="#tab-1" onclick="file_type_search(121);return true;"><img src="icons/htm.ico" class="icon"/>网页(<span id="htm_file">0</span>)</a>
+			<a href="#tab-1" onclick="file_type_search(135);return true;"><img src="icons/source.ico" class="icon"/>其它(<span id="text_file">0</span>)</a>
+		</div>
+		</li>
 		<li><a href="#tab-1" onclick="file_type_search(143);return true;"><img src="icons/unknown.ico" class="icon"/>其它(<span id="other_file">0</span>)</a></li>
-
 	</ul>
 	<div id="tab-1">
+		<ul style="display:none" id="program-div">
+			<li><a href="#tab-1" onclick="file_type_search(17);return true;"><img src="icons/exe.ico" class="icon"/>程序(<span id="exe_file">0</span>)</a></li>
+			<li><a href="#tab-1" onclick="file_type_search(18);return true;"><img src="icons/lnk.ico" class="icon"/>快捷方式(<span id="link_file">0</span>)</a></li>
+			<li><a href="#tab-1" onclick="file_type_search(19);return true;"><img src="icons/script.ico" class="icon"/>脚本(<span id="script_file">0</span>)</a></li>
+			<li><a href="#tab-1" onclick="file_type_search(20);return true;"><img src="icons/lib.ico" class="icon"/>库(<span id="lib_file">0</span>)</a></li>
+		</ul>
+		<ul style="display:none" id="media-div">
+			<li><a href="#tab-1" onclick="file_type_search(49);return true;"><img src="icons/music.ico" class="icon"/>音乐(<span id="music_file">0</span>)</a></li>
+			<li><a href="#tab-1" onclick="file_type_search(50);return true;"><img src="icons/photo.ico" class="icon"/>图片(<span id="photo_file">0</span>)</a></li>
+			<li><a href="#tab-1" onclick="file_type_search(51);return true;"><img src="icons/video.ico" class="icon"/>视频(<span id="video_file">0</span>)</a></li>
+			<li><a href="#tab-1" onclick="file_type_search(52);return true;"><img src="icons/animation.ico" class="icon"/>动画(<span id="animation_file">0</span>)</a></li>
+		</ul>
 		<table id="maintable" width="100%" cellspacing="0">
 			<thead>
 				<tr unselectable="on" class="unselectable">
@@ -137,6 +156,7 @@
 		var files = [];
 		var search_timeout;
 		var highlight_timeout;
+		var stat_timeout;
 		var pagerow = 200;
 		var page_from = 0;
 			function page(){
@@ -183,12 +203,17 @@
 			if(cur_search == value) return;
 			cur_search = value;
 			clearTimeout(search_timeout);
+			clearTimeout(stat_timeout);
+			clearTimeout(highlight_timeout);
+			if(value==""){
+				$("#result1").html("");
+				$("#tabs span").html("0");
+				return;
+			}
 			if(value.length<3){
-				search_timeout = setTimeout(searchf0,300);
-			}else if(value.length<5){
-				search_timeout = setTimeout(searchf0,150);
+				search_timeout = setTimeout(searchf0,0);
 			}else{
-				search_timeout = setTimeout(searchf0,50);
+				search_timeout = setTimeout(searchf0,0);
 			}        
 		}
 		function orderby(col,desc){
@@ -213,10 +238,7 @@
 			clearTimeout(search_timeout);
 			search_timeout = setTimeout(searchf0,0);
 		}
-		function stat_search(){
-			if($("#search").val()!=cur_search) return; //查询已过期
-			var s = plugin.stat(cur_search);
-			var stats = eval("("+s+")");
+		function stat_num_set(stats){
 			$("#all_file").html(stats.all);
 			$("#dir_file").html(stats.dir);
 			$("#compress_file").html(stats.compress);
@@ -224,6 +246,25 @@
 			$("#media_file").html(stats.media);
 			$("#archive_file").html(stats.archive);
 			$("#other_file").html(stats.other);
+			$("#exe_file").html(stats.exe);
+			$("#link_file").html(stats.link);
+			$("#script_file").html(stats.script);
+			$("#lib_file").html(stats.lib);
+			$("#music_file").html(stats.music);
+			$("#photo_file").html(stats.photo);
+			$("#video_file").html(stats.video);
+			$("#animation_file").html(stats.animation);
+			$("#office_file").html(stats.office);
+			$("#ebook_file").html(stats.ebook);
+			$("#htm_file").html(stats.htm);
+			$("#text_file").html(stats.text);
+		}
+		function stat_search(){
+			if($("#search").val()!=cur_search) return; //查询已过期
+			if(cur_search=="") return;
+			var s = plugin.stat(cur_search);
+			var stats = eval("("+s+")");
+			stat_num_set(stats);
 		}
 		$(function() {
 			$("#search").focus();
@@ -249,6 +290,10 @@
 				}
 			});
 			$('#tabs').tabs();
+			$("#archive-a").bind('click',function(e){
+				$("#archive-div").show();
+				//$("#archive-div").css("left","400px");
+			});
 			$( "#search_img").position({
 				of: $( "#search" ),
 				my: "right top",

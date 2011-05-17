@@ -26,7 +26,7 @@ extern "C" {
 
 //#define USE_ZIP
 
-//#define MY_DEBUG
+#define MY_DEBUG
 
 #define WORD_SIZE 4
 

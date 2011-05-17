@@ -206,7 +206,7 @@ int print_suffix_type(pFileEntry file, char *buffer){
 		case SF_RAR	: 		strcpy(buffer,"rar");return 3;
 		case SF_OTHER_ZIP: 		strcpy(buffer,"other_zip");return 9;
 		case SF_EXE	: 		strcpy(buffer,"exe");return 3;
-		case SF_LNK	: 		strcpy(buffer,"lnk");return 3;
+		case SF_LNK	: 		strcpy(buffer,"link");return 4;
 		case SF_SCRIPT: 		strcpy(buffer,"script");return 6;
 		case SF_LIB	: 		strcpy(buffer,"lib");return 3;
 		case SF_MUSIC: 			strcpy(buffer,"music");return 5;
@@ -239,7 +239,7 @@ int print_suffix_type2(int index, char *buffer){
 		case 5: 	strcpy(buffer,"rar");return 3;
 		case 6: 	strcpy(buffer,"other_zip");return 9;
 		case 7: 	strcpy(buffer,"exe");return 3;
-		case 8: 	strcpy(buffer,"lnk");return 3;
+		case 8: 	strcpy(buffer,"link");return 4;
 		case 9: 	strcpy(buffer,"script");return 6;
 		case 10:	strcpy(buffer,"lib");return 3;
 		case 11:	strcpy(buffer,"music");return 5;

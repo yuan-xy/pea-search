@@ -74,3 +74,14 @@ background-color: #FFDDDD;
 .icon {
 	width:16px; height:16px; border:0;
 }
+
+.subnav{
+	list-style: none;
+	float: left;
+	position: relative;
+	top: 1px;
+	margin: 0 .2em 1px 0;
+	border-bottom: 0 !important;
+	padding: 0;
+	white-space: nowrap;
+}

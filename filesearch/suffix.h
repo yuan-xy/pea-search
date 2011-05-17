@@ -34,8 +34,9 @@ extern "C" {
 						001 pdf
 						010 chm
 						011 other_ebook //djvu pdg caj
-			11 text
+
 						001 htm		//htm html shtml mhtml mht xml
+			11 text
 						010 txt
 						011 source code // c cpp cc h hpp java cs vb pas rb py php css yaml s d  asp aspx jsp as 
 						111 other_text //log ini lrc
@@ -86,13 +87,13 @@ extern "C" {
 #define SFV_OTHER	BYTE_BIN(10001111)
 
 #define IS_OTHER(x) (x==0 || x==1)
-#define IS_COMPRESS(x) (x >> 3)==1
+#define IS_COMPRESS(x) (x >> 3)==1 || (x==SF_DISK)
 #define IS_PROGRAM(x)  (x >> 4)==1
 #define IS_MEDIA(x)		(x >> 4)==3
 #define IS_ARCHIVE(x)		(x >> 5)==3
 #define IS_OFFICE(x)		(x >> 3)==015
 #define IS_EBOOK(x)			(x >> 3)==016
-#define IS_TEXT(x)			(x >> 3)==017
+#define IS_TEXT(x)			(x >> 3)==017 && (x!=SF_HTM)
 
 #define NON_VIRTUAL_TYPE_SIZE 26
 

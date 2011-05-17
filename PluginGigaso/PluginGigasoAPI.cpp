@@ -127,6 +127,7 @@ FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 	req.env.case_sensitive = m_case;
 	req.env.file_type = m_file_type;
 	std::wstring s = msg.convert_cast<std::wstring>();
+	if(s.length()==0) return "";
 	wcscpy(req.str,s.c_str());
 	if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
 		WIN_ERROR;
@@ -157,6 +158,7 @@ FB::variant PluginGigasoAPI::stat(const FB::variant& msg){
 	req.env.case_sensitive = m_case;
 	req.env.file_type = m_file_type;
 	std::wstring s = msg.convert_cast<std::wstring>();
+	if(s.length()==0) return "";
 	wcscpy(req.str,s.c_str());
 	if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
 		WIN_ERROR;
