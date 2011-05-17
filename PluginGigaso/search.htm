@@ -24,7 +24,9 @@
 <input type="radio" name="case" id="case1">非模糊拼音、英文大小写敏感
 
 <center style="margin:10px;">
-搜索：<input id="search" name="s" type="text" size="35" value="" title="查询条件"><img id="search_img" src="images/find.ico"/>
+搜索：<img id="loading" src="images/spinner.gif" style="visibility: hidden"/>
+<input id="search" name="s" type="text" size="35" value="" title="查询条件"><img id="search_img" src="images/find.ico"/>
+
 </center>
 
 
@@ -177,6 +179,7 @@
 					"<span class='highlight-match'>"+html.substring(fi, fi+$("#search").val().length)+"</span>" + 
 					html.substring(fi+$("#search").val().length, html.length);
 			});
+			$("#loading").css("visibility","hidden");
 	  }
 </script>
 <script type="text/javascript">
@@ -206,6 +209,7 @@
 		table_over();
 	}
 	function searchf0(){
+		$("#loading").css("visibility","visible");
 		clearTimeout(highlight_timeout);
 		var s = plugin.search(cur_search);
 		if($("#search").val()!=cur_search) return; //查询已过期
@@ -230,6 +234,7 @@
 		page();
 	}
     function searchf(value){
+		$("#loading").css("visibility","visible");
 		value = trim(value);
 		cur_search = value;
 		clearTimeout(search_timeout);
@@ -239,6 +244,7 @@
 		$("#tab-1 span span").html("0");
 		if(value==""){
 			$("#result1").html("");
+			$("#loading").css("visibility","hidden");
 			return;
 		}
 		if(value.length<3){
