@@ -1,6 +1,6 @@
 body {font-size:12px}
 
-#search {padding:0px; margin:0px; height:30px; width:400px; font: 16px arial;}
+#search {padding:0px; margin:0px; height:30px; width:400px; font-size: 120%;}
 #search_img {
 		width: 16px;
 		height: 16px;
@@ -77,11 +77,18 @@ background-color: #FFDDDD;
 
 .subnav{
 	list-style: none;
-	float: left;
+	float: center;
 	position: relative;
 	top: 1px;
-	margin: 0 .2em 1px 0;
+	margin: 2px;
 	border-bottom: 0 !important;
 	padding: 0;
 	white-space: nowrap;
+}
+
+.subnav-span{
+	margin: 5px;
+}
+.subnav a{
+	text-decoration: none;
 }
