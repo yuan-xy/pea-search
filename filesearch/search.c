@@ -716,8 +716,8 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 	}
 }
 
-void free_search(){
-	free_safe(list);
+void free_search(pFileEntry *pp){
+	free_safe(pp);
 }
 
 int * stat(WCHAR *str, pSearchEnv env){

@@ -181,6 +181,7 @@ static unsigned int WINAPI Server (void *pArg) {
 				pFileEntry *result=NULL;
 				int count = search(req.str,&(req.env),&result);
 				send_response_search(hNamedPipe,&req,result,count);
+				free_search(result);
 			}
 		} /* Get next command */
 		FlushFileBuffers (hNamedPipe);
