@@ -138,6 +138,7 @@ static void print_all_stat(WCHAR *str){
 	printf("%s\n",buffer);
 }
 
+#ifndef SERVICE_MODE
 int main(){
 	setlocale (LC_ALL, "");
 	my_assert(24 == sizeof(FileEntry), 1);
@@ -154,3 +155,4 @@ int main(){
 	ExitProcess(0);
 	return 0;
 }
+#endif

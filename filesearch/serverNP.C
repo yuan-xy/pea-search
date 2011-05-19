@@ -59,7 +59,9 @@ static void exit_conn_thread(HANDLE hConTh){
 		HANDLE hClient = CreateFile (SERVER_PIPE, GENERIC_READ | GENERIC_WRITE, 0, NULL,
 				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (hClient != INVALID_HANDLE_VALUE) CloseHandle (hClient);
-		WaitForSingleObject (hConTh, INFINITE);
+		if(WAIT_TIMEOUT==WaitForSingleObject (hConTh, 3*1000)){
+			CloseHandle (hConTh);
+		}
 	}
 }
 
@@ -206,3 +208,14 @@ BOOL WINAPI shutdown_handle(DWORD CtrlEvent) {
 	ShutDown = TRUE;
 	return TRUE;
 }
+
+void shutdown_NP(){
+	int i;
+	ShutDown = TRUE;
+	Sleep(5*1000);
+	for (i = 0; i < MAX_CLIENTS; i++) {
+		if(ThArgs[i].hNamedPipe !=NULL) CloseHandle(ThArgs[i].hNamedPipe);
+		if (hSrvrThread[i] != NULL) TerminateThread(hSrvrThread[i], 0);
+	}
+}
+

@@ -216,7 +216,7 @@
 		try{
 			files = eval(s);
 		}catch(e){
-			show_error(e);
+			show_error("搜索服务失去响应！");
 			return;
 		}
 		$(files).each( function sub(i,obj){
@@ -304,7 +304,9 @@
 		try{
 			var stats = eval("("+s+")");
 			stat_num_set(stats);
-		}catch(e){show_error(e)}
+		}catch(e){
+			show_error("搜索服务失去响应！");
+		}
 	}
 	$(function() {
 		if(plugin.case){
