@@ -309,17 +309,17 @@
 		}
 	}
 	$(function() {
-		if(plugin.case){
+		if(plugin.caze){
 			$("#case1").click();
 		}else{
 			$("#case0").click();
 		}
 		$("#case0").bind('click',function(event,t){
-			plugin.case = false;
+			plugin.caze = false;
 			searchf($("#search").val());
 		});
 		$("#case1").bind('click',function(event,t){
-			plugin.case = true;
+			plugin.caze = true;
 			searchf($("#search").val());
 		});
 		$("#search").focus();

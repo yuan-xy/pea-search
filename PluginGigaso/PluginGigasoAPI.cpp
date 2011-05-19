@@ -60,10 +60,10 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
                      make_property(this,
                         &PluginGigasoAPI::get_file_type,
                         &PluginGigasoAPI::set_file_type));
-    registerProperty("case",
+    registerProperty("caze",
                      make_property(this,
-                        &PluginGigasoAPI::get_case,
-                        &PluginGigasoAPI::set_case));
+                        &PluginGigasoAPI::get_caze,
+                        &PluginGigasoAPI::set_caze));
     // Read-only property
     registerProperty("version",
                      make_property(this,
@@ -101,10 +101,10 @@ int PluginGigasoAPI::get_file_type(){
 void PluginGigasoAPI::set_file_type(int val){
     m_file_type = val;
 }
-bool PluginGigasoAPI::get_case(){
+bool PluginGigasoAPI::get_caze(){
     return m_case;
 }
-void PluginGigasoAPI::set_case(bool val){
+void PluginGigasoAPI::set_caze(bool val){
     m_case = val;
 }
 

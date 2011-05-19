@@ -28,8 +28,8 @@ public:
 	int get_file_type();
     void set_file_type(int val);
 
-	bool get_case();
-    void set_case(bool val);
+	bool get_caze();
+    void set_caze(bool val);
 
     // Read-only property ${PROPERTY.ident}
     std::string get_version();
