@@ -107,10 +107,7 @@ void DriveChangeListener(int i, BOOL add){
 }
 
 BOOL gigaso_init(){
-	printf("load hz : %d milli-seconds.\n",time_passed(init_chinese));
-	parse_pinyin("fang'an");
-	parse_pinyin("chanzao");
-	parse_pinyin("fangan");
+	init_chinese();
 	setlocale (LC_ALL, "");
 	my_assert(24 == sizeof(FileEntry), 0);
 	my_assert(WORD_SIZE == sizeof(void *), 0);
@@ -140,14 +137,11 @@ static void print_all_stat(WCHAR *str){
 
 #ifndef SERVICE_MODE
 int main(){
-	setlocale (LC_ALL, "");
-	my_assert(24 == sizeof(FileEntry), 1);
 	if (!SetConsoleCtrlHandler(shutdown_handle, TRUE)) {
 		WIN_ERROR;
 		return 3;
 	}
 	gigaso_init();
-	printf(" \nstat *, time:%d\n",time_passed_p1(print_all_stat, L"*"));
 	if(start_named_pipe()){
 		wait_stop_named_pipe();
 	}

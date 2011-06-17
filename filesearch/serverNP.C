@@ -186,8 +186,8 @@ static unsigned int WINAPI Server (void *pArg) {
 				free_search(result);
 			}
 		} /* Get next command */
-		FlushFileBuffers (hNamedPipe);
-		DisconnectNamedPipe (hNamedPipe);
+		if(!FlushFileBuffers(hNamedPipe)) WIN_ERROR;
+		if(!DisconnectNamedPipe(hNamedPipe)) WIN_ERROR;
 	}
 	if(hConTh!=NULL) exit_conn_thread(hConTh);
 	printf("Exiting server thread number %d\n", pThArg->ThreadNo);
@@ -197,7 +197,11 @@ static unsigned int WINAPI Server (void *pArg) {
 
 static unsigned int WINAPI Connect (void *arg){
 	BOOL f= ConnectNamedPipe ((HANDLE)arg, NULL);
-	printf ("ConnNP finished: %d\n", f);
+	if(f){
+		printf ("ConnNP finished: %d\n", f);
+	}else{
+		WIN_ERROR;
+	}
 	_endthreadex (0);
 	return 0;
 }
