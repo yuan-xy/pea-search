@@ -34,5 +34,7 @@ add_subdirectory (filesearch)
 include_directories ("${PROJECT_SOURCE_DIR}/console-example")
 add_subdirectory (console-example)
 
+include_directories ("${PROJECT_SOURCE_DIR}/browser")
+add_subdirectory (browser)
 
 INCLUDE(CPack)

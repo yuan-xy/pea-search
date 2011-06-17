@@ -10,13 +10,13 @@ function get_file_path(tr){
 function dblclick_file(target){
 	get_file_path(target.parentNode);
 	var ret = document.getElementById('plugin0').shell2_default(path+file);
-	info_or_error(ret, file, "打开");
+	info_if_error(ret, file, "打开");
 }
 
 function dblclick_path(target){
 	get_file_path(target.parentNode);
 	ret = document.getElementById('plugin0').shell_explore(path);
-	info_or_error(ret, path, "资源管理器");
+	info_if_error(ret, path, "资源管理器");
 }
 
 var context_menu_obj = {
@@ -39,18 +39,18 @@ var context_menu_obj = {
 					  'default': function(t,menuitem) {
 					    get_file_path(t);
 						var ret = document.getElementById('plugin0').shell2_default(path+file);
-						info_or_error(ret, file, menuitem.lastChild.data);
+						info_if_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'openas': function(t,menuitem) {
 					    get_file_path(t);
 						var ret = document.getElementById('plugin0').shell2_openas(path+file);
-						info_or_error(ret, file, menuitem.lastChild.data);
+						info_if_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'explore': function(t,menuitem) {
 					    get_file_path(t);
 						if(type=="dir") ret = document.getElementById('plugin0').shell_explore(path+file);
 						else  ret = document.getElementById('plugin0').shell_explore(path);
-						info_or_error(ret, file, menuitem.lastChild.data);
+						info_if_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'copypath': function(t,menuitem) {
 					    get_file_path(t);
@@ -84,7 +84,7 @@ var context_menu_obj = {
 					  'prop': function(t,menuitem) {
 					    get_file_path(t);
 						var ret = document.getElementById('plugin0').shell2_prop(path+file);
-						info_or_error(ret, file, menuitem.lastChild.data);
+						info_if_error(ret, file, menuitem.lastChild.data);
 					  }
 					}
 				  }

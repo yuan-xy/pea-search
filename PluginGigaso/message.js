@@ -5,7 +5,13 @@
 							show_error("执行失败! &nbsp;&nbsp;"+action+'"'+file+'".');
 						}
 		}
-var message_timeout;
+	function info_if_error(ret,file, action){
+						if(!ret){
+							show_error("执行失败! &nbsp;&nbsp;"+action+'"'+file+'".');
+						}
+		}
+
+	var message_timeout;
 	function hide_message(){
 			$("#message-area").fadeTo(2500,0.0);
 		}
