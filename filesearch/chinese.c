@@ -52,7 +52,15 @@ BOOL load_hz(){
 	char buf[BUF_LEN_0];
 	int line_count=0;
 	fp = fopen("hz.lib", "r");
-	if(fp==NULL) return 0;
+	if(fp==NULL){
+			char szPath[MAX_PATH], *p; 
+			if( !GetModuleFileNameA( NULL, szPath, MAX_PATH ) ) return 0;
+			p = strrchr(szPath,'\\');
+			*(p+1) = '\0';
+			strcat(p,"hz.lib");
+			fp = fopen(szPath, "r");
+			if(fp==NULL) return 0;
+	}
 	while(fgets(buf,BUF_LEN_0,fp)!=NULL){
 //Reads  at  most  N-1  characters  from FP until a newline is found.
 //The characters including to the newline are stored in BUF.  The  buffer  is terminated with a 0.
