@@ -461,7 +461,6 @@ static void splitAterisk(SearchOpt *s0,int i){	// abc*def
 							s1->logic = AND_LOGIC;
 							s1->match_t = END_MATCH;
 							s1->next = s0->next;
-							s0->wname +=1;
 							s0->wlen =i-1;
 							s0->match_t = NORMAL_MATCH;
 							s0->next = s1;
