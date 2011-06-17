@@ -1,6 +1,8 @@
 #define UNICODE
 #define _UNICODE
 
+#include <string.h>
+#include <stdio.h>
 #include <windows.h>
 #include "webform.h"
 
@@ -60,12 +62,26 @@ static void dom_demo(){
 		}
 }
 
+static void get_path(){
+	WCHAR szPath[MAX_PATH]; 
+	if( !GetModuleFileName( NULL, szPath, MAX_PATH ) ){
+			//MessageBox(_T("GetModuleFileName failed!") + GetLastError()); 
+			return;
+	}
+	WCHAR *p = wcsrchr(szPath,'\\');
+	*(p+1) = L'\0';
+	wcscat(p,L"web\\search.htm");
+	//MessageBox(NULL, szPath, szPath, MB_OK);
+	SetWindowText(hwebf, szPath);
+}
+
 LRESULT CALLBACK PlainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 	case WM_CREATE: {
-		hwebf = CreateWindow(WEBFORM_CLASS, _T("E:\\firebreath-1.4\\projects\\PluginGigaso\\search.htm"),
+		hwebf = CreateWindow(WEBFORM_CLASS, _T(""),
 				WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | WS_VSCROLL, 0, 0,
 				100, 100, hwnd, (HMENU) 103, hInstance, 0);
+		get_path();
 		//SetTimer(hwnd,1,2000,0);
 	}
 		break;
