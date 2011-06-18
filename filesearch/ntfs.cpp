@@ -171,8 +171,9 @@ BOOL init_size_time(pFileEntry file, void *data){
 		my_assert( FileNameLength == file->us.v.FileNameLength, 0);
 		return 1;
 	} __finally{
-		return 0;
+		;
 	}
+	return 0;
 }
 
 DWORD WINAPI init_size_time_all(pFileEntry root){

@@ -519,16 +519,16 @@ void TCharToWide(const char *src, wchar_t *dst, int dst_size_in_wchars) {
 	MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, src, -1, dst,
 			dst_size_in_wchars);
 }
-#pragma warning(suppress:4996)
+
 void TCharToWide(const wchar_t *src, wchar_t *dst, int dst_size_in_wchars) {
-	wcscpy(dst, src);
+	wcscpy_s(dst, dst_size_in_wchars, src);
 }
 void WideToTChar(const wchar_t *src, char *dst, int dst_size_in_tchars) {
 	WideCharToMultiByte(CP_ACP, 0, src, -1, dst, dst_size_in_tchars, NULL, NULL);
 }
-#pragma warning(suppress:4996)
+
 void WideToTChar(const wchar_t *src, wchar_t *dst, int dst_size_in_tchars) {
-	wcscpy(dst, src);
+	wcscpy_s(dst, dst_size_in_tchars, src);
 }
 
 HANDLE TWebf::Ready() {
