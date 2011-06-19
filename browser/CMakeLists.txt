@@ -4,9 +4,9 @@ SET( SOURCES
     "search.cpp"
     )
    
-add_executable (Search ${SOURCES} )
+add_executable (search ${SOURCES} )
 
-set_target_properties(Search PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
+set_target_properties(search PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
 
-install (TARGETS Search DESTINATION .)
+install (TARGETS search DESTINATION .)
 install (DIRECTORY "${PROJECT_SOURCE_DIR}/browser/web"   DESTINATION .)

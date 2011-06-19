@@ -37,4 +37,34 @@ add_subdirectory (console-example)
 include_directories ("${PROJECT_SOURCE_DIR}/browser")
 add_subdirectory (browser)
 
+
+#include (InstallRequiredSystemLibraries)
+
+set(CPACK_PACKAGE_DESCRIPTION "Do the file search")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A longer description about our Gigaso app.")
+set(CPACK_PACKAGE_CONTACT "yuanxinyu@gigaso.com")
+set(CPACK_PACKAGE_VENDOR "Gigaso.com")
+
+set(CPACK_PACKAGE_NAME "Gigaso")
+set(CPACK_RESOURCE_FILE_LICENSE  "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+set(CPACK_PACKAGE_VERSION_MAJOR "${GIGASO_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${GIGASO_VERSION_MINOR}")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}-${CMAKE_SYSTEM_PROCESSOR}") 
+set(CPACK_PACKAGE_EXECUTABLES  ("${DESTINATION}/search.exe" "${CMAKE_SOURCE_DIR}/browser\\\\web\\\\images\\\\find.ico") )
+
+IF(WIN32 AND NOT UNIX)
+  # There is a bug in NSI that does not handle full unix paths properly. Make
+  # sure there is at least one set of four (4) backslashes.
+  SET(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/browser\\\\web\\\\images\\\\find.ico")
+  SET(CPACK_NSIS_INSTALLED_ICON_NAME "\\\\gigaso.exe")
+  SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} Gigaso")
+  SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.gigaso.com")
+  SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.gigaso.com")
+  SET(CPACK_NSIS_CONTACT "yuanxinyu@gigaso.com")
+  #SET(CPACK_NSIS_MODIFY_PATH ON)
+ENDIF(WIN32 AND NOT UNIX)
+
 INCLUDE(CPack)
+
+
+
