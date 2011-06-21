@@ -636,6 +636,12 @@ FunctionEnd
 Section "-Core installation"
   ;Use the entire tree produced by the INSTALL target.  Keep the
   ;list of directories here in sync with the RMDir commands below.
+
+  Exec 'net stop gigaso'
+  ExecWait 'taskkill /f /im gigaso.exe'
+  Exec 'sc delete gigaso'
+  ExecWait 'taskkill /f /im search.exe'
+
   SetOutPath "$INSTDIR"
   @CPACK_NSIS_FULL_INSTALL@
   
@@ -714,6 +720,12 @@ Section "-Core installation"
   Push "InstallToDesktop"
   Push "$INSTALL_DESKTOP"
   Call ConditionalAddToRegisty
+
+  Exec 'sc create gigaso binPath= "$INSTDIR\gigaso.exe"  start= auto  DisplayName= "Gigaso file searcher"'
+  Exec 'sc description gigaso "A fast file name searcher"'
+  Exec 'net start gigaso'
+  CreateShortCut "$DESKTOP\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
+  CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Gigaso文件查询.lnk"  "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
 
   !insertmacro MUI_STARTMENU_WRITE_END
 
@@ -803,6 +815,12 @@ FunctionEnd
 ;Uninstaller Section
 
 Section "Uninstall"
+
+  Exec 'net stop gigaso'
+  ExecWait 'taskkill /f /im gigaso.exe'
+  Exec 'sc delete gigaso'
+  ExecWait 'taskkill /f /im search.exe'
+
   ReadRegStr $START_MENU SHCTX \
    "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_NAME@" "StartMenu"
   ;MessageBox MB_OK "Start menu is in: $START_MENU"
@@ -839,11 +857,16 @@ Section "Uninstall"
   ; Remove the registry entries.
   DeleteRegKey SHCTX "Software\@CPACK_PACKAGE_VENDOR@\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@"
 
+
   ; Removes all optional components
   !insertmacro SectionList "RemoveSection"
   
   !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
-    
+
+
+  Delete "$DESKTOP\Gigaso文件查询.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\Gigaso文件查询.lnk"
+
   Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
 @CPACK_NSIS_DELETE_ICONS@
 @CPACK_NSIS_DELETE_ICONS_EXTRA@
