@@ -642,6 +642,7 @@ Section "-Core installation"
   Exec 'sc delete gigaso'
   ExecWait 'taskkill /f /im search.exe'
 
+
   SetOutPath "$INSTDIR"
   @CPACK_NSIS_FULL_INSTALL@
   
@@ -724,6 +725,7 @@ Section "-Core installation"
   Exec 'sc create gigaso binPath= "$INSTDIR\gigaso.exe"  start= auto  DisplayName= "Gigaso file searcher"'
   Exec 'sc description gigaso "A fast file name searcher"'
   Exec 'net start gigaso'
+  Exec 'regsvr32 "$INSTDIR\npPluginGigaso.dll"'
   CreateShortCut "$DESKTOP\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
   CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Gigaso文件查询.lnk"  "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
 
