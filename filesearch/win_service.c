@@ -35,8 +35,18 @@ VOID main (int argc, LPWSTR argv [])
 }
 #endif
 
+BOOL setPWD(){
+	char szFilePath[MAX_PATH]={0};
+	char *szFileName = NULL;
+	GetModuleFileNameA(NULL,szFilePath,MAX_PATH);
+	szFileName = strrchr(szFilePath,'\\');
+	if(!szFileName) return 0;
+	szFilePath[szFileName-szFilePath]='\0';
+	return SetCurrentDirectoryA(szFilePath);
+}
+
 VOID WINAPI ServiceMain (DWORD argc, LPWSTR argv[]){
-	//if (argc > 2) SetCurrentDirectory (argv[2]);
+	setPWD();
 	hLogFile = fopen ("SimpleServiceLog.txt", "a+");
 	if (hLogFile == NULL) return ;
 	fprintf(hLogFile, "Starting service. First log entry.");
@@ -73,10 +83,9 @@ VOID WINAPI ServiceMain (DWORD argc, LPWSTR argv[]){
 }
 
 int ServiceSpecific (){
-	UpdateStatus (-1, -1); /* Now change to status; increment the checkpoint */
+	UpdateStatus (SERVICE_RUNNING, -1);
 	gigaso_init();
 	if(start_named_pipe()){
-		UpdateStatus (SERVICE_RUNNING, -1);
 		wait_stop_named_pipe();
 	}
 	gigaso_destory();
@@ -92,6 +101,7 @@ VOID WINAPI ServerCtrlHandler( DWORD Control){
 	case SERVICE_CONTROL_STOP:
 		UpdateStatus (SERVICE_STOP_PENDING, -1);
 		shutdown_NP();
+		gigaso_destory();
 		return;
 	case SERVICE_CONTROL_PAUSE:
 		break;

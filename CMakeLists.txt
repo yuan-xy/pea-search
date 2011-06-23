@@ -37,7 +37,7 @@ add_subdirectory (console-example)
 include_directories ("${PROJECT_SOURCE_DIR}/browser")
 add_subdirectory (browser)
 
-install (FILES "${PROJECT_SOURCE_DIR}/../firebreath-1.4/build/bin/PluginGigaso/Debug/npPluginGigaso.dll"   DESTINATION .)
+install (FILES "${PROJECT_SOURCE_DIR}/../firebreath-1.4/release/bin/PluginGigaso/npPluginGigaso.dll"   DESTINATION .)
 
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})

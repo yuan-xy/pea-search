@@ -637,10 +637,11 @@ Section "-Core installation"
   ;Use the entire tree produced by the INSTALL target.  Keep the
   ;list of directories here in sync with the RMDir commands below.
 
-  Exec 'net stop gigaso'
-  ExecWait 'taskkill /f /im gigaso.exe'
-  Exec 'sc delete gigaso'
-  ExecWait 'taskkill /f /im search.exe'
+  
+  nsExec::ExecToStack 'net stop gigaso'
+  nsExec::ExecToStack 'taskkill /f /im gigaso.exe'
+  nsExec::ExecToStack 'sc delete gigaso'
+  nsExec::ExecToStack 'taskkill /f /im search.exe'
 
 
   SetOutPath "$INSTDIR"
@@ -722,10 +723,13 @@ Section "-Core installation"
   Push "$INSTALL_DESKTOP"
   Call ConditionalAddToRegisty
 
-  Exec 'sc create gigaso binPath= "$INSTDIR\gigaso.exe"  start= auto  DisplayName= "Gigaso file searcher"'
-  Exec 'sc description gigaso "A fast file name searcher"'
-  Exec 'net start gigaso'
-  Exec 'regsvr32 "$INSTDIR\npPluginGigaso.dll"'
+  nsExec::ExecToStack 'sc create gigaso binPath= "$INSTDIR\gigaso.exe"  start= auto  DisplayName= "Gigaso file searcher"'
+  Pop $0
+  StrCmp $0 "0" 0 +2
+  nsExec::ExecToStack '"$INSTDIR\sctrl.exe" create "$INSTDIR\gigaso.exe"'
+  nsExec::ExecToStack 'sc description gigaso "A fast file name searcher"'
+  nsExec::ExecToStack 'net start gigaso'
+  nsExec::ExecToStack 'regsvr32 /s "$INSTDIR\npPluginGigaso.dll"'
   CreateShortCut "$DESKTOP\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
   CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Gigaso文件查询.lnk"  "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
 
@@ -818,10 +822,10 @@ FunctionEnd
 
 Section "Uninstall"
 
-  Exec 'net stop gigaso'
-  ExecWait 'taskkill /f /im gigaso.exe'
-  Exec 'sc delete gigaso'
-  ExecWait 'taskkill /f /im search.exe'
+  nsExec::ExecToStack 'net stop gigaso'
+  nsExec::ExecToStack 'taskkill /f /im gigaso.exe'
+  nsExec::ExecToStack 'sc delete gigaso'
+  nsExec::ExecToStack 'taskkill /f /im search.exe'
 
   ReadRegStr $START_MENU SHCTX \
    "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_NAME@" "StartMenu"
