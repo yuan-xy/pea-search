@@ -217,6 +217,7 @@
 			files = eval(s);
 		}catch(e){
 			show_error("搜索服务失去响应！");
+			$("#loading").css("visibility","hidden");
 			return;
 		}
 		$(files).each( function sub(i,obj){

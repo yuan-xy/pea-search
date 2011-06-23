@@ -16,7 +16,7 @@
 
 #define WIN_ERROR fprintf(stderr,"error code : %d , line %d in '%s'\n",GetLastError(), __LINE__, __FILE__);
 
-static HANDLE hNamedPipe;
+static HANDLE hNamedPipe=NULL;
 
 static BOOL connect_named_pipe(HANDLE *p){
 	HANDLE handle;
@@ -31,6 +31,12 @@ static BOOL connect_named_pipe(HANDLE *p){
 		return 1;
 	}
 }
+
+static void close_named_pipe(){
+		if(hNamedPipe!=NULL) CloseHandle(hNamedPipe);
+		hNamedPipe=NULL;
+}
+
 
 PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr& host) : m_plugin(plugin), m_host(host)
 {
@@ -78,7 +84,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 }
 
 PluginGigasoAPI::~PluginGigasoAPI(){
-		CloseHandle(hNamedPipe);
+		close_named_pipe();
 }
 
 PluginGigasoPtr PluginGigasoAPI::getPlugin(){
@@ -117,6 +123,9 @@ std::string PluginGigasoAPI::get_version()
 static int MAX_ROW = 1000;
 
 FB::variant PluginGigasoAPI::search(const FB::variant& msg){
+	if(hNamedPipe==NULL){
+		if(!connect_named_pipe(&hNamedPipe)) return "error";
+	}
 	SearchRequest req;
 	SearchResponse resp;
 	DWORD nRead, nWrite;
@@ -131,6 +140,7 @@ FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 	wcscpy(req.str,s.c_str());
 	if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
 		WIN_ERROR;
+		close_named_pipe();
 		return "error";
 	}
 	if(ReadFile(hNamedPipe, &resp, sizeof(int), &nRead, NULL)  && resp.len>0){
@@ -148,6 +158,9 @@ FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 }
 
 FB::variant PluginGigasoAPI::stat(const FB::variant& msg){
+	if(hNamedPipe==NULL){
+		if(!connect_named_pipe(&hNamedPipe)) return "error";
+	}
 	SearchRequest req;
 	SearchResponse resp;
 	DWORD nRead, nWrite;
@@ -162,6 +175,7 @@ FB::variant PluginGigasoAPI::stat(const FB::variant& msg){
 	wcscpy(req.str,s.c_str());
 	if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
 		WIN_ERROR;
+		close_named_pipe();
 		return "error";
 	}
 	if(ReadFile(hNamedPipe, &resp, sizeof(int), &nRead, NULL)  && resp.len>0){
