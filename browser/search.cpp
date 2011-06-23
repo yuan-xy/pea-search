@@ -148,7 +148,7 @@ int WINAPI WinMain(HINSTANCE h,HINSTANCE,LPSTR,int)
 	OleInitialize(0);
 	//
 	WNDCLASSEX wcex; ZeroMemory(&wcex,sizeof(wcex)); wcex.cbSize = sizeof(WNDCLASSEX);
-	BOOL res=GetClassInfoEx(hInstance,_T("PlainClass"),&wcex);
+	BOOL res=GetClassInfoEx(hInstance,_T("Gigaso_Search"),&wcex);
 	if (!res)
 	{	wcex.style = CS_HREDRAW | CS_VREDRAW;
 		wcex.lpfnWndProc = (WNDPROC)PlainWndProc;
@@ -159,14 +159,14 @@ int WINAPI WinMain(HINSTANCE h,HINSTANCE,LPSTR,int)
 		wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wcex.hbrBackground = NULL;
 		wcex.lpszMenuName = NULL;
-		wcex.lpszClassName = _T("PlainClass");
+		wcex.lpszClassName = _T("Gigaso_Search");
 		wcex.hIconSm = NULL;
 		ATOM res=RegisterClassEx(&wcex);
 		if (res==0) {MessageBox(NULL,_T("Failed to register class"),_T("Error"),MB_OK); return 0;}
 	}
 	//
-	hMain = CreateWindowEx(0,_T("PlainClass"), _T("Plain Window"), WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN,
-			CW_USEDEFAULT, CW_USEDEFAULT, 400, 400, NULL, NULL, hInstance, NULL);
+	hMain = CreateWindowEx(0,_T("Gigaso_Search"), _T("¼Ç¼ÑÎÄ¼þËÑË÷"), WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN,
+			CW_USEDEFAULT, CW_USEDEFAULT, 1000, 680, NULL, NULL, hInstance, NULL);
 	if (hMain==NULL) {MessageBox(NULL,_T("Failed to create window"),_T("Error"),MB_OK); return 0;}
 	ShowWindow(hMain,SW_SHOW);
 	//
