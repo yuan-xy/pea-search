@@ -7,6 +7,7 @@ extern "C" {
 #include "util.h"
 #include "search.h"
 #include "ntfs.h"
+#include "write.h"
 
 __forceinline ULONG RunLength(PUCHAR run)
 {
@@ -182,6 +183,7 @@ DWORD WINAPI init_size_time_all(pFileEntry root){
 	my_assert(IsNtfs(i),1);
 	FilesIterate(root,(void (*)(pFileEntry , void *))init_size_time,&i);
 	printf("init size/time finish for drive %c .\n", i+'A');
+	save_db(i);
 	return 0;
 }
 

@@ -83,9 +83,11 @@ VOID WINAPI ServiceMain (DWORD argc, LPWSTR argv[]){
 }
 
 int ServiceSpecific (){
-	UpdateStatus (SERVICE_RUNNING, -1);
+	UpdateStatus (-1, -1);
 	gigaso_init();
+	UpdateStatus (-1, -1);
 	if(start_named_pipe()){
+		UpdateStatus (SERVICE_RUNNING, -1);
 		wait_stop_named_pipe();
 	}
 	gigaso_destory();
