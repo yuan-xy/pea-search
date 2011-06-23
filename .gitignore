@@ -4,6 +4,7 @@ Thumbs.db
 *.ncb
 *.db
 *.dbz
+*.obj
 Debug
 Release
 build
