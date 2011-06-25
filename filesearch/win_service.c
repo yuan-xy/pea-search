@@ -20,7 +20,6 @@ static FILE *hLogFile;
 static SERVICE_STATUS hServStatus;
 static SERVICE_STATUS_HANDLE hSStat; /* Service status handle for setting status */
 
-#ifdef SERVICE_MODE
 VOID main (int argc, LPWSTR argv [])
 {
 	SERVICE_TABLE_ENTRY DispatchTable[] =
@@ -33,7 +32,6 @@ VOID main (int argc, LPWSTR argv [])
 
 	return;
 }
-#endif
 
 BOOL setPWD(){
 	char szFilePath[MAX_PATH]={0};

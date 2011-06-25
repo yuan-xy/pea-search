@@ -23,30 +23,6 @@
 //TODO: 文件的资源管理器类树状浏览
 
 
-void search0(void *name){
-	pFileEntry *result=NULL;
-	int count=0,i;
-		NEW(SearchEnv, sEnv);
-		sEnv->case_sensitive=0;
-		sEnv->order=0;
-		sEnv->file_type=0;
-		wcscpy(sEnv->path_name, L"E:\\backup");
-		sEnv->path_len=0;
-	count = search((WCHAR *)name,sEnv,&result);
-	for(i=0;i<count;i++){
-		pFileEntry file = *(result+i);
-		FSIZE size;
-		size = GET_SIZE(file);
-		print_time(file);
-		print_full_path(file);
-		//PrintFilenameMB(file);
-		printf("\n");
-		if(i>30) break;
-	}
-	free_safe(sEnv);
-	free_safe(result);
-}
-
 BOOL read_build_check(int i){
 	BOOL flag = load_db(i);
 	if(!flag) return 0;
@@ -146,18 +122,3 @@ static void print_all_stat(WCHAR *str){
 	printf("%s\n",buffer);
 }
 
-#ifndef SERVICE_MODE
-int main(){
-	if (!SetConsoleCtrlHandler(shutdown_handle, TRUE)) {
-		WIN_ERROR;
-		return 3;
-	}
-	gigaso_init();
-	if(start_named_pipe()){
-		wait_stop_named_pipe();
-	}
-	gigaso_destory();
-	ExitProcess(0);
-	return 0;
-}
-#endif

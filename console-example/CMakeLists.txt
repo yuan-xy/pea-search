@@ -1,9 +1,3 @@
-add_executable(testcons test.c)
-
-set_target_properties(testcons PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
-
-install (TARGETS testcons DESTINATION .)
-
 
 add_executable(sctrl win_service_ctrl.c)
 
