@@ -33,7 +33,7 @@ public:
 
     // Read-only property ${PROPERTY.ident}
     std::string get_version();
-
+    FB::variant history();
     FB::variant search(const FB::variant& msg);
     FB::variant stat(const FB::variant& msg);
 

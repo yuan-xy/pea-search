@@ -31,6 +31,13 @@
 
 <div id="links">
 </div>
+<textarea id="history_template" style="display:none"> 
+<ul>
+		{#foreach $T as record}
+		<li><span>{$T.record}</span></li>
+		{#/for}
+</ul>
+</textarea> 
 
 <div id="tabs">
 	<ul>
@@ -363,6 +370,12 @@
 			offset: "0px"
 		});
 	});
+
+//eval("var hs = (" + plugin.history() + ") ");
+var hs = plugin.history().replace(/\\/g,"\\\\");
+hs = eval(hs);
+$("#links").setTemplateElement("history_template");
+$("#links").processTemplate(hs.slice(0,5));
 </script>
 
 </body>

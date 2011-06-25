@@ -11,6 +11,7 @@
 #include "PluginGigasoAPI.h"
 
 #include "sharelib.h"
+#include "history.h"
 #include <stdlib.h>   
 #include <stdio.h>
 
@@ -40,6 +41,7 @@ static void close_named_pipe(){
 
 PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr& host) : m_plugin(plugin), m_host(host)
 {
+	registerMethod("history",      make_method(this, &PluginGigasoAPI::history));
     registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
     registerMethod("stat",      make_method(this, &PluginGigasoAPI::stat));
 
@@ -81,10 +83,12 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	m_order=0;
 	m_case=0;
 	m_file_type=0;
+	load_history();
 }
 
 PluginGigasoAPI::~PluginGigasoAPI(){
 		close_named_pipe();
+		save_history();
 }
 
 PluginGigasoPtr PluginGigasoAPI::getPlugin(){
@@ -201,6 +205,7 @@ static int shell_exec(const FB::variant& msg, const wchar_t *verb){
 	std::wstring s = msg.convert_cast<std::wstring>();
 	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
     HINSTANCE ret = ShellExecuteW(NULL,verb,s.c_str(),NULL,NULL,SW_SHOWNORMAL);
+	add_history(s.c_str());
 	return (int)ret > 32;
 }
 
@@ -216,6 +221,7 @@ static int shell2_exec(const FB::variant& msg, const wchar_t *verb){
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL; 
+	add_history(s.c_str());
 	return ShellExecuteEx(&ShExecInfo);
 }
 
@@ -275,4 +281,13 @@ FB::variant PluginGigasoAPI::copy_str(const FB::variant& msg){
 		return 1;
 	}
 	return 0;
+}
+
+
+FB::variant PluginGigasoAPI::history(){
+	wchar_t buffer[MAX_HISTORY*MAX_PATH];
+	int len = to_json(buffer);
+	std::wstring ret(buffer,len) ;
+	FB::variant var(ret);
+	return var;
 }

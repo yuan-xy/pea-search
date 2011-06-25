@@ -16,6 +16,7 @@ browserplugin_project(${PROJNAME})
 
 file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     [^.]*.cpp
+    [^.]*.c
     [^.]*.h
     [^.]*.cmake
     )
@@ -38,3 +39,12 @@ SET( SOURCES
 
 # This will include Win/projectDef.cmake, Linux/projectDef.cmake, etc
 include_platform()
+
+SET( SOURCES
+    history.h
+    history.c
+    test_history.c
+    )
+
+add_executable(test_history ${SOURCES} )
+set_target_properties(test_history PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
