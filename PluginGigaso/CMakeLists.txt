@@ -16,7 +16,6 @@ browserplugin_project(${PROJNAME})
 
 file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     [^.]*.cpp
-    [^.]*.c
     [^.]*.h
     [^.]*.cmake
     )
@@ -35,16 +34,26 @@ SOURCE_GROUP(Generated FILES
 SET( SOURCES
     ${GENERAL}
     ${GENERATED}
+    history.c
     )
 
 # This will include Win/projectDef.cmake, Linux/projectDef.cmake, etc
 include_platform()
 
-SET( SOURCES
+SET( SOURCES1
     history.h
     history.c
     test_history.c
     )
 
-add_executable(test_history ${SOURCES} )
+add_executable(test_history ${SOURCES1} )
 set_target_properties(test_history PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
+
+SET( SOURCES2
+    win_icon.h
+    win_icon.cpp
+    test_win_icon.c
+    )
+
+add_executable(test_win_icon ${SOURCES2} )
+set_target_properties(test_win_icon PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
