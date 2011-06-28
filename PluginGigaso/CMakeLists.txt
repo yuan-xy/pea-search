@@ -35,6 +35,7 @@ SET( SOURCES
     ${GENERAL}
     ${GENERATED}
     history.c
+    common.c
     )
 
 # This will include Win/projectDef.cmake, Linux/projectDef.cmake, etc

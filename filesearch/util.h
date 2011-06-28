@@ -124,8 +124,6 @@ extern int file_size_unit(FSIZE size);
 extern int file_size_amount(FSIZE size);
 
 
-extern BOOL WindowsVersionOK (DWORD MajorVerRequired, DWORD MinorVerRequired);
-
 #endif  // FILE_SEARCH_UTIL_H_
 
 #ifdef __cplusplus

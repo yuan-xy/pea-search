@@ -22,6 +22,7 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	suffix.c
 	util.c
 	write.c
+	common.c
 )
 
 

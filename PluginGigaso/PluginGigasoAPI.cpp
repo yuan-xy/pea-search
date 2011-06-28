@@ -11,6 +11,7 @@
 #include "PluginGigasoAPI.h"
 
 #include "sharelib.h"
+#include "common.h"
 #include "history.h"
 #include "win_icon.h"
 #include <stdlib.h>   
@@ -37,16 +38,6 @@ static BOOL connect_named_pipe(HANDLE *p){
 static void close_named_pipe(){
 		if(hNamedPipe!=NULL) CloseHandle(hNamedPipe);
 		hNamedPipe=NULL;
-}
-
-BOOL setPWD(){
-	char szFilePath[MAX_PATH]={0};
-	char *szFileName = NULL;
-	GetModuleFileNameA(NULL,szFilePath,MAX_PATH);
-	szFileName = strrchr(szFilePath,'\\');
-	if(!szFileName) return 0;
-	szFilePath[szFileName-szFilePath]='\0';
-	return SetCurrentDirectoryA(szFilePath);
 }
 
 PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr& host) : m_plugin(plugin), m_host(host)
@@ -307,9 +298,10 @@ FB::variant PluginGigasoAPI::history(){
 
 static int thumb_index;
 static void gen_thumb(wchar_t *file, void *context){
-	wchar_t thumb_name[MAX_PATH];
+	wchar_t path[MAX_PATH], thumb_name[16];
 	wsprintf(thumb_name,L".\\web\\%d.bmp%c",thumb_index,L'\0');
-	gen_icon_xlarge(file, thumb_name);
+	get_abs_path(thumb_name, path);
+	gen_icon_xlarge(file, path);
 	thumb_index++;
 }
 

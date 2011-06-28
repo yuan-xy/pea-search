@@ -9,7 +9,7 @@
 #include "main.h"
 #include "util.h"
 #include "serverNP.h"
-
+#include "common.h"
 
 VOID WINAPI ServiceMain (DWORD argc, LPWSTR argv[]);
 VOID WINAPI ServerCtrlHandler(DWORD);
@@ -33,15 +33,6 @@ VOID main (int argc, LPWSTR argv [])
 	return;
 }
 
-BOOL setPWD(){
-	char szFilePath[MAX_PATH]={0};
-	char *szFileName = NULL;
-	GetModuleFileNameA(NULL,szFilePath,MAX_PATH);
-	szFileName = strrchr(szFilePath,'\\');
-	if(!szFileName) return 0;
-	szFilePath[szFileName-szFilePath]='\0';
-	return SetCurrentDirectoryA(szFilePath);
-}
 
 VOID WINAPI ServiceMain (DWORD argc, LPWSTR argv[]){
 	setPWD();

@@ -33,6 +33,17 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/PluginGigaso/sharelib.h"
   )
 
+configure_file (
+  "${PROJECT_SOURCE_DIR}/filesearch/common.h"
+  "${PROJECT_SOURCE_DIR}/PluginGigaso/common.h"
+  )
+
+configure_file (
+  "${PROJECT_SOURCE_DIR}/filesearch/common.c"
+  "${PROJECT_SOURCE_DIR}/PluginGigaso/common.c"
+  )
+
+
 # add the binary tree to the search path for include files
 # so that we will find GIGASOConfig.h
 include_directories ("${PROJECT_BINARY_DIR}")

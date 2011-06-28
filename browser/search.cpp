@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include "webform.h"
+#include "../filesearch/common.h"
 
 HINSTANCE hInstance;
 HWND hMain; // Our main window
@@ -63,14 +64,8 @@ static void dom_demo(){
 }
 
 static void get_path(){
-	WCHAR szPath[MAX_PATH+14]; 
-	const WCHAR filename[] = L"web\\search.htm";
-	if( !GetModuleFileName( NULL, szPath, MAX_PATH ) ) return;
-	WCHAR *p = wcsrchr(szPath,'\\');
-	if(p==NULL) return;
-	*(p+1) = L'\0';
-	#pragma warning(suppress:4996)
-	wcscat(p,filename);
+	WCHAR szPath[MAX_PATH];
+	get_abs_path(L"web\\search.htm", szPath);
 	SetWindowText(hwebf, szPath);
 }
 

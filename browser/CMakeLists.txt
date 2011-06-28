@@ -2,6 +2,8 @@ SET( SOURCES
     "webform.h"
     "webform.cpp"
     "search.cpp"
+    "../filesearch/common.h"
+    "../filesearch/common.c"
     )
    
 add_executable (search ${SOURCES} )

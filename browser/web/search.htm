@@ -376,6 +376,7 @@ var hs = plugin.history().replace(/\\/g,"\\\\");
 hs = eval(hs);
 $("#links").setTemplateElement("history_template");
 $("#links").processTemplate(hs.slice(0,5));
+plugin.history_thumb();
 </script>
 
 </body>
