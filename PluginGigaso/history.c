@@ -4,12 +4,12 @@
 static wchar_t his_files[MAX_HISTORY][MAX_PATH];
 static int start=0;
 
-void add_history(const wchar_t *file){
+void history_add(const wchar_t *file){
 	wcscpy(his_files[start],file);
 	start++;
 }
 
-BOOL save_history(){
+BOOL history_save(){
 	FILE *fp;
 	fp = fopen("history.ini", "w");
 	if(fp==NULL) return 0;
@@ -19,7 +19,7 @@ BOOL save_history(){
 	return 1;
 }
 
-BOOL load_history(){
+BOOL history_load(){
 	FILE *fp;
 	fp = fopen("history.ini", "r");
 	if(fp==NULL) return 0;
@@ -53,7 +53,7 @@ static void json_print(wchar_t *file, void *context){
 	pctx->p = p;
 }
 
-int to_json(wchar_t *buffer){
+int history_to_json(wchar_t *buffer){
 	wchar_t *p = buffer;
 	tmp_json_context ctx;
 	*p++ = L'[';

@@ -12,6 +12,7 @@
 
 #include "sharelib.h"
 #include "history.h"
+#include "win_icon.h"
 #include <stdlib.h>   
 #include <stdio.h>
 
@@ -38,10 +39,20 @@ static void close_named_pipe(){
 		hNamedPipe=NULL;
 }
 
+BOOL setPWD(){
+	char szFilePath[MAX_PATH]={0};
+	char *szFileName = NULL;
+	GetModuleFileNameA(NULL,szFilePath,MAX_PATH);
+	szFileName = strrchr(szFilePath,'\\');
+	if(!szFileName) return 0;
+	szFilePath[szFileName-szFilePath]='\0';
+	return SetCurrentDirectoryA(szFilePath);
+}
 
 PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr& host) : m_plugin(plugin), m_host(host)
 {
 	registerMethod("history",      make_method(this, &PluginGigasoAPI::history));
+	registerMethod("history_thumb",      make_method(this, &PluginGigasoAPI::history_thumb));
     registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
     registerMethod("stat",      make_method(this, &PluginGigasoAPI::stat));
 
@@ -83,12 +94,13 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	m_order=0;
 	m_case=0;
 	m_file_type=0;
-	load_history();
+	setPWD();
+	history_load();
 }
 
 PluginGigasoAPI::~PluginGigasoAPI(){
 		close_named_pipe();
-		save_history();
+		history_save();
 }
 
 PluginGigasoPtr PluginGigasoAPI::getPlugin(){
@@ -205,7 +217,7 @@ static int shell_exec(const FB::variant& msg, const wchar_t *verb){
 	std::wstring s = msg.convert_cast<std::wstring>();
 	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
     HINSTANCE ret = ShellExecuteW(NULL,verb,s.c_str(),NULL,NULL,SW_SHOWNORMAL);
-	add_history(s.c_str());
+	history_add(s.c_str());
 	return (int)ret > 32;
 }
 
@@ -221,7 +233,7 @@ static int shell2_exec(const FB::variant& msg, const wchar_t *verb){
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL; 
-	add_history(s.c_str());
+	history_add(s.c_str());
 	return ShellExecuteEx(&ShExecInfo);
 }
 
@@ -286,8 +298,22 @@ FB::variant PluginGigasoAPI::copy_str(const FB::variant& msg){
 
 FB::variant PluginGigasoAPI::history(){
 	wchar_t buffer[MAX_HISTORY*MAX_PATH];
-	int len = to_json(buffer);
+	int len = history_to_json(buffer);
 	std::wstring ret(buffer,len) ;
 	FB::variant var(ret);
 	return var;
+}
+
+
+static int thumb_index;
+static void gen_thumb(wchar_t *file, void *context){
+	wchar_t thumb_name[MAX_PATH];
+	wsprintf(thumb_name,L".\\web\\%d.bmp%c",thumb_index,L'\0');
+	gen_icon_xlarge(file, thumb_name);
+	thumb_index++;
+}
+
+void PluginGigasoAPI::history_thumb(){
+	thumb_index = 0;
+	HistoryIterator(gen_thumb,NULL);
 }

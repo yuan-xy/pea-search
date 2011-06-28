@@ -9,17 +9,17 @@ extern "C" {
 
 #define MAX_HISTORY 20
 
-extern void add_history(const wchar_t *file);
+extern void history_add(const wchar_t *file);
 
-extern BOOL save_history();
+extern BOOL history_save();
 
-extern BOOL load_history();
+extern BOOL history_load();
 
 typedef void (*pHistoryVisitor)(wchar_t *file, void *context);
 
 extern void HistoryIterator(pHistoryVisitor, void *context);
 
-extern int to_json(wchar_t *buffer);
+extern int history_to_json(wchar_t *buffer);
 
 #endif  // FILE_SEARCH_HISTORY_H_
 
