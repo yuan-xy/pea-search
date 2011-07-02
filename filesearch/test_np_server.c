@@ -3,6 +3,21 @@
 #include "serverNP.h"
 #include "main.h"
 
+DWORD WINAPI  Hotkey(PVOID pParam){
+    MSG msg = {0};
+    if (!RegisterHotKey(NULL,1, MOD_ALT, 0x42)) {	//0x42 is 'b'
+        return 1;
+    }
+    wprintf(L"Hotkey 'ALT+b' registered, using MOD_NOREPEAT flag\n");
+    while(GetMessage(&msg, NULL, 0, 0) != 0){
+        if (msg.message == WM_HOTKEY){
+            wprintf(L"WM_HOTKEY received\n");
+        }
+    }
+	return 0;
+}
+
+
 int main(){
 	if (!SetConsoleCtrlHandler(shutdown_handle, TRUE)) {
 		WIN_ERROR;
@@ -10,6 +25,7 @@ int main(){
 	}
 	gigaso_init();
 	if(start_named_pipe()){
+		CreateThread(NULL,0,Hotkey,NULL,0,0);
 		wait_stop_named_pipe();
 	}
 	gigaso_destory();

@@ -8,7 +8,7 @@ extern "C" {
 /**
  * 设置应用程序当前目录
  */
-extern BOOL setPWD();
+extern BOOL setPWD(char *lpModuleName);
 
 /**
  * 根据相对路径文件名得到绝对路径名

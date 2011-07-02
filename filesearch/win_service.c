@@ -35,7 +35,7 @@ VOID main (int argc, LPWSTR argv [])
 
 
 VOID WINAPI ServiceMain (DWORD argc, LPWSTR argv[]){
-	setPWD();
+	setPWD(NULL);
 	hLogFile = fopen ("SimpleServiceLog.txt", "a+");
 	if (hLogFile == NULL) return ;
 	fprintf(hLogFile, "Starting service. First log entry.");

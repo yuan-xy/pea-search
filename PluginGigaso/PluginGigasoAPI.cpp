@@ -85,7 +85,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	m_order=0;
 	m_case=0;
 	m_file_type=0;
-	setPWD();
+	setPWD("npPluginGigaso.dll");
 	history_load();
 }
 
@@ -121,10 +121,11 @@ void PluginGigasoAPI::set_caze(bool val){
     m_case = val;
 }
 
-// Read-only property version
-std::string PluginGigasoAPI::get_version()
-{
-    return "CURRENT_VERSION";
+std::wstring PluginGigasoAPI::get_version(){
+	wchar_t buffer[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH,buffer);
+	std::wstring ret(buffer,wcslen(buffer)) ;
+	return ret;
 }
 
 static int MAX_ROW = 1000;
@@ -298,10 +299,9 @@ FB::variant PluginGigasoAPI::history(){
 
 static int thumb_index;
 static void gen_thumb(wchar_t *file, void *context){
-	wchar_t path[MAX_PATH], thumb_name[16];
+	wchar_t thumb_name[16];
 	wsprintf(thumb_name,L".\\web\\%d.bmp%c",thumb_index,L'\0');
-	get_abs_path(thumb_name, path);
-	gen_icon_xlarge(file, path);
+	gen_icon_xlarge(file, thumb_name);
 	thumb_index++;
 }
 

@@ -32,7 +32,7 @@ public:
     void set_caze(bool val);
 
     // Read-only property ${PROPERTY.ident}
-    std::string get_version();
+    std::wstring get_version();
     FB::variant history();
     void history_thumb();
     FB::variant search(const FB::variant& msg);

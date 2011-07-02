@@ -1,10 +1,12 @@
 #include <windows.h>
 #include "common.h"
 
-BOOL setPWD(){
+BOOL setPWD(char *lpModuleName){
 	char szFilePath[MAX_PATH]={0};
 	char *szFileName = NULL;
-	GetModuleFileNameA(NULL,szFilePath,MAX_PATH);
+	HMODULE hModule = NULL;
+	if(lpModuleName!=NULL) hModule = GetModuleHandleA(lpModuleName);
+	GetModuleFileNameA(hModule,szFilePath,MAX_PATH);
 	szFileName = strrchr(szFilePath,'\\');
 	if(!szFileName) return 0;
 	szFilePath[szFileName-szFilePath]='\0';
@@ -12,12 +14,10 @@ BOOL setPWD(){
 }
 
 BOOL get_abs_path(const WCHAR *name, WCHAR full_path[]){
-	WCHAR *p;
-	if( !GetModuleFileNameW( NULL, full_path, MAX_PATH ) ) return 0;
-	p = wcsrchr(full_path,'\\');
-	if(p==NULL) return 0;
-	*(p+1) = L'\0';
-	#pragma warning(suppress:4996)
+	WCHAR *p = full_path;
+	if( !GetCurrentDirectoryW(MAX_PATH,full_path) ) return 0;
+	p += wcslen(full_path);
+	*p++ = L'\\';
 	wcscat(p,name);
 	return 1;
 }
