@@ -84,10 +84,11 @@
 
 #pragma warning(suppress:4312)
 inline HWND WebformCreate(HWND hparent, UINT id) {
-	return CreateWindowEx(0, WEBFORM_CLASS, _T("about:blank"),
-			WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE, 0, 0, 100, 100, hparent,
+	return CreateWindowEx(0, WEBFORM_CLASS, _T(""),
+			WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | WS_VSCROLL, 0, 0, 100, 100, hparent,
 			(HMENU) id, GetModuleHandle(0), 0);
 }
+
 inline void WebformDestroy(HWND hwebf) {
 	DestroyWindow(hwebf);
 }

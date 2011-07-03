@@ -12,19 +12,21 @@ HWND hMain; // Our main window
 HWND hwebf; // We declare this handle globally, just for convenience
 bool loaded, isquit = false; // we declare it as a global variable, for convenience
 
-void PumpMessages() {
-	MSG msg;
-	while (true) {
-		BOOL res = PeekMessage(&msg, 0, 0, 0, PM_REMOVE);
-		if (!res)
-			return;
-		if (msg.message == WM_QUIT) {
-			isquit = true;
-			return;
-		}
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
+void clear(){
+	if(hwebf != NULL) WebformDestroy(hwebf);
+	hwebf = NULL;
+	loaded = false;
+}
+
+static void load(){
+	WCHAR szPath[MAX_PATH];
+	get_abs_path(L"web\\search.htm", szPath);
+	SetWindowText(hwebf, szPath);
+}
+
+void init_browser(HWND hwnd){
+	hwebf = WebformCreate(hwnd,103);
+	load();
 }
 
 static void show_title(){
@@ -54,54 +56,10 @@ static void exec_js(){
 		doc->Release();
 }
 
-static void dom_demo(){
-		// And alter the text: document.all["id"].innerHTML="fred<br>,ary";
-		IHTMLElement *e2 = WebformGetElement < IHTMLElement > (hwebf, _T("id"));
-		if (e2 != 0) {
-			e2->put_innerHTML(L"hello,<br>Ô¬ÐÂÓî<hr>world");
-			e2->Release();
-		}
-}
-
-static void get_path(){
-	WCHAR szPath[MAX_PATH];
-	get_abs_path(L"web\\search.htm", szPath);
-	SetWindowText(hwebf, szPath);
-}
-
 LRESULT CALLBACK PlainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 	case WM_CREATE: {
-		hwebf = CreateWindow(WEBFORM_CLASS, _T(""),
-				WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | WS_VSCROLL, 0, 0,
-				100, 100, hwnd, (HMENU) 103, hInstance, 0);
-		get_path();
-		//SetTimer(hwnd,1,2000,0);
-	}
-		break;
-	case WM_TIMER: {
-		KillTimer(hwnd, 1);
-		loaded = false;
-		WebformReady(hwebf);
-		WebformSet(hwebf,_T("<html><head><script type='text/javascript'>\n")
-				_T("function MyJavascriptFunc(arg) {alert(arg);}\n")
-				_T("</script></head><body><form>\n")
-				_T("<input name='cx' type='checkbox' checked> Do you want some?<br>\n")
-				_T("<input name='tx' type='text' value='Come and get it!'><br>\n")
-				_T("<input name='sub' type='submit' value='Ok'>\n")
-				_T("<input name='sub' type='submit' value='Cancel'>\n")
-				_T("<br><div id='id'>hell<div>\n")
-				_T("</form></body></html>\n"));
-		WebformGo(hwebf, 0);
-         while (!loaded && !isquit) {
-                 PumpMessages();
-                 Sleep(5);
-         }
-         if (isquit) {
-                 PostQuitMessage(0);
-                 return 0;
-         }
-		 dom_demo();
+		init_browser(hwnd);
 	}
 		break;
 	case WM_SIZE: {
@@ -127,8 +85,18 @@ LRESULT CALLBACK PlainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 	}
 		break;
-	case WM_KEYUP: 
-		exec_js();
+	case WM_KEYUP:
+		switch (wParam) {
+			case VK_F5:
+				clear();
+				init_browser(hwnd);
+				break;
+			case VK_ESCAPE:
+				PostQuitMessage(0);
+				return 0;
+			default:
+				exec_js();
+		}
 		break;
 	case WM_DESTROY: {
 		PostQuitMessage(0);
@@ -138,10 +106,10 @@ LRESULT CALLBACK PlainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-int WINAPI WinMain(HINSTANCE h,HINSTANCE,LPSTR,int)
-{	hInstance=h;
+int WINAPI WinMain(HINSTANCE h,HINSTANCE,LPSTR,int){
+	hInstance=h;
 	OleInitialize(0);
-	//
+	setPWD(NULL);
 	WNDCLASSEX wcex; ZeroMemory(&wcex,sizeof(wcex)); wcex.cbSize = sizeof(WNDCLASSEX);
 	BOOL res=GetClassInfoEx(hInstance,_T("Gigaso_Search"),&wcex);
 	if (!res)

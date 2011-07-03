@@ -1,10 +1,18 @@
 function get_file_path(tr){
-	var inputs = $(tr).find("td input");
-	type = inputs[0].value;
-	file = $(tr).find("td[colid=0] span")[0].title;
-	if(file=="") file = inputs[1].value;
-	path = $(tr).find("td[colid=1] span")[0].title;
-	if(path=="") path = inputs[2].value;
+	if(tr.tagName=="LI"){
+		path = tr.title; 
+		file = $(tr).find("span")[0].innerHTML;
+	}else if(tr.tagName=="UL"){
+		path = tr.firstChild.title; 
+		file = $(tr).find("span")[0].innerHTML;
+	}else{
+		var inputs = $(tr).find("td input");
+		type = inputs[0].value;
+		file = $(tr).find("td[colid=0] span")[0].title;
+		if(file=="") file = inputs[1].value;
+		path = $(tr).find("td[colid=1] span")[0].title;
+		if(path=="") path = inputs[2].value;
+	}
 }
 
 function dblclick_file(target){

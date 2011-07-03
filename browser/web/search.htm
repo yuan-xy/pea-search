@@ -29,12 +29,12 @@
 
 </center>
 
-<div id="links">
+<div id="historys">
 </div>
 <textarea id="history_template" style="display:none"> 
-<ul>
+<ul class="history_ul">
 		{#foreach $T as record}
-		<li><span>{$T.record}</span></li>
+		<li title="{$T.record.path}" class="history_file" history="1"><img src="{$T.record.id}.bmp" /><span>{$T.record.name}</span></li>
 		{#/for}
 </ul>
 </textarea> 
@@ -371,12 +371,24 @@
 		});
 	});
 
-//eval("var hs = (" + plugin.history() + ") ");
 var hs = plugin.history().replace(/\\/g,"\\\\");
 hs = eval(hs);
-$("#links").setTemplateElement("history_template");
-$("#links").processTemplate(hs.slice(0,5));
+for( var i=0;i<hs.length;i++){
+	tmp = {
+		"id":i, 
+		"path": hs[i].substring(0, hs[i].lastIndexOf("\\")+1),
+		"name": hs[i].substring(hs[i].lastIndexOf("\\")+1,hs[i].length)
+	}
+	hs[i] = tmp;
+}
+$("#historys").setTemplateElement("history_template");
+$("#historys").processTemplate(hs.slice(0,10));
 plugin.history_thumb();
+$(".history_file").contextMenu('myMenu1', context_menu_obj);
+$(".history_file").bind('dblclick',function(e){
+	dblclick_file(e.currentTarget);
+});
+
 </script>
 
 </body>

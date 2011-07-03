@@ -15,9 +15,12 @@ BOOL setPWD(char *lpModuleName){
 
 BOOL get_abs_path(const WCHAR *name, WCHAR full_path[]){
 	WCHAR *p = full_path;
-	if( !GetCurrentDirectoryW(MAX_PATH,full_path) ) return 0;
-	p += wcslen(full_path);
-	*p++ = L'\\';
+	DWORD d = GetCurrentDirectoryW(MAX_PATH,full_path);
+	if( d==0 ) return 0;
+	p += d;
+	if(*name != L'\\') *p = L'\\';
+	*(p+1) = L'\0';
+	#pragma warning(suppress:4996)
 	wcscat(p,name);
 	return 1;
 }
