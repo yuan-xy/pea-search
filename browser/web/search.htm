@@ -34,12 +34,12 @@
 <textarea id="history_template" style="display:none"> 
 <ul class="history_ul">
 		{#foreach $T as record}
-		<li title="{$T.record.path}" class="history_file" history="1"><img src="{$T.record.id}.bmp" /><span>{$T.record.name}</span></li>
+		<li title="{$T.record.path}" class="history_file" style="position:absolute; left:{$T.record.left}; top:{$T.record.top}"><img src="{$T.record.id}.bmp" /><br/><span>{$T.record.name}</span></li>
 		{#/for}
 </ul>
 </textarea> 
 
-<div id="tabs">
+<div id="tabs" style="display:none">
 	<ul>
 		<li>
 			<a id="all-" href="#tab-1" onclick="file_type_search(0);return true;"><img src="icons/file.ico" class="icon"/>全部
@@ -243,6 +243,8 @@
 		page();
 	}
     function searchf(value){
+		$("#historys").fadeOut();
+		$("#tabs").show();
 		$("#loading").css("visibility","visible");
 		value = trim(value);
 		cur_search = value;
@@ -322,6 +324,32 @@
 			show_error("搜索服务失去响应！");
 		}
 	}
+	function history_parse(){
+		var hs = plugin.history().replace(/\\/g,"\\\\");
+		hs = eval(hs);
+		for( var i=0;i<hs.length;i++){
+			tmp = {
+				"id":i, 
+				"left": 50+250*(i%5),
+				"top" : i>=5? 300:150,
+				"path": hs[i].substring(0, hs[i].lastIndexOf("\\")+1),
+				"name": hs[i].substring(hs[i].lastIndexOf("\\")+1,hs[i].length)
+			}
+			hs[i] = tmp;
+		}
+		$("#historys").setTemplateElement("history_template");
+		$("#historys").processTemplate(hs.slice(0,10));
+		$(".history_file").bind('dblclick',function(e){
+			dblclick_file(e.target);
+		});
+		$(".history_file").contextMenu('myMenu1',context_menu_obj);
+	}
+	function history_thumb(){ 	plugin.history_thumb(); }
+	function load_history(){
+		history_thumb_timeout = setTimeout(history_thumb,0);
+		history_parse_timeout = setTimeout(history_parse,10);
+	}
+
 	$(function() {
 		if(plugin.caze){
 			$("#case1").click();
@@ -369,25 +397,8 @@
 			at: "right center",
 			offset: "0px"
 		});
+		load_history();
 	});
-
-var hs = plugin.history().replace(/\\/g,"\\\\");
-hs = eval(hs);
-for( var i=0;i<hs.length;i++){
-	tmp = {
-		"id":i, 
-		"path": hs[i].substring(0, hs[i].lastIndexOf("\\")+1),
-		"name": hs[i].substring(hs[i].lastIndexOf("\\")+1,hs[i].length)
-	}
-	hs[i] = tmp;
-}
-$("#historys").setTemplateElement("history_template");
-$("#historys").processTemplate(hs.slice(0,10));
-plugin.history_thumb();
-$(".history_file").contextMenu('myMenu1', context_menu_obj);
-$(".history_file").bind('dblclick',function(e){
-	dblclick_file(e.currentTarget);
-});
 
 </script>
 

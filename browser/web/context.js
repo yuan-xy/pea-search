@@ -1,10 +1,10 @@
 function get_file_path(tr){
+	//alert(tr.tagName);
 	if(tr.tagName=="LI"){
 		path = tr.title; 
 		file = $(tr).find("span")[0].innerHTML;
 	}else if(tr.tagName=="UL"){
-		path = tr.firstChild.title; 
-		file = $(tr).find("span")[0].innerHTML;
+		alert(tr.tagName);
 	}else{
 		var inputs = $(tr).find("td input");
 		type = inputs[0].value;
