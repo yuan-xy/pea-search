@@ -22,7 +22,15 @@ void history_add(const wchar_t *file){
 }
 
 void history_delete(int i){
-	wcscpy(his_files[index_transform(i)],L"C:");
+	int j;
+	for(j=0;j<MAX_HISTORY/2;j++){
+		if(wcscmp(his_files[j],L"")!=0){
+			memcpy(his_files[index_transform(i)],his_files[j], sizeof(his_files[0]));
+			wcscpy(his_files[j],L"");
+			return;
+		}
+	}
+	wcscpy(his_files[index_transform(i)],L"");
 }
 
 BOOL history_save(){
@@ -30,7 +38,7 @@ BOOL history_save(){
 	fp = fopen("history.ini", "w");
 	if(fp==NULL) return 0;
 	fwrite(&start,sizeof(int),1,fp);
-	fwrite(his_files,MAX_PATH,MAX_HISTORY,fp);
+	fwrite(his_files,sizeof(his_files[0]),MAX_HISTORY,fp);
 	fclose(fp);
 	return 1;
 }
@@ -43,7 +51,7 @@ BOOL history_load(){
 		return 0;
 	}
 	fread(&start,sizeof(int),1,fp);
-	fread(his_files,MAX_PATH,MAX_HISTORY,fp);
+	fread(his_files,sizeof(his_files[0]),MAX_HISTORY,fp);
 	fclose(fp);
 	return 1;
 }
@@ -137,6 +145,7 @@ void init_from_recent(){
 		{
 			int i=0;
 			for(;i<MAX_HISTORY;i++) history_add(list[i].path);
+			start = MAX_HISTORY/2 +1;
 		}
 		FindClose(hFind);
 	}

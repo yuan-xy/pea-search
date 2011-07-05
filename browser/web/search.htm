@@ -32,11 +32,15 @@
 <div id="historys">
 </div>
 <textarea id="history_template" style="display:none"> 
-<ul class="history_ul">
 		{#foreach $T as record}
-		<li title="{$T.record.path}" class="history_file" style="position:absolute; left:{$T.record.left}; top:{$T.record.top}"><img src="{$T.record.id}.bmp" /><br/><span>{$T.record.name}</span></li>
+		<div title="{$T.record.path}{$T.record.name}" class="history_file" style="position:absolute; left:{$T.record.left}; top:{$T.record.top}">
+			<img src="{$T.record.id}.bmp" /><a onclick="plugin.history_del({$T.record.id});$(this.parentNode).hide();return false;">X</a>
+			<input type="hidden" value="{$T.record.name}">
+			<input type="hidden" value="{$T.record.path}">
+			<br/>
+			<span style="width:150px;text-align: center;word-break:break-all">{$T.record.name2}</span>
+		</div>
 		{#/for}
-</ul>
 </textarea> 
 
 <div id="tabs" style="display:none">
@@ -216,6 +220,27 @@
 		}
 		table_over();
 	}
+	function file_name_trim(files){
+		$(files).each( function sub(i,obj){
+			if(obj.name.length>53){
+				obj.name2 = obj.name;
+				obj.name = obj.name2.substring(0, 25)+"..."+obj.name2.substring(obj.name2.length-25, obj.name2.length);
+			}
+			if(obj.path.length>52){
+				obj.path2 = obj.path;
+				obj.path = obj.path2.substring(0, 24)+"..."+obj.path2.substring(obj.path2.length-25, obj.path2.length);
+			}
+		});
+	}
+	function file_name_trim2(files){
+		$(files).each( function sub(i,obj){
+			if(obj.name.length>33){
+				obj.name2 = obj.name.substring(0, 15)+"..."+obj.name.substring(obj.name.length-15, obj.name.length);
+			}else{
+				obj.name2 = obj.name;
+			}
+		});
+	}
 	function searchf0(){
 		$("#loading").css("visibility","visible");
 		clearTimeout(highlight_timeout);
@@ -228,16 +253,7 @@
 			$("#loading").css("visibility","hidden");
 			return;
 		}
-		$(files).each( function sub(i,obj){
-			if(obj.name.length>53){
-				obj.name2 = obj.name;
-				obj.name = obj.name2.substring(0, 25)+"..."+obj.name2.substring(obj.name2.length-25, obj.name2.length);
-			}
-			if(obj.path.length>52){
-				obj.path2 = obj.path;
-				obj.path = obj.path2.substring(0, 24)+"..."+obj.path2.substring(obj.path2.length-25, obj.path2.length);
-			}
-		});
+		file_name_trim(files);
 		if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
 		page_from = 0;
 		page();
@@ -330,13 +346,14 @@
 		for( var i=0;i<hs.length;i++){
 			tmp = {
 				"id":i, 
-				"left": 50+250*(i%5),
+				"left": 10+210*(i%5),
 				"top" : i>=5? 300:150,
 				"path": hs[i].substring(0, hs[i].lastIndexOf("\\")+1),
 				"name": hs[i].substring(hs[i].lastIndexOf("\\")+1,hs[i].length)
 			}
 			hs[i] = tmp;
 		}
+		file_name_trim2(hs);
 		$("#historys").setTemplateElement("history_template");
 		$("#historys").processTemplate(hs.slice(0,10));
 		$(".history_file").bind('dblclick',function(e){

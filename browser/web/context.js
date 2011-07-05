@@ -1,8 +1,8 @@
 function get_file_path(tr){
 	//alert(tr.tagName);
-	if(tr.tagName=="LI"){
-		path = tr.title; 
-		file = $(tr).find("span")[0].innerHTML;
+	if(tr.tagName=="DIV"){
+		path = $(tr).find("input")[1].value;
+		file = $(tr).find("input")[0].value;
 	}else if(tr.tagName=="UL"){
 		alert(tr.tagName);
 	}else{
