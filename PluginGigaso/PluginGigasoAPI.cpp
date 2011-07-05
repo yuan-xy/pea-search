@@ -44,6 +44,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 {
 	registerMethod("history",      make_method(this, &PluginGigasoAPI::history));
 	registerMethod("history_thumb",      make_method(this, &PluginGigasoAPI::history_thumb));
+	registerMethod("history_del",      make_method(this, &PluginGigasoAPI::history_del));
     registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
     registerMethod("stat",      make_method(this, &PluginGigasoAPI::stat));
 
@@ -210,6 +211,7 @@ static int shell_exec(const FB::variant& msg, const wchar_t *verb){
 	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
     HINSTANCE ret = ShellExecuteW(NULL,verb,s.c_str(),NULL,NULL,SW_SHOWNORMAL);
 	history_add(s.c_str());
+	history_save();
 	return (int)ret > 32;
 }
 
@@ -226,6 +228,7 @@ static int shell2_exec(const FB::variant& msg, const wchar_t *verb){
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL; 
 	history_add(s.c_str());
+	history_save();
 	return ShellExecuteEx(&ShExecInfo);
 }
 
@@ -308,4 +311,10 @@ static void gen_thumb(wchar_t *file, void *context){
 void PluginGigasoAPI::history_thumb(){
 	thumb_index = 0;
 	HistoryIterator(gen_thumb,NULL);
+}
+
+bool PluginGigasoAPI::history_del(int i){
+	history_delete(i);
+	history_save();
+	return true;
 }

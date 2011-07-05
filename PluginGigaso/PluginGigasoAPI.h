@@ -35,6 +35,7 @@ public:
     std::wstring get_version();
     FB::variant history();
     void history_thumb();
+	bool history_del(int i);
     FB::variant search(const FB::variant& msg);
     FB::variant stat(const FB::variant& msg);
 

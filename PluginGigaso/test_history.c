@@ -6,6 +6,7 @@ void print(wchar_t *file, void *context){
 }
 
 int main(){
+	init_from_recent();
 	history_add(L"asdf");
 	history_add(L"qwer");
 	history_save();

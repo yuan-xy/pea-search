@@ -11,9 +11,13 @@ extern "C" {
 
 extern void history_add(const wchar_t *file);
 
+extern void history_delete(int index);
+
 extern BOOL history_save();
 
 extern BOOL history_load();
+
+extern void init_from_recent();
 
 typedef void (*pHistoryVisitor)(wchar_t *file, void *context);
 
