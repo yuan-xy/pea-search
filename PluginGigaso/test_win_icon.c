@@ -1,5 +1,14 @@
 #include <stdio.h>
 #include "win_icon.h"
+#include "bitmap.h"
+
+void gen_thumbnail(const wchar_t *wsDir, const wchar_t *wsFile, const wchar_t *thumb_name){
+	HBITMAP pThumbnail;
+	HRESULT hr = CreateThumbnail(wsDir,wsFile,100,100,&pThumbnail);
+	if( SUCCEEDED( hr ) ){
+			CreateBMPFile(thumb_name, pThumbnail);
+	}
+}
 
 int main(){
 	HICON hicon = (HICON)LoadImage(GetModuleHandle(TEXT("user32.dll")), 
@@ -14,6 +23,7 @@ int main(){
 	gen_icon_small(L"c:\\boot.ini", L"small.bmp");
 	gen_icon_xlarge(L"E:\\firebreath-1.4\\build\\projects\\PluginGigaso\\Debug\\plugingigaso_wixinstall.pdb",L"ini2.bmp");
 	CoUninitialize();
+	gen_thumbnail(L"C:\\google-d", L"ActiveX开发人员指南.pdf", L"setup_thumb.bmp");
 	return 0;
 }
 

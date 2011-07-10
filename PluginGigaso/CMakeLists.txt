@@ -51,6 +51,8 @@ add_executable(test_history ${SOURCES1} )
 set_target_properties(test_history PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
 
 SET( SOURCES2
+    bitmap.h
+    bitmap.cpp
     win_icon.h
     win_icon.cpp
     test_win_icon.c
