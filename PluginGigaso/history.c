@@ -17,6 +17,20 @@ static int index_transform(int i){
 }
 
 void history_add(const wchar_t *file){
+	int j;
+	if(wcscmp(file,his_files[index_transform(0)])==0) return;
+	for(j=1;j<MAX_HISTORY;j++){
+		if(wcscmp(file,his_files[index_transform(j)])==0){
+			int k;
+			wchar_t tmp[MAX_PATH];
+			wcscpy(tmp,file);
+			for(k=j-1;k>=0;k--){
+				wcscpy(his_files[index_transform(k+1)],his_files[index_transform(k)]);
+			}
+			wcscpy(his_files[index_transform(0)],tmp);
+			return;
+		}
+	}
 	wcscpy(his_files[start],file);
 	inc_start();
 }
