@@ -303,7 +303,7 @@ FB::variant PluginGigasoAPI::history(){
 static int thumb_index;
 static void gen_thumb(wchar_t *file, void *context){
 	wchar_t thumb_name[16];
-	wsprintf(thumb_name,L".\\web\\%d.bmp%c",thumb_index,L'\0');
+	wsprintf(thumb_name,L".\\web\\%d.jpg%c",thumb_index,L'\0');
 	gen_icon_xlarge(file, thumb_name);
 	thumb_index++;
 }

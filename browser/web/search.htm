@@ -19,7 +19,7 @@
 <body>
 <object id="plugin0" type="application/x-plugingigaso" width="10" height="10">
 </object>
-
+<input type="button" value="刷新" onclick="refresh();">
 <input type="radio" name="case" id="case0">模糊查询（模糊拼音、不区分英文大小写）
 <input type="radio" name="case" id="case1">精确模糊（非模糊拼音、区分英文大小写）
 
@@ -34,11 +34,11 @@
 <textarea id="history_template" style="display:none"> 
 		{#foreach $T as record}
 		<div title="{$T.record.path}{$T.record.name}" class="history_file" style="position:absolute; left:{$T.record.left}; top:{$T.record.top}">
-			<img src="{$T.record.id}.bmp" /><a onclick="plugin.history_del({$T.record.id});$(this.parentNode).hide();return false;">X</a>
+			<div style="align:center;text-align:center;"><img src="{$T.record.id}.jpg" /><a onclick="plugin.history_del({$T.record.id});$(this.parentNode).hide();return false;" style="vertical-align: top">&nbsp;X</a></div>
 			<input type="hidden" value="{$T.record.name}">
 			<input type="hidden" value="{$T.record.path}">
 			<br/>
-			<span style="width:150px;text-align: center;word-break:break-all">{$T.record.name2}</span>
+			<div style="width:150px;text-align: center;word-break:break-all;">{$T.record.name2}</div>
 		</div>
 		{#/for}
 </textarea> 
@@ -175,10 +175,10 @@
 			}
 			$("#maintable tbody tr").contextMenu('myMenu1', context_menu_obj);
 			$("#maintable tbody td[colid=0]").bind('dblclick',function(e){
-				dblclick_file(e.currentTarget);
+				dblclick_file(e.currentTarget.parentNode);
 			});
 			$("#maintable tbody td[colid=1]").bind('dblclick',function(e){
-				dblclick_path(e.currentTarget);
+				dblclick_path(e.currentTarget.parentNode);
 			});
 			highlight_timeout = setTimeout(highlight,0);
 	  }
@@ -234,8 +234,8 @@
 	}
 	function file_name_trim2(files){
 		$(files).each( function sub(i,obj){
-			if(obj.name.length>33){
-				obj.name2 = obj.name.substring(0, 15)+"..."+obj.name.substring(obj.name.length-15, obj.name.length);
+			if(obj.name.length>43){
+				obj.name2 = obj.name.substring(0, 20)+"..."+obj.name.substring(obj.name.length-20, obj.name.length);
 			}else{
 				obj.name2 = obj.name;
 			}
@@ -346,7 +346,7 @@
 		for( var i=0;i<hs.length;i++){
 			tmp = {
 				"id":i, 
-				"left": 10+210*(i%5),
+				"left": 10+200*(i%5),
 				"top" : i>=5? 300:150,
 				"path": hs[i].substring(0, hs[i].lastIndexOf("\\")+1),
 				"name": hs[i].substring(hs[i].lastIndexOf("\\")+1,hs[i].length)
@@ -357,7 +357,7 @@
 		$("#historys").setTemplateElement("history_template");
 		$("#historys").processTemplate(hs.slice(0,10));
 		$(".history_file").bind('dblclick',function(e){
-			dblclick_file(e.target);
+			dblclick_file(e.currentTarget);
 		});
 		$(".history_file").contextMenu('myMenu1',context_menu_obj);
 	}
@@ -366,6 +366,7 @@
 		history_thumb_timeout = setTimeout(history_thumb,0);
 		history_parse_timeout = setTimeout(history_parse,10);
 	}
+	function refresh(){ searchf($("#search").val()); }
 
 	$(function() {
 		if(plugin.caze){

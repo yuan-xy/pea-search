@@ -1,5 +1,5 @@
 function get_file_path(tr){
-	//alert(tr.tagName);
+	//alert(tr.innerHTML);
 	if(tr.tagName=="DIV"){
 		path = $(tr).find("input")[1].value;
 		file = $(tr).find("input")[0].value;
@@ -16,13 +16,13 @@ function get_file_path(tr){
 }
 
 function dblclick_file(target){
-	get_file_path(target.parentNode);
+	get_file_path(target);
 	var ret = document.getElementById('plugin0').shell2_default(path+file);
 	info_if_error(ret, file, "打开");
 }
 
 function dblclick_path(target){
-	get_file_path(target.parentNode);
+	get_file_path(target);
 	ret = document.getElementById('plugin0').shell_explore(path);
 	info_if_error(ret, path, "资源管理器");
 }

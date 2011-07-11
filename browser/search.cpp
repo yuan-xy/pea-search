@@ -38,14 +38,14 @@ static void show_title(){
 			SysFreeString(b);
 		doc->Release();
 }
-
-static void exec_js(){
+static void exec_js(const wchar_t *function_name){
+		wchar_t buffer[100];
+		wsprintf(buffer, L"if(%s) %s()",function_name,function_name);
 		IHTMLDocument2 *doc = WebformGetDoc(hwebf);
 		IHTMLWindow2 *win = 0;
 		doc->get_parentWindow(&win);
 		if (win != 0) {
-			BSTR cmd = SysAllocString(
-					L"if(search_if_change) search_if_change()");
+			BSTR cmd = SysAllocString(buffer);
 			VARIANT v;
 			VariantInit(&v);
 			win->execScript(cmd, NULL, &v);
@@ -55,6 +55,7 @@ static void exec_js(){
 		}
 		doc->Release();
 }
+
 
 LRESULT CALLBACK PlainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
@@ -88,14 +89,13 @@ LRESULT CALLBACK PlainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		switch (wParam) {
 			case VK_F5:
-				clear();
-				init_browser(hwnd);
+				exec_js(L"refresh");
 				break;
 			case VK_ESCAPE:
 				PostQuitMessage(0);
 				return 0;
 			default:
-				exec_js();
+				exec_js(L"search_if_change");
 		}
 		break;
 	case WM_DESTROY: {
