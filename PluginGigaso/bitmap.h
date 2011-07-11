@@ -12,11 +12,12 @@ extern "C" {
 
 extern HBITMAP ReplaceColor(HBITMAP hBmp,COLORREF cOldColor,COLORREF cNewColor,HDC hBmpDC);
 
-extern PBITMAPINFO CreateBitmapInfoStruct(HBITMAP hBmp);
+extern BOOL save_bmp(LPCTSTR bmpFile, HBITMAP hBMP);
 
-extern BOOL CreateBMPFile0(LPCTSTR pszFile, PBITMAPINFO pbi, HBITMAP hBMP, HDC hDC);
+extern HRESULT save_as(LPCTSTR pszFile, HBITMAP bmp);
 
-extern BOOL CreateBMPFile(LPCTSTR pszFile, HBITMAP hBMP);
+extern HRESULT CreateThumbnail(const wchar_t *wsDir, const wchar_t *wsFile,DWORD dwWidth, DWORD dwHeight, HBITMAP* pThumbnail);
+
 
 #endif  // FILE_SEARCH_BITMAP_H_
 

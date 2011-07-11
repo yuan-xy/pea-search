@@ -24,7 +24,7 @@ void gen_icon_xlarge(LPCTSTR szFileName, LPCTSTR iconFileName){
 	  HICON hIcon; 
 	  hResult = ((IImageList*)imageList)->GetIcon(sfi.iIcon, ILD_TRANSPARENT, &hIcon); 
 	  if (hResult == S_OK) { 
-		 SaveIconToBMP(hIcon, iconFileName);
+		 save_icon_to_photo(hIcon, iconFileName);
 		 //SaveIcon(hIcon,iconFileName,TRUE);
 		 DestroyIcon(hIcon);
 	  } 
@@ -34,12 +34,12 @@ void gen_icon_xlarge(LPCTSTR szFileName, LPCTSTR iconFileName){
 void gen_icon_small(LPCTSTR szFileName, LPCTSTR iconFileName){
 	SHFILEINFO shfi;
 	HRESULT hr = SHGetFileInfo( szFileName, 0, &shfi, sizeof( SHFILEINFO ), SHGFI_ICON | SHGFI_SMALLICON | SHGFI_ADDOVERLAYS );
-	SaveIconToBMP(shfi.hIcon, iconFileName);
+	save_icon_to_photo(shfi.hIcon, iconFileName);
 	//SaveIcon(shfi.hIcon,iconFileName,TRUE);
 	DestroyIcon(shfi.hIcon);
 }
 
-void SaveIcon(HICON hico, LPCTSTR szFileName, BOOL bAutoDelete){
+void saveicon(HICON hico, LPCTSTR szFileName, BOOL bAutoDelete){
 	PICTDESC pd = {sizeof(pd), PICTYPE_ICON};
 	pd.icon.hicon = hico;
 
@@ -84,14 +84,12 @@ void SaveIcon(HICON hico, LPCTSTR szFileName, BOOL bAutoDelete){
 	}
 }
 
-void SaveIconToBMP(HICON hico, LPCTSTR szFileName){	
+void save_icon_to_photo(HICON hico, LPCTSTR szFileName){	
 	HDC hdc = GetDC(NULL) ;
 	ICONINFO info;
 	GetIconInfo(hico,&info);
 	HBITMAP  bmp = ReplaceColor(info.hbmColor,RGB(0,0,0), RGB(255,255,255), hdc);
-	PBITMAPINFO pbinfo;
-	pbinfo = CreateBitmapInfoStruct(bmp);
-	CreateBMPFile0(szFileName,pbinfo,bmp,hdc);
+	save_as(szFileName,bmp);
 }
 
 

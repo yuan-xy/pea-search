@@ -22,12 +22,12 @@ extern void gen_icon_small(LPCTSTR szFileName, LPCTSTR iconFileName);
 /**
 * 将HICON保存到ICO格式文件iconFileName中。
 */
-extern void SaveIcon(HICON hico, LPCTSTR iconFileName, BOOL bAutoDelete);
+extern void saveicon(HICON hico, LPCTSTR iconFileName, BOOL bAutoDelete);
 
 /**
-* 将HICON保存到BMP格式文件iconFileName中。
+* 将HICON保存到图像文件iconFileName中。
 */
-extern void SaveIconToBMP(HICON hico, LPCTSTR iconFileName);
+extern void save_icon_to_photo(HICON hico, LPCTSTR iconFileName);
 
 
 #endif  // FILE_SEARCH_WIN_ICON_H_

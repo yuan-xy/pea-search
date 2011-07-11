@@ -5,6 +5,8 @@
 #include <shlguid.h> 
 #include <shellapi.h> 
 #include "bitmap.h"
+#include <gdiplus.h>
+#include <atlimage.h>
 
 
 #define COLORREF2RGB(Color) (Color & 0xff00) | ((Color >> 16) & 0xff) | ((Color << 16) & 0xff0000)
@@ -229,11 +231,18 @@ BOOL CreateBMPFile0(LPCTSTR pszFile, PBITMAPINFO pbi,
 }
 
 
-BOOL CreateBMPFile(LPCTSTR pszFile, HBITMAP bmp){
+BOOL save_bmp(LPCTSTR pszFile, HBITMAP bmp){
 	PBITMAPINFO pbinfo;
 	pbinfo = CreateBitmapInfoStruct(bmp);
 	return CreateBMPFile0(pszFile,pbinfo,bmp,GetDC(NULL));
 }
+
+HRESULT save_as(LPCTSTR pszFile, HBITMAP bmp){
+	CImage image;
+	image.Attach(bmp);
+	return image.Save(pszFile);
+}
+
 
 static wchar_t m_wsBuffer[255];	// ÁÙÊ±»º³åÇø
 
