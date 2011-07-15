@@ -49,6 +49,15 @@ void ValidDrivesIterator(pDriveVisitor f){
 	}
 }
 
+void ValidFixDrivesIterator(pDriveVisitor f){
+	int i=0;
+	for(;i<26;i++){
+		if(g_bVols[i] && g_VolsInfo[i].serialNumber && g_VolsInfo[i].type == DRIVE_FIXED ){
+			(*f)(i);
+		}
+	}
+}
+
 BOOL IsNtfs(int i){
 	return wcsncmp(g_VolsInfo[i].fsName,L"NTFS",4)==0;
 }

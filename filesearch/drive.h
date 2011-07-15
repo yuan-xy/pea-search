@@ -59,6 +59,8 @@ extern void DrivesIterator(pDriveVisitor);
  */
 extern void ValidDrivesIterator(pDriveVisitor);
 
+extern void ValidFixDrivesIterator(pDriveVisitor);
+
 /**
  * 给定的驱动器是否是NTFS类型的
  * @param i  驱动器编号

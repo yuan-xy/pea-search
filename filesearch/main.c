@@ -34,7 +34,6 @@ BOOL read_build_check(int i){
 void after_build(int i){
 	FilesIterate(g_rootVols[i],FileRemoveFilter,NULL);
 	FilesIterate(g_rootVols[i],SuffixProcess,NULL);
-	StartMonitorThread(i);
 }
 
 void load_online_db(int i){
@@ -105,12 +104,13 @@ BOOL gigaso_init(){
 	ValidDrivesIterator(load_online_db);
 	CreateThread(NULL,0,ScanAll,NULL,0,0);
 	if(load_offline) load_offline_dbs();
+	ValidFixDrivesIterator(StartMonitorThread);
 	return 1;
 }
 
 BOOL gigaso_destory(){
 	save_db_all();
-	ValidDrivesIterator(StopMonitorThread);
+	ValidFixDrivesIterator(StopMonitorThread);
 	StopDriveChangeMonitorThread();
 	ValidDrivesIterator(CloseVolumeHandle);
 	return 1;
