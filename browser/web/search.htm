@@ -366,7 +366,10 @@
 		history_thumb_timeout = setTimeout(history_thumb,0);
 		history_parse_timeout = setTimeout(history_parse,10);
 	}
-	function refresh(){ searchf($("#search").val()); }
+	function refresh(){
+		if($("#search").val()!="") searchf($("#search").val()); 
+		else load_history();
+	}
 
 	$(function() {
 		if(plugin.caze){

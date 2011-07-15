@@ -40,7 +40,7 @@ static void show_title(){
 }
 static void exec_js(const wchar_t *function_name){
 		wchar_t buffer[100];
-		wsprintf(buffer, L"if(%s) %s()",function_name,function_name);
+		wsprintf(buffer, L"try{if(%s) %s()}catch(e){}",function_name,function_name);
 		IHTMLDocument2 *doc = WebformGetDoc(hwebf);
 		IHTMLWindow2 *win = 0;
 		doc->get_parentWindow(&win);
@@ -107,9 +107,9 @@ LRESULT CALLBACK PlainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 
 int WINAPI WinMain(HINSTANCE h,HINSTANCE,LPSTR,int){
+	setPWD(NULL);
 	hInstance=h;
 	OleInitialize(0);
-	setPWD(NULL);
 	WNDCLASSEX wcex; ZeroMemory(&wcex,sizeof(wcex)); wcex.cbSize = sizeof(WNDCLASSEX);
 	BOOL res=GetClassInfoEx(hInstance,_T("Gigaso_Search"),&wcex);
 	if (!res)

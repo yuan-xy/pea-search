@@ -774,7 +774,6 @@ LRESULT CALLBACK WebformWndProc(HWND hwnd, UINT msg, WPARAM wParam,
 	if (msg == WM_DESTROY) {
 		webf->Close();
 		webf->Release();
-		delete webf;
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, 0);
 	}
 	//

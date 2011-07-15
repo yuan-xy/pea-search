@@ -724,7 +724,7 @@ Section "-Core installation"
   Push "$INSTALL_DESKTOP"
   Call ConditionalAddToRegisty
 
-  nsExec::ExecToStack 'sc create gigaso binPath= "$INSTDIR\gigaso.exe"  start= auto  DisplayName= "Gigaso file searcher"'
+  nsExec::ExecToStack 'sc create gigaso binPath= "$INSTDIR\gigaso.exe"  start= auto  type= interact type= own DisplayName= "Gigaso file searcher"'
   nsExec::ExecToStack 'sc description gigaso "A fast file name searcher"'
   DetailPrint "find files to index ..."
   nsExec::ExecToStack 'net start gigaso'

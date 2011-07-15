@@ -3,7 +3,7 @@
 #include "serverNP.h"
 #include "main.h"
 
-DWORD WINAPI  Hotkey(PVOID pParam){
+static DWORD WINAPI  Hotkey(PVOID pParam){
     MSG msg = {0};
     if (!RegisterHotKey(NULL,1, MOD_ALT, 0x42)) {	//0x42 is 'b'
         return 1;
@@ -12,6 +12,7 @@ DWORD WINAPI  Hotkey(PVOID pParam){
     while(GetMessage(&msg, NULL, 0, 0) != 0){
         if (msg.message == WM_HOTKEY){
             wprintf(L"WM_HOTKEY received\n");
+            WinExec("search.exe", SW_SHOW);
         }
     }
 	return 0;
