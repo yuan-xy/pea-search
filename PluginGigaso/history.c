@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <Shlobj.h>
 #include "history.h"
+#include "win_misc.h"
 
 static wchar_t his_files[MAX_HISTORY][MAX_PATH];
 static int start=0;
@@ -123,6 +124,8 @@ static int recent_compare(const void *pa, const void *pb){
 	}
 }
 
+
+
 void init_from_recent(){
 	WCHAR szPath[MAX_PATH];
 	file list[MAX_FILE_STRUCT];
@@ -158,7 +161,10 @@ void init_from_recent(){
 		qsort(list,count,sizeof(list[0]),recent_compare);
 		{
 			int i=0;
-			for(;i<MAX_HISTORY;i++) history_add(list[i].path);
+			for(;i<MAX_HISTORY;i++){
+				shortcut(list[i].path, list[i].path);
+				history_add(list[i].path);
+			}
 			start = MAX_HISTORY/2 +1;
 		}
 		FindClose(hFind);

@@ -45,6 +45,9 @@ SET( SOURCES1
     history.h
     history.c
     test_history.c
+    win_misc.h
+    win_misc.cpp
+
     )
 
 add_executable(test_history ${SOURCES1} )
