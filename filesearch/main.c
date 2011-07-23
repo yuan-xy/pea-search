@@ -94,7 +94,10 @@ DWORD WINAPI  ScanAll(PVOID pParam){
 	return 0;
 }
 
+extern void breakpad_init();
+
 BOOL gigaso_init(){
+	breakpad_init();
 	init_chinese();
 	setlocale (LC_ALL, "");
 	my_assert(24 == sizeof(FileEntry), 0);

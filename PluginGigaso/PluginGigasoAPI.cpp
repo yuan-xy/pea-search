@@ -209,10 +209,13 @@ void PluginGigasoAPI::testEvent(const FB::variant& var)
 static int shell_exec(const FB::variant& msg, const wchar_t *verb){
 	std::wstring s = msg.convert_cast<std::wstring>();
 	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-    HINSTANCE ret = ShellExecuteW(NULL,verb,s.c_str(),NULL,NULL,SW_SHOWNORMAL);
-	history_add(s.c_str());
-	history_save();
-	return (int)ret > 32;
+    HINSTANCE h = ShellExecuteW(NULL,verb,s.c_str(),NULL,NULL,SW_SHOWNORMAL);
+	int ret = (int)h > 32;
+	if(ret){
+		history_add(s.c_str());
+		history_save();
+	}
+	return ret;
 }
 
 static int shell2_exec(const FB::variant& msg, const wchar_t *verb){
@@ -227,9 +230,12 @@ static int shell2_exec(const FB::variant& msg, const wchar_t *verb){
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL; 
-	history_add(s.c_str());
-	history_save();
-	return ShellExecuteEx(&ShExecInfo);
+	BOOL ret = ShellExecuteEx(&ShExecInfo);
+	if(ret){
+			history_add(s.c_str());
+			history_save();
+	}
+	return ret;
 }
 
 FB::variant PluginGigasoAPI::shell_default(const FB::variant& msg){
