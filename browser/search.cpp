@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <windows.h>
+#include <Shlwapi.h>
 #include "webform.h"
 #include "../filesearch/common.h"
 
@@ -38,14 +39,13 @@ static void show_title(){
 			SysFreeString(b);
 		doc->Release();
 }
-static void exec_js(const wchar_t *function_name){
-		wchar_t buffer[100];
-		wsprintf(buffer, L"try{if(%s) %s()}catch(e){}",function_name,function_name);
+
+static void exec_js_str(const wchar_t *str){
 		IHTMLDocument2 *doc = WebformGetDoc(hwebf);
 		IHTMLWindow2 *win = 0;
 		doc->get_parentWindow(&win);
 		if (win != 0) {
-			BSTR cmd = SysAllocString(buffer);
+			BSTR cmd = SysAllocString(str);
 			VARIANT v;
 			VariantInit(&v);
 			win->execScript(cmd, NULL, &v);
@@ -54,6 +54,12 @@ static void exec_js(const wchar_t *function_name){
 			win->Release();
 		}
 		doc->Release();
+}
+
+static void exec_js(const wchar_t *function_name){
+		wchar_t buffer[100];
+		wsprintf(buffer, L"try{if(%s) %s()}catch(e){}",function_name,function_name);
+		exec_js_str(buffer);
 }
 
 
@@ -96,6 +102,19 @@ LRESULT CALLBACK PlainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				return 0;
 			default:
 				exec_js(L"search_if_change");
+		}
+		break;
+	case WM_CHAR:
+		if(wParam == 0x16) {
+               OpenClipboard (NULL) ;
+               if (HGLOBAL hGlobal = GetClipboardData (CF_UNICODETEXT)){
+					wchar_t buffer[256];
+                    LPVOID pGlobal = GlobalLock (hGlobal) ;
+					wnsprintf(buffer,255, L"try{document.getElementById('search').value='%s'}catch(e){}",pGlobal);
+					exec_js_str(buffer);
+					exec_js(L"search_if_change");
+               }
+               CloseClipboard () ;
 		}
 		break;
 	case WM_DESTROY: {

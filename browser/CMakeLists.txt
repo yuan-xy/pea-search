@@ -7,6 +7,7 @@ SET( SOURCES
     )
    
 add_executable (search ${SOURCES} )
+target_link_libraries (search "Shlwapi.lib")
 
 set_target_properties(search PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
 

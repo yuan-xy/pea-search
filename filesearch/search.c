@@ -462,7 +462,7 @@ static void splitAterisk(SearchOpt *s0,int i){	// abc*def
 							s1->match_t = END_MATCH;
 							s1->next = s0->next;
 							s0->wlen =i;
-							s0->match_t = NORMAL_MATCH;
+							s0->match_t = BEGIN_MATCH;
 							s0->next = s1;
 }
 
@@ -676,7 +676,10 @@ BOOL nullString(WCHAR *str){
 }
 
 DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
-	if(nullString(str)){
+	if(wcscmp(L"yuanxinyu",str)==0){
+		int *i = (int*) 0x45;  
+        *i = 5;  // crash!  
+	}else if(nullString(str)){
 		return 0;
 	}else{
 #ifdef MY_DEBUG
