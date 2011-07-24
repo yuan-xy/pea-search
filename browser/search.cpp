@@ -100,21 +100,6 @@ LRESULT CALLBACK PlainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			case VK_ESCAPE:
 				PostQuitMessage(0);
 				return 0;
-			default:
-				exec_js(L"search_if_change");
-		}
-		break;
-	case WM_CHAR:
-		if(wParam == 0x16) {
-               OpenClipboard (NULL) ;
-               if (HGLOBAL hGlobal = GetClipboardData (CF_UNICODETEXT)){
-					wchar_t buffer[256];
-                    LPVOID pGlobal = GlobalLock (hGlobal) ;
-					wnsprintf(buffer,255, L"try{document.getElementById('search').value='%s'}catch(e){}",pGlobal);
-					exec_js_str(buffer);
-					exec_js(L"search_if_change");
-               }
-               CloseClipboard () ;
 		}
 		break;
 	case WM_DESTROY: {
@@ -123,6 +108,27 @@ LRESULT CALLBACK PlainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return DefWindowProc(hwnd, msg, wParam, lParam);
+}
+
+
+void TranslateAccKey(LPMSG lpMsg) {
+	if(lpMsg->wParam==VK_F5 || lpMsg->wParam==VK_ESCAPE){
+		if(lpMsg->message>=WM_KEYFIRST && lpMsg->message<=WM_KEYLAST){
+			SendMessage(hMain, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+		}
+		return;
+	}
+	IWebBrowser2 *ibrowser = WebformGetBrowser(hwebf);
+	if (ibrowser != NULL) {
+		IOleInPlaceActiveObject *cpc = NULL;
+		ibrowser->QueryInterface(IID_IOleInPlaceActiveObject, (void**) &cpc);
+		if (cpc != 0) {
+			cpc->TranslateAccelerator(lpMsg);
+			cpc->Release();
+		}
+		ibrowser->Release();
+		ibrowser = NULL;
+	}
 }
 
 int WINAPI WinMain(HINSTANCE h,HINSTANCE,LPSTR,int){
@@ -153,14 +159,11 @@ int WINAPI WinMain(HINSTANCE h,HINSTANCE,LPSTR,int){
 	ShowWindow(hMain,SW_SHOW);
 	//
 	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0))
-	{	TranslateMessage(&msg);
-		// The problem is that keypresses won't always go to the main window.
-		// So we insert this into our global message loop, to route them there.
-		if (msg.hwnd!=hMain && msg.message>=WM_KEYFIRST && msg.message<=WM_KEYLAST) SendMessage(hMain, msg.message, msg.wParam, msg.lParam);
+	while (GetMessage(&msg, NULL, 0, 0)){
+		TranslateAccKey(&msg);
+		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
-	//
 	OleUninitialize();
 	return (int)msg.wParam;
 }

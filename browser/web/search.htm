@@ -34,7 +34,7 @@
 <textarea id="history_template" style="display:none"> 
 		{#foreach $T as record}
 		<div title="{$T.record.path}{$T.record.name}" class="history_file" style="position:absolute; left:{$T.record.left}; top:{$T.record.top}">
-			<div style="align:center;text-align:center;"><img src="{$T.record.id}.jpg" /><a onclick="plugin.history_del({$T.record.id});$(this.parentNode).hide();return false;" style="vertical-align: top">&nbsp;X</a></div>
+			<div style="align:center;text-align:center;"><img src="{$T.record.id}.jpg" /><a onclick="plugin.history_del({$T.record.id});$(this).parents('.history_file').hide();return false;" style="vertical-align: top">&nbsp;X</a></div>
 			<input type="hidden" value="{$T.record.name}">
 			<input type="hidden" value="{$T.record.path}">
 			<br/>
@@ -344,6 +344,7 @@
 		var hs = plugin.history().replace(/\\/g,"\\\\");
 		hs = eval(hs);
 		for( var i=0;i<hs.length;i++){
+			if(hs[i].charAt(hs[i].length-1)=='\\') hs[i] = hs[i].substr(0,hs[i].length-1);
 			tmp = {
 				"id":i, 
 				"left": 10+200*(i%5),
