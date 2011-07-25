@@ -25,7 +25,7 @@
 
 <center style="margin:10px;">
 搜索：<img id="loading" src="images/spinner.gif" style="visibility: hidden"/>
-<input id="search" name="s" type="text" size="35" value="" title="查询条件"><img id="search_img" src="images/find.ico"/>
+<input id="dir" name="dir" type="text" size="20" value="" title="目录"><input id="search" name="s" type="text" size="35" value="" title="查询条件"><img id="search_img" src="images/find.ico"/>
 
 </center>
 
@@ -373,6 +373,10 @@
 	}
 
 	$(function() {
+		$("#dir")[0].value = plugin.dire;
+		$("#dir").bind('keyup',function(event,t){
+			plugin.dire = $("#dir")[0].value;
+		});
 		if(plugin.caze){
 			$("#case1").click();
 		}else{

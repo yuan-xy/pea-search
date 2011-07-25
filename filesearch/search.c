@@ -751,6 +751,9 @@ int * stat(WCHAR *str, pSearchEnv env){
 		}else{
 			sEnv = env;
 			dir = find_file(env->path_name,env->path_len);
+#ifdef MY_DEBUG
+			if(dir==NULL && env->path_len>0) printf("dir:%ls, can't be find.\n", env->path_name);
+#endif
 		}
 		preProcessSearchOpt(sOpt);
 		preProcessPinyin(sOpt);

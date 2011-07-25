@@ -75,6 +75,10 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
                      make_property(this,
                         &PluginGigasoAPI::get_caze,
                         &PluginGigasoAPI::set_caze));
+    registerProperty("dire",
+                     make_property(this,
+                        &PluginGigasoAPI::get_dir,
+                        &PluginGigasoAPI::set_dir));
     // Read-only property
     registerProperty("version",
                      make_property(this,
@@ -86,6 +90,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	m_order=0;
 	m_case=0;
 	m_file_type=0;
+	//m_dir = std::wstring(L"c:\\");
 	setPWD("npPluginGigaso.dll");
 	history_load();
 }
@@ -121,7 +126,12 @@ bool PluginGigasoAPI::get_caze(){
 void PluginGigasoAPI::set_caze(bool val){
     m_case = val;
 }
-
+std::wstring PluginGigasoAPI::get_dir(){
+	return m_dir;
+}
+void PluginGigasoAPI::set_dir(std::wstring s){
+	m_dir = s;
+}
 std::wstring PluginGigasoAPI::get_version(){
 	wchar_t buffer[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH,buffer);
@@ -144,6 +154,8 @@ FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 	req.env.order = m_order;
 	req.env.case_sensitive = m_case;
 	req.env.file_type = m_file_type;
+	req.env.path_len = m_dir.length()*sizeof(wchar_t);
+	wcsncpy(req.env.path_name, m_dir.c_str(), MAX_PATH);
 	std::wstring s = msg.convert_cast<std::wstring>();
 	if(s.length()==0) return "";
 	wcscpy(req.str,s.c_str());
@@ -179,6 +191,8 @@ FB::variant PluginGigasoAPI::stat(const FB::variant& msg){
 	req.env.order = m_order;
 	req.env.case_sensitive = m_case;
 	req.env.file_type = m_file_type;
+	req.env.path_len = m_dir.length()*sizeof(wchar_t);
+	wcsncpy(req.env.path_name, m_dir.c_str(), MAX_PATH);
 	std::wstring s = msg.convert_cast<std::wstring>();
 	if(s.length()==0) return "";
 	wcscpy(req.str,s.c_str());

@@ -5,6 +5,7 @@
 \**********************************************************/
 
 #include <string>
+#include <windows.h>
 #include <sstream>
 #include <boost/weak_ptr.hpp>
 #include "JSAPIAuto.h"
@@ -30,6 +31,9 @@ public:
 
 	bool get_caze();
     void set_caze(bool val);
+    
+    std::wstring get_dir();
+    void set_dir(std::wstring s);
 
     // Read-only property ${PROPERTY.ident}
     std::wstring get_version();
@@ -60,6 +64,8 @@ private:
     int m_order;
 	int m_file_type;
 	bool m_case;
+	bool m_offline;
+	std::wstring m_dir;
 };
 
 #endif // H_PluginGigasoAPI

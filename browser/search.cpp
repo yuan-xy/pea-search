@@ -157,7 +157,8 @@ int WINAPI WinMain(HINSTANCE h,HINSTANCE,LPSTR,int){
 			CW_USEDEFAULT, CW_USEDEFAULT, 1000, 680, NULL, NULL, hInstance, NULL);
 	if (hMain==NULL) {MessageBox(NULL,_T("Failed to create window"),_T("Error"),MB_OK); return 0;}
 	ShowWindow(hMain,SW_SHOW);
-	//
+	SetForegroundWindow(hMain);
+	SetFocus(hMain);
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0)){
 		TranslateAccKey(&msg);
