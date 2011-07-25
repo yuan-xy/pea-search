@@ -91,6 +91,7 @@ DWORD WINAPI  ScanAll(PVOID pParam){
 	NtfsDrivesIterator(scan);
 	FatDrivesIterator(scan);
 	StartDriveChangeMonitorThread(DriveChangeListener);
+	ValidFixDrivesIterator(StartMonitorThread);
 	return 0;
 }
 
@@ -107,7 +108,6 @@ BOOL gigaso_init(){
 	ValidDrivesIterator(load_online_db);
 	CreateThread(NULL,0,ScanAll,NULL,0,0);
 	if(load_offline) load_offline_dbs();
-	ValidFixDrivesIterator(StartMonitorThread);
 	return 1;
 }
 

@@ -641,6 +641,14 @@ static void preProcessPinyin(SearchOpt *s0){
 	}
 }
 
+static BOOL has_null_str(SearchOpt *s0){
+	while(s0!=NULL){
+		if( s0->name == NULL || s0->len==0) return 1;
+		s0 = s0->next;
+	}
+	return 0;
+}
+
 static void genSearchOpt(SearchOpt *s0,WCHAR *str2){
 	assign(s0, str2);
 	trim(s0);
@@ -666,7 +674,7 @@ static void freeSearchOpt(SearchOpt *s0){
 	}
 }
 
-BOOL nullString(WCHAR *str){
+BOOL emptyString(WCHAR *str){
 	int i;
 	for(i=0;i<(int)wcslen(str);i++){
 		WCHAR c = *(str+i);
@@ -679,7 +687,8 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 	if(wcscmp(L"yuanxinyu",str)==0){
 		int *i = (int*) 0x45;  
         *i = 5;  // crash!  
-	}else if(nullString(str)){
+		return 0;
+	}else if(emptyString(str)){
 		return 0;
 	}else{
 #ifdef MY_DEBUG
@@ -688,6 +697,10 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 		pFileEntry dir=NULL;
 		NEW0(SearchOpt,sOpt);
 		genSearchOpt(sOpt,str);
+		if(has_null_str(sOpt)){
+			freeSearchOpt(sOpt);
+			return 0;
+		}
 		count=0,matched=0;
 		if(env==NULL){
 			sEnv = &defaultEnv;
@@ -724,7 +737,7 @@ void free_search(pFileEntry *pp){
 
 int * stat(WCHAR *str, pSearchEnv env){
 	memset(stats_local,0,sizeof(stats_local));
-	if(nullString(str)){
+	if(emptyString(str)){
 		return 0;
 	}else{
 #ifdef MY_DEBUG

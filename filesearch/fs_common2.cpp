@@ -137,6 +137,7 @@ static void delete_file_from_parent_vector(pFileEntry file,pFileEntry parent){
 }
 
 void deleteFile(pFileEntry file){
+	if(file==NULL) return;
 	if(file->up.parent!=NULL){
 		delete_file_from_parent_vector(file,file->up.parent);
 	}
