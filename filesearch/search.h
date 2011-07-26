@@ -24,7 +24,7 @@ extern int print_stat(int * stats, char *p);
 /**
 * 根据文件名查找到对应的pFileEntry。非精确路径匹配，支持部分模糊查询。
 * @param name 待查找文件的全路径名
-* @len 路径名的byte长度
+* @len 路径名的字符长度
 */
 extern pFileEntry find_file(WCHAR *name, int len);
 

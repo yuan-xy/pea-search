@@ -127,26 +127,26 @@ int file_size_amount(FSIZE size){
 	return 0x3FF & size;
 }
 
-pUTF8 wchar_to_utf8(const WCHAR *in, int insize, int *out_size){
-    int buffer_len = WideCharToMultiByte(CP_UTF8, 0, in, insize, NULL, 0, NULL, NULL);
+pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b){
+    int buffer_len = WideCharToMultiByte(CP_UTF8, 0, in, insize_c, NULL, 0, NULL, NULL);
     if (buffer_len <= 0){
     	return 0;
     }else{
     	pUTF8 utf8 = (pUTF8)malloc_safe(buffer_len);
-    	WideCharToMultiByte(CP_UTF8, 0, in, insize, utf8, buffer_len, NULL, NULL);
-    	if(out_size!=NULL) *out_size = buffer_len;
+    	WideCharToMultiByte(CP_UTF8, 0, in, insize_c, utf8, buffer_len, NULL, NULL);
+    	if(out_size_b!=NULL) *out_size_b = buffer_len;
     	return utf8;
     }
 }
 
-WCHAR* utf8_to_wchar(const pUTF8 in, int insize, int *out_size){
-    int buffer_len = MultiByteToWideChar(CP_UTF8, 0, in, insize, NULL, 0);
+WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
+    int buffer_len = MultiByteToWideChar(CP_UTF8, 0, in, insize_b, NULL, 0);
     if (buffer_len <= 0){
     	return 0;
     }else{
     	WCHAR *wstr = (WCHAR *)malloc_safe(buffer_len*sizeof(WCHAR));
-    	MultiByteToWideChar(CP_UTF8, 0, in, insize, wstr, buffer_len);
-    	if(out_size!=NULL) *out_size = buffer_len;
+    	MultiByteToWideChar(CP_UTF8, 0, in, insize_b, wstr, buffer_len);
+    	if(out_size_c!=NULL) *out_size_c = buffer_len;
     	return wstr;
     }
 }

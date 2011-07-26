@@ -45,15 +45,17 @@ SET( SOURCES
     )
 
 add_library (file_search STATIC ${SOURCES} )
+set_target_properties(file_search PROPERTIES LINK_FLAGS "/include:__tcmalloc") 
 target_link_libraries (file_search "${PROJECT_SOURCE_DIR}/libs/libtcmalloc_minimal.lib")
-#target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/Release/lib/exception_handler.lib")
-#target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/Release/lib/crash_generation_client.lib")
-#target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/Release/lib/common.lib")
+target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/Release/lib/exception_handler.lib")
+target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/Release/lib/crash_generation_client.lib")
+target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/Release/lib/common.lib")
 
 add_executable (gigaso "win_service.c" )
 target_link_libraries (gigaso "file_search")
 set_target_properties(gigaso PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\"") 
 install (TARGETS gigaso  DESTINATION .)
+install (FILES "${PROJECT_SOURCE_DIR}/libs/libtcmalloc_minimal.dll"   DESTINATION .)
 install (FILES "${PROJECT_SOURCE_DIR}/libs/hz.lib"   DESTINATION .)
 
 

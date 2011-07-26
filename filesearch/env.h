@@ -54,7 +54,7 @@ struct searchEnv{ //搜索的环境配置
 	unsigned char order; //排序方式，缺省按名称排序
 	BOOL case_sensitive; //是否大小写敏感，缺省不敏感
 	unsigned char file_type;//指定搜索的类型
-	int path_len; //如果指定了搜索的路径，该路径名得byte长度
+	int path_len; //如果指定了搜索的路径，该路径名的字符长度
 	WCHAR path_name[MAX_PATH]; ////指定搜索的路径
 };
 typedef struct searchEnv SearchEnv, *pSearchEnv;

@@ -154,7 +154,7 @@ FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 	req.env.order = m_order;
 	req.env.case_sensitive = m_case;
 	req.env.file_type = m_file_type;
-	req.env.path_len = m_dir.length()*sizeof(wchar_t);
+	req.env.path_len = m_dir.length();
 	wcsncpy(req.env.path_name, m_dir.c_str(), MAX_PATH);
 	std::wstring s = msg.convert_cast<std::wstring>();
 	if(s.length()==0) return "";
@@ -191,7 +191,7 @@ FB::variant PluginGigasoAPI::stat(const FB::variant& msg){
 	req.env.order = m_order;
 	req.env.case_sensitive = m_case;
 	req.env.file_type = m_file_type;
-	req.env.path_len = m_dir.length()*sizeof(wchar_t);
+	req.env.path_len = m_dir.length();
 	wcsncpy(req.env.path_name, m_dir.c_str(), MAX_PATH);
 	std::wstring s = msg.convert_cast<std::wstring>();
 	if(s.length()==0) return "";

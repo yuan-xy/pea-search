@@ -58,9 +58,15 @@ extern int time_passed_ret(int (*f)(),int *ret_data);
 
 #define WCHAR_TO_UTF8(wstr, wstrlen, ustr, ustrlen) WideCharToMultiByte(CP_UTF8, 0, (wstr), (wstrlen), (ustr), (ustrlen), NULL, NULL)
 
-extern pUTF8 wchar_to_utf8(const WCHAR *in, int insize, int *out_size);
+/**
+ * 将unicode编码的字符串in转换为utf-8编码的字符串
+ * @param insize_c表示The number of Unicode (16-bit) characters in the string
+ * @param out_size_b表示以byte统计的字符串长度
+ * 
+ */
+extern pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b);
 
-extern WCHAR* utf8_to_wchar(const pUTF8 in, int insize, int *out_size);
+extern WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c);
 
 //定义二进制常量
 #define BYTE_BIN(n) ( \
