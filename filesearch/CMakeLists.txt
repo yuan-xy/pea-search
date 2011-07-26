@@ -28,8 +28,6 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	common.c
 )
 
-
-
 # Generated files are stored in ${GENERATED} by the project configuration
 SET_SOURCE_FILES_PROPERTIES(
     ${GENERATED}
@@ -44,39 +42,24 @@ SOURCE_GROUP(Generated FILES
 SET( SOURCES
     ${GENERAL}
     ${GENERATED}
-    win_service.c
     )
 
+add_library (file_search STATIC ${SOURCES} )
+target_link_libraries (file_search "${PROJECT_SOURCE_DIR}/libs/libtcmalloc_minimal.lib")
+#target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/Release/lib/exception_handler.lib")
+#target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/Release/lib/crash_generation_client.lib")
+#target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/Release/lib/common.lib")
 
-# add the executable
-add_executable (gigaso ${SOURCES} )
-target_link_libraries (gigaso "${PROJECT_SOURCE_DIR}/libs/libtcmalloc_minimal.lib")
-target_link_libraries (gigaso "${BREAKPAD_DIR}/client/windows/Release/lib/exception_handler.lib")
-target_link_libraries (gigaso "${BREAKPAD_DIR}/client/windows/Release/lib/crash_generation_client.lib")
-target_link_libraries (gigaso "${BREAKPAD_DIR}/client/windows/Release/lib/common.lib")
-
-set_target_properties(gigaso PROPERTIES LINK_FLAGS "/include:__tcmalloc") 
+add_executable (gigaso "win_service.c" )
+target_link_libraries (gigaso "file_search")
 set_target_properties(gigaso PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\"") 
-
 install (TARGETS gigaso  DESTINATION .)
-install (FILES "${PROJECT_SOURCE_DIR}/libs/libtcmalloc_minimal.dll"   DESTINATION .)
 install (FILES "${PROJECT_SOURCE_DIR}/libs/hz.lib"   DESTINATION .)
 
 
 
-SET( SOURCES
-    ${GENERAL}
-    ${GENERATED}
-    test_np_server.c
-    )
-
-add_executable (test_np_server ${SOURCES} )
-target_link_libraries (test_np_server "${PROJECT_SOURCE_DIR}/libs/libtcmalloc_minimal.lib")
-target_link_libraries (test_np_server "${BREAKPAD_DIR}/client/windows/Release/lib/exception_handler.lib")
-target_link_libraries (test_np_server "${BREAKPAD_DIR}/client/windows/Release/lib/crash_generation_client.lib")
-target_link_libraries (test_np_server "${BREAKPAD_DIR}/client/windows/Release/lib/common.lib")
-
-set_target_properties(test_np_server PROPERTIES LINK_FLAGS "/include:__tcmalloc") 
+add_executable (test_np_server "test_np_server.c" )
+target_link_libraries (test_np_server "file_search")
 set_target_properties(test_np_server PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\"") 
 install (TARGETS test_np_server  DESTINATION .)
 
@@ -85,18 +68,13 @@ set_target_properties(test_np_client PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level
 install (TARGETS test_np_client DESTINATION .)
 
 
-SET( SOURCES
-    ${GENERAL}
-    ${GENERATED}
-    test_main.c
-    )
 
-add_executable (test_main ${SOURCES} )
-target_link_libraries (test_main "${PROJECT_SOURCE_DIR}/libs/libtcmalloc_minimal.lib")
-target_link_libraries (test_main "${BREAKPAD_DIR}/client/windows/Release/lib/exception_handler.lib")
-target_link_libraries (test_main "${BREAKPAD_DIR}/client/windows/Release/lib/crash_generation_client.lib")
-target_link_libraries (test_main "${BREAKPAD_DIR}/client/windows/Release/lib/common.lib")
-
-set_target_properties(test_main PROPERTIES LINK_FLAGS "/include:__tcmalloc") 
+add_executable (test_main "test_main.c" )
+target_link_libraries (test_main "file_search")
 set_target_properties(test_main PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\"") 
 install (TARGETS test_main  DESTINATION .)
+
+
+add_executable (ctest_find_path "ctest_find_path.c" )
+target_link_libraries (ctest_find_path "file_search")
+ADD_TEST(SimpleTest ${CMAKE_CURRENT_BINARY_DIR}/ctest_find_path)

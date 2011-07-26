@@ -35,6 +35,8 @@
 #ifndef TCMALLOC_TCMALLOC_H_
 #define TCMALLOC_TCMALLOC_H_
 
+#define PERFTOOLS_DLL_DECL
+
 // Define the version number so folks can check against it
 #define TC_VERSION_MAJOR  1
 #define TC_VERSION_MINOR  4

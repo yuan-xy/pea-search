@@ -83,7 +83,6 @@ IF(MSVC)
     IF(NOT CMAKE_INSTALL_DEBUG_LIBRARIES_ONLY)
       SET(__install__libs
         "${MSVC80_CRT_DIR}/Microsoft.VC80.CRT.manifest"
-        "${MSVC80_CRT_DIR}/msvcm80.dll"
         "${MSVC80_CRT_DIR}/msvcp80.dll"
         "${MSVC80_CRT_DIR}/msvcr80.dll"
         )
@@ -94,7 +93,6 @@ IF(MSVC)
         "${MSVC80_REDIST_DIR}/Debug_NonRedist/${CMAKE_MSVC_ARCH}/Microsoft.VC80.DebugCRT")
       SET(__install__libs ${__install__libs}
         "${MSVC80_CRT_DIR}/Microsoft.VC80.DebugCRT.manifest"
-        "${MSVC80_CRT_DIR}/msvcm80d.dll"
         "${MSVC80_CRT_DIR}/msvcp80d.dll"
         "${MSVC80_CRT_DIR}/msvcr80d.dll"
         )
@@ -117,7 +115,6 @@ IF(MSVC)
     IF(NOT CMAKE_INSTALL_DEBUG_LIBRARIES_ONLY)
       SET(__install__libs
         "${MSVC90_CRT_DIR}/Microsoft.VC90.CRT.manifest"
-        "${MSVC90_CRT_DIR}/msvcm90.dll"
         "${MSVC90_CRT_DIR}/msvcp90.dll"
         "${MSVC90_CRT_DIR}/msvcr90.dll"
         )
@@ -128,7 +125,6 @@ IF(MSVC)
         "${MSVC90_REDIST_DIR}/Debug_NonRedist/${CMAKE_MSVC_ARCH}/Microsoft.VC90.DebugCRT")
       SET(__install__libs ${__install__libs}
         "${MSVC90_CRT_DIR}/Microsoft.VC90.DebugCRT.manifest"
-        "${MSVC90_CRT_DIR}/msvcm90d.dll"
         "${MSVC90_CRT_DIR}/msvcp90d.dll"
         "${MSVC90_CRT_DIR}/msvcr90d.dll"
         )
