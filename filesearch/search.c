@@ -551,6 +551,7 @@ static void findSlash(SearchOpt *s0){
 					NEW0(SearchOpt,s1);
 					s1->wlen = s0->wlen-i-1;
 					s1->wname = s0->wname+i+1;
+					s1->name = wchar_to_utf8(s1->wname,s1->wlen,&s1->len);
 					s1->next = NULL;
 					s0->wlen =i-1;
 					s0->subdir = s1;
