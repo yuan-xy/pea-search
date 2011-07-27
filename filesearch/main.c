@@ -70,7 +70,7 @@ void scan(int i){
 		save_db(i);
 	}
 	g_loaded[i]=1;
-	//TODO: 发送就绪事件通知
+	printf("Scan drive %c finished.\n",i+'A');
 }
 
 void DriveChangeListener(int i, BOOL add){

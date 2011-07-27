@@ -79,6 +79,7 @@ BOOL save2filezip(int i){
 }
 
 BOOL save_db(int i){
+	if(!g_loaded[i]) return 1;
 	#ifdef USE_ZIP
 		return save2filezip(i);
 	#else

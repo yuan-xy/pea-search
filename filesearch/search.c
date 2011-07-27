@@ -64,6 +64,7 @@ static pFileEntry find_file_in(pFileEntry parent, pUTF8 name, int whole_len){
 	pFileEntry tmp;
 	Strlen strlen;
 	int i, cur_len=whole_len;
+	if(parent==NULL) return NULL;
 	for(i=1;i<whole_len;i++){
 		if(*(name+i)=='\\' || *(name+i)=='/'){
 			cur_len=i;
