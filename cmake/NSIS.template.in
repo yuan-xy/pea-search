@@ -734,6 +734,8 @@ Section "-Core installation"
   CreateShortCut "$DESKTOP\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
   CreateShortCut "$QUICKLAUNCH\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
   CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Gigaso文件查询.lnk"  "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
+  WriteINIStr "$INSTDIR\gigaso.inf" Strings EXEPATH "$INSTDIR\search.exe"
+  nsExec::ExecToStack 'RunDll32 advpack.dll, LaunchINFSection "$INSTDIR\gigaso.inf", DefaultInstall'
   DetailPrint "finish ..."
   Sleep 1500
 
@@ -835,6 +837,7 @@ Section "Uninstall"
   nsExec::ExecToStack 'taskkill /f /im gigaso.exe'
   nsExec::ExecToStack 'sc delete gigaso'
   nsExec::ExecToStack 'taskkill /f /im search.exe'
+  nsExec::ExecToStack 'RunDll32 advpack.dll, LaunchINFSection "$INSTDIR\gigaso.inf", DefaultUninstall'
 
   ReadRegStr $START_MENU SHCTX \
    "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_NAME@" "StartMenu"

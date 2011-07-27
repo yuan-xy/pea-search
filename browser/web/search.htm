@@ -371,7 +371,33 @@
 		if($("#search").val()!="") searchf($("#search").val()); 
 		else load_history();
 	}
-
+	function init_dir(ss){ //Called from exe
+		if(ss.charAt(0)=='"'){
+			var findex = ss.indexOf('"',1);
+			if(findex==-1) return;
+			ss = ss.substring(findex+1, ss.length);
+		}else{
+			var findex = ss.indexOf(' ',1);
+			if(findex==-1) return;
+			ss = ss.substring(findex+1, ss.length);
+		}
+		ss = trim(ss);
+		if(ss.charAt(0)=='"'){
+			var findex = ss.indexOf('"',1);
+			if(findex==-1) return;
+			ss = ss.substring(1, findex);
+		}else{
+			var findex = ss.indexOf(' ',1);
+			if(findex==-1) return;
+			ss = ss.substring(1, findex);
+		}
+		if(ss.length<=1) return;
+		plugin.dire = ss;
+		$("#dir")[0].value = ss;
+		$("#search")[0].value = "*";
+		$("#search")[0].select();
+		searchf("*");
+	}
 	$(function() {
 		$("#dir")[0].value = plugin.dire;
 		$("#dir").bind('keyup',function(event,t){
