@@ -638,11 +638,12 @@ Section "-Core installation"
   ;Use the entire tree produced by the INSTALL target.  Keep the
   ;list of directories here in sync with the RMDir commands below.
 
-  
+  DetailPrint "寻找旧版本的记佳搜索..."
   nsExec::ExecToStack 'net stop gigaso'
   nsExec::ExecToStack 'taskkill /f /im gigaso.exe'
   nsExec::ExecToStack 'sc delete gigaso'
   nsExec::ExecToStack 'taskkill /f /im search.exe'
+  DetailPrint "开始安装新版本的记佳搜索..."
 
 
   SetOutPath "$INSTDIR"
@@ -726,9 +727,9 @@ Section "-Core installation"
 
   nsExec::ExecToStack 'sc create gigaso binPath= "$INSTDIR\gigaso.exe"  start= auto  type= interact type= own DisplayName= "Gigaso file searcher"'
   nsExec::ExecToStack 'sc description gigaso "A fast file name searcher"'
-  DetailPrint "find files to index ..."
+  DetailPrint "获得磁盘信息..."
   nsExec::ExecToStack 'net start gigaso'
-  DetailPrint "indexing ..."
+  DetailPrint "准备初次运行的数据..."
   Sleep 3000
   nsExec::ExecToStack 'regsvr32 /s "$INSTDIR\npPluginGigaso.dll"'
   CreateShortCut "$DESKTOP\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
@@ -736,7 +737,7 @@ Section "-Core installation"
   CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Gigaso文件查询.lnk"  "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
   WriteINIStr "$INSTDIR\gigaso.inf" Strings EXEPATH "$INSTDIR\search.exe"
   nsExec::ExecToStack 'RunDll32 advpack.dll, LaunchINFSection "$INSTDIR\gigaso.inf", DefaultInstall'
-  DetailPrint "finish ..."
+  DetailPrint "完成安装..."
   Sleep 1500
 
   !insertmacro MUI_STARTMENU_WRITE_END

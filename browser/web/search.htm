@@ -376,13 +376,15 @@
 	}
 	function history_thumb(){ 	plugin.history_thumb(); }
 	function load_history(){
-		history_thumb_timeout = setTimeout(history_thumb,0);
+		if(!need_load_history) return;
+		history_thumb_timeout = setTimeout(history_thumb,1);
 		history_parse_timeout = setTimeout(history_parse,50);
 	}
 	function refresh(){
 		if($("#search").val()!="") searchf($("#search").val()); 
 		else load_history();
 	}
+	var need_load_history = true;
 	function init_dir(ss){ //Called from exe
 		if(ss.charAt(0)=='"'){
 			var findex = ss.indexOf('"',1);
@@ -404,7 +406,7 @@
 			ss = ss.substring(1, findex);
 		}
 		if(ss.length<=1) return;
-		clearTimeout(history_parse_timeout);
+		need_load_history = false;
 		plugin.dire = ss;
 		$("#dir")[0].value = ss;
 		$("#search")[0].value = "*";
@@ -462,7 +464,7 @@
 			at: "right center",
 			offset: "0px"
 		});
-		load_history();
+		setTimeout(load_history,100);
 	});
 
 </script>
