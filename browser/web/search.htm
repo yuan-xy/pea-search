@@ -21,6 +21,7 @@
 <object id="plugin0" type="application/x-plugingigaso" width="10" height="10">
 </object>
 <input type="button" value="刷新" onclick="refresh();">
+<input type="button" value="首页" onclick="return_history();">
 <input type="radio" name="case" id="case0">模糊查询（模糊拼音、不区分英文大小写）
 <input type="radio" name="case" id="case1">精确模糊（非模糊拼音、区分英文大小写）
 
@@ -273,8 +274,8 @@
     function searchf(value){
 		value = trim(value);
 		if(value.length==0) return;
-		$("#historys").fadeOut();
-		$("#tabs").show();
+		$("#historys").fadeOut(1000);
+		$("#tabs").show(1000);
 		$("#loading").css("visibility","visible");
 		cur_search = value;
 		clearTimeout(search_timeout);
@@ -373,12 +374,20 @@
 			dblclick_file(e.currentTarget);
 		});
 		$(".thumbnail-container").contextMenu('myMenu1',context_menu_obj);
+		$("#loading").css("visibility","hidden");
 	}
 	function history_thumb(){ 	plugin.history_thumb(); }
 	function load_history(){
 		if(!need_load_history) return;
+		$("#loading").css("visibility","visible");
 		history_thumb_timeout = setTimeout(history_thumb,1);
 		history_parse_timeout = setTimeout(history_parse,50);
+	}
+	function return_history(){
+		$("#loading").css("visibility","visible");
+		$("#tabs").fadeOut(1000);
+		$("#historys").show();
+		load_history();
 	}
 	function refresh(){
 		if($("#search").val()!="") searchf($("#search").val()); 
@@ -413,16 +422,10 @@
 		$("#search")[0].select();
 		searchf("*");
 	}
-	$(function() {
-		$("#dir")[0].value = plugin.dire;
+	function init_event(){
 		$("#dir").bind('keyup',function(event,t){
 			plugin.dire = $("#dir")[0].value;
 		});
-		if(plugin.caze){
-			$("#case1").click();
-		}else{
-			$("#case0").click();
-		}
 		$("#case0").bind('click',function(event,t){
 			plugin.caze = false;
 			searchf($("#search").val());
@@ -431,8 +434,6 @@
 			plugin.caze = true;
 			searchf($("#search").val());
 		});
-		$("#search").focus();
-		$("#search").bind('keyup',search_if_change);
 		$("#message-area").corner("bottom 3px");
 		$("#result1").setTemplateElement("template");
 		$(document).bind("contextmenu", function(e){
@@ -453,7 +454,6 @@
 				if(reachBottom()) page();
 			}
 		});
-		$('#tabs').tabs();
 		$("#tabs ul li a").bind('click',function(e){
 			$(".subnav").hide();
 			$("#"+e.target.id+"div").show();
@@ -464,6 +464,17 @@
 			at: "right center",
 			offset: "0px"
 		});
+		$('#tabs').tabs();
+	}
+	$(function() {
+		if(plugin.caze){
+			$("#case1").click();
+		}else{
+			$("#case0").click();
+		}
+		$("#search").focus();
+		$("#search").bind('keyup',search_if_change);
+		setTimeout(init_event,1);
 		setTimeout(load_history,100);
 	});
 
