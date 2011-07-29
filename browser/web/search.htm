@@ -275,7 +275,7 @@
 		value = trim(value);
 		if(value.length==0) return;
 		$("#historys").fadeOut(1000);
-		$("#tabs").show(1000);
+		$("#tabs").fadeIn(1000);
 		$("#loading").css("visibility","visible");
 		cur_search = value;
 		clearTimeout(search_timeout);

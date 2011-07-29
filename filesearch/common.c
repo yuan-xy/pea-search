@@ -25,6 +25,15 @@ BOOL get_abs_path(const WCHAR *name, WCHAR full_path[]){
 	return 1;
 }
 
+void print_debug(WCHAR *fmt, ...){
+	WCHAR buffer[255];
+	va_list args;
+	va_start (args, fmt);
+	wsprintf(buffer,fmt,args);//TODO:存在问题，只打印了第一个字符
+	va_end(args);
+	OutputDebugString(buffer);
+}
+
 BOOL WindowsVersionOK (DWORD MajorVerRequired, DWORD MinorVerRequired){
     OSVERSIONINFO OurVersion;
 	OurVersion.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);

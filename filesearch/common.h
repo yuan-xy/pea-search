@@ -17,6 +17,8 @@ extern BOOL setPWD(char *lpModuleName);
  */
 extern BOOL get_abs_path(const WCHAR *name, WCHAR full_path[]);
 
+extern void print_debug(WCHAR *fmt, ...);
+
 extern BOOL WindowsVersionOK (DWORD MajorVerRequired, DWORD MinorVerRequired);
 
 

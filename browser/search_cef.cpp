@@ -356,12 +356,12 @@ public:
 		int modifiers,
 		bool isSystemKey)
 	{
-		if(code == VK_ESCAPE && modifiers==0){
+		if(code == VK_ESCAPE && type==KEYEVENT_RAWKEYDOWN){
 			PostQuitMessage(0);
 			TerminateProcess(GetCurrentProcess(),0);
 			return RV_HANDLED;
 		}
-		if(code == VK_F5 && modifiers==0){
+		if(code == VK_F5 && type==KEYEVENT_RAWKEYDOWN){
 			exec_js(L"refresh");
 			return RV_HANDLED;
 		}
