@@ -3,6 +3,7 @@
 
 #include "../3rd/cef_binary_r78_VS2005/include/cef.h"
 #include "../filesearch/common.h"
+#include "scheme_test.h"
 #include <sstream>
 
 #include <string>
@@ -47,7 +48,7 @@ static void init_dir(){
 	wchar_t *cmdLine = GetCommandLineW();
 	std::wstring str(cmdLine), olds(L"\\"), news(L"\\\\");
 	searchAndReplace(str,olds,news);
-	wsprintf(buffer,L"try{init_dir('%s')}catch(e){}",str.c_str());
+	wsprintf(buffer,L"try{init_dir('%s');in_exe=true;}catch(e){alert(e)}",str.c_str());
 	exec_js_str(buffer);
 }
 
@@ -68,6 +69,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	// Initialize the CEF with messages processed using a separate UI thread.
 	CefInitialize(true, std::wstring());
 #endif
+	InitSchemeTest();
 	MyRegisterClass(hInstance);
 	if (!InitInstance (hInstance, nCmdShow)) return FALSE;
 	SetForegroundWindow(hMainWin);

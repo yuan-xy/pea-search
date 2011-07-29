@@ -19,7 +19,14 @@ set(CEF_DIR ${PROJECT_SOURCE_DIR}/3rd/cef_binary_r78_VS2005)
 set(CEF_DLL_DIR ${CEF_DIR}/build/${CMAKE_BUILD_TYPE})
 
 link_directories("${CEF_DIR}/lib/${CMAKE_BUILD_TYPE}")
-add_executable (search "search_cef.cpp" "../filesearch/common.c")
+SET( SOURCES
+    "string_util.cpp"
+    "scheme_test.cpp"
+    "search_cef.cpp"
+    "../filesearch/common.c"
+    )
+
+add_executable (search  ${SOURCES})
 target_link_libraries (search "libcef.lib libcef_dll_wrapper.lib")
 set_target_properties(search PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
 
