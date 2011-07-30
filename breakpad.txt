@@ -1,2 +1,0 @@
-svn checkout http://google-breakpad.googlecode.com/svn/trunk/ google-breakpad-read-only
-src\tools\gyp\gyp.bat src\client\windows\breakpad_client.gyp

@@ -41,6 +41,8 @@
 #define TC_VERSION_PATCH  ""
 #define TC_VERSION_STRING "google-perftools 1.4"
 
+#define PERFTOOLS_DLL_DECL
+
 // __THROW is defined in glibc systems.  It means, counter-intuitively,
 // "This function will never throw an exception."  It's an optional
 // optimization tool, but we may need to use it to match glibc prototypes.

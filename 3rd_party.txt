@@ -1,0 +1,7 @@
+svn checkout http://google-breakpad.googlecode.com/svn/trunk/ google-breakpad-read-only
+src\tools\gyp\gyp.bat src\client\windows\breakpad_client.gyp
+
+静态链接tcmalloc:
+1、将libtcmalloc_minimal项目从dll更改为为静态库
+2、增加编译选项“/D PERFTOOLS_DLL_DECL=”
+3、手动更改“libtcmalloc_minimal.vcproj”文件，将所有RuntimeLibrary="2"更改为RuntimeLibrary="0"，将3更改为1
