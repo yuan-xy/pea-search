@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CEFCLIENT_STRING_UTIL_H
+#define _CEFCLIENT_STRING_UTIL_H
 
 #include <string>
 
@@ -13,4 +14,9 @@ std::string WStringToString(const std::wstring& s);
 std::wstring StringReplace(const std::wstring& str, const std::wstring& from,
                            const std::wstring& to);
 
-std::wstring UrlDecode(const std::wstring& str);
+std::string StringReplace(const std::string& str, const std::string& from,
+                          const std::string& to);
+
+std::string UrlDecode(const std::string& str);
+
+#endif // _CEFCLIENT_STRING_UTIL_H
