@@ -1,123 +1,76 @@
-// Copyright (c) 2009 The Chromium Embedded Framework Authors. All rights
-// reserved. Use of this source code is governed by a BSD-style license that
-// can be found in the LICENSE file.
-
 #include "scheme_test.h"
 #include "string_util.h"
+#include "../PluginGigaso/bitmap.h"
+#include <gdiplus.h>
+#include <atlimage.h>
 
-bool LoadBinaryResource(int binaryId, DWORD &dwSize, LPBYTE &pBytes)
-{
-  extern HINSTANCE hInst;
-	HRSRC hRes = FindResource(hInst, MAKEINTRESOURCE(binaryId),
-                            MAKEINTRESOURCE(256));
-	if(hRes)
-	{
-		HGLOBAL hGlob = LoadResource(hInst, hRes);
-		if(hGlob)
-		{
-			dwSize = SizeofResource(hInst, hRes);
-			pBytes = (LPBYTE)LockResource(hGlob);
-			if(dwSize > 0 && pBytes)
-				return true;
-		}
-	}
-
-	return false;
-}
-
-// Implementation of the schema handler for client:// requests.
-class ClientSchemeHandler : public CefThreadSafeBase<CefSchemeHandler>
-{
+class ClientSchemeHandler : public CefThreadSafeBase<CefSchemeHandler>{
 public:
-  ClientSchemeHandler() : size_(0), offset_(0), bytes_(NULL) {}
+  ClientSchemeHandler() : size_(0), offset_(0) {
+	  bytes_ = (LPBYTE) malloc(4096);
+  }
 
-  // Process the request. All response generation should take place in this
-  // method. If there is no response set |response_length| to zero and
-  // ReadResponse() will not be called. If the response length is not known then
-  // set |response_length| to -1 and ReadResponse() will be called until it
-  // returns false or until the value of |bytes_read| is set to 0. Otherwise,
-  // set |response_length| to a positive value and ReadResponse() will be called
-  // until it returns false, the value of |bytes_read| is set to 0 or the
-  // specified number of bytes have been read. If there is a response set
-  // |mime_type| to the mime type for the response.
+  ~ClientSchemeHandler() {
+	  free(bytes_);
+  }
+
+  bool LoadBinaryResource(const WCHAR *file){
+	SHFILEINFO shfi;
+	HRESULT hr = SHGetFileInfo( file, 0, &shfi, sizeof( SHFILEINFO ), SHGFI_ICON | SHGFI_SMALLICON | SHGFI_ADDOVERLAYS );
+	if( !SUCCEEDED(hr) || shfi.hIcon==NULL) return false;
+	HDC hdc = GetDC(NULL) ;
+	ICONINFO info;
+	GetIconInfo(shfi.hIcon,&info);
+	HBITMAP  bmp = ReplaceColor(info.hbmColor,RGB(0,0,0), RGB(255,255,255), hdc);
+	CImage image;
+	image.Attach(bmp);
+	IStream* stream;
+	hr = CreateStreamOnHGlobal(0, TRUE, &stream);
+	if( !SUCCEEDED(hr) ) return false;
+	image.Save(stream,Gdiplus::ImageFormatPNG);
+	DestroyIcon(shfi.hIcon);
+    ULARGE_INTEGER liSize;
+    IStream_Size(stream, &liSize);
+	size_ = liSize.LowPart;
+	IStream_Reset(stream);
+	IStream_Read(stream, bytes_, size_);
+	stream->Release();
+	return true;
+  }
+
   virtual bool ProcessRequest(CefRefPtr<CefRequest> request,
-                              std::wstring& mime_type, int* response_length)
+	  std::wstring& mime_type, int* response_length)
   {
-    bool handled = false;
-
-    Lock();
-    std::wstring url = request->GetURL();
-    if(wcsstr(url.c_str(), L"handler.html") != NULL) {
-      // Build the response html
-      html_ = "<html><head><title>Client Scheme Handler</title></head><body>"
-              "This contents of this page page are served by the "
-              "ClientSchemeHandler class handling the client:// protocol."
-              "<br>You should see an image:"
-              "<br/><img src=\"client://tests/client.gif\"><pre>";
-      
-      // Output a string representation of the request
-      std::wstring dump;
-      DumpRequestContents(request, dump);
-      html_.append(WStringToString(dump));
-
-      html_.append("</pre><br>Try the test form:"
-                   "<form method=\"POST\" action=\"handler.html\">"
-                   "<input type=\"text\" name=\"field1\">"
-                   "<input type=\"text\" name=\"field2\">"
-                   "<input type=\"submit\">"
-                   "</form></body></html>");
-
-      handled = true;
-      size_ = html_.size();
-      bytes_ = (LPBYTE)html_.c_str();
-
-      // Set the resulting mime type
-      mime_type = L"text/html";
-    }
-    else if(wcsstr(url.c_str(), L"client.gif") != NULL) {
-      // Load the response image
-      if(LoadBinaryResource(101, size_, bytes_)) {
-        handled = true;
-        // Set the resulting mime type
-        mime_type = L"image/jpg";
-      }
-    }
-
-    // Set the resulting response length
-    *response_length = size_;
-    Unlock();
-
-    return handled;
+	  bool handled = false;
+	  Lock();
+	  std::wstring url = request->GetURL();
+		url = UrlDecode(url);
+	  if(LoadBinaryResource(url.c_str()+wcslen(L"gigaso://images/") )) {
+		  handled = true;
+		  mime_type = L"image/png";
+	  }
+	  *response_length = size_;
+	  Unlock();
+	  return handled;
   }
 
-  // Cancel processing of the request.
-  virtual void Cancel()
-  {
-  }
+  virtual void Cancel(){}
 
-  // Copy up to |bytes_to_read| bytes into |data_out|. If the copy succeeds
-  // set |bytes_read| to the number of bytes copied and return true. If the
-  // copy fails return false and ReadResponse() will not be called again.
   virtual bool ReadResponse(void* data_out, int bytes_to_read,
                             int* bytes_read)
   {
     bool has_data = false;
     *bytes_read = 0;
-
     Lock();
-
     if(offset_ < size_) {
       // Copy the next block of data into the buffer.
       int transfer_size = min(bytes_to_read, static_cast<int>(size_ - offset_));
       memcpy(data_out, bytes_ + offset_, transfer_size);
       offset_ += transfer_size;
-
       *bytes_read = transfer_size;
       has_data = true;
     }
-
     Unlock();
-
     return has_data;
   }
 
@@ -141,10 +94,6 @@ public:
 
 void InitSchemeTest()
 {
-  CefRegisterScheme(L"client", L"tests", new ClientSchemeHandlerFactory());
+  CefRegisterScheme(L"gigaso", L"images", new ClientSchemeHandlerFactory());
 }
 
-void RunSchemeTest(CefRefPtr<CefBrowser> browser)
-{
-  browser->GetMainFrame()->LoadURL(L"client://tests/handler.html");
-}

@@ -20,12 +20,19 @@ set(CEF_DLL_DIR ${CEF_DIR}/build/${CMAKE_BUILD_TYPE})
 
 link_directories("${CEF_DIR}/lib/${CMAKE_BUILD_TYPE}")
 SET( SOURCES
+    "string_util.h"
     "string_util.cpp"
+    "scheme_test.h"
     "scheme_test.cpp"
     "search_cef.cpp"
+    "../filesearch/env.h"
+    "../filesearch/common.h"
     "../filesearch/common.c"
+    "../PluginGigaso/bitmap.h"
+    "../PluginGigaso/bitmap.cpp"
+    "../PluginGigaso/win_icon.h"
+    "../PluginGigaso/win_icon.cpp"
     )
-
 add_executable (search  ${SOURCES})
 target_link_libraries (search "libcef.lib libcef_dll_wrapper.lib")
 set_target_properties(search PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 

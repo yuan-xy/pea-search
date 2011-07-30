@@ -1,9 +1,6 @@
-// Copyright (c) 2010 The Chromium Embedded Framework Authors. All rights
-// reserved. Use of this source code is governed by a BSD-style license that
-// can be found in the LICENSE file.
-
-#include "string_util.h"
+#include <string_util.h>
 #include <sstream>
+#include <windows.h>
 
 
 std::wstring StringToWString(const std::string& s)
@@ -32,55 +29,6 @@ std::string WStringToString(const std::wstring& s)
   return str;
 }
 
-void DumpRequestContents(CefRefPtr<CefRequest> request, std::wstring& str)
-{
-  std::wstringstream ss;
-
-  ss << L"URL: " << request->GetURL();
-  ss << L"\nMethod: " << request->GetMethod();
-
-  CefRequest::HeaderMap headerMap;
-  request->GetHeaderMap(headerMap);
-  if(headerMap.size() > 0) {
-    ss << L"\nHeaders:";
-    CefRequest::HeaderMap::const_iterator it = headerMap.begin();
-    for(; it != headerMap.end(); ++it) {
-      ss << L"\n\t" << (*it).first << L": " << (*it).second;
-    }
-  }
-
-  CefRefPtr<CefPostData> postData = request->GetPostData();
-  if(postData.get()) {
-    CefPostData::ElementVector elements;
-    postData->GetElements(elements);
-    if(elements.size() > 0) {
-      ss << L"\nPost Data:";
-      CefRefPtr<CefPostDataElement> element;
-      CefPostData::ElementVector::const_iterator it = elements.begin();
-      for(; it != elements.end(); ++it) {
-        element = (*it);
-        if(element->GetType() == PDE_TYPE_BYTES) {
-          // the element is composed of bytes
-          ss << L"\n\tBytes: ";
-          if(element->GetBytesCount() == 0)
-            ss << L"(empty)";
-          else {
-            // retrieve the data.
-            size_t size = element->GetBytesCount();
-            char* bytes = new char[size];
-            element->GetBytes(size, bytes);
-            ss << StringToWString(std::string(bytes, size));
-            delete [] bytes;
-          }
-        } else if(element->GetType() == PDE_TYPE_FILE) {
-          ss << L"\n\tFile: " << element->GetFile();
-        }
-      }
-    }
-  }
-
-  str = ss.str();
-}
 
 std::wstring StringReplace(const std::wstring& str, const std::wstring& from,
                            const std::wstring& to)
@@ -97,4 +45,52 @@ std::wstring StringReplace(const std::wstring& str, const std::wstring& from,
     }
   } while(pos != std::wstring::npos);
   return result;
+}
+
+static int decode1(const wchar_t c){
+	if(c>=L'A') return c-L'A'+10;
+	return c-L'0';
+}
+
+static int decode(const wchar_t *ss){
+	return decode1(*ss)*16 + decode1(*(ss+1));
+}
+
+static std::wstring UrlDecode_Chinese(const std::wstring& str){
+  std::wstring result = str;
+  std::wstring::size_type pos = 0;
+  do {
+    pos = result.find(L"%", pos);
+    if(pos != std::wstring::npos) {
+	  std::wstring ch;
+	  byte utf8[3];
+	  wchar_t c;
+	  ch = result.substr(pos+1,2);
+	  utf8[0] = decode(ch.c_str());
+	  ch = result.substr(pos+4,2);
+	  utf8[1] = decode(ch.c_str());
+	  ch = result.substr(pos+7,2);
+	  utf8[2] = decode(ch.c_str());
+	  MultiByteToWideChar(CP_UTF8, 0, (char *)utf8, 3, &c, 1);
+	  std::wstring chh(1, c);
+      result.replace(pos, 9, chh);
+      pos += 1;
+    }
+  } while(pos != std::wstring::npos);
+  return result;
+}
+
+
+std::wstring UrlDecode(const std::wstring& str){
+	std::wstring url = str;
+	  url = StringReplace(url, L"/", L"\\");
+	  url = StringReplace(url, L"%20", L" ");
+	  //url = StringReplace(url, L"%23", L"#");
+	  //url = StringReplace(url, L"%25", L"%");
+	  //url = StringReplace(url, L"%7B", L"{");
+	  //url = StringReplace(url, L"%7D", L"}");
+	  //url = StringReplace(url, L"%5B", L"[");
+	  //url = StringReplace(url, L"%5D", L"]");
+	  url = UrlDecode_Chinese(url);
+  return url;
 }

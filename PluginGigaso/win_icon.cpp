@@ -31,12 +31,14 @@ void gen_icon_xlarge(LPCTSTR szFileName, LPCTSTR iconFileName){
 	} 
 }
 
-void gen_icon_small(LPCTSTR szFileName, LPCTSTR iconFileName){
+BOOL gen_icon_small(LPCTSTR szFileName, LPCTSTR iconFileName){
 	SHFILEINFO shfi;
 	HRESULT hr = SHGetFileInfo( szFileName, 0, &shfi, sizeof( SHFILEINFO ), SHGFI_ICON | SHGFI_SMALLICON | SHGFI_ADDOVERLAYS );
+	if( !SUCCEEDED(hr) || shfi.hIcon==NULL) return 0;
 	save_icon_to_photo(shfi.hIcon, iconFileName);
 	//SaveIcon(shfi.hIcon,iconFileName,TRUE);
 	DestroyIcon(shfi.hIcon);
+	return 1;
 }
 
 void saveicon(HICON hico, LPCTSTR szFileName, BOOL bAutoDelete){

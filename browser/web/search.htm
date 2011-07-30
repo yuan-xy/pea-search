@@ -194,6 +194,14 @@
 			});
 			highlight_timeout = setTimeout(highlight,0);
 	  }
+	  function icon_replace(){
+			$("#maintable tbody tr").each(function(i,o){
+				get_file_path(o);
+				var full_path = path+file;
+				if(full_path.indexOf('%')!=-1) return;
+				$(o).find("img")[0].src = "gigaso://images/"+full_path;
+			});
+	  }
 	  function highlight(){
 			$("#maintable tbody td[colid=0] span").each(function(i,o){
 				var html = o.innerHTML;
@@ -203,6 +211,7 @@
 					"<span class='highlight-match'>"+html.substring(fi, fi+$("#search").val().length)+"</span>" + 
 					html.substring(fi+$("#search").val().length, html.length);
 			});
+			highlight_timeout = setTimeout(icon_replace,1);
 			$("#loading").css("visibility","hidden");
 	  }
 </script>
@@ -480,7 +489,6 @@
 	});
 //alert($.browser.webkit);
 </script>
-<img src="client://tests/client.gif">
 </body>
 
 </html>

@@ -1,6 +1,4 @@
-#define UNICODE
-#define _UNICODE
-
+#include "../filesearch/env.h"
 #include "../3rd/cef_binary_r78_VS2005/include/cef.h"
 #include "../filesearch/common.h"
 #include "scheme_test.h"

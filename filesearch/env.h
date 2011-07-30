@@ -19,9 +19,6 @@ extern "C" {
 #define _WIN32_WINNT 0x0500
 #endif
 
-#define UNICODE
-#define _UNICODE
-
 #pragma warning(disable:4996)
 
 //#define USE_ZIP
