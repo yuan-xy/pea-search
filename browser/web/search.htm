@@ -25,15 +25,14 @@
 
 <input type="radio" name="case" id="case0">模糊查询
 <input type="radio" name="case" id="case1">精确查询 
-<input type="button" value="zoom_in" onclick="cef.gigaso.zoom_in()">
-<input type="button" value="zoom_out" onclick="cef.gigaso.zoom_out()">
-<input type="button" value="zoom_reset" onclick="cef.gigaso.zoom_reset()">
+<input type="button" value="放大" onclick="cef.gigaso.zoom_in()">
+<input type="button" value="缩小" onclick="cef.gigaso.zoom_out()">
 
 
 
 <center style="margin:10px;">
 搜索：<img id="loading" src="images/spinner.gif" style="visibility: hidden"/>
-<input id="dir" name="dir" type="text" size="20" value="" title="目录"><input id="search" name="s" type="text" size="35" value="" title="查询条件"><img src="images/find.ico">
+<input id="dir" name="dir" type="text" size="20" value="" title="目录"><input id="search" name="s" type="text" size="50" value="" title="查询条件"><img src="images/find.ico">
 
 </center>
 
@@ -56,13 +55,13 @@
 					<input type="hidden" value="{$T.record.path}">
 				</div>
 			</div>
-			<div style="width:150px;text-align: center;word-break:break-all;font-size:12pt">{$T.record.name2}</div>
+			<div style="width:150px;text-align: center;word-break:break-all;">{$T.record.name2}</div>
 		</div>
 		{#/for}
 </textarea> 
 
 <div id="tabs" style="display:none">
-	<ul>
+	<ul id="main_nav_tab">
 		<li>
 			<a id="all-" href="#tab-1" onclick="file_type_search(0);return true;"><img src="icons/file.ico" class="icon"/>全部
 			<br/><span id="all_file">0</span></a>
@@ -148,7 +147,7 @@
 <div id="message-area" style="opacity: 0;">no message.</div> 
 
 <div id="myMenu1" style="display:none;">
-  <ul style="font-size:10pt">
+  <ul>
     <li id="default"><img width="16" height="16" src="./images/win.png"> 打开</li>
     <li id="openas"><img width="16" height="16" src="./images/openas.ico"> 打开方式</li>
     <li id="explore"><img  width="16" height="16" src="./images/explore.ico"> 资源管理器</li>
@@ -381,10 +380,11 @@
 		hs = eval(hs);
 		for( var i=0;i<hs.length;i++){
 			if(hs[i].charAt(hs[i].length-1)=='\\') hs[i] = hs[i].substr(0,hs[i].length-1);
+			function calc_top(x){if(x>=10) return 460;if(x>=5) return 290;return 120}
 			tmp = {
 				"id":i, 
 				"left": 10+200*(i%5),
-				"top" : i>=5? 350:150,
+				"top" : calc_top(i),
 				"path": hs[i].substring(0, hs[i].lastIndexOf("\\")+1),
 				"name": hs[i].substring(hs[i].lastIndexOf("\\")+1,hs[i].length)
 			}
@@ -392,7 +392,7 @@
 		}
 		file_name_trim2(hs);
 		$("#historys").setTemplateElement("history_template");
-		$("#historys").processTemplate(hs.slice(0,10));
+		$("#historys").processTemplate(hs.slice(0,15));
 		$(".thumbnail-container").bind('click',function(e){
 			dblclick_file(e.currentTarget);
 		});
@@ -495,6 +495,7 @@
 		setTimeout(load_history,100);
 	});
 </script>
+
 </body>
 
 </html>

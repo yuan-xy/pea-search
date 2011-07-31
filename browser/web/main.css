@@ -1,6 +1,6 @@
-body {font-size:12px}
+body {font-size: 90%}
 
-#search {padding:0px; margin:0px; height:30px; width:400px; font-size: 120%;}
+#search {padding:0px; margin:0px; height:35px; width:600px; font-size: 120%;}
 #search_img {
 		width: 16px;
 		height: 16px;
@@ -10,7 +10,7 @@ body {font-size:12px}
 		bottom: 0;
 }
 
-#maintable {font-size:84%; line-height:1.5em; text-align:left; border-bottom:1px solid #888; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
+#maintable {font-size: 80%; line-height:1.5em; text-align:left; border-bottom:1px solid #888; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
 #maintable th, #maintable td { padding:0 .3em; white-space:nowrap;}
 #maintable th { line-height:1.8em; background-color:#ECE9D8; border:1px solid #888;
 	background-image: url(./images/header.png);
@@ -88,7 +88,12 @@ background-color: #FFDDDD;
 
 .subnav-span{
 	margin: 5px;
+	font-size: 75%
 }
 .subnav a{
 	text-decoration: none;
+}
+
+#main_nav_tab {
+	font-size: 75%
 }

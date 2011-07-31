@@ -42,24 +42,22 @@ public:
                               CefRefPtr<CefResponse> response,
                               int* response_length)
   {
-    REQUIRE_IO_THREAD();
-
-    bool handled = false;
-
-    AutoLock lock_scope(this);
-    
-    std::string url = request->GetURL();
-		url = UrlDecode(url);
-		std::wstring urlw = StringToWString(url);
-	  if(LoadBinaryResource(urlw.c_str()+wcslen(L"gigaso://images/") )) {
-		data_ = std::string(reinterpret_cast<const char*>(bytes_), size_);
-		handled = true;
-		// Set the resulting mime type
-		response->SetMimeType("image/png");
-		response->SetStatus(200);
-	  }
-	  *response_length = size_;
-    return handled;
+	  REQUIRE_IO_THREAD();
+	  bool handled = false;
+	  AutoLock lock_scope(this);
+	  try{
+		  std::string url = request->GetURL();
+		  url = UrlDecode(url);
+		  std::wstring urlw = StringToWString(url);
+		  if(LoadBinaryResource(urlw.c_str()+wcslen(L"gigaso://images/") )) {
+			  handled = true;
+			  // Set the resulting mime type
+			  response->SetMimeType("image/png");
+			  response->SetStatus(200);
+		  }
+		  *response_length = size_;
+	  }catch(...){}
+	  return handled;
   }
 
   // Cancel processing of the request.
@@ -81,11 +79,11 @@ public:
 
     AutoLock lock_scope(this);
 
-    if(offset_ < data_.length()) {
+    if(offset_ < size_) {
       // Copy the next block of data into the buffer.
       int transfer_size =
-          min(bytes_to_read, static_cast<int>(data_.length() - offset_));
-      memcpy(data_out, data_.c_str() + offset_, transfer_size);
+          min(bytes_to_read, static_cast<int>(size_ - offset_));
+      memcpy(data_out, bytes_ + offset_, transfer_size);
       offset_ += transfer_size;
 
       *bytes_read = transfer_size;
@@ -96,7 +94,6 @@ public:
   }
 
 private:
-  std::string data_;
   DWORD size_, offset_;
   LPBYTE bytes_;
 
