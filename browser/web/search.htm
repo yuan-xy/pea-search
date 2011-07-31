@@ -22,12 +22,15 @@
 </object>
 <input type="button" value="刷新" onclick="refresh();">
 <input type="button" value="首页" onclick="return_history();">
-<input type="radio" name="case" id="case0">模糊查询（模糊拼音、不区分英文大小写）
-<input type="radio" name="case" id="case1">精确模糊（非模糊拼音、区分英文大小写）
+
+<input type="radio" name="case" id="case0">模糊查询
+<input type="radio" name="case" id="case1">精确查询 
+
+
 
 <center style="margin:10px;">
 搜索：<img id="loading" src="images/spinner.gif" style="visibility: hidden"/>
-<input id="dir" name="dir" type="text" size="20" value="" title="目录"><input id="search" name="s" type="text" size="35" value="" title="查询条件"><img id="search_img" src="images/find.ico"/>
+<input id="dir" name="dir" type="text" size="20" value="" title="目录"><input id="search" name="s" type="text" size="35" value="" title="查询条件"><img src="images/find.ico">
 
 </center>
 
@@ -194,13 +197,19 @@
 			});
 			highlight_timeout = setTimeout(highlight,0);
 	  }
+	  var icon_replace_index=0;
 	  function icon_replace(){
-			$("#maintable tbody tr").each(function(i,o){
+			var finished = true;
+			$("#maintable tbody tr").slice(icon_replace_index,icon_replace_index+10).each(function(i,o){
 				get_file_path(o);
 				var full_path = path+file;
 				if(full_path.indexOf('%')!=-1) return;
 				$(o).find("img")[0].src = "gigaso://images/"+full_path;
+				finished = false;
 			});
+			if(finished) return;
+			icon_replace_index+=10;
+			highlight_timeout = setTimeout(icon_replace,1);
 	  }
 	  function highlight(){
 			$("#maintable tbody td[colid=0] span").each(function(i,o){
@@ -211,7 +220,8 @@
 					"<span class='highlight-match'>"+html.substring(fi, fi+$("#search").val().length)+"</span>" + 
 					html.substring(fi+$("#search").val().length, html.length);
 			});
-			highlight_timeout = setTimeout(icon_replace,1);
+			icon_replace_index=0;
+			if(in_exe) highlight_timeout = setTimeout(icon_replace,1);
 			$("#loading").css("visibility","hidden");
 	  }
 </script>
@@ -468,12 +478,6 @@
 			$(".subnav").hide();
 			$("#"+e.target.id+"div").show();
 		});
-		$( "#search_img").position({
-			of: $( "#search" ),
-			my: "right top",
-			at: "right center",
-			offset: "0px"
-		});
 		$('#tabs').tabs();
 	}
 	$(function() {
@@ -487,7 +491,6 @@
 		setTimeout(init_event,1);
 		setTimeout(load_history,100);
 	});
-//alert($.browser.webkit);
 </script>
 </body>
 

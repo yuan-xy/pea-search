@@ -11,7 +11,7 @@ target_link_libraries (search_ie "Shlwapi.lib")
 set_target_properties(search_ie PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
 
 #install (TARGETS search_ie DESTINATION .)
-install (DIRECTORY "${PROJECT_SOURCE_DIR}/browser/web"   DESTINATION .)
+install (DIRECTORY "${PROJECT_SOURCE_DIR}/browser/web"   DESTINATION . PATTERN "Thumbs.db" EXCLUDE)
 
 
 
