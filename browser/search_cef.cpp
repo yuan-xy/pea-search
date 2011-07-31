@@ -2,6 +2,7 @@
 #include "../3rd/cef_binary/include/cef.h"
 #include "../filesearch/common.h"
 #include "cef_scheme.h"
+#include "cef_js.h"
 #include "client_handler.h"
 #include <sstream>
 #include <string>
@@ -49,6 +50,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
   CefInitialize(settings);
 	InitSchemeTest();
+	InitExtensionTest();
 	MyRegisterClass(hInstance);
 	if (!InitInstance (hInstance, nCmdShow)) return FALSE;
 	SetForegroundWindow(hMainWin);

@@ -27,6 +27,8 @@ SET( SOURCES
     "client_handler.cpp"
     "cef_scheme.h"
     "cef_scheme.cpp"
+    "cef_js.h"
+    "cef_js.cpp"
     "search_cef.cpp"
     "../filesearch/env.h"
     "../filesearch/common.h"
