@@ -62,14 +62,15 @@ void FilesIterate(pFileEntry file,pFileVisitor visitor, void *data){
 
 void AllFilesIterate(pFileVisitor visitor, void *data){
 	int i=0;
-	for(;i<26;i++){
-		if(g_bVols[i] && g_VolsInfo[i].serialNumber && g_rootVols[i]!=NULL){
-			FilesIterate(g_rootVols[i],visitor,data);
-		}
-	}
 	if(load_offline){
 		for(i=DIRVE_COUNT;i<DIRVE_COUNT_OFFLINE;i++){
 			if(g_rootVols[i]!=NULL){
+				FilesIterate(g_rootVols[i],visitor,data);
+			}
+		}
+	}else{
+		for(;i<26;i++){
+			if(g_bVols[i] && g_VolsInfo[i].serialNumber && g_rootVols[i]!=NULL){
 				FilesIterate(g_rootVols[i],visitor,data);
 			}
 		}

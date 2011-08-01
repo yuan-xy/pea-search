@@ -4,9 +4,12 @@
 #include <io.h>
 #include <process.h>
 #include "util.h"
+#include "global.h"
+#include "drive.h"
 #include "sharelib.h"
 #include "search.h"
 #include "suffix.h"
+#include "write.h"
 #include "serverNP.h"
 
 typedef struct { /* Argument to a server thread. */
@@ -162,6 +165,110 @@ static void send_response_stat(HANDLE hNamedPipe, pSearchRequest req){
 	}
 }
 
+static char * print_index_status(char *buffer,int id){
+	char *p = buffer;
+	*p++ = '{';
+	{
+		memcpy(p,"\"id\":\"",6);
+		p += 6;
+		p += sprintf(p,"%d",id);
+		*p++ ='"';
+		*p++ =',';
+	}
+	{
+		memcpy(p,"\"type\":\"",8);
+		p += 8;
+		p += sprintf(p,"%d",g_VolsInfo[id].type);
+		*p++ ='"';
+		*p++ =',';
+	}
+	{
+		memcpy(p,"\"serialNumber\":\"",16);
+		p += 16;
+		p += sprintf(p,"%d",g_VolsInfo[id].serialNumber);
+		*p++ ='"';
+		*p++ =',';
+	}
+	if(wcslen(g_VolsInfo[id].volumeName)>0){
+		pUTF8 str;
+		int str_len;
+		str = wchar_to_utf8(g_VolsInfo[id].volumeName,wcslen(g_VolsInfo[id].volumeName),&str_len);
+		memcpy(p,"\"volumeName\":\"",14);
+		p += 14;
+		memcpy(p,str,str_len);
+		//free_safe(str);
+		p += str_len;
+		*p++ ='"';
+		*p++ =',';
+	}
+	if(wcslen(g_VolsInfo[id].fsName)>0){
+		pUTF8 str;
+		int str_len;
+		str = wchar_to_utf8(g_VolsInfo[id].fsName,wcslen(g_VolsInfo[id].fsName),&str_len);
+		memcpy(p,"\"fsName\":\"",10);
+		p += 10;
+		memcpy(p,str,str_len);
+		//free_safe(str);
+		p += str_len;
+		*p++ ='"';
+	}
+	*p++ = '}';
+	return p;
+}
+
+static void send_response_index_status(HANDLE hNamedPipe){
+	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
+	int i;
+	*p++ = '[';
+	for(i=0;i<DIRVE_COUNT_OFFLINE;i++){
+		if(!g_loaded[i]) continue;
+		p = print_index_status(p,i);
+		*p++ = ',';
+		if((p-p1)>8192-100) break; //prevent buffer overflow
+	}
+	if(*(p-1)==',') p--;
+	*p++ = ']';	
+	{
+		DWORD nXfer;
+		pSearchResponse resp = (pSearchResponse)buffer;
+		resp->len = (p-p1);
+		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+	}
+}
+
+static void command_exec(WCHAR *command, HANDLE hNamedPipe){
+	if(wcsncmp(command,L"index_status",wcslen(L"index_status"))==0){
+		send_response_index_status(hNamedPipe);
+	}
+	if(wcsncmp(command,L"offline_db",wcslen(L"offline_db"))==0){
+		if(!load_offline){
+			load_offline = 1;
+			load_offline_dbs();
+		}
+		{
+			char buffer[12], *p;
+			DWORD nXfer;
+			pSearchResponse resp = (pSearchResponse)buffer;
+			p = buffer + sizeof(int);
+			memcpy(p,"'ok'",4);
+			resp->len = 4;
+			WriteFile (hNamedPipe, resp, sizeof(int)+4, &nXfer, NULL);
+		}
+	}
+	if(wcsncmp(command,L"online_db",wcslen(L"online_db"))==0){
+		load_offline = 0;
+		{
+			char buffer[12], *p;
+			DWORD nXfer;
+			pSearchResponse resp = (pSearchResponse)buffer;
+			p = buffer + sizeof(int);
+			memcpy(p,"'ok'",4);
+			resp->len = 4;
+			WriteFile (hNamedPipe, resp, sizeof(int)+4, &nXfer, NULL);
+		}
+	}	
+}
+
 static unsigned int WINAPI Server (void *pArg) {
 	LPTHREAD_ARG pThArg = (LPTHREAD_ARG)pArg;
 	HANDLE hNamedPipe= pThArg->hNamedPipe, hConTh = NULL;
@@ -179,6 +286,9 @@ static unsigned int WINAPI Server (void *pArg) {
 		while (!ShutDown && ReadFile (hNamedPipe, &req, sizeof(SearchRequest), &nXfer, NULL)) {
 			if(req.rows==-1){
 				send_response_stat(hNamedPipe, &req);
+			}else if(wcsncmp(req.str,L"[///",4)==0){
+				WCHAR *command = req.str + 4;
+				command_exec(command, hNamedPipe);
 			}else{
 				pFileEntry *result=NULL;
 				int count = search(req.str,&(req.env),&result);

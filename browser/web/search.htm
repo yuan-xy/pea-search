@@ -28,6 +28,13 @@
 <input type="button" value="放大" onclick="cef.gigaso.zoom_in()">
 <input type="button" value="缩小" onclick="cef.gigaso.zoom_out()">
 
+<input type="button" value="所有文件" onclick="$('#search')[0].value='*';searchf('*');orderby(0,true);">
+<input type="button" value="最大文件" onclick="$('#search')[0].value='*'; searchf('*');orderby(2,true);">
+
+<input type="button" value="在线" onclick="online_db();">
+<input type="button" value="离线" onclick="offline_db();">
+
+<input type="button" value="状态" onclick="alert(plugin.search('[///index_status'));">
 
 
 <center style="margin:10px;">
@@ -197,7 +204,7 @@
 			$("#maintable tbody td[colid=1]").bind('dblclick',function(e){
 				dblclick_path(e.currentTarget.parentNode);
 			});
-			highlight_timeout = setTimeout(highlight,0);
+			highlight_timeout = setTimeout(highlight,1);
 	  }
 	  var icon_replace_index=0;
 	  function icon_replace(){
@@ -322,6 +329,7 @@
 		if(value != cur_search) searchf(value);
 	}
 	function orderby(col,desc){
+		$("#loading").css("visibility","visible");
 		order_col = col;
 		order_desc = desc;
 		plugin.order = col*2+desc+1;
@@ -334,14 +342,15 @@
 		}
 		if(files.length>0){
 			clearTimeout(search_timeout);
-			search_timeout = setTimeout(searchf0,0);
+			search_timeout = setTimeout(searchf0,5);
 		}
 	}
 	function file_type_search(ft){
+		$("#loading").css("visibility","visible");
 		plugin.file_type=ft;
 		if($("#search").val()=="") return;
 		clearTimeout(search_timeout);
-		search_timeout = setTimeout(searchf0,0);
+		search_timeout = setTimeout(searchf0,5);
 	}
 	function stat_num_set(stats){
 		$("#all_file").html(stats.all);
@@ -403,7 +412,7 @@
 	function load_history(){
 		if(!need_load_history) return;
 		$("#loading").css("visibility","visible");
-		history_thumb_timeout = setTimeout(history_thumb,1);
+		history_thumb_timeout = setTimeout(history_thumb,5);
 		history_parse_timeout = setTimeout(history_parse,50);
 	}
 	function return_history(){
@@ -444,6 +453,27 @@
 		$("#search")[0].value = "*";
 		$("#search")[0].select();
 		searchf("*");
+	}
+	function offline_db(){
+		$("#loading").css("visibility","visible");
+		function offline_db0(){
+			var s = plugin.search("[///offline_db");
+			if(s=="'ok'"){
+				refresh();
+			}else{
+				show_error("执行失败! "+s);
+				$("#loading").css("visibility","hidden");
+			}
+		}
+		setTimeout(offline_db0,10);
+	}
+	function online_db(){
+		var s = plugin.search("[///online_db");
+		if(s=="'ok'") refresh();
+		else{
+			show_error("执行失败! "+s);
+			$("#loading").css("visibility","hidden");
+		}
 	}
 	function init_event(){
 		$("#dir").bind('keyup',function(event,t){

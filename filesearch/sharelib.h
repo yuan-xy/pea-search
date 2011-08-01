@@ -29,7 +29,7 @@ typedef struct searchResponse SearchResponse, *pSearchResponse;
 
 #define MAX_CLIENTS  5 /* Maximum number of clients for serverNP */
 
-#define SERVER_PIPE L"\\\\.\\PIPE\\SERVER"
+#define SERVER_PIPE L"\\\\.\\PIPE\\GIGASOSERVER"
 
 
 /* Commands for the statistics maintenance function. */

@@ -114,8 +114,8 @@ BOOL readfile(int i, char *filename){
 		d=(int)fread(&minor_ver,1,1,fp);
 		if(d<1) goto error;
 		fread(&info,sizeof(DriveInfo),1,fp);
-		if(info.serialNumber!=g_VolsInfo[i].serialNumber) goto error;
-		if(i<26){
+		if(i<DIRVE_COUNT){
+			if(info.serialNumber!=g_VolsInfo[i].serialNumber) goto error;
 			if(IsNtfs(i)){
 				USN         first_usn;
 				USN         next_usn;
@@ -135,6 +135,23 @@ BOOL readfile(int i, char *filename){
 				d=(int)fread(&last,sizeof(time_t),1,fp);
 				if(d<1) goto error;
 				if(now-last>3600*8)  g_expires[i]=1;
+			}
+		}else{
+			g_VolsInfo[i] = info;
+			if(IsNtfs(i)){
+				USN         first_usn;
+				USN         next_usn;
+				DWORDLONG   jid;
+				d=(int)fread(&first_usn,sizeof(USN),1,fp);
+				if(d<1) goto error;
+				d=(int)fread(&next_usn,sizeof(USN),1,fp);
+				if(d<1) goto error;
+				d=(int)fread(&jid,sizeof(DWORDLONG),1,fp);
+				if(d<1) goto error;
+			}else{
+				time_t last;
+				d=(int)fread(&last,sizeof(time_t),1,fp);
+				if(d<1) goto error;
 			}
 		}
 	}
@@ -162,7 +179,9 @@ BOOL readfile(int i, char *filename){
 					if(!IsRoot(file->FileReferenceNumber)) goto error;
 				}
 			}else{
-				 SET_ROOT_NAME(file,L"-:"); //离线文件的根目录
+				char root_name[3];
+				_itoa(i,root_name,10);
+				SET_ROOT_NAME(file,root_name); //离线文件的根目录
 			}
 			if(file->up.ParentFileReferenceNumber!=0) goto error;
 			g_rootVols[i] = file;
@@ -173,7 +192,7 @@ BOOL readfile(int i, char *filename){
 	}while(1);
 ok:
 #ifdef MY_DEBUG
-	printf("load %d from file for drive %c\n",count,i+'A');
+	printf("load %d from file for drive %c\n",count, i<26? i+'A':i );
 #endif
 	fclose(fp);
 	return 1;
@@ -205,8 +224,8 @@ static int load_offline_db_one(int i,char *file){
 
 static BOOL loaded(char *filename){
 	int i=0;
-	for(;i<26;i++){
-		if(g_bVols[i] && g_VolsInfo[i].serialNumber){
+	for(;i<DIRVE_COUNT_OFFLINE;i++){
+		if(g_loaded[i]){
 			FILE_NAME(i);
 			if(stricmp(filename,name)==0) return 1;
 		}
@@ -229,6 +248,8 @@ int load_offline_dbs(){
 		flag = load_offline_db_one(i,fd.cFileName);
 		if(flag){
 			build_dir(i);
+			after_build(i);
+			g_loaded[i]=1;
 			i++;
 		}
 		if(i>=DIRVE_COUNT_OFFLINE) break;

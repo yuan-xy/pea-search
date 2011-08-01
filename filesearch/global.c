@@ -6,9 +6,9 @@
 UTF8 rootNames[26][3] = {"A:", "B:", "C:", "D:", "E:", "F:", "G:", "H:", "I:", "J:", "K:", "L:", "M:", "N:", "O:", "P:", "Q:", "R:", "S:", "T:", "U:", "V:", "W:", "X:", "Y:", "Z:"};
 
 BOOL		g_bVols[26]={0};
-BOOL		g_loaded[]={0};
-BOOL		g_expires[]={0};
-DriveInfo	g_VolsInfo[26]={0};
+BOOL		g_loaded[DIRVE_COUNT_OFFLINE]={0};
+BOOL		g_expires[26]={0};
+DriveInfo	g_VolsInfo[DIRVE_COUNT_OFFLINE]={0};
 HANDLE      g_hVols[26]={0};
 typedef struct rbtree	*p_rbtree;
 p_rbtree g_treeVols[DIRVE_COUNT_OFFLINE]={0};
@@ -24,7 +24,7 @@ PBYTE       g_pOutBuffer[26]={0};
 
 unsigned int ALL_FILE_COUNT;
 
-BOOL load_offline=1;
+BOOL load_offline=0;
 
 
 unsigned char FILE_SEARCH_MAJOR_VERSION =1;
