@@ -28,7 +28,7 @@ static void init_dir(){
 	wchar_t buffer[MAX_PATH*2];
 	wchar_t *cmdLine = GetCommandLineW();
 	std::wstring str(cmdLine), olds(L"\\"), news(L"\\\\");
-	StringReplace(str,olds,news);
+	str = StringReplace(str,olds,news);
 	wsprintf(buffer,L"try{init_dir('%s');in_exe=true;}catch(e){alert(e)}",str.c_str());
 	exec_js_str(buffer);
 }
@@ -77,7 +77,6 @@ bool ClientHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
 }
 
 
-
 bool ClientHandler::OnKeyEvent(CefRefPtr<CefBrowser> browser,
                           KeyEventType type,
                           int code,
@@ -88,11 +87,11 @@ bool ClientHandler::OnKeyEvent(CefRefPtr<CefBrowser> browser,
 		if(code == VK_ESCAPE && type==KEYEVENT_RAWKEYDOWN){
 			PostQuitMessage(0);
 			TerminateProcess(GetCurrentProcess(),0);
-			return false;
+			return true;
 		}
 		if(code == VK_F5 && type==KEYEVENT_RAWKEYDOWN){
 			exec_js(L"refresh");
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}

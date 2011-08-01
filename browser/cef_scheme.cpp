@@ -6,6 +6,7 @@
 #include <gdiplus.h>
 #include <atlimage.h>
 
+extern HWND hMainWin;
 
 class ClientSchemeHandler : public CefSchemeHandler
 {
@@ -17,10 +18,22 @@ public:
 	SHFILEINFO shfi;
 	HRESULT hr = SHGetFileInfo( file, 0, &shfi, sizeof( SHFILEINFO ), SHGFI_ICON | SHGFI_SMALLICON | SHGFI_ADDOVERLAYS );
 	if( !SUCCEEDED(hr) || shfi.hIcon==NULL) return false;
-	HDC hdc = GetDC(NULL) ;
 	ICONINFO info;
 	GetIconInfo(shfi.hIcon,&info);
+/*
+	HDC hdc = GetDC(hMainWin) ;
+	HDC hdcMem = CreateCompatibleDC(hdc);
+	SelectObject (hdcMem, info.hbmColor) ;
+	HDC hdcMask = CreateCompatibleDC(hdc);
+	SelectObject (hdcMask, info.hbmMask) ;
+    BitBlt (hdcMem, 0, 0, 16, 16, 
+                  hdcMask, 0, 0, SRCPAINT) ;
+	ReleaseDC(hMainWin,hdcMem);
+	ReleaseDC(hMainWin,hdc);
+*/
+	HDC hdc = GetDC(NULL) ;
 	HBITMAP  bmp = ReplaceColor(info.hbmColor,RGB(0,0,0), RGB(255,255,255), hdc);
+	ReleaseDC(NULL,hdc);
 	CImage image;
 	image.Attach(bmp);
 	IStream* stream;

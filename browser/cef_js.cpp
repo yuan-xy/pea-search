@@ -87,22 +87,3 @@ void InitExtensionTest()
     "})();";
   CefRegisterExtension("v8/gigaso", code, new ClientV8ExtensionHandler());
 }
-
-void RunExtensionTest(CefRefPtr<CefBrowser> browser)
-{
-  std::string html =
-    "<html><body>ClientV8ExtensionHandler says:<br><pre>"
-    "<script language=\"JavaScript\">"
-    "cef.gigaso.test_param ="
-    "  'Assign and retrieve a value succeeded the first time.';"
-    "document.writeln(cef.gigaso.test_param);"
-    "cef.gigaso.test_param ="
-    "  'Assign and retrieve a value succeeded the second time.';"
-    "document.writeln(cef.gigaso.test_param);"
-    "var obj = cef.gigaso.test_object();"
-    "document.writeln(obj.param);"
-    "document.writeln(obj.GetMessage());"
-    "</script>"
-    "</pre></body></html>";
-  browser->GetMainFrame()->LoadString(html, "about:blank");
-}

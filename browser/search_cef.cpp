@@ -18,6 +18,12 @@ TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[]=L"Gigaso_Search"; // the main window class name
 CefRefPtr<ClientHandler> g_handler;
 
+#if defined(OS_WIN)
+// Add Common Controls to the application manifest because it's required to
+// support the default tooltip implementation.
+#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#endif
+
 ATOM				MyRegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -151,6 +157,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam){
 				return 0;
 			}
 			break;
+		case WM_CLOSE:
+		  // All clients must forward the WM_CLOSE call to all contained browser
+		  // windows to give those windows a chance to cleanup before the window
+		  // closes. Don't forward this message if you are cancelling the request.
+		  if(g_handler.get())
+		  {
+			HWND hWnd = g_handler->GetBrowserHwnd();
+			if (hWnd)
+			  ::SendMessage(hWnd, WM_CLOSE, 0, 0);
+		  }
+		  break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;

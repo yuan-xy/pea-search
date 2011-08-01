@@ -5,12 +5,6 @@
 #include "cef_util.h"
 
 
-// Define this value to redirect all popup URLs to the main application browser
-// window.
-//#define TEST_REDIRECT_POPUP_URLS
-
-
-// ClientHandler implementation.
 class ClientHandler : public CefClient,
                       public CefLifeSpanHandler,
                       public CefLoadHandler,
@@ -24,8 +18,9 @@ public:
       { return this; }
   virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE
       { return this; }
-  
-    // CefLifeSpanHandler methods
+  virtual CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() OVERRIDE
+      { return this; }
+
     virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
 
   virtual void OnLoadEnd(CefRefPtr<CefBrowser> browser,

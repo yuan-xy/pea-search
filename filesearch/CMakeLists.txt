@@ -1,4 +1,4 @@
-set(BREAKPAD_DIR ${PROJECT_SOURCE_DIR}/../google-breakpad-read-only/src)
+set(BREAKPAD_DIR ${PROJECT_SOURCE_DIR}/3rd/google-breakpad-read-only/src)
 
 include_directories ("${CMAKE_CURRENT_SOURCE_DIR}/sparsehash")
 include_directories ("${CMAKE_CURRENT_SOURCE_DIR}/sparsehash/windows")

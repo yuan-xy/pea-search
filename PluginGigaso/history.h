@@ -7,7 +7,7 @@ extern "C" {
 
 #include "env.h"
 
-#define MAX_HISTORY 20
+#define MAX_HISTORY 30
 
 extern void history_add(const wchar_t *file);
 
