@@ -717,7 +717,7 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 		if(dir != NULL){
 			FilesIterate(dir,FileSearchVisitor,sOpt);
 		}else{
-			AllFilesIterate(FileSearchVisitor,sOpt);
+			AllFilesIterate(FileSearchVisitor,sOpt, sEnv->offline);
 		}
 		freeSearchOpt(sOpt);
 		if(sEnv->order>0 || matched<1000){
@@ -762,7 +762,7 @@ int * stat(WCHAR *str, pSearchEnv env){
 		if(dir != NULL){
 			FilesIterate(dir,FileStatVisitor,sOpt);
 		}else{
-			AllFilesIterate(FileStatVisitor,sOpt);
+			AllFilesIterate(FileStatVisitor,sOpt, sEnv->offline);
 		}
 		freeSearchOpt(sOpt);
 #ifdef MY_DEBUG

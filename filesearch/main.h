@@ -11,6 +11,8 @@ extern "C" {
 extern BOOL gigaso_init();
 extern BOOL gigaso_destory();
 
+extern BOOL read_build_check(int i);
+extern void after_build(int i);
 
 #endif  // FILE_SEARCH_MAIN_H_
 

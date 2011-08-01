@@ -16,7 +16,7 @@
 #include "drive_change.h"
 #include "chinese.h"
 #include "serverNP.h"
-//TODO: log库、单元测试、崩溃报告、自动升级、win64移植、linux移植、UI部分、首页常用文档、langchy快捷启动程序、Explorer整合、全文检索、文件缩略图、邮件搜索
+//TODO: log库、自动升级、win64移植、linux移植、langchy快捷启动程序、全文检索、邮件搜索
 //TODO: 虚拟文件夹如控制面板，数据库过期时异步更新、文件系统监视代码排错、
 //TODO: 支持压缩文件、光盘镜像中的文件查询
 //TODO: 所有windows系统调用查看返回值
@@ -107,7 +107,6 @@ BOOL gigaso_init(){
 	//DrivesIterator(PrintDriveDetails);
 	ValidDrivesIterator(load_online_db);
 	CreateThread(NULL,0,ScanAll,NULL,0,0);
-	if(load_offline) load_offline_dbs();
 	return 1;
 }
 

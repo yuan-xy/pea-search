@@ -240,34 +240,9 @@ static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 	if(wcsncmp(command,L"index_status",wcslen(L"index_status"))==0){
 		send_response_index_status(hNamedPipe);
 	}
-	if(wcsncmp(command,L"offline_db",wcslen(L"offline_db"))==0){
-		if(!load_offline){
-			load_offline = 1;
-			load_offline_dbs();
-		}
-		{
-			char buffer[12], *p;
-			DWORD nXfer;
-			pSearchResponse resp = (pSearchResponse)buffer;
-			p = buffer + sizeof(int);
-			memcpy(p,"'ok'",4);
-			resp->len = 4;
-			WriteFile (hNamedPipe, resp, sizeof(int)+4, &nXfer, NULL);
-		}
-	}
-	if(wcsncmp(command,L"online_db",wcslen(L"online_db"))==0){
-		load_offline = 0;
-		{
-			char buffer[12], *p;
-			DWORD nXfer;
-			pSearchResponse resp = (pSearchResponse)buffer;
-			p = buffer + sizeof(int);
-			memcpy(p,"'ok'",4);
-			resp->len = 4;
-			WriteFile (hNamedPipe, resp, sizeof(int)+4, &nXfer, NULL);
-		}
-	}	
 }
+
+static BOOL loaded_offline=0;
 
 static unsigned int WINAPI Server (void *pArg) {
 	LPTHREAD_ARG pThArg = (LPTHREAD_ARG)pArg;
@@ -284,6 +259,10 @@ static unsigned int WINAPI Server (void *pArg) {
 		if (ShutDown) continue;
 		CloseHandle (hConTh); hConTh = NULL;
 		while (!ShutDown && ReadFile (hNamedPipe, &req, sizeof(SearchRequest), &nXfer, NULL)) {
+			if(req.env.offline && !loaded_offline){
+				load_offline_dbs();
+				loaded_offline=1;
+			}
 			if(req.rows==-1){
 				send_response_stat(hNamedPipe, &req);
 			}else if(wcsncmp(req.str,L"[///",4)==0){

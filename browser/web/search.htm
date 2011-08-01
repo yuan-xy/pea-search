@@ -166,6 +166,11 @@
     <li id="prop"><img  width="16" height="16" src="./images/prop.ico"> 属性</li>
   </ul>
 </div>
+<div id="myMenu2" style="display:none;">
+  <ul>
+    <li id="copypath"><img  width="16" height="16" src="./images/copypath.ico"> 复制全路径到剪贴板</li>
+  </ul>
+</div>
 
 <script type="text/javascript">
 	function trim(str, chars) {
@@ -197,13 +202,17 @@
 					this.onmouseout = ieTrOut;
 				});
 			}
-			$("#maintable tbody tr").contextMenu('myMenu1', context_menu_obj);
-			$("#maintable tbody td[colid=0]").bind('dblclick',function(e){
-				dblclick_file(e.currentTarget.parentNode);
-			});
-			$("#maintable tbody td[colid=1]").bind('dblclick',function(e){
-				dblclick_path(e.currentTarget.parentNode);
-			});
+			if(!plugin.offline){
+				$("#maintable tbody tr").contextMenu('myMenu1', context_menu_obj);
+				$("#maintable tbody td[colid=0]").bind('dblclick',function(e){
+					dblclick_file(e.currentTarget.parentNode);
+				});
+				$("#maintable tbody td[colid=1]").bind('dblclick',function(e){
+					dblclick_path(e.currentTarget.parentNode);
+				});
+			}else{
+				$("#maintable tbody tr").contextMenu('myMenu2', context_menu_obj);
+			}
 			highlight_timeout = setTimeout(highlight,1);
 	  }
 	  var icon_replace_index=0;
@@ -230,7 +239,7 @@
 					html.substring(fi+$("#search").val().length, html.length);
 			});
 			icon_replace_index=0;
-			if(in_exe) highlight_timeout = setTimeout(icon_replace,1);
+			if(in_exe && !plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
 			$("#loading").css("visibility","hidden");
 	  }
 </script>
@@ -456,24 +465,12 @@
 	}
 	function offline_db(){
 		$("#loading").css("visibility","visible");
-		function offline_db0(){
-			var s = plugin.search("[///offline_db");
-			if(s=="'ok'"){
-				refresh();
-			}else{
-				show_error("执行失败! "+s);
-				$("#loading").css("visibility","hidden");
-			}
-		}
-		setTimeout(offline_db0,10);
+		plugin.offline = true;
+		setTimeout(refresh,10);
 	}
 	function online_db(){
-		var s = plugin.search("[///online_db");
-		if(s=="'ok'") refresh();
-		else{
-			show_error("执行失败! "+s);
-			$("#loading").css("visibility","hidden");
-		}
+		plugin.offline = false;
+		setTimeout(refresh,10);
 	}
 	function init_event(){
 		$("#dir").bind('keyup',function(event,t){

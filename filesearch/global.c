@@ -24,8 +24,6 @@ PBYTE       g_pOutBuffer[26]={0};
 
 unsigned int ALL_FILE_COUNT;
 
-BOOL load_offline=0;
-
 
 unsigned char FILE_SEARCH_MAJOR_VERSION =1;
 unsigned char FILE_SEARCH_MINOR_VERSION =0;

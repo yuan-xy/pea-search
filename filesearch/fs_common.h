@@ -196,7 +196,7 @@ extern void FilesIterate(pFileEntry file,pFileVisitor visitor, void *data);
  * @param visitor 访问函数
  * @param data 环境数据
  */
-extern void AllFilesIterate(pFileVisitor visitor, void *data);
+extern void AllFilesIterate(pFileVisitor visitor, void *data, BOOL offline);
 
 extern void FileRemoveFilter(pFileEntry file, void *data);
 

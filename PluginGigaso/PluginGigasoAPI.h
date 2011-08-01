@@ -31,7 +31,10 @@ public:
 
 	bool get_caze();
     void set_caze(bool val);
-    
+ 
+	bool get_offline();
+    void set_offline(bool val);
+
     std::wstring get_dir();
     void set_dir(std::wstring s);
 
@@ -42,6 +45,7 @@ public:
 	bool history_del(int i);
     FB::variant search(const FB::variant& msg);
     FB::variant stat(const FB::variant& msg);
+    FB::variant query(const FB::variant& msg, int rows);
 
     FB::variant shell_open(const FB::variant& msg);
     FB::variant shell_edit(const FB::variant& msg);

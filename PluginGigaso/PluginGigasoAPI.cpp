@@ -75,6 +75,10 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
                      make_property(this,
                         &PluginGigasoAPI::get_caze,
                         &PluginGigasoAPI::set_caze));
+    registerProperty("offline",
+                     make_property(this,
+                        &PluginGigasoAPI::get_offline,
+                        &PluginGigasoAPI::set_offline));
     registerProperty("dire",
                      make_property(this,
                         &PluginGigasoAPI::get_dir,
@@ -126,6 +130,12 @@ bool PluginGigasoAPI::get_caze(){
 void PluginGigasoAPI::set_caze(bool val){
     m_case = val;
 }
+bool PluginGigasoAPI::get_offline(){
+    return m_offline;
+}
+void PluginGigasoAPI::set_offline(bool val){
+    m_offline = val;
+}
 std::wstring PluginGigasoAPI::get_dir(){
 	return m_dir;
 }
@@ -141,7 +151,7 @@ std::wstring PluginGigasoAPI::get_version(){
 
 static int MAX_ROW = 1000;
 
-FB::variant PluginGigasoAPI::search(const FB::variant& msg){
+FB::variant PluginGigasoAPI::query(const FB::variant& msg, int rows){
 	if(hNamedPipe==NULL){
 		if(!connect_named_pipe(&hNamedPipe)) return "error";
 	}
@@ -150,9 +160,10 @@ FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 	DWORD nRead, nWrite;
 	memset(&req,0,sizeof(SearchRequest));
 	req.from = 0;
-	req.rows = MAX_ROW;
+	req.rows = rows;
 	req.env.order = m_order;
 	req.env.case_sensitive = m_case;
+	req.env.offline = m_offline? 1:0;
 	req.env.file_type = m_file_type;
 	req.env.path_len = m_dir.length();
 	wcsncpy(req.env.path_name, m_dir.c_str(), MAX_PATH);
@@ -178,41 +189,11 @@ FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 	return msg;
 }
 
+FB::variant PluginGigasoAPI::search(const FB::variant& msg){
+	return query(msg,MAX_ROW);
+}
 FB::variant PluginGigasoAPI::stat(const FB::variant& msg){
-	if(hNamedPipe==NULL){
-		if(!connect_named_pipe(&hNamedPipe)) return "error";
-	}
-	SearchRequest req;
-	SearchResponse resp;
-	DWORD nRead, nWrite;
-	memset(&req,0,sizeof(SearchRequest));
-	req.from = 0;
-	req.rows = -1;
-	req.env.order = m_order;
-	req.env.case_sensitive = m_case;
-	req.env.file_type = m_file_type;
-	req.env.path_len = m_dir.length();
-	wcsncpy(req.env.path_name, m_dir.c_str(), MAX_PATH);
-	std::wstring s = msg.convert_cast<std::wstring>();
-	if(s.length()==0) return "";
-	wcscpy(req.str,s.c_str());
-	if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
-		WIN_ERROR;
-		close_named_pipe();
-		return "error";
-	}
-	if(ReadFile(hNamedPipe, &resp, sizeof(int), &nRead, NULL)  && resp.len>0){
-		char buffer[MAX_RESPONSE_LEN];
-		printf("%d,", resp.len);
-		ReadFile(hNamedPipe, buffer, resp.len, &nRead, NULL);
-		if(nRead!=resp.len){
-			return "error";
-		}
-		std::string ret(buffer,resp.len) ;
-		FB::variant var(ret);
-		return var;
-	}
-	return msg;
+	return query(msg,-1);
 }
 
 void PluginGigasoAPI::testEvent(const FB::variant& var)

@@ -7,7 +7,6 @@ extern "C" {
 
 #include "env.h"
 
-#define MAX_HISTORY 20
 
 /**
 * 根据文件szFileName的类型得到该文件的SHIL_EXTRALARGE类型的图标，并保存到文件iconFileName中。

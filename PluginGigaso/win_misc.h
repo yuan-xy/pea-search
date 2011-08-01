@@ -7,8 +7,6 @@ extern "C" {
 
 #include "env.h"
 
-#define MAX_HISTORY 20
-
 
 extern BOOL shortcut(LPWSTR lnkFile, LPTSTR destFile);
 

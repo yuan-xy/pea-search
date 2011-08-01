@@ -60,9 +60,9 @@ void FilesIterate(pFileEntry file,pFileVisitor visitor, void *data){
 	}
 }
 
-void AllFilesIterate(pFileVisitor visitor, void *data){
+void AllFilesIterate(pFileVisitor visitor, void *data, BOOL offline){
 	int i=0;
-	if(load_offline){
+	if(offline){
 		for(i=DIRVE_COUNT;i<DIRVE_COUNT_OFFLINE;i++){
 			if(g_rootVols[i]!=NULL){
 				FilesIterate(g_rootVols[i],visitor,data);
