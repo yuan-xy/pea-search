@@ -165,7 +165,7 @@ static void send_response_stat(HANDLE hNamedPipe, pSearchRequest req){
 	}
 }
 
-static char * print_index_status(char *buffer,int id){
+static char * print_drive_info(char *buffer,int id){
 	char *p = buffer;
 	*p++ = '{';
 	{
@@ -222,7 +222,54 @@ static void send_response_index_status(HANDLE hNamedPipe){
 	*p++ = '[';
 	for(i=0;i<DIRVE_COUNT_OFFLINE;i++){
 		if(!g_loaded[i]) continue;
-		p = print_index_status(p,i);
+		p = print_drive_info(p,i);
+		*p++ = ',';
+		if((p-p1)>8192-100) break; //prevent buffer overflow
+	}
+	if(*(p-1)==',') p--;
+	*p++ = ']';	
+	{
+		DWORD nXfer;
+		pSearchResponse resp = (pSearchResponse)buffer;
+		resp->len = (p-p1);
+		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+	}
+}
+
+static BOOL print_db_visitor(char *db_name, void *data){
+		char **pp = (char **)data;
+		char *p = *pp;
+		*p++ = '"';
+		memcpy(p,db_name,strlen(db_name));
+		p += strlen(db_name);
+		*p++ = '"';
+		*p++ = ',';
+		*pp = p;
+		return 1;
+}
+
+static void send_response_cache_dbs(HANDLE hNamedPipe){
+	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
+	int i;
+	*p++ = '[';
+	DbIterator(print_db_visitor,&p);
+	if(*(p-1)==',') p--;
+	*p++ = ']';	
+	{
+		DWORD nXfer;
+		pSearchResponse resp = (pSearchResponse)buffer;
+		resp->len = (p-p1);
+		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+	}
+}
+
+static void send_response_get_drives(HANDLE hNamedPipe){
+	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
+	int i;
+	*p++ = '[';
+	for(i=0;i<DIRVE_COUNT;i++){
+		if(!g_bVols[i]) continue;
+		p = print_drive_info(p,i);
 		*p++ = ',';
 		if((p-p1)>8192-100) break; //prevent buffer overflow
 	}
@@ -239,6 +286,12 @@ static void send_response_index_status(HANDLE hNamedPipe){
 static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 	if(wcsncmp(command,L"index_status",wcslen(L"index_status"))==0){
 		send_response_index_status(hNamedPipe);
+	}
+	if(wcsncmp(command,L"cache_dbs",wcslen(L"cache_dbs"))==0){
+		send_response_cache_dbs(hNamedPipe);
+	}
+	if(wcsncmp(command,L"get_drives",wcslen(L"get_drives"))==0){
+		send_response_get_drives(hNamedPipe);
 	}
 }
 

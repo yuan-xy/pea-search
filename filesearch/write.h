@@ -24,7 +24,24 @@ extern void save_db_all();
  */
 extern BOOL load_db(int i);
 
+
+/**
+ * 加载所有的离线的db文件
+ */
 extern int load_offline_dbs();
+
+/**
+ * 访问给定的db文件
+ * @param db_name  db文件名
+ * @return 是否继续迭代
+ */
+typedef BOOL (*pDbVisitor)(char *db_name, void *data);
+
+/**
+ * 遍历所有的db文件。
+ */
+extern void DbIterator(pDbVisitor, void *data);
+
 
 #endif  // FILE_SEARCH_WRITE_H_
 

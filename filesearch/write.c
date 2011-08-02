@@ -233,28 +233,39 @@ static BOOL loaded(char *filename){
 	return 0;
 }
 
-int load_offline_dbs(){
-	int i=DIRVE_COUNT;
+void DbIterator(pDbVisitor visitor, void *data){
 	WIN32_FIND_DATAA fd;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	hFind = FindFirstFileA(".\\*.db", &fd);
 	if (INVALID_HANDLE_VALUE == hFind){
 		FindClose(hFind);
-		return 0;
+		return;
 	}
 	do{
+		BOOL ret = (*visitor)(fd.cFileName,data);
+		if(!ret) break;
+	}while (FindNextFileA(hFind, &fd) != 0);
+	FindClose(hFind);
+}
+
+BOOL offline_db_visitor(char *db_name, void *data){
+		int i = *(int *)data;
 		BOOL flag;
-		if(loaded(fd.cFileName)) continue;
-		flag = load_offline_db_one(i,fd.cFileName);
+		if(loaded(db_name)) return 1;
+		flag = load_offline_db_one(i,db_name);
 		if(flag){
 			build_dir(i);
 			after_build(i);
 			g_loaded[i]=1;
 			i++;
 		}
-		if(i>=DIRVE_COUNT_OFFLINE) break;
-	}while (FindNextFileA(hFind, &fd) != 0);
-	FindClose(hFind);
+		if(i>=DIRVE_COUNT_OFFLINE) return 0;
+		return 1;
+}
+
+int load_offline_dbs(){
+	int i=DIRVE_COUNT;
+	DbIterator(offline_db_visitor,&i);
 	return i-DIRVE_COUNT;
 }
 
