@@ -51,13 +51,16 @@ void scanFolder(pFileEntry dir, WCHAR *full_name, int name_len, int i);
 
 void scanFile(pFileEntry file,WCHAR *full_name, int name_len, int i){
 	if(IsDir(file)){
-		int new_name_len = name_len + file->us.v.FileNameLength + sizeof(WCHAR);
+		int wsize;
+		WCHAR *filename = utf8_to_wchar(file->FileName,file->us.v.FileNameLength, &wsize);
+		int new_name_len = name_len + (wsize + 1) * sizeof(WCHAR);
 		WCHAR *new_full_name = (WCHAR *) malloc_safe(new_name_len);
 		memcpy(new_full_name,full_name,name_len);
-		memcpy(new_full_name+name_len/sizeof(WCHAR),file->FileName,file->us.v.FileNameLength);
+		memcpy(new_full_name+name_len/sizeof(WCHAR),filename,wsize * sizeof(WCHAR));
 		*(new_full_name+new_name_len/sizeof(WCHAR)-1) = L'\\';
 		scanFolder(file,new_full_name,new_name_len,i);
 		free_safe(new_full_name);
+		free_safe(filename);
 	}
 }
 

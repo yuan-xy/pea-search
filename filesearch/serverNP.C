@@ -196,7 +196,7 @@ static char * print_drive_info(char *buffer,int id){
 		memcpy(p,"\"volumeName\":\"",14);
 		p += 14;
 		memcpy(p,str,str_len);
-		//free_safe(str);
+		free_safe(str);
 		p += str_len;
 		*p++ ='"';
 		*p++ =',';
@@ -208,7 +208,7 @@ static char * print_drive_info(char *buffer,int id){
 		memcpy(p,"\"fsName\":\"",10);
 		p += 10;
 		memcpy(p,str,str_len);
-		//free_safe(str);
+		free_safe(str);
 		p += str_len;
 		*p++ ='"';
 	}

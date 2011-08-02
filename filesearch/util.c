@@ -13,7 +13,7 @@
 
 void assert_debug(int exp){
 	#ifdef MY_DEBUG
-		assert(exp);
+		//assert(exp);
 	#endif
 }
 
