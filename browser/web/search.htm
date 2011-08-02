@@ -15,6 +15,7 @@
     <script type="text/javascript" src="message.js"></script>
     <script type="text/javascript" src="context.js"></script>
     <script type="text/javascript" src="scroll.js"></script>
+    <script type="text/javascript" src="disk.js"></script>
 </head>
 
 <body>
@@ -303,6 +304,10 @@
 			show_error("搜索服务失去响应！");
 			$("#loading").css("visibility","hidden");
 			return;
+		}
+		if(plugin.offline){
+			for(var f_index=0; f_index<files.length; f_index++)
+				gen_offline_dir_name(files[f_index]);
 		}
 		file_name_trim(files);
 		if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});

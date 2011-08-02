@@ -46,7 +46,6 @@ void load_online_db(int i){
 	if(read_build_check(i)){
 		after_build(i);
 		g_loaded[i]=1;
-		//TODO: 发送就绪事件通知
 	}
 }
 
@@ -64,12 +63,13 @@ void scan(int i){
 			CloseHandle(h);
 		}
 		after_build(i);
+		g_loaded[i]=1;
 	}else{
 		scanRoot(genRootFileEntry(i),i);
 		after_build(i);
+		g_loaded[i]=1;
 		save_db(i);
 	}
-	g_loaded[i]=1;
 	printf("Scan drive %c finished.\n",i+'A');
 }
 

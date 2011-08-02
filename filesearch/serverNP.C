@@ -185,7 +185,7 @@ static char * print_index_status(char *buffer,int id){
 	{
 		memcpy(p,"\"serialNumber\":\"",16);
 		p += 16;
-		p += sprintf(p,"%d",g_VolsInfo[id].serialNumber);
+		p += sprintf(p,"%x",g_VolsInfo[id].serialNumber);
 		*p++ ='"';
 		*p++ =',';
 	}
