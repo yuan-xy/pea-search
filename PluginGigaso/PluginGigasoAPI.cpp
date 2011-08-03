@@ -96,12 +96,10 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	m_file_type=0;
 	//m_dir = std::wstring(L"c:\\");
 	setPWD("npPluginGigaso.dll");
-	history_load();
 }
 
 PluginGigasoAPI::~PluginGigasoAPI(){
 		close_named_pipe();
-		history_save();
 }
 
 PluginGigasoPtr PluginGigasoAPI::getPlugin(){
@@ -311,6 +309,7 @@ static void gen_thumb(wchar_t *file, void *context){
 
 void PluginGigasoAPI::history_thumb(){
 	thumb_index = 0;
+	history_load();
 	HistoryIterator(gen_thumb,NULL);
 }
 

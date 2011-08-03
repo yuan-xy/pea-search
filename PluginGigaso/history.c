@@ -165,7 +165,8 @@ void init_from_recent(){
 				shortcut(list[i].path, list[i].path);
 				history_add(list[i].path);
 			}
-			start = MAX_HISTORY/2 +1;
+			//start = MAX_HISTORY/2 +1;
+			history_save();
 		}
 		FindClose(hFind);
 	}

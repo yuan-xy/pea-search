@@ -294,7 +294,7 @@
 		});
 	}
 	function searchf0(){
-		stat_timeout = setTimeout(stat_search,0);
+		stat_timeout = setTimeout(stat_search,10);
 		$("#loading").css("visibility","visible");
 		clearTimeout(highlight_timeout);
 		var s = plugin.search(cur_search);
@@ -435,8 +435,8 @@
 	function load_history(){
 		if(!need_load_history) return;
 		$("#loading").css("visibility","visible");
-		history_thumb_timeout = setTimeout(history_thumb,5);
-		history_parse_timeout = setTimeout(history_parse,50);
+		history_thumb_timeout = setTimeout(history_thumb,10);
+		history_parse_timeout = setTimeout(history_parse,100);
 	}
 	function return_history(){
 		$("#loading").css("visibility","visible");

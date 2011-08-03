@@ -58,7 +58,7 @@ function todo_dirves(){
 }
 
 function is_scan_finished(){
-	return todo_dirves().length > 0
+	return todo_dirves().length == 0
 }
 
 function scan_img(){
