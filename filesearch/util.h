@@ -68,6 +68,8 @@ extern pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b);
 
 extern WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c);
 
+extern wchar_t *wcsrchr_me(const wchar_t *S, int len, wchar_t C);
+
 //定义二进制常量
 #define BYTE_BIN(n) ( \
 ((0n%0100000000/010000000>0)<<7)| \

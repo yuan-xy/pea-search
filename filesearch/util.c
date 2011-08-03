@@ -150,3 +150,11 @@ WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
     	return wstr;
     }
 }
+
+wchar_t *wcsrchr_me(const wchar_t *name, int len, wchar_t C){
+	int index=len-1;
+		for(;index>0;index--){
+			if( *(name+index) == C) return name+index;
+		}
+	return NULL;
+}

@@ -66,5 +66,6 @@ function scan_img(){
 		$("#scanning").css("visibility","hidden");
 		return;
 	}
+	$("#scanning").css("visibility","visible");
 	setTimeout(scan_img, 5000);
 }

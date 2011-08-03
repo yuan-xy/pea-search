@@ -311,6 +311,14 @@
 				gen_offline_dir_name(files[f_index]);
 		}
 		file_name_trim(files);
+/*
+		if(order_col==1){//目录排序
+			$(files).each( function sub(i,obj){
+				var num = obj.path.match(/[/\\]/g);
+				for(var bi=0;bi<num.length;bi++) obj.name = "　"+obj.name;
+			});
+		}
+*/
 		if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
 		page_from = 0;
 		page();
