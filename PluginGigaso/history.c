@@ -3,56 +3,112 @@
 #include "history.h"
 #include "win_misc.h"
 
-static wchar_t his_files[MAX_HISTORY][MAX_PATH];
-static int start=0;
+#define MAX_HISTORY 30  //最大保存的历史文件记录
 
-static void inc_start(){
-	start++;
-	if(MAX_HISTORY<=start) start=0;
+static wchar_t his_files[MAX_HISTORY][MAX_PATH];
+
+//采用匈牙利命名法区分外部位置和内部位置
+static int nstart=0; 
+
+static struct{
+	int wi:4; //外部位置
+	int ni:4; //内部位置
+}PIN[VIEW_HISTORY] = {-1}; //只初始化了第一个wi，是否存在移植性问题？默认初始化后，所有PIN[i].wi!=i
+
+#define VALID_PIN(i) (PIN[i].wi==i)
+
+static int all_pined(){//所有被固定的记录的总数
+	int i=0,ret=0;
+	for(;i<VIEW_HISTORY;i++){
+		if(VALID_PIN(i)) ret+=1;
+	}
+	return ret;
+}
+static BOOL occupy_by_pin(int ni){//给定位置是否被固定
+	int i=0;
+	for(;i<VIEW_HISTORY;i++){
+		if(VALID_PIN(i)){
+			if(ni==PIN[i].ni) return 1;
+		}
+	}
+	return 0;
 }
 
-static int index_transform(int i){
-	int j = start-i-1;
-	if(j<0) j += MAX_HISTORY;
-	return j;
+static void inc_start(){//前移首地址
+	do{
+		nstart++;
+		if(MAX_HISTORY<=nstart) nstart=0;
+	}while(occupy_by_pin(nstart));
+}
+
+static int n_index_form_w(int wi){//将外部地址转换为内部地址
+	int i,nj,count=0,pin_under_wi=0;
+	for(i=0;i<VIEW_HISTORY;i++){
+		if(VALID_PIN(i)){
+			if(PIN[i].wi==wi) return PIN[i].ni;
+			if(PIN[i].wi<wi) pin_under_wi++;
+		}
+
+	}
+	nj=nstart;
+	while(1){
+		nj-=1;
+		if(nj<0) nj = MAX_HISTORY-1;
+		if(!occupy_by_pin(nj)){
+			if(count+pin_under_wi==wi) return nj;
+			count++;
+		}
+	}
+}
+
+typedef struct{
+	const wchar_t *filename;
+	int flag;
+} tmp_contain_context, *p_tmp_contain_context;
+
+static void containVisitor(wchar_t *file, void *context){
+	p_tmp_contain_context ctx = (p_tmp_contain_context)context;
+	if(wcscmp(file,ctx->filename)==0) ctx->flag=1;
 }
 
 void history_add(const wchar_t *file){
-	int j;
-	if(wcscmp(file,his_files[index_transform(0)])==0) return;
-	for(j=1;j<MAX_HISTORY;j++){
-		if(wcscmp(file,his_files[index_transform(j)])==0){
-			int k;
-			wchar_t tmp[MAX_PATH];
-			wcscpy(tmp,file);
-			for(k=j-1;k>=0;k--){
-				wcscpy(his_files[index_transform(k+1)],his_files[index_transform(k)]);
-			}
-			wcscpy(his_files[index_transform(0)],tmp);
-			return;
-		}
-	}
-	wcscpy(his_files[start],file);
+	tmp_contain_context ctx;
+	ctx.filename = file;
+	ctx.flag = 0;
+	HistoryIterator(containVisitor,&ctx);
+	if(ctx.flag) return;
+	wcscpy(his_files[nstart],file);
 	inc_start();
 }
 
-void history_delete(int i){
-	int j;
-	for(j=0;j<MAX_HISTORY/2;j++){
-		if(wcscmp(his_files[j],L"")!=0){
-			memcpy(his_files[index_transform(i)],his_files[j], sizeof(his_files[0]));
-			wcscpy(his_files[j],L"");
-			return;
-		}
+void history_delete(int wi){
+	int nj=nstart;
+	do{
+		nj+=1;
+		if(nj>=MAX_HISTORY) nj=0;
+	}while(occupy_by_pin(nj));
+	memcpy(his_files[n_index_form_w(wi)],his_files[nj], sizeof(his_files[0]));
+	wcscpy(his_files[nj],L"");
+}
+
+void history_pin(int wi){
+	if(wi>=0 && wi<VIEW_HISTORY){
+		int ni = n_index_form_w(wi);
+		PIN[wi].ni = ni;
+		PIN[wi].wi = wi;
 	}
-	wcscpy(his_files[index_transform(i)],L"");
+}
+
+wchar_t *history_get(int wi){
+	return his_files[n_index_form_w(wi)];
 }
 
 BOOL history_save(){
 	FILE *fp;
 	fp = fopen("history.ini", "w");
 	if(fp==NULL) return 0;
-	fwrite(&start,sizeof(int),1,fp);
+	fwrite(&nstart,sizeof(int),1,fp);
+	fwrite(PIN,sizeof(PIN[0]),VIEW_HISTORY,fp);
 	fwrite(his_files,sizeof(his_files[0]),MAX_HISTORY,fp);
 	fclose(fp);
 	return 1;
@@ -65,7 +121,8 @@ BOOL history_load(){
 		init_from_recent();
 		return 0;
 	}
-	fread(&start,sizeof(int),1,fp);
+	fread(&nstart,sizeof(int),1,fp);
+	fread(PIN,sizeof(PIN[0]),VIEW_HISTORY,fp);
 	fread(his_files,sizeof(his_files[0]),MAX_HISTORY,fp);
 	fclose(fp);
 	return 1;
@@ -73,9 +130,9 @@ BOOL history_load(){
 
 void HistoryIterator(pHistoryVisitor visitor, void *context){
 	int i;
-	for(i=0;i<MAX_HISTORY;i++){
-		int j = index_transform(i);
-		(*visitor)(his_files[j],context);
+	for(i=0;i<VIEW_HISTORY;i++){
+		int nj = n_index_form_w(i);
+		(*visitor)(his_files[nj],context);
 	}
 }
 
@@ -165,7 +222,7 @@ void init_from_recent(){
 				shortcut(list[i].path, list[i].path);
 				history_add(list[i].path);
 			}
-			//start = MAX_HISTORY/2 +1;
+			//nstart = MAX_HISTORY/2 +1;
 			history_save();
 		}
 		FindClose(hFind);

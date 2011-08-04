@@ -43,8 +43,9 @@ static void close_named_pipe(){
 PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr& host) : m_plugin(plugin), m_host(host)
 {
 	registerMethod("history",      make_method(this, &PluginGigasoAPI::history));
-	registerMethod("history_thumb",      make_method(this, &PluginGigasoAPI::history_thumb));
-	registerMethod("history_del",      make_method(this, &PluginGigasoAPI::history_del));
+	registerMethod("his_thumb",      make_method(this, &PluginGigasoAPI::his_thumb));
+	registerMethod("his_del",      make_method(this, &PluginGigasoAPI::his_del));
+	registerMethod("his_pin",      make_method(this, &PluginGigasoAPI::his_pin));
     registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
     registerMethod("stat",      make_method(this, &PluginGigasoAPI::stat));
 
@@ -291,8 +292,9 @@ FB::variant PluginGigasoAPI::copy_str(const FB::variant& msg){
 
 
 FB::variant PluginGigasoAPI::history(){
-	wchar_t buffer[MAX_HISTORY*MAX_PATH];
+	wchar_t buffer[VIEW_HISTORY*MAX_PATH];
 	int len = history_to_json(buffer);
+	//注意：调用此方法前确保history_load()已被调用
 	std::wstring ret(buffer,len) ;
 	FB::variant var(ret);
 	return var;
@@ -307,14 +309,20 @@ static void gen_thumb(wchar_t *file, void *context){
 	thumb_index++;
 }
 
-void PluginGigasoAPI::history_thumb(){
+void PluginGigasoAPI::his_thumb(){
 	thumb_index = 0;
 	history_load();
 	HistoryIterator(gen_thumb,NULL);
 }
 
-bool PluginGigasoAPI::history_del(int i){
+bool PluginGigasoAPI::his_del(int i){
 	history_delete(i);
+	history_save();
+	return true;
+}
+
+bool PluginGigasoAPI::his_pin(int i){
+	history_pin(i);
 	history_save();
 	return true;
 }

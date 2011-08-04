@@ -41,8 +41,9 @@ public:
     // Read-only property ${PROPERTY.ident}
     std::wstring get_version();
     FB::variant history();
-    void history_thumb();
-	bool history_del(int i);
+    void his_thumb();
+	bool his_del(int i);
+	bool his_pin(int i);
     FB::variant search(const FB::variant& msg);
     FB::variant stat(const FB::variant& msg);
     FB::variant query(const FB::variant& msg, int rows);

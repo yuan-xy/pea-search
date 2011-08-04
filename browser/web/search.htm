@@ -53,9 +53,9 @@
 			<div class="thumbnail-container">
 				<div class="edit-mode-border">
 					<div class="edit-bar">
-					 <div class="pin" title="固定在此显示"></div>
+					 <div class="pin" title="固定在此显示" onclick="plugin.his_pin({$T.record.id});this.title='取消固定';return false;"></div>
 					 <div class="spacer"></div>
-					 <div class="remove" title="不要显示"></div>
+					 <div class="remove" title="不要显示" onclick="plugin.his_del({$T.record.id});$(this).parents('.history_file').hide();refreash();return false;"></div>
 					</div>
 					<span class="thumbnail-wrapper" style="background-image: url({$T.record.id}.jpg); ">
 					 <span class="thumbnail"></span>
@@ -425,18 +425,21 @@
 		file_name_trim2(hs);
 		$("#historys").setTemplateElement("history_template");
 		$("#historys").processTemplate(hs.slice(0,15));
-		$(".thumbnail-container").bind('click',function(e){
+		$(".thumbnail-wrapper").bind('click',function(e){
 			dblclick_file(e.currentTarget);
 		});
-		$(".thumbnail-container").contextMenu('myMenu1',context_menu_obj);
+		$(".thumbnail-wrapper").contextMenu('myMenu1',context_menu_obj);
 		$("#loading").css("visibility","hidden");
+		$("div.pin first").addClass("pinned")
 	}
-	function history_thumb(){ 	plugin.history_thumb(); }
+	function history_thumb(){
+		plugin.his_thumb();
+		history_parse_timeout = setTimeout(history_parse,1);
+	}
 	function load_history(){
 		if(!need_load_history) return;
 		$("#loading").css("visibility","visible");
 		history_thumb_timeout = setTimeout(history_thumb,10);
-		history_parse_timeout = setTimeout(history_parse,100);
 	}
 	function return_history(){
 		$("#loading").css("visibility","visible");

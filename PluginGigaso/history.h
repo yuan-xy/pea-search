@@ -7,11 +7,19 @@ extern "C" {
 
 #include "env.h"
 
-#define MAX_HISTORY 30
+#define VIEW_HISTORY 15  //实际显示的历史文件记录
 
 extern void history_add(const wchar_t *file);
 
+/**
+index从1开始
+*/
 extern void history_delete(int index);
+
+extern void history_pin(int index);
+extern void history_unpin(int index);
+
+extern wchar_t *history_get(int index);
 
 extern BOOL history_save();
 
