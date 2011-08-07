@@ -7,6 +7,7 @@ if "%1" == "gigaso_install" goto do_build
 :do_build
 	cd Release
 	cmake -G "NMake Makefiles" -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=Release ..  
+	cmake -G "NMake Makefiles" -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=Release ..  
 	nmake
 	cd ..
 	if "%1" == "gigaso" goto end	

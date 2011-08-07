@@ -9,7 +9,6 @@
 	<script type="text/javascript" src="jquery-1.6.min.js"></script>
 	<script type="text/javascript" src="jquery-jtemplates.js"></script>
     <script type="text/javascript" src="jquery.contextmenu.r2.js"></script>
-    <script type="text/javascript" src="jquery.corner.js"></script>
     <script type="text/javascript" src="jquery-ui-1.8.12.custom.min.js"></script>
 	<link type="text/css" href="jquery-ui-1.8.12.custom.css" rel="stylesheet" />	
     <script type="text/javascript" src="message.js"></script>
@@ -426,7 +425,7 @@
 		$("#historys").setTemplateElement("history_template");
 		$("#historys").processTemplate(hs.slice(0,15));
 		$(".thumbnail-wrapper").bind('click',function(e){
-			dblclick_file(e.currentTarget);
+			dblclick_file(e.currentTarget.parentNode);
 		});
 		$(".thumbnail-wrapper").contextMenu('myMenu1',context_menu_obj);
 		$("#loading").css("visibility","hidden");
