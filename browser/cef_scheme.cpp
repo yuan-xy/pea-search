@@ -5,14 +5,20 @@
 #include "../PluginGigaso/bitmap.h"
 #include <gdiplus.h>
 #include <atlimage.h>
+#include <atlbase.h>
+#include <shlobj.h> 
+#include <shlguid.h> 
+#include <shellapi.h> 
+#include <commctrl.h> 
+#include <commoncontrols.h> 
 
 extern HWND hMainWin;
 
-class ClientSchemeHandler : public CefSchemeHandler
+class IconHandler : public CefSchemeHandler
 {
 public:
-  ClientSchemeHandler() : offset_(0) {bytes_ = (LPBYTE) malloc(4096);}
-  ~ClientSchemeHandler() {free(bytes_);}
+  IconHandler() : offset_(0) {bytes_ = (LPBYTE) malloc(4096);}
+  ~IconHandler() {free(bytes_);}
 
   bool LoadBinaryResource(const WCHAR *file){
 	SHFILEINFO shfi;
@@ -20,17 +26,6 @@ public:
 	if( !SUCCEEDED(hr) || shfi.hIcon==NULL) return false;
 	ICONINFO info;
 	GetIconInfo(shfi.hIcon,&info);
-/*
-	HDC hdc = GetDC(hMainWin) ;
-	HDC hdcMem = CreateCompatibleDC(hdc);
-	SelectObject (hdcMem, info.hbmColor) ;
-	HDC hdcMask = CreateCompatibleDC(hdc);
-	SelectObject (hdcMask, info.hbmMask) ;
-    BitBlt (hdcMem, 0, 0, 16, 16, 
-                  hdcMask, 0, 0, SRCPAINT) ;
-	ReleaseDC(hMainWin,hdcMem);
-	ReleaseDC(hMainWin,hdc);
-*/
 	HDC hdc = GetDC(NULL) ;
 	HBITMAP  bmp = ReplaceColor(info.hbmColor,RGB(0,0,0), RGB(255,255,255), hdc);
 	ReleaseDC(NULL,hdc);
@@ -62,7 +57,7 @@ public:
 		  std::string url = request->GetURL();
 		  url = UrlDecode(url);
 		  std::wstring urlw = StringToWString(url);
-		  if(LoadBinaryResource(urlw.c_str()+wcslen(L"gigaso://images/") )) {
+		  if(LoadBinaryResource(urlw.c_str()+wcslen(L"gigaso://icon/") )) {
 			  handled = true;
 			  // Set the resulting mime type
 			  response->SetMimeType("image/png");
@@ -110,28 +105,138 @@ private:
   DWORD size_, offset_;
   LPBYTE bytes_;
 
-  IMPLEMENT_REFCOUNTING(ClientSchemeHandler);
-  IMPLEMENT_LOCKING(ClientSchemeHandler);
+  IMPLEMENT_REFCOUNTING(IconHandler);
+  IMPLEMENT_LOCKING(IconHandler);
 };
 
-// Implementation of the factory for for creating schema handlers.
-class ClientSchemeHandlerFactory : public CefSchemeHandlerFactory
-{
+
+class IconHandlerFactory : public CefSchemeHandlerFactory{
 public:
-  // Return a new scheme handler instance to handle the request.
   virtual CefRefPtr<CefSchemeHandler> Create(const CefString& scheme_name,
                                              CefRefPtr<CefRequest> request)
   {
     REQUIRE_IO_THREAD();
-    return new ClientSchemeHandler();
+    return new IconHandler();
   }
-
-  IMPLEMENT_REFCOUNTING(ClientSchemeHandlerFactory);
+  IMPLEMENT_REFCOUNTING(IconHandlerFactory);
 };
 
-void InitSchemeTest()
+
+class ThumbHandler : public CefSchemeHandler
 {
+public:
+  ThumbHandler() : offset_(0) {bytes_ = (LPBYTE) malloc(40960);}
+  ~ThumbHandler() {free(bytes_);}
+
+  bool LoadBinaryResource(const WCHAR *file){
+	SHFILEINFOW sfi = {0}; 
+	HRESULT hr = SHGetFileInfo(file, -1, &sfi, sizeof(sfi), SHGFI_SYSICONINDEX | SHGFI_ADDOVERLAYS | SHGFI_ICON ); 
+	if( !SUCCEEDED(hr) ) return false;
+	HIMAGELIST* imageList; 
+	HICON hIcon; 
+	hr = SHGetImageList(SHIL_EXTRALARGE, IID_IImageList, (void**)&imageList);  
+	if( !SUCCEEDED(hr) ) return false;
+	hr = ((IImageList*)imageList)->GetIcon(sfi.iIcon, ILD_TRANSPARENT, &hIcon); 
+	if( !SUCCEEDED(hr) ) return false;
+	ICONINFO info;
+	GetIconInfo(hIcon,&info);
+	HDC hdc = GetDC(NULL) ;
+	HBITMAP  bmp = ReplaceColor(info.hbmColor,RGB(0,0,0), RGB(255,255,255), hdc);
+	ReleaseDC(NULL,hdc);
+	CImage image;
+	image.Attach(bmp);
+	IStream* stream;
+	hr = CreateStreamOnHGlobal(0, TRUE, &stream);
+	if( !SUCCEEDED(hr) ) return false;
+	image.Save(stream,Gdiplus::ImageFormatPNG);
+	DestroyIcon(hIcon);
+    ULARGE_INTEGER liSize;
+    IStream_Size(stream, &liSize);
+	size_ = liSize.LowPart;
+	IStream_Reset(stream);
+	IStream_Read(stream, bytes_, size_);
+	stream->Release();
+	return true;
+  }
+
+  virtual bool ProcessRequest(CefRefPtr<CefRequest> request,
+                              CefString& redirectUrl,
+                              CefRefPtr<CefResponse> response,
+                              int* response_length)
+  {
+	  REQUIRE_IO_THREAD();
+	  bool handled = false;
+	  AutoLock lock_scope(this);
+	  try{
+		  std::string url = request->GetURL();
+		  url = UrlDecode(url);
+		  std::wstring urlw = StringToWString(url);
+		  if(LoadBinaryResource(urlw.c_str()+wcslen(L"gigaso://thumb/") )) {
+			  handled = true;
+			  // Set the resulting mime type
+			  response->SetMimeType("image/png");
+			  response->SetStatus(200);
+		  }
+		  *response_length = size_;
+	  }catch(...){}
+	  return handled;
+  }
+
+  // Cancel processing of the request.
+  virtual void Cancel()
+  {
+    REQUIRE_IO_THREAD();
+  }
+
+  // Copy up to |bytes_to_read| bytes into |data_out|. If the copy succeeds
+  // set |bytes_read| to the number of bytes copied and return true. If the
+  // copy fails return false and ReadResponse() will not be called again.
+  virtual bool ReadResponse(void* data_out, int bytes_to_read,
+                            int* bytes_read)
+  {
+    REQUIRE_IO_THREAD();
+
+    bool has_data = false;
+    *bytes_read = 0;
+
+    AutoLock lock_scope(this);
+
+    if(offset_ < size_) {
+      // Copy the next block of data into the buffer.
+      int transfer_size =
+          min(bytes_to_read, static_cast<int>(size_ - offset_));
+      memcpy(data_out, bytes_ + offset_, transfer_size);
+      offset_ += transfer_size;
+
+      *bytes_read = transfer_size;
+      has_data = true;
+    }
+
+    return has_data;
+  }
+
+private:
+  DWORD size_, offset_;
+  LPBYTE bytes_;
+
+  IMPLEMENT_REFCOUNTING(ThumbHandler);
+  IMPLEMENT_LOCKING(ThumbHandler);
+};
+
+
+class ThumbHandlerFactory : public CefSchemeHandlerFactory{
+public:
+  virtual CefRefPtr<CefSchemeHandler> Create(const CefString& scheme_name,
+                                             CefRefPtr<CefRequest> request)
+  {
+    REQUIRE_IO_THREAD();
+    return new ThumbHandler();
+  }
+  IMPLEMENT_REFCOUNTING(ThumbHandlerFactory);
+};
+
+void InitSchemeTest(){
   CefRegisterCustomScheme("gigaso", true, false, false);
-  CefRegisterSchemeHandlerFactory("gigaso", "images",
-      new ClientSchemeHandlerFactory());
+  CefRegisterSchemeHandlerFactory("gigaso", "icon",new IconHandlerFactory());
+  CefRegisterSchemeHandlerFactory("gigaso", "thumb",new ThumbHandlerFactory());
 }

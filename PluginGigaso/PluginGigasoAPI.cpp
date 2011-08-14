@@ -225,9 +225,11 @@ static int shell2_exec(const FB::variant& msg, const wchar_t *verb){
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL; 
 	BOOL ret = ShellExecuteEx(&ShExecInfo);
-	if(ret && wcscmp(L"delete",verb)!=0 ){
+	if(ret){
+		if(verb==NULL || wcscmp(L"delete",verb)!=0){
 			history_add(s.c_str());
 			history_save();
+		}
 	}
 	return ret;
 }
@@ -293,7 +295,9 @@ FB::variant PluginGigasoAPI::copy_str(const FB::variant& msg){
 
 FB::variant PluginGigasoAPI::history(){
 	wchar_t buffer[VIEW_HISTORY*MAX_PATH];
-	int len = history_to_json(buffer);
+	int len;
+	history_load();
+	len = history_to_json(buffer);
 	//注意：调用此方法前确保history_load()已被调用
 	std::wstring ret(buffer,len) ;
 	FB::variant var(ret);

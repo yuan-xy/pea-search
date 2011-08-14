@@ -54,9 +54,9 @@
 					<div class="edit-bar">
 					 <div class="pin" title="固定在此显示" onclick="plugin.his_pin({$T.record.id});this.title='取消固定';return false;"></div>
 					 <div class="spacer"></div>
-					 <div class="remove" title="不要显示" onclick="plugin.his_del({$T.record.id});$(this).parents('.history_file').hide();refreash();return false;"></div>
+					 <div class="remove" title="不要显示" onclick="plugin.his_del({$T.record.id});$(this).parents('.history_file').hide();refresh();return false;"></div>
 					</div>
-					<span class="thumbnail-wrapper" style="background-image: url({$T.record.id}.jpg); ">
+					<span class="thumbnail-wrapper" style="background-image: url({$T.record.thumb})">
 					 <span class="thumbnail"></span>
 					</span>
 					<input type="hidden" value="{$T.record.name}">
@@ -223,7 +223,7 @@
 				get_file_path(o);
 				var full_path = path+file;
 				if(full_path.indexOf('%')!=-1) return;
-				$(o).find("img")[0].src = "gigaso://images/"+full_path;
+				$(o).find("img")[0].src = "gigaso://icon/"+full_path;
 				finished = false;
 			});
 			if(finished) return;
@@ -310,14 +310,6 @@
 				gen_offline_dir_name(files[f_index]);
 		}
 		file_name_trim(files);
-/*
-		if(order_col==1){//目录排序
-			$(files).each( function sub(i,obj){
-				var num = obj.path.match(/[/\\]/g);
-				for(var bi=0;bi<num.length;bi++) obj.name = "　"+obj.name;
-			});
-		}
-*/
 		if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
 		page_from = 0;
 		page();
@@ -422,6 +414,12 @@
 				"path": hs[i].substring(0, hs[i].lastIndexOf("\\")+1),
 				"name": hs[i].substring(hs[i].lastIndexOf("\\")+1,hs[i].length)
 			}
+			if(in_exe){
+				tmp.thumb = "gigaso://thumb/"+tmp.path+tmp.name;
+				tmp.thumb = tmp.thumb.replace(/\\/g,"\\\\");
+			}else{
+				tmp.thumb = tmp.id+".jpg";
+			}
 			hs[i] = tmp;
 		}
 		file_name_trim2(hs);
@@ -432,10 +430,10 @@
 		});
 		$(".thumbnail-wrapper").contextMenu('myMenu1',context_menu_obj);
 		$("#loading").css("visibility","hidden");
-		$("div.pin first").addClass("pinned")
+		//$("div.pin first").addClass("pinned")
 	}
 	function history_thumb(){
-		plugin.his_thumb();
+		if(!in_exe) plugin.his_thumb();
 		history_parse_timeout = setTimeout(history_parse,1);
 	}
 	function load_history(){
