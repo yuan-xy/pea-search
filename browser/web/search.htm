@@ -502,7 +502,7 @@
 		});
 		$("#result1").setTemplateElement("template");
 		$(document).bind("contextmenu", function(e){
-			//return false;
+			return false;
 		});
 		$("#maintable th").bind('click',function(event,t){
 			var index = this.getAttribute("colid");
@@ -515,7 +515,7 @@
 		orderby(0,0);
 		$(window).bind('scroll',function(e){
 			if(files.length > page_from){
-				show_info(page_from);
+				//show_info(page_from);
 				if(reachBottom()) page();
 			}
 		});
@@ -535,7 +535,7 @@
 		$("#search").focus();
 		$("#search").bind('keyup',search_if_change);
 		setTimeout(init_event,1);
-		setTimeout(load_history,100);
+		setTimeout(load_history,50);
 	});
 </script>
 

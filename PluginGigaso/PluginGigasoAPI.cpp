@@ -225,7 +225,7 @@ static int shell2_exec(const FB::variant& msg, const wchar_t *verb){
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL; 
 	BOOL ret = ShellExecuteEx(&ShExecInfo);
-	if(ret){
+	if(ret && wcscmp(L"delete",verb)!=0 ){
 			history_add(s.c_str());
 			history_save();
 	}

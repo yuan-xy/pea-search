@@ -86,8 +86,11 @@ var context_menu_obj = {
 					  },
 					  'delete': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = document.getElementById('plugin0').shell2(path+file, "delete");
-						info_or_error(ret, file, menuitem.lastChild.data);
+						if(window.confirm("您确定要删除 '"+file+"' 吗?")){
+							var ret = document.getElementById('plugin0').shell2(path+file, "delete");
+							refresh();
+							info_or_error(ret, file, menuitem.lastChild.data);
+						}
 					  },
 					  'prop': function(t,menuitem) {
 					    get_file_path(t);
