@@ -258,7 +258,7 @@
 
 	function page(){
 		var to = page_from + pagerow;
-		if($("#search").val()!=cur_search) return; //查询已过期
+		if(changed()) return; //查询已过期
 		if(page_from==0){
 			$("#result1").processTemplate(files.slice(page_from,to));
 		}else{
@@ -297,7 +297,7 @@
 		$("#loading").css("visibility","visible");
 		clearTimeout(highlight_timeout);
 		var s = plugin.search(cur_search);
-		if($("#search").val()!=cur_search) return; //查询已过期
+		if(changed()) return; //查询已过期
 		try{
 			files = eval(s);
 		}catch(e){
@@ -345,10 +345,13 @@
 			search_timeout = setTimeout(searchf0,150);
 		}        
 	}
-	function search_if_change(){
+	function changed(){
 		value = $("#search").val();
 		value = trim(value);
-		if(value != cur_search) searchf(value);
+		return value != cur_search;
+	}
+	function search_if_change(){
+		if(changed()) searchf(value);
 	}
 	function orderby(col,desc){
 		$("#loading").css("visibility","visible");
@@ -396,7 +399,7 @@
 		$("#text_file").html(stats.text);
 	}
 	function stat_search(){
-		if($("#search").val()!=cur_search) return; //查询已过期
+		if(changed()) return; //查询已过期
 		if(cur_search=="") return;
 		var s = plugin.stat(cur_search);
 		try{
