@@ -3,8 +3,6 @@
 #include "history.h"
 #include "win_misc.h"
 
-#define MAX_HISTORY 30  //最大保存的历史文件记录
-
 static wchar_t his_files[MAX_HISTORY][MAX_PATH];
 
 //采用匈牙利命名法区分外部位置和内部位置
@@ -15,7 +13,7 @@ static struct{
 	int ni:4; //内部位置
 }PIN[VIEW_HISTORY] = {-1}; //只初始化了第一个wi，是否存在移植性问题？默认初始化后，所有PIN[i].wi!=i
 
-#define VALID_PIN(i) (PIN[i].wi==i)
+#define VALID_PIN(i) (i<VIEW_HISTORY && PIN[i].wi==i)
 
 static int all_pined(){//所有被固定的记录的总数
 	int i=0,ret=0;
@@ -66,7 +64,7 @@ typedef struct{
 	int flag;
 } tmp_contain_context, *p_tmp_contain_context;
 
-static void containVisitor(wchar_t *file, void *context){
+static void containVisitor(wchar_t *file, int pin, void *context){
 	p_tmp_contain_context ctx = (p_tmp_contain_context)context;
 	if(wcscmp(file,ctx->filename)==0) ctx->flag=1;
 }
@@ -132,7 +130,15 @@ void HistoryIterator(pHistoryVisitor visitor, void *context){
 	int i;
 	for(i=0;i<VIEW_HISTORY;i++){
 		int nj = n_index_form_w(i);
-		(*visitor)(his_files[nj],context);
+		(*visitor)(his_files[nj], VALID_PIN(i),context);
+	}
+}
+
+void HistoryIteratorAll(pHistoryVisitor visitor, void *context){
+	int i;
+	for(i=0;i<MAX_HISTORY;i++){
+		int nj = n_index_form_w(i);
+		(*visitor)(his_files[nj], VALID_PIN(i), context);
 	}
 }
 
@@ -140,13 +146,24 @@ typedef struct{
 	wchar_t *p;
 } tmp_json_context, *p_tmp_json_context;
 
-static void json_print(wchar_t *file, void *context){
+static void json_print(wchar_t *file, int pin, void *context){
 	p_tmp_json_context pctx = (p_tmp_json_context)context;
 	wchar_t *p = pctx->p;
-	*p++ = L'"';
-	wcscpy(p,file);
-	p+=wcslen(file);
-	*p++ = L'"';
+	*p++ = L'{';
+	{
+		memcpy(p,L"\"name\":\"",8*sizeof(wchar_t));
+		p += 8;
+		wcscpy(p,file);
+		p+=wcslen(file);
+		*p++ =L'"';
+		*p++ =L',';
+	}
+	{
+		memcpy(p,L"\"pin\":",6*sizeof(wchar_t));
+		p += 6;
+		p += wsprintf(p,L"%d",pin);
+	}
+	*p++ = L'}';
 	*p++ = L',';
 	pctx->p = p;
 }
@@ -156,7 +173,7 @@ int history_to_json(wchar_t *buffer){
 	tmp_json_context ctx;
 	*p++ = L'[';
 	ctx.p = p;
-	HistoryIterator(json_print,&ctx);
+	HistoryIteratorAll(json_print,&ctx);
 	p = ctx.p;
 	*(p-1) = L']';
 	*p = L'\0';

@@ -298,7 +298,6 @@ FB::variant PluginGigasoAPI::history(){
 	int len;
 	history_load();
 	len = history_to_json(buffer);
-	//注意：调用此方法前确保history_load()已被调用
 	std::wstring ret(buffer,len) ;
 	FB::variant var(ret);
 	return var;
@@ -306,7 +305,7 @@ FB::variant PluginGigasoAPI::history(){
 
 
 static int thumb_index;
-static void gen_thumb(wchar_t *file, void *context){
+static void gen_thumb(wchar_t *file, int pin, void *context){
 	wchar_t thumb_name[16];
 	wsprintf(thumb_name,L".\\web\\%d.jpg%c",thumb_index,L'\0');
 	gen_icon_xlarge(file, thumb_name);

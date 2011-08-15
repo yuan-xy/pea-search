@@ -42,7 +42,7 @@ int main(){
 		wchar_t buffer[VIEW_HISTORY*MAX_PATH];
 		int len = history_to_json(buffer);
 		buffer[len+1] = L'\0';
-		printf("%d,%ls\n",len,buffer);
+		wprintf(L"\n%d,%s\n",len,buffer);
 	}
 	return 0;
 }

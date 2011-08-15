@@ -252,6 +252,7 @@
 	var files = [];
 	var search_timeout;
 	var highlight_timeout;
+	var history_timeout;
 	var stat_timeout;
 	var pagerow = 100;
 	var page_from = 0;
@@ -405,22 +406,21 @@
 		var hs = plugin.history().replace(/\\/g,"\\\\");
 		hs = eval(hs);
 		for( var i=0;i<hs.length;i++){
-			if(hs[i].charAt(hs[i].length-1)=='\\') hs[i] = hs[i].substr(0,hs[i].length-1);
+			var fname = hs[i].name;
+			if(fname.charAt(fname.length-1)=='\\') fname = fname.substr(0,fname.length-1);
 			function calc_top(x){if(x>=10) return 460;if(x>=5) return 290;return 120}
-			tmp = {
-				"id":i, 
-				"left": 10+200*(i%5),
-				"top" : calc_top(i),
-				"path": hs[i].substring(0, hs[i].lastIndexOf("\\")+1),
-				"name": hs[i].substring(hs[i].lastIndexOf("\\")+1,hs[i].length)
-			}
+			hs[i].id = i;
+			hs[i].left = 10+200*(i%5);
+			hs[i].top = calc_top(i);
+			hs[i].path = fname.substring(0, fname.lastIndexOf("\\")+1);
+			hs[i].name = fname.substring(fname.lastIndexOf("\\")+1,fname.length);
 			if(in_exe){
-				tmp.thumb = "gigaso://thumb/"+tmp.path+tmp.name;
-				tmp.thumb = tmp.thumb.replace(/\\/g,"\\\\");
+				hs[i].thumb = "gigaso://thumb/"+hs[i].path+hs[i].name;
+				hs[i].thumb = hs[i].thumb.replace(/\\/g,"\\\\");
 			}else{
-				tmp.thumb = tmp.id+".jpg";
+				hs[i].thumb = hs[i].id+".jpg";
 			}
-			hs[i] = tmp;
+			//if(hs[i].pin==1) alert(hs[i].name);
 		}
 		file_name_trim2(hs);
 		$("#historys").setTemplateElement("history_template");
@@ -437,9 +437,8 @@
 		history_parse_timeout = setTimeout(history_parse,1);
 	}
 	function load_history(){
-		if(!need_load_history) return;
 		$("#loading").css("visibility","visible");
-		history_thumb_timeout = setTimeout(history_thumb,10);
+		history_thumb_timeout = setTimeout(history_thumb,1);
 	}
 	function return_history(){
 		$("#loading").css("visibility","visible");
@@ -451,7 +450,6 @@
 		if($("#search").val()!="") searchf($("#search").val()); 
 		else load_history();
 	}
-	var need_load_history = true;
 	function init_dir(ss){ //Called from exe
 		if(ss.charAt(0)=='"'){
 			var findex = ss.indexOf('"',1);
@@ -473,7 +471,7 @@
 			ss = ss.substring(1, findex);
 		}
 		if(ss.length<=1) return;
-		need_load_history = false;
+		clearTimeout(history_timeout);
 		plugin.dire = ss;
 		$("#dir")[0].value = ss;
 		$("#search")[0].value = "*";
@@ -536,7 +534,7 @@
 		$("#search").focus();
 		$("#search").bind('keyup',search_if_change);
 		setTimeout(init_event,1);
-		setTimeout(load_history,50);
+		history_timeout = setTimeout(load_history,50);
 	});
 </script>
 
