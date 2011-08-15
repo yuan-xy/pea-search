@@ -417,6 +417,7 @@
 			if(in_exe){
 				hs[i].thumb = "gigaso://thumb/"+hs[i].path+hs[i].name;
 				hs[i].thumb = hs[i].thumb.replace(/\\/g,"\\\\");
+				hs[i].thumb = hs[i].thumb.replace(/ /g,"%20");
 			}else{
 				hs[i].thumb = hs[i].id+".jpg";
 			}
