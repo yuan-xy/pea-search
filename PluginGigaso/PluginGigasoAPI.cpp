@@ -46,6 +46,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	registerMethod("his_thumb",      make_method(this, &PluginGigasoAPI::his_thumb));
 	registerMethod("his_del",      make_method(this, &PluginGigasoAPI::his_del));
 	registerMethod("his_pin",      make_method(this, &PluginGigasoAPI::his_pin));
+	registerMethod("his_unpin",      make_method(this, &PluginGigasoAPI::his_unpin));
     registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
     registerMethod("stat",      make_method(this, &PluginGigasoAPI::stat));
 
@@ -326,6 +327,12 @@ bool PluginGigasoAPI::his_del(int i){
 
 bool PluginGigasoAPI::his_pin(int i){
 	history_pin(i);
+	history_save();
+	return true;
+}
+
+bool PluginGigasoAPI::his_unpin(int i){
+	history_unpin(i);
 	history_save();
 	return true;
 }

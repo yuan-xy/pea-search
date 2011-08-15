@@ -52,7 +52,7 @@
 			<div class="thumbnail-container">
 				<div class="edit-mode-border">
 					<div class="edit-bar">
-					 <div class="pin" title="固定在此显示" onclick="plugin.his_pin({$T.record.id});this.title='取消固定';return false;"></div>
+					 <div class="pin"></div>
 					 <div class="spacer"></div>
 					 <div class="remove" title="不要显示" onclick="plugin.his_del({$T.record.id});$(this).parents('.history_file').hide();refresh();return false;"></div>
 					</div>
@@ -420,15 +420,36 @@
 			}else{
 				hs[i].thumb = hs[i].id+".jpg";
 			}
-			//if(hs[i].pin==1) alert(hs[i].name);
 		}
 		file_name_trim2(hs);
 		$("#historys").setTemplateElement("history_template");
-		$("#historys").processTemplate(hs.slice(0,15));
+		hs0 = hs.slice(0,15);
+		$("#historys").processTemplate(hs0);
 		$(".thumbnail-wrapper").bind('click',function(e){
 			dblclick_file(e.currentTarget.parentNode);
 		});
 		$(".thumbnail-wrapper").contextMenu('myMenu1',context_menu_obj);
+		for( var i=0;i<hs0.length;i++){
+			var p = $(".edit-bar .pin")[i];
+			p.idx = i;
+			if(hs[i].pin==1){
+				$(p).addClass("pinned");
+				p.title = "取消固定";
+				$(p).bind('click',function(e){
+					plugin.his_unpin(e.currentTarget.idx);
+					$(e.currentTarget).attr("title",'固定在此显示');
+					$(e.currentTarget).removeClass("pinned");
+					alert(e.currentTarget.outerHTML);
+				});
+			}else{
+				p.title = "固定在此显示";
+				$(p).bind('click',function(e){
+					plugin.his_pin(e.currentTarget.idx);
+					$(e.currentTarget).attr("title",'取消固定');
+					$(e.currentTarget).addClass("pinned");
+				});
+			}
+		}
 		$("#loading").css("visibility","hidden");
 		//$("div.pin first").addClass("pinned")
 	}

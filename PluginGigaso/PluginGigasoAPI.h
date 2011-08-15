@@ -44,6 +44,7 @@ public:
     void his_thumb();
 	bool his_del(int i);
 	bool his_pin(int i);
+	bool his_unpin(int i);
     FB::variant search(const FB::variant& msg);
     FB::variant stat(const FB::variant& msg);
     FB::variant query(const FB::variant& msg, int rows);

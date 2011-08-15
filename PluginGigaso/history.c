@@ -22,6 +22,15 @@ static int all_pined(){//所有被固定的记录的总数
 	}
 	return ret;
 }
+
+static int pined_before(int wi){//小于位置wi的被固定的记录的总数
+	int i=0,ret=0;
+	for(;i<wi;i++){
+		if(VALID_PIN(i)) ret+=1;
+	}
+	return ret;
+}
+
 static BOOL occupy_by_pin(int ni){//给定位置是否被固定
 	int i=0;
 	for(;i<VIEW_HISTORY;i++){
@@ -32,6 +41,16 @@ static BOOL occupy_by_pin(int ni){//给定位置是否被固定
 	return 0;
 }
 
+static int w_pin_from_ni(int ni){//给定被固定的内部位置，返回外部位置
+	int i=0;
+	for(;i<VIEW_HISTORY;i++){
+		if(VALID_PIN(i)){
+			if(ni==PIN[i].ni) return PIN[i].wi;
+		}
+	}
+	return -1;
+}
+
 static void inc_start(){//前移首地址
 	do{
 		nstart++;
@@ -39,20 +58,56 @@ static void inc_start(){//前移首地址
 	}while(occupy_by_pin(nstart));
 }
 
-static int n_index_form_w(int wi){//将外部地址转换为内部地址
-	int i,nj,count=0,pin_under_wi=0;
-	if(VALID_PIN(wi)) return PIN[wi].ni;
-	for(i=0;i<wi;i++){
-		if(VALID_PIN(i)) pin_under_wi++;
-	}
-	nj=nstart;
-	while(1){
-		nj-=1;
-		if(nj<0) nj = MAX_HISTORY-1;
-		if(!occupy_by_pin(nj)){
-			if(count+pin_under_wi==wi) return nj;
-			count++;
+int n_index_form_w(int wi){//将外部地址转换为内部地址
+	if(VALID_PIN(wi)){
+		return PIN[wi].ni;
+	}else{
+		int nj,count=0,pin_under_wi=pined_before(wi);
+		nj=nstart;
+		while(1){
+			nj-=1;
+			if(nj<0) nj = MAX_HISTORY-1;
+			if(!occupy_by_pin(nj)){
+				if(count+pin_under_wi==wi) return nj;
+				count++;
+			}
 		}
+	}
+}
+
+int w_index_from_n(int ni){
+	if(occupy_by_pin(ni)){
+		return w_pin_from_ni(ni);
+	}else{
+		int nj =nstart, wi=0, max_pin=-1;
+		while(1){
+			nj-=1;
+			if(nj<0) nj = MAX_HISTORY-1;
+			if(ni==nj){
+				if(occupy_by_pin(ni)){
+					return w_pin_from_ni(ni);
+				}else{
+					break;
+				}
+			}
+			wi+=1;
+			if(occupy_by_pin(nj)){
+				if(max_pin<w_pin_from_ni(nj)){
+					max_pin = w_pin_from_ni(nj);
+				}
+			}
+		}
+		while(nj!=nstart){
+			if(occupy_by_pin(nj)){
+				if(wi>=w_pin_from_ni(nj)) wi++;
+			}
+			nj-=1;
+			if(nj<0) nj = MAX_HISTORY-1;
+		}
+		if(max_pin>=wi){
+			wi--; //TODO: 有可能有多个pin都大于wi，这里只记录一个。
+		}
+		return wi;
 	}
 }
 
@@ -91,6 +146,44 @@ void history_pin(int wi){
 		int ni = n_index_form_w(wi);
 		PIN[wi].ni = ni;
 		PIN[wi].wi = wi;
+	}
+}
+
+static int distance_to_startp(int ni){
+	int d = nstart-ni-1;
+	if(d<0) d+=MAX_HISTORY;
+	return d;
+}
+
+void history_unpin(int wi){
+	if(VALID_PIN(wi)) PIN[wi].wi = -1;
+}
+
+void history_unpin_(int wi){
+	if(VALID_PIN(wi)){
+		int ni = PIN[wi].ni, ni_to;
+		wchar_t tmp[MAX_PATH];
+		PIN[wi].wi = -1;
+		ni_to = n_index_form_w(wi);
+		memcpy(tmp,his_files[ni],sizeof(his_files[0]));
+		if(distance_to_startp(ni)>distance_to_startp(ni_to)){
+			int p = ni+1;
+			if(p>=MAX_HISTORY) p-=MAX_HISTORY;
+			while(p!=ni_to){
+				memcpy(his_files[p-1],his_files[p],sizeof(his_files[0]));
+				p++;
+				if(p>=MAX_HISTORY) p-=MAX_HISTORY;
+			}
+		}else{
+			int p = ni-1;
+			if(p<0) p+=MAX_HISTORY;
+			while(p!=ni_to){
+				memcpy(his_files[p+1],his_files[p],sizeof(his_files[0]));
+				p--;
+				if(p<0) p+=MAX_HISTORY;
+			}
+		}
+		memcpy(his_files[ni_to],tmp,sizeof(his_files[0]));
 	}
 }
 
