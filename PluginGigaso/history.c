@@ -9,8 +9,8 @@ static wchar_t his_files[MAX_HISTORY][MAX_PATH];
 static int nstart=0; 
 
 static struct{
-	int wi:4; //外部位置
-	int ni:4; //内部位置
+	int wi:16; //外部位置
+	int ni:16; //内部位置
 }PIN[VIEW_HISTORY] = {-1}; //只初始化了第一个wi，是否存在移植性问题？默认初始化后，所有PIN[i].wi!=i
 
 #define VALID_PIN(i) (i<VIEW_HISTORY && PIN[i].wi==i)
@@ -41,12 +41,9 @@ static void inc_start(){//前移首地址
 
 static int n_index_form_w(int wi){//将外部地址转换为内部地址
 	int i,nj,count=0,pin_under_wi=0;
-	for(i=0;i<VIEW_HISTORY;i++){
-		if(VALID_PIN(i)){
-			if(PIN[i].wi==wi) return PIN[i].ni;
-			if(PIN[i].wi<wi) pin_under_wi++;
-		}
-
+	if(VALID_PIN(wi)) return PIN[wi].ni;
+	for(i=0;i<wi;i++){
+		if(VALID_PIN(i)) pin_under_wi++;
 	}
 	nj=nstart;
 	while(1){
@@ -103,7 +100,7 @@ wchar_t *history_get(int wi){
 
 BOOL history_save(){
 	FILE *fp;
-	fp = fopen("history.ini", "w");
+	fp = fopen("history.ini", "wb");
 	if(fp==NULL) return 0;
 	fwrite(&nstart,sizeof(int),1,fp);
 	fwrite(PIN,sizeof(PIN[0]),VIEW_HISTORY,fp);
@@ -114,7 +111,8 @@ BOOL history_save(){
 
 BOOL history_load(){
 	FILE *fp;
-	fp = fopen("history.ini", "r");
+	fp = fopen("history.ini", "rb");//采用二进制流
+	//unicode编码的中文“业”的hex值为“4e 1a”，其中1a是Ctrl-Z，被windows认为是文件结束标志。
 	if(fp==NULL){
 		init_from_recent();
 		return 0;
