@@ -66,6 +66,8 @@
 			<div style="width:150px;text-align: center;word-break:break-all;">{$T.record.name2}</div>
 		</div>
 		{#/for}
+<a onclick="history_switch();return false;">更多</a>
+
 </textarea> 
 
 <div id="tabs" style="display:none">
@@ -402,15 +404,17 @@
 			show_error("搜索服务失去响应！");
 		}
 	}
-	function history_parse(){
+	function history_parse(start_index){
+		if(arguments.length==0) start_index=0;
 		var hs = plugin.history().replace(/\\/g,"\\\\");
 		hs = eval(hs);
 		for( var i=0;i<hs.length;i++){
 			var fname = hs[i].name;
 			if(fname.charAt(fname.length-1)=='\\') fname = fname.substr(0,fname.length-1);
-			function calc_top(x){if(x>=10) return 460;if(x>=5) return 290;return 120}
+			function calc_top(x){if(x>=15) x-=15;if(x>=10) return 460;if(x>=5) return 290;return 120}
+			function calc_left(x){if(x>=15) x-=15;return 10+200*(x%5)}
 			hs[i].id = i;
-			hs[i].left = 10+200*(i%5);
+			hs[i].left = calc_left(i);
 			hs[i].top = calc_top(i);
 			hs[i].path = fname.substring(0, fname.lastIndexOf("\\")+1);
 			hs[i].name = fname.substring(fname.lastIndexOf("\\")+1,fname.length);
@@ -424,7 +428,7 @@
 		}
 		file_name_trim2(hs);
 		$("#historys").setTemplateElement("history_template");
-		hs0 = hs.slice(0,15);
+		hs0 = hs.slice(start_index,start_index+15);
 		$("#historys").processTemplate(hs0);
 		$(".thumbnail-wrapper").bind('click',function(e){
 			dblclick_file(e.currentTarget.parentNode);
@@ -440,7 +444,6 @@
 					plugin.his_unpin(e.currentTarget.idx);
 					$(e.currentTarget).attr("title",'固定在此显示');
 					$(e.currentTarget).removeClass("pinned");
-					alert(e.currentTarget.outerHTML);
 				});
 			}else{
 				p.title = "固定在此显示";
@@ -467,6 +470,16 @@
 		$("#tabs").fadeOut(1000);
 		$("#historys").show();
 		load_history();
+	}
+	var his_start=true;
+	function history_switch(){
+		if(his_start){
+			history_parse(15);
+			his_start = false;
+		}else{
+			history_parse(0);
+			his_start = true;
+		}
 	}
 	function refresh(){
 		if($("#search").val()!="") searchf($("#search").val()); 
