@@ -52,6 +52,16 @@ public:
 		}
       return true;
     }
+    else if(name == "ShowDevTools")
+    {
+        CefRefPtr<CefBrowser> browser;
+		if(g_handler.get()){
+          browser = g_handler->GetBrowser();
+          if(browser.get())
+            browser->ShowDevTools();
+		}
+      return true;
+    }
     return false;
   }
 
@@ -83,6 +93,10 @@ void InitExtensionTest()
     "  cef.gigaso.zoom_reset = function() {"
     "    native function ZoomReset();"
     "    return ZoomReset();"
+    "  };"
+    "  cef.gigaso.dev_tool = function() {"
+    "    native function ShowDevTools();"
+    "    return ShowDevTools();"
     "  };"
     "})();";
   CefRegisterExtension("v8/gigaso", code, new ClientV8ExtensionHandler());

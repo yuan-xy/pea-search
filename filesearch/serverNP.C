@@ -4,6 +4,7 @@
 #include <io.h>
 #include <process.h>
 #include "util.h"
+#include "common.h"
 #include "global.h"
 #include "drive.h"
 #include "sharelib.h"
@@ -365,3 +366,24 @@ void shutdown_NP(){
 	}
 }
 
+DWORD WINAPI  Hotkey(PVOID pParam){
+    MSG msg = {0};
+    if (!RegisterHotKey(NULL,1, 0, VK_PAUSE)) {	//0x42 is 'b'
+        return 1;
+    }
+    wprintf(L"Hotkey 'ALT+b' registered, using MOD_NOREPEAT flag\n");
+    while(GetMessage(&msg, NULL, 0, 0) != 0){
+        if (msg.message == WM_HOTKEY){
+			wchar_t buffer1[MAX_PATH], buffer2[MAX_PATH];
+			wprintf(L"WM_HOTKEY received\n");
+			get_abs_path(L"search.exe",buffer1);
+			get_abs_path(L"",buffer2);
+			{
+				HINSTANCE  hi = ShellExecute(NULL, L"open", buffer1,NULL,buffer2,SW_SHOW); 
+				DWORD ret = GetLastError();
+				printf("%d",ret);
+			}
+		}
+    }
+	return 0;
+}

@@ -71,36 +71,6 @@ VOID WINAPI ServiceMain (DWORD argc, LPWSTR argv[]){
 
 }
 
-DWORD WINAPI  Hotkey(PVOID pParam){
-    MSG msg = {0};
-    if (!RegisterHotKey(NULL,1, MOD_ALT, 0x44)) {
-        return 1;
-    }
-    while(GetMessage(&msg, NULL, 0, 0) != 0){
-        if (msg.message == WM_HOTKEY){
-			wchar_t buffer1[MAX_PATH], buffer2[MAX_PATH];
-			get_abs_path(L"search.exe",buffer1);
-			get_abs_path(L"",buffer2);
-			{
-				HINSTANCE  hi = ShellExecute(NULL, L"open", buffer1,NULL,buffer2,SW_SHOW); 
-				DWORD ret = GetLastError();
-				printf("%d",ret);
-			}
-			{
-        		STARTUPINFO si = {0};
-        		PROCESS_INFORMATION pi;
-        		si.cb = sizeof(si);
-        		if(!CreateProcess(buffer1, NULL, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)){
-					DWORD ret = GetLastError();
-					printf("%d",ret);
-        		}
-			}
-
-        }
-    }
-	return 0;
-}
-
 int ServiceSpecific (){
 	UpdateStatus (-1, -1);
 	gigaso_init();
