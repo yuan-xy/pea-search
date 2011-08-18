@@ -85,6 +85,10 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
                      make_property(this,
                         &PluginGigasoAPI::get_dir,
                         &PluginGigasoAPI::set_dir));
+    registerProperty("hotkey",
+                     make_property(this,
+                        &PluginGigasoAPI::get_hk,
+                        &PluginGigasoAPI::set_hk));
     // Read-only property
     registerProperty("version",
                      make_property(this,
@@ -142,6 +146,16 @@ std::wstring PluginGigasoAPI::get_dir(){
 void PluginGigasoAPI::set_dir(std::wstring s){
 	m_dir = s;
 }
+
+int PluginGigasoAPI::get_hk(){
+    return get_hotkey();
+}
+void PluginGigasoAPI::set_hk(int val){
+    set_hotkey(val);
+	HWND wnd = FindWindow(ListenerWindowClass,NULL);
+	if(wnd!=NULL) SendMessage(wnd,WM_SET_HOTKEY,NULL,NULL);
+}
+
 std::wstring PluginGigasoAPI::get_version(){
 	wchar_t buffer[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH,buffer);

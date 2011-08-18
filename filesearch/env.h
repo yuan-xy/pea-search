@@ -59,6 +59,10 @@ typedef struct searchEnv SearchEnv, *pSearchEnv;
 
 #define SearchWindowTitle L"记佳搜索 -- 最好的文件搜索软件"
 #define SearchWindowClass L"Gigaso_Search"
+#define ListenerWindowClass L"Gigaso_Search_Listener"
+
+#define WM_SET_HOTKEY WM_USER+1
+
 
 #endif  // FILE_SEARCH_ENV_H_
 

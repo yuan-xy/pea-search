@@ -35,6 +35,9 @@ public:
 	bool get_offline();
     void set_offline(bool val);
 
+	int get_hk();
+    void set_hk(int val);
+
     std::wstring get_dir();
     void set_dir(std::wstring s);
 

@@ -22,6 +22,14 @@ extern void print_debug(WCHAR *fmt, ...);
 extern BOOL WindowsVersionOK (DWORD MajorVerRequired, DWORD MinorVerRequired);
 
 
+extern void get_prop(LPCWSTR key, LPWSTR out, DWORD nSize);
+extern void get_prop2(LPCWSTR key, LPWSTR out, DWORD nSize,LPCWSTR deft);
+extern void set_prop(LPCWSTR key, LPWSTR str);
+
+extern int get_hotkey();
+extern void set_hotkey(int key);
+
+
 #endif  // FILE_SEARCH_COMMON_H_
 
 #ifdef __cplusplus
