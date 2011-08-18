@@ -1,4 +1,5 @@
 #include "env.h"
+#include "common.h"
 
 static BOOL HasAnOtherProcess(){
         HANDLE hMutex = CreateMutex( NULL, FALSE, L"GigasoHotkeyListener" );
@@ -17,6 +18,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if (!RegisterHotKey(NULL,1, 0, VK_PAUSE)) {
         return 1;
     }
+	setPWD(NULL);
     while(GetMessage(&msg, NULL, 0, 0) != 0){
         if (msg.message == WM_HOTKEY){
 			HWND wnd = FindWindow(SearchWindowClass,SearchWindowTitle);

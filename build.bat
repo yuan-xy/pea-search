@@ -3,6 +3,7 @@ if "%1" == "clean" goto do_clean
 if "%1" == "plugin" goto do_build_plugin
 if "%1" == "gigaso" goto do_build
 if "%1" == "gigaso_install" goto do_build
+if "%1" == "install" goto do_install
 
 :do_build
 	cd Release

@@ -641,6 +641,7 @@ Section "-Core installation"
   DetailPrint "寻找旧版本的记佳搜索..."
   nsExec::ExecToStack 'net stop gigaso'
   nsExec::ExecToStack 'taskkill /f /im gigaso.exe'
+  nsExec::ExecToStack 'taskkill /f /im gigasoln.exe'
   nsExec::ExecToStack 'sc delete gigaso'
   nsExec::ExecToStack 'taskkill /f /im search.exe'
   DetailPrint "开始安装新版本的记佳搜索..."
@@ -735,11 +736,11 @@ Section "-Core installation"
   CreateShortCut "$DESKTOP\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
   CreateShortCut "$QUICKLAUNCH\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
   CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Gigaso文件查询.lnk"  "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
-  WriteINIStr "$INSTDIR\gigaso.inf" Strings EXEPATH "$INSTDIR\search.exe"
+  WriteINIStr "$INSTDIR\gigaso.inf" Strings EXEPATH "$INSTDIR"
   nsExec::ExecToStack 'RunDll32 advpack.dll, LaunchINFSection "$INSTDIR\gigaso.inf", DefaultInstall'
   DetailPrint "完成安装..."
   Sleep 1500
-
+  Exec '$INSTDIR\gigasoln.exe'
   !insertmacro MUI_STARTMENU_WRITE_END
 
 @CPACK_NSIS_EXTRA_INSTALL_COMMANDS@
