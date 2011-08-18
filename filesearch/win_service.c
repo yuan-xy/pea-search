@@ -77,7 +77,6 @@ int ServiceSpecific (){
 	UpdateStatus (-1, -1);
 	if(start_named_pipe()){
 		UpdateStatus (SERVICE_RUNNING, -1);
-		CreateThread(NULL,0,Hotkey,NULL,0,0);
 		wait_stop_named_pipe();
 	}
 	gigaso_destory();

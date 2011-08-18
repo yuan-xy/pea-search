@@ -79,3 +79,7 @@ set_target_properties(test_main PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='req
 add_executable (ctest_find_path "ctest_find_path.c" )
 target_link_libraries (ctest_find_path "file_search")
 ADD_TEST(find_path ${CMAKE_CURRENT_BINARY_DIR}/ctest_find_path)
+
+add_executable (gigasoln "hotkey_listener.c" )
+set_target_properties(gigasoln PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+install (TARGETS gigasoln  DESTINATION .)

@@ -57,6 +57,8 @@ struct searchEnv{ //搜索的环境配置
 };
 typedef struct searchEnv SearchEnv, *pSearchEnv;
 
+#define SearchWindowTitle L"记佳搜索 -- 最好的文件搜索软件"
+#define SearchWindowClass L"Gigaso_Search"
 
 #endif  // FILE_SEARCH_ENV_H_
 

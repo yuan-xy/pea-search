@@ -7,15 +7,12 @@
 #include <sstream>
 #include <string>
 
-
 #define MAX_LOADSTRING 100
 #define MAX_URL_LENGTH  255
 //#define TEST_SINGLE_THREADED_MESSAGE_LOOP
 
 HINSTANCE hInst;								// current instance
 HWND hMainWin;
-TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
-TCHAR szWindowClass[]=L"Gigaso_Search"; // the main window class name
 CefRefPtr<ClientHandler> g_handler;
 
 #if defined(OS_WIN)
@@ -86,14 +83,14 @@ ATOM MyRegisterClass(HINSTANCE hInstance){
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
 	wcex.lpszMenuName	= NULL;
-	wcex.lpszClassName	= szWindowClass;
+	wcex.lpszClassName	= SearchWindowClass;
 	wcex.hIconSm		= NULL;
 	return RegisterClassEx(&wcex);
 }
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow){
 	hInst = hInstance;
-	hMainWin = CreateWindow(szWindowClass, szTitle,
+	hMainWin = CreateWindow(SearchWindowClass, SearchWindowTitle,
 		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, CW_USEDEFAULT, 0, 1000,
 		680, NULL, NULL, hInstance, NULL);
 	if (!hMainWin) return FALSE;
@@ -130,6 +127,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam){
 			return 0;
 		case WM_ACTIVATE:
 			if((short)wParam!=WA_INACTIVE){
+				//SetForegroundWindow(hWnd);
 				trans_focus();
 			}
 			return 0;
