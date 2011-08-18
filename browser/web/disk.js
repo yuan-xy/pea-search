@@ -69,3 +69,19 @@ function scan_img(){
 	$("#scanning").css("visibility","visible");
 	setTimeout(scan_img, 5000);
 }
+
+function show_index_status(){
+	var s=plugin.search('[///index_status');
+	$("#dialog-index-status").text(s);
+	$("#dialog-index-status").dialog({modal: true});
+}
+
+function show_hotkey(){
+	$("#select-hotkey").val(plugin.hotkey);
+	$("#dialog-set-hotkey").dialog({modal: true});
+}
+function set_hotkey(){
+	plugin.hotkey = $("#select-hotkey").val();
+	$("#dialog-set-hotkey").dialog("close");
+	show_info("快捷键设置成功！");
+}

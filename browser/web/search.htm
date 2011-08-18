@@ -35,7 +35,8 @@
 <input type="button" value="在线" onclick="online_db();">
 <input type="button" value="离线" onclick="offline_db();">
 
-<input type="button" value="状态" onclick="alert(plugin.search('[///index_status'));">
+<input type="button" value="状态" onclick="show_index_status();">
+<input type="button" value="快捷键" onclick="show_hotkey();">
 
 
 <center style="margin:10px;">
@@ -173,6 +174,22 @@
   <ul>
     <li id="copypath"><img  width="16" height="16" src="./images/copypath.ico"> 复制全路径到剪贴板</li>
   </ul>
+</div>
+
+<div id="dialog-index-status" title="硬盘索引状态" style="display:none;"></div>
+
+<div id="dialog-set-hotkey" title="设置快捷键" style="display:none;">
+	<select id="select-hotkey">
+		<option value="0">PAUSE</option>
+		<option value="1">ALT + PAUSE</option>
+		<option value="2">F7</option>
+		<option value="3">ALT + F7</option>
+		<option value="4">F8</option>
+		<option value="5">ALT + F8</option>
+		<option value="6">F9</option>
+		<option value="7">ALT + F9</option>
+	</select>
+	<input type="button" value="确定" onclick="set_hotkey();">
 </div>
 
 <script type="text/javascript">
