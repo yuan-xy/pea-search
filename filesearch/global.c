@@ -10,8 +10,6 @@ BOOL		g_loaded[DIRVE_COUNT_OFFLINE]={0};
 BOOL		g_expires[26]={0};
 DriveInfo	g_VolsInfo[DIRVE_COUNT_OFFLINE]={0};
 HANDLE      g_hVols[26]={0};
-typedef struct rbtree	*p_rbtree;
-p_rbtree g_treeVols[DIRVE_COUNT_OFFLINE]={0};
 pFileEntry g_rootVols[DIRVE_COUNT_OFFLINE]={0};
 
 USN         g_curFirstUSN[26]={0};

@@ -190,6 +190,21 @@
 <tbody id="index_status_result"> 
 </tbody> 
 </TABLE>
+<textarea id="index_status_template" style="display:none"> 
+		{#foreach $T as record}
+        <tr unselectable="on" class="unselectable">
+			<TR>
+				<TD>{$T.record.panfu}:</TD>
+				<TD>{$T.record.volumeName}</TD>
+				<TD>{$T.record.typename}</TD>
+				<TD>{$T.record.fsName}</TD>
+				<TD align="center"><img src="{$T.record.indexed}"></TD>
+				<TD align="center"><img src="icons/disk.ico" title="重新扫描硬盘，建立索引" width="16" height="16" style="cursor:hand" onclick="rescan(this.parentNode,{$T.record.id})"></TD>
+			</TR>
+        </tr>
+		{#/for}
+</textarea> 
+
 <br>
 离线磁盘：
 <TABLE border="1">
@@ -204,20 +219,6 @@
 <tbody id="offline-index_status_result"> 
 </tbody> 
 </TABLE>
-<textarea id="index_status_template" style="display:none"> 
-		{#foreach $T as record}
-        <tr unselectable="on" class="unselectable">
-			<TR>
-				<TD>{$T.record.panfu}:</TD>
-				<TD>{$T.record.volumeName}</TD>
-				<TD>{$T.record.typename}</TD>
-				<TD>{$T.record.fsName}</TD>
-				<TD align="center"><img src="{$T.record.indexed}"></TD>
-				<TD align="center">重新索引</TD>
-			</TR>
-        </tr>
-		{#/for}
-</textarea> 
 <textarea id="offline_index_status_template" style="display:none"> 
 		{#foreach $T as record}
         <tr unselectable="on" class="unselectable">

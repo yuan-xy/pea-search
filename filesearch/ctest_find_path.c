@@ -4,7 +4,7 @@
 #include "main.h"
 #include "global.h"
 
-#define EXPECT(cond) if(!(cond)) { ret=1; goto error;}
+#define EXPECT(cond) if(!(cond)) { fprintf(stderr,"ASSERT ERROR: line %d in '%s'\n",__LINE__, __FILE__);ret=1; goto error;}
 
 #define EQUAL_STR(str,file) strnicmp(str,file->FileName,strlen(str))==0
 
@@ -43,6 +43,8 @@ int main(int argc, char *argv[]){
 	EXPECT(dir==NULL);
 	dir = my_find_file(L"n:\\vvvvvvvvv");
 	EXPECT(dir==NULL);
+	deleteDir(g_rootVols[2]);
+	g_loaded[2]=0;
 	gigaso_destory();
 error:
 	return ret;

@@ -73,6 +73,13 @@ void scan(int i){
 	printf("Scan drive %c finished.\n",i+'A');
 }
 
+void rescan(int i){
+	if(i<0 || i>=DIRVE_COUNT) return;
+	g_loaded[i] = 0;
+	deleteDir(g_rootVols[i]);
+	scan(i);
+}
+
 static int get_next_offline_slot(){
 	int i;
 	for(i=DIRVE_COUNT;i<DIRVE_COUNT_OFFLINE;i++){

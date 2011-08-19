@@ -11,6 +11,7 @@
 #include "fs_common.h"
 #include "bzip2/bzlib.h"
 #include "ntfs.h"
+#include "main.h"
 
 static unsigned short MAGIC = 0x1234;
 static short MAGIC_LEN = sizeof(MAGIC);

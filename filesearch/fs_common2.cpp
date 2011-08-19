@@ -98,7 +98,10 @@ __forceinline void add2Map(pFileEntry file,int i){
 
 void resetMap(int i){
 	tmpList[i].clear();
+	FileList(0).swap(tmpList[i]);
 	DirMaps[i].clear();
+	sparsehash tmp;
+	tmp.swap(DirMaps[i]);
 }
 
 __forceinline pFileEntry findDir(KEY frn,int i){
@@ -135,6 +138,22 @@ static void delete_file_from_parent_vector(pFileEntry file,pFileEntry parent){
 	}catch(...){
 		CPP_ERROR;
 	}
+}
+
+void deleteDir(pFileEntry file){
+	if(IsDir(file)){
+		pFileList children = (pFileList)file->children;
+		if(children!=NULL){
+			for(FileList::iterator it = children->begin(); it!= children->end(); ++it) {
+				pFileEntry p = pFileEntry(*it);
+				deleteDir(p);
+			}
+			children->clear();
+			FileList(0).swap(*children);
+		}
+		file->children = NULL;
+	}
+	free_safe(file);
 }
 
 void deleteFile(pFileEntry file){

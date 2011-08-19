@@ -12,6 +12,7 @@
 #include "suffix.h"
 #include "write.h"
 #include "serverNP.h"
+#include "main.h"
 
 typedef struct { /* Argument to a server thread. */
 	HANDLE hNamedPipe; /* Named pipe instance. */
@@ -251,7 +252,6 @@ static BOOL print_db_visitor(char *db_name, void *data){
 
 static void send_response_cache_dbs(HANDLE hNamedPipe){
 	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
-	int i;
 	*p++ = '[';
 	DbIterator(print_db_visitor,&p);
 	if(*(p-1)==',') p--;
@@ -284,6 +284,17 @@ static void send_response_get_drives(HANDLE hNamedPipe){
 	}
 }
 
+static void send_response_rescan(HANDLE hNamedPipe){
+	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
+	*p++ = '1';
+	{
+		DWORD nXfer;
+		pSearchResponse resp = (pSearchResponse)buffer;
+		resp->len = (p-p1);
+		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+	}
+}
+
 static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 	if(wcsncmp(command,L"index_status",wcslen(L"index_status"))==0){
 		send_response_index_status(hNamedPipe);
@@ -293,6 +304,11 @@ static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 	}
 	if(wcsncmp(command,L"get_drives",wcslen(L"get_drives"))==0){
 		send_response_get_drives(hNamedPipe);
+	}
+	if(wcsncmp(command,L"rescan",wcslen(L"rescan"))==0){
+		int i = *(command+wcslen(L"rescan")) - L'0';
+		rescan(i);
+		send_response_rescan(hNamedPipe);
 	}
 }
 
