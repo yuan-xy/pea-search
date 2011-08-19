@@ -1,9 +1,22 @@
 function drive_type_name(type){
-	if (type==2) return "优盘"
-	if (type==3) return "外置硬盘"
+	if (type==0) return "未知"
+	if (type==1) return "无效"
+	if (type==2) return "U盘"
+	if (type==3) return "硬盘"
 	if (type==4) return "网络磁盘"
 	if (type==5) return "光盘"
+	if (type==6) return "内存盘"
 	return ""
+}
+
+function contain(id, obj){
+		var ret=false;
+		$.each(obj, function (index, ele) { 
+			if(ele.id == id){
+				ret = true;
+			}
+		});
+		return ret;
 }
 
 function get_drive_info(id){
@@ -71,9 +84,32 @@ function scan_img(){
 }
 
 function show_index_status(){
-	var s=plugin.search('[///index_status');
-	$("#dialog-index-status").text(s);
-	$("#dialog-index-status").dialog({modal: true});
+	var done = eval(plugin.search("[///index_status"));
+	var drives = eval(plugin.search("[///get_drives"));
+	$.each(drives, function (index, ele) { 
+		if(!ele.volumeName) ele.volumeName="未命名";
+		ele.panfu = String.fromCharCode(65+ele.id*1);
+		ele.typename = drive_type_name(ele.type);
+		if(contain(ele.id,done)){
+			ele.indexed = "images/tick.png";
+		}else{
+			if(ele.serialNumber.length>1) ele.indexed = "images/spinner.gif";
+			else  ele.indexed = "";
+		}
+	});
+	var offline = [];
+	$.each(done, function (index, ele) { 
+		if(!contain(ele.id,drives)){
+			ele.indexed = "离线";
+			ele.typename = drive_type_name(ele.type);
+			offline.push(ele);
+		}
+	});
+	$("#index_status_result").setTemplateElement("index_status_template");
+	$("#index_status_result").processTemplate(drives);
+	$("#offline-index_status_result").setTemplateElement("offline_index_status_template");
+	$("#offline-index_status_result").processTemplate(offline);
+	$("#dialog-index-status").dialog({modal: true, width:600});
 }
 
 function show_hotkey(){
