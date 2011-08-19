@@ -73,7 +73,7 @@ void scan(int i){
 	printf("Scan drive %c finished.\n",i+'A');
 }
 
-static int get_net_offline_slot(){
+static int get_next_offline_slot(){
 	int i;
 	for(i=DIRVE_COUNT;i<DIRVE_COUNT_OFFLINE;i++){
 		if(!g_loaded[i]) return i;
@@ -94,7 +94,7 @@ void DriveChangeListener(int i, BOOL add){
 		g_bVols[i]=0;
 		g_loaded[i]=0;
 		{
-			int off_id = get_net_offline_slot();
+			int off_id = get_next_offline_slot();
 			g_loaded[off_id]=1;
 			g_VolsInfo[off_id] = g_VolsInfo[i];
 			g_rootVols[off_id] = g_rootVols[i];

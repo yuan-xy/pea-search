@@ -102,7 +102,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow){
 static void trans_focus(){
 	if(g_handler.get() && g_handler->GetBrowserHwnd()){
 		PostMessage(g_handler->GetBrowserHwnd(), WM_SETFOCUS, NULL, NULL);
-		//exec_js_str(L"try{ $('#search').blur();$('#search').focus();}catch(e){}");
+		exec_js_str(L"try{ $('#search').select();}catch(e){}");
 	}
 }
 

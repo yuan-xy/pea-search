@@ -367,6 +367,13 @@
 			}
 		});
 	}
+	function restart_when_error(){
+			show_error("搜索服务失去响应。请稍后重试！");
+			files = [];
+			page_from = 0;
+			page();
+			plugin.start_server();
+	}
 	function searchf0(){
 		stat_timeout = setTimeout(stat_search,10);
 		$("#loading").css("visibility","visible");
@@ -376,13 +383,14 @@
 		try{
 			files = eval(s);
 		}catch(e){
-			show_error("搜索服务失去响应！");
+			restart_when_error();
 			$("#loading").css("visibility","hidden");
 			return;
 		}
 		if(plugin.offline){
+			var d_infos = get_loaded_offline_dbs();
 			for(var f_index=0; f_index<files.length; f_index++)
-				gen_offline_dir_name(files[f_index]);
+				gen_offline_dir_name(files[f_index],d_infos);
 		}
 		file_name_trim(files);
 		if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
@@ -473,7 +481,7 @@
 			var stats = eval("("+s+")");
 			stat_num_set(stats);
 		}catch(e){
-			show_error("搜索服务失去响应！");
+			restart_when_error();
 		}
 	}
 	function history_parse(start_index){

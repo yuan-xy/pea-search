@@ -19,21 +19,32 @@ function contain(id, obj){
 		return ret;
 }
 
-function get_drive_info(id){
-	var d_infos = eval(plugin.search("[///index_status"));
-	//TODO: cache pipe call
+function get_drive_info(id, d_infos){
 	for(var f_index=0; f_index<d_infos.length; f_index++){
 		if(d_infos[f_index].id == id) return d_infos[f_index];
 	}
 }
 
-function gen_offline_dir_name(file){
+function gen_offline_dir_name(file, d_infos){
 	var id = file.path.substring(0,2);
 	var dir = file.path.substring(2, file.path.length);
-	var info = get_drive_info(id);
+	var info = get_drive_info(id, d_infos);
 	var disk_name = (info.volumeName ? info.volumeName : '未命名'+(id-25));
 	file.path = "["+drive_type_name(info.type)+":"+disk_name+"]"+dir;
 }
+
+function get_loaded_offline_dbs(){
+	var done = eval(plugin.search("[///index_status"));
+	var drives = eval(plugin.search("[///get_drives"));
+	var offline = [];
+	$.each(done, function (index, ele) { 
+		if(!contain(ele.id,drives)){
+			offline.push(ele);
+		}
+	});
+	return offline;
+}
+
 
 function get_offline_dbs(){
 	var dbs = eval(plugin.search("[///cache_dbs"));
@@ -97,13 +108,10 @@ function show_index_status(){
 			else  ele.indexed = "";
 		}
 	});
-	var offline = [];
-	$.each(done, function (index, ele) { 
-		if(!contain(ele.id,drives)){
-			ele.indexed = "离线";
-			ele.typename = drive_type_name(ele.type);
-			offline.push(ele);
-		}
+	var offline = get_loaded_offline_dbs();
+	$.each(offline, function (index, ele) { 
+		ele.indexed = "离线";
+		ele.typename = drive_type_name(ele.type);
 	});
 	$("#index_status_result").setTemplateElement("index_status_template");
 	$("#index_status_result").processTemplate(drives);

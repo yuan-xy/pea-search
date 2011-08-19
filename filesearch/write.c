@@ -249,17 +249,17 @@ void DbIterator(pDbVisitor visitor, void *data){
 }
 
 BOOL offline_db_visitor(char *db_name, void *data){
-		int i = *(int *)data;
+		int *pi = (int *)data;
 		BOOL flag;
 		if(loaded(db_name)) return 1;
-		flag = load_offline_db_one(i,db_name);
+		flag = load_offline_db_one(*pi,db_name);
 		if(flag){
-			build_dir(i);
-			after_build(i);
-			g_loaded[i]=1;
-			i++;
+			build_dir(*pi);
+			after_build(*pi);
+			g_loaded[*pi]=1;
+			(*pi)++;
 		}
-		if(i>=DIRVE_COUNT_OFFLINE) return 0;
+		if((*pi)>=DIRVE_COUNT_OFFLINE) return 0;
 		return 1;
 }
 

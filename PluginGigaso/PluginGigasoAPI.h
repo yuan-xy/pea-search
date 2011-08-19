@@ -48,6 +48,7 @@ public:
 	bool his_del(int i);
 	bool his_pin(int i);
 	bool his_unpin(int i);
+	bool start_server();
     FB::variant search(const FB::variant& msg);
     FB::variant stat(const FB::variant& msg);
     FB::variant query(const FB::variant& msg, int rows);

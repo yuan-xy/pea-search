@@ -49,6 +49,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	registerMethod("his_unpin",      make_method(this, &PluginGigasoAPI::his_unpin));
     registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
     registerMethod("stat",      make_method(this, &PluginGigasoAPI::stat));
+    registerMethod("start_server",      make_method(this, &PluginGigasoAPI::start_server));
 
     registerMethod("shell_open",      make_method(this, &PluginGigasoAPI::shell_open));
 	registerMethod("shell_edit",      make_method(this, &PluginGigasoAPI::shell_edit));
@@ -348,5 +349,11 @@ bool PluginGigasoAPI::his_pin(int i){
 bool PluginGigasoAPI::his_unpin(int i){
 	history_unpin(i);
 	history_save();
+	return true;
+}
+
+bool PluginGigasoAPI::start_server(){
+	//WinExec("net stop gigaso",0);
+	WinExec("net start gigaso",0);
 	return true;
 }

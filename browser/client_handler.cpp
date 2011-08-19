@@ -8,7 +8,7 @@
 extern CefRefPtr<ClientHandler> g_handler;
 
 
-static void exec_js_str(wchar_t *str){
+void exec_js_str(wchar_t *str){
 	if(g_handler.get()){
 		CefRefPtr<CefBrowser> browser = g_handler->GetBrowser();
 		if(browser.get()){
@@ -18,7 +18,7 @@ static void exec_js_str(wchar_t *str){
 	}
 }
 
-static void exec_js(const wchar_t *function_name){
+void exec_js(const wchar_t *function_name){
 	wchar_t buffer[100];
 	wsprintf(buffer, L"try{if(%s) %s()}catch(e){}",function_name,function_name);
 	exec_js_str(buffer);
