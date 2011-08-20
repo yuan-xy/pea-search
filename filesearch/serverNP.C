@@ -193,6 +193,20 @@ static char * print_drive_info(char *buffer,int id){
 		*p++ ='"';
 		*p++ =',';
 	}
+	{
+		memcpy(p,"\"totalMB\":\"",11);
+		p += 11;
+		p += sprintf(p,"%d",g_VolsInfo[id].totalMB);
+		*p++ ='"';
+		*p++ =',';
+	}
+	{
+		memcpy(p,"\"totalFreeMB\":\"",15);
+		p += 15;
+		p += sprintf(p,"%d",g_VolsInfo[id].totalFreeMB);
+		*p++ ='"';
+		*p++ =',';
+	}
 	if(wcslen(g_VolsInfo[id].volumeName)>0){
 		pUTF8 str;
 		int str_len;

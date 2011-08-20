@@ -142,7 +142,7 @@ BOOL gigaso_destory(){
 
 static void print_all_stat(WCHAR *str){
 	char buffer[1024];
-	print_stat(stat(str,NULL),buffer);
+	print_stat(statistic(str,NULL),buffer);
 	printf("%s\n",buffer);
 }
 

@@ -134,6 +134,7 @@ function show_index_status(){
 	$.each(offline, function (index, ele) { 
 		ele.indexed = "离线";
 		ele.typename = drive_type_name(ele.type);
+		if(!ele.volumeName) ele.volumeName = '未命名 ('+(ele.id-25)+')';
 	});
 	$("#index_status_result").setTemplateElement("index_status_template");
 	add_time_info(drives);

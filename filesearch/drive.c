@@ -14,12 +14,22 @@ BOOL is_removable_drive(int i){
 	return g_VolsInfo[i].type==DRIVE_REMOVABLE;
 }
 
+void get_drive_space(int i){
+	ULARGE_INTEGER TotalNumberOfBytes, TotalNumberOfFreeBytes;
+	WCHAR name[4];
+	swprintf(name,4,L"%c:\\",i+'A');
+	GetDiskFreeSpaceEx(name,NULL,&TotalNumberOfBytes,&TotalNumberOfFreeBytes);
+	g_VolsInfo[i].totalMB = (TotalNumberOfBytes.HighPart)*4000 + ((TotalNumberOfBytes.LowPart)>>20);
+	g_VolsInfo[i].totalFreeMB = (TotalNumberOfFreeBytes.HighPart)*4000 + ((TotalNumberOfFreeBytes.LowPart)>>20);
+}
+
 void InitDrive(int i){
 	WCHAR name[4];
 	g_bVols[i]=1;
 	swprintf(name,4,L"%c:\\",i+'A');
 	g_VolsInfo[i].type = GetDriveType(name);
 	GetVolumeInformation(name,g_VolsInfo[i].volumeName,32,&g_VolsInfo[i].serialNumber,NULL,NULL,g_VolsInfo[i].fsName,8);
+	get_drive_space(i);
 }
 
 void InitDrives(){

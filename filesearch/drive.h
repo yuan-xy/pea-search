@@ -29,6 +29,8 @@ struct driveInfo{
 	DWORD serialNumber;  //the volume serial number.
 	WCHAR volumeName[32];  //A pointer to a buffer that receives the name of a specified volume. The maximum buffer size is MAX_PATH+1.
 	WCHAR fsName[8];  //the name of the file system, for example, the FAT file system or the NTFS file system
+	int totalMB; //最大4PB
+	int totalFreeMB;
 };
 typedef struct driveInfo DriveInfo, *pDriveInfo;
 
@@ -42,6 +44,12 @@ extern void InitDrives();
  * @param i 驱动器编号
  */
 extern void InitDrive(int i);
+
+/**
+ * 获得驱动器的磁盘空间与可用空间
+ * @param i 驱动器编号
+ */
+extern void get_drive_space(int i);
 
 /**
  * 访问给定的驱动器

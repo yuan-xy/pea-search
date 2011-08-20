@@ -185,6 +185,8 @@
 		<TD>名称</TD>
 		<TD>类型</TD>
 		<TD>格式</TD>
+		<TD>总大小</TD>
+		<TD>可用空间</TD>
 		<TD>索引状态</TD>
 		<TD>重新索引</TD>
 	</TR>
@@ -200,6 +202,8 @@
 				<TD>{$T.record.volumeName}</TD>
 				<TD>{$T.record.typename}</TD>
 				<TD>{$T.record.fsName}</TD>
+				<TD>{$T.record.totalMB}</TD>
+				<TD>{$T.record.totalFreeMB}</TD>
 				<TD align="center"><img src="{$T.record.indexed}"></TD>
 				<TD align="center"><img src="icons/disk.ico" title="重新扫描硬盘，建立索引" width="16" height="16" style="cursor:hand;{$T.record.display}" onclick="rescan(this.parentNode,{$T.record.id})"></TD>
 			</TR>
@@ -216,6 +220,8 @@
 		<TD>名称</TD>
 		<TD>类型</TD>
 		<TD>格式</TD>
+		<TD>总大小</TD>
+		<TD>可用空间</TD>
 		<TD>状态</TD>
 		<TD>删除索引</TD>
 	</TR>
@@ -231,6 +237,8 @@
 				<TD>{$T.record.volumeName}</TD>
 				<TD>{$T.record.typename}</TD>
 				<TD>{$T.record.fsName}</TD>
+				<TD>{$T.record.totalMB}</TD>
+				<TD>{$T.record.totalFreeMB}</TD>
 				<TD>{$T.record.indexed}</TD>
 				<TD align="center"><img src="images/delete.ico" title="删除此离线索引数据库" width="16" height="16" style="cursor:hand" onclick="del_offline_db(this.parentNode,{$T.record.id})"></TD>
 			</TR>
