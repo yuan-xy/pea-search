@@ -18,6 +18,7 @@ void get_drive_space(int i){
 	ULARGE_INTEGER TotalNumberOfBytes, TotalNumberOfFreeBytes;
 	WCHAR name[4];
 	swprintf(name,4,L"%c:\\",i+'A');
+	if(g_VolsInfo[i].serialNumber==0) return;
 	GetDiskFreeSpaceEx(name,NULL,&TotalNumberOfBytes,&TotalNumberOfFreeBytes);
 	g_VolsInfo[i].totalMB = (TotalNumberOfBytes.HighPart)*4000 + ((TotalNumberOfBytes.LowPart)>>20);
 	g_VolsInfo[i].totalFreeMB = (TotalNumberOfFreeBytes.HighPart)*4000 + ((TotalNumberOfFreeBytes.LowPart)>>20);

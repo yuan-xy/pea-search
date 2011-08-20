@@ -77,6 +77,21 @@ function add_time_info(objs){
 	});
 }
 
+function parse_space(objs){
+	$.each(objs, function (index, ele) {
+		if(ele.totalMB>9000){
+			ele.totalMB = Math.round(ele.totalMB/1000) + "GB";
+			ele.totalFreeMB = Math.round(ele.totalFreeMB/1000) + "GB";
+		} else if(ele.totalMB>900){
+			ele.totalMB = Math.round(ele.totalMB/100)/10 + "GB";
+			ele.totalFreeMB = Math.round(ele.totalFreeMB/100)/10 + "GB";
+		}else{
+			ele.totalMB = Math.round(ele.totalMB/10)*10 + "MB";
+			ele.totalFreeMB = Math.round(ele.totalFreeMB/10)*10 + "MB";
+		}
+	});
+}
+
 //判断是否有离线db
 function has_offline_dbs(){
 	return get_offline_dbs().length>0;
@@ -138,9 +153,11 @@ function show_index_status(){
 	});
 	$("#index_status_result").setTemplateElement("index_status_template");
 	add_time_info(drives);
+	parse_space(drives);
 	$("#index_status_result").processTemplate(drives);
 	$("#offline-index_status_result").setTemplateElement("offline_index_status_template");
 	add_time_info(offline);
+	parse_space(offline);
 	$("#offline-index_status_result").processTemplate(offline);
 	$("#dialog-index-status").dialog({modal: true, width:600});
 }
