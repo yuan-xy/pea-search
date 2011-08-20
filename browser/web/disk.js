@@ -122,12 +122,36 @@ function show_index_status(){
 
 function show_hotkey(){
 	$("#select-hotkey").val(plugin.hotkey);
-	$("#dialog-set-hotkey").dialog({modal: true});
+	$("#dialog-set-hotkey").dialog({modal: true, width:600});
 }
 function set_hotkey(){
 	plugin.hotkey = $("#select-hotkey").val();
 	$("#dialog-set-hotkey").dialog("close");
 	show_info("快捷键设置成功！");
+}
+
+function show_export(){
+	d = new Date();
+	$("#export-filename").val("c:\\gigaso-"+d.getFullYear()+
+		"-"+(d.getMonth()+1)+"-"+d.getDate() +"'"+d.getSeconds() +".txt");
+	$("#dialog-export").dialog({modal: true, width:600});
+}
+function do_export(){
+	var etype = $("#select-export").val();
+	var s = "";
+	$.each(files, function (index, ele) { 
+		if(ele.path2) s += ele.path2;
+		else  s += ele.path;
+		if(ele.name2) s += ele.name2;
+		else s += ele.name;
+		if(etype=="1"){
+			s += "\t,"+ele.size+"\t,"+ele.time;
+		}
+		s += "\r\n";
+	});
+	plugin.save($("#export-filename").val(),s);
+	$("#dialog-export").dialog("close");
+	show_info("查询结果导出成功！");
 }
 
 

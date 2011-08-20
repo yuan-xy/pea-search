@@ -50,6 +50,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
     registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
     registerMethod("stat",      make_method(this, &PluginGigasoAPI::stat));
     registerMethod("start_server",      make_method(this, &PluginGigasoAPI::start_server));
+    registerMethod("save",      make_method(this, &PluginGigasoAPI::save));
 
     registerMethod("shell_open",      make_method(this, &PluginGigasoAPI::shell_open));
 	registerMethod("shell_edit",      make_method(this, &PluginGigasoAPI::shell_edit));
@@ -355,5 +356,18 @@ bool PluginGigasoAPI::his_unpin(int i){
 bool PluginGigasoAPI::start_server(){
 	//WinExec("net stop gigaso",0);
 	WinExec("net start gigaso",0);
+	return true;
+}
+
+bool PluginGigasoAPI::save(const FB::variant& filename,const FB::variant& content){
+	std::string name = filename.convert_cast<std::string>();
+	std::wstring s = content.convert_cast<std::wstring>();
+	const wchar_t *cs = s.c_str();
+	FILE *fp;
+	fp = fopen(name.c_str(), "w, ccs=UNICODE");
+	if(fp==NULL) return false;
+	size_t len = fwrite(cs,sizeof(wchar_t),wcslen(cs),fp);
+	fclose(fp);
+	if(len!=wcslen(cs)) return false;
 	return true;
 }

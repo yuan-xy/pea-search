@@ -49,6 +49,7 @@ public:
 	bool his_pin(int i);
 	bool his_unpin(int i);
 	bool start_server();
+	bool save(const FB::variant& filename,const FB::variant& content);
     FB::variant search(const FB::variant& msg);
     FB::variant stat(const FB::variant& msg);
     FB::variant query(const FB::variant& msg, int rows);

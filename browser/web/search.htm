@@ -36,6 +36,7 @@
 
 <input type="button" value="状态" onclick="show_index_status();">
 <input type="button" value="快捷键" onclick="show_hotkey();">
+<input type="button" value="导出" title="导出当前查询结果" onclick="show_export();">
 
 
 <center style="margin:10px;">
@@ -247,6 +248,21 @@
 	</select>
 	<input type="button" value="确定" onclick="set_hotkey();">
 </div>
+
+<div id="dialog-export" title="导出当前查询结果" style="display:none;">
+请选择导出信息类型：
+	<select id="select-export">
+		<option value="0">完整路径的文件名</option>
+		<option value="1">全部信息（文件名/大小/日期）</option>
+	</select>
+<br>
+导出文件名：
+	<input type="text" id="export-filename" size="40" readonly="readonly">
+<br>
+	<input type="button" value="确定" onclick="do_export();">
+</div>
+
+
 
 <script type="text/javascript">
 	function trim(str, chars) {
