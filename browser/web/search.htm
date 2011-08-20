@@ -37,6 +37,7 @@
 <input type="button" value="状态" onclick="show_index_status();">
 <input type="button" value="快捷键" onclick="show_hotkey();">
 <input type="button" value="导出" title="导出当前查询结果" onclick="show_export();">
+<input type="button" value="调试" onclick="cef.gigaso.dev_tool();">
 
 
 <center style="margin:10px;">
@@ -200,17 +201,18 @@
 				<TD>{$T.record.typename}</TD>
 				<TD>{$T.record.fsName}</TD>
 				<TD align="center"><img src="{$T.record.indexed}"></TD>
-				<TD align="center"><img src="icons/disk.ico" title="重新扫描硬盘，建立索引" width="16" height="16" style="cursor:hand" onclick="rescan(this.parentNode,{$T.record.id})"></TD>
+				<TD align="center"><img src="icons/disk.ico" title="重新扫描硬盘，建立索引" width="16" height="16" style="cursor:hand;{$T.record.display}" onclick="rescan(this.parentNode,{$T.record.id})"></TD>
 			</TR>
         </tr>
 		{#/for}
 </textarea> 
 
 <br>
-离线磁盘：
+离线磁盘的分区：
 <TABLE border="1">
 <thead>
 	<TR>
+		<TD>最后访问时间</TD>
 		<TD>名称</TD>
 		<TD>类型</TD>
 		<TD>格式</TD>
@@ -225,6 +227,7 @@
 		{#foreach $T as record}
         <tr unselectable="on" class="unselectable">
 			<TR>
+				<TD>{$T.record.time}</TD>
 				<TD>{$T.record.volumeName}</TD>
 				<TD>{$T.record.typename}</TD>
 				<TD>{$T.record.fsName}</TD>
@@ -254,7 +257,7 @@
 <div id="dialog-export" title="导出当前查询结果" style="display:none;">
 请选择导出信息类型：
 	<select id="select-export">
-		<option value="0">完整路径的文件名</option>
+		<option value="0">文件名</option>
 		<option value="1">全部信息（文件名/大小/日期）</option>
 	</select>
 <br>

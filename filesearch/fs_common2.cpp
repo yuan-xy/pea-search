@@ -70,7 +70,7 @@ void AllFilesIterate(pFileVisitor visitor, void *data, BOOL offline){
 		}
 	}else{
 		for(;i<26;i++){
-			if(g_bVols[i] && g_VolsInfo[i].serialNumber && g_rootVols[i]!=NULL){
+			if(g_loaded[i] && g_rootVols[i]!=NULL){
 				FilesIterate(g_rootVols[i],visitor,data);
 			}
 		}

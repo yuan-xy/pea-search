@@ -27,10 +27,13 @@ function get_drive_info(id, d_infos){
 
 function gen_offline_dir_name(file, d_infos){
 	var id = file.path.substring(0,2);
-	var dir = file.path.substring(2, file.path.length);
-	var info = get_drive_info(id, d_infos);
-	var disk_name = (info.volumeName ? info.volumeName : '未命名'+(id-25));
-	file.path = "["+drive_type_name(info.type)+":"+disk_name+"]"+dir;
+	if(id>=26 && id<26*3){
+		var dir = file.path.substring(2, file.path.length);
+		var info = get_drive_info(id, d_infos);
+		if(info.volumeName) disk_name = info.volumeName;
+		else disk_name = '未命名'+(id-25);
+		file.path = "["+drive_type_name(info.type)+":"+disk_name+"]"+dir;
+	}
 }
 
 function get_loaded_offline_dbs(){
@@ -48,12 +51,30 @@ function get_loaded_offline_dbs(){
 
 function get_offline_dbs(){
 	var dbs = eval(plugin.search("[///cache_dbs"));
+	dbs_name = dbs.map(function(ele){
+		return ele.name;
+	})
 	var drives = eval(plugin.search("[///get_drives"));
 	$.each(drives, function (index, ele) { 
-		var i = $.inArray(ele.serialNumber+".db", dbs);
-		if(i!=-1) dbs.splice(i, 1);
+		var i = $.inArray(ele.serialNumber+".db", dbs_name);
+		if(i!=-1) dbs_name.splice(i, 1);
 	});
-	return dbs;
+	return dbs_name;
+}
+
+function add_time_info(objs){
+	var dbs = eval(plugin.search("[///cache_dbs"));
+	dbs_name = dbs.map(function(ele){
+		return ele.name;
+	})
+	$.each(objs, function (index, ele) { 
+		var i = $.inArray(ele.serialNumber+".db", dbs_name);
+		if(i!=-1){
+			d = new Date(dbs[i].time*1000);
+			ele.time = d.getFullYear()+
+		"-"+(d.getMonth()+1)+"-"+d.getDate()+ " "+d.getHours()+":"+d.getMinutes();
+		}
+	});
 }
 
 //判断是否有离线db
@@ -107,6 +128,7 @@ function show_index_status(){
 			if(ele.serialNumber.length>1) ele.indexed = "images/spinner.gif";
 			else  ele.indexed = "";
 		}
+		if(!ele.fsName) ele.display="display:none";
 	});
 	var offline = get_loaded_offline_dbs();
 	$.each(offline, function (index, ele) { 
@@ -114,8 +136,10 @@ function show_index_status(){
 		ele.typename = drive_type_name(ele.type);
 	});
 	$("#index_status_result").setTemplateElement("index_status_template");
+	add_time_info(drives);
 	$("#index_status_result").processTemplate(drives);
 	$("#offline-index_status_result").setTemplateElement("offline_index_status_template");
+	add_time_info(offline);
 	$("#offline-index_status_result").processTemplate(offline);
 	$("#dialog-index-status").dialog({modal: true, width:600});
 }

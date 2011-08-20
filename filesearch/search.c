@@ -737,7 +737,7 @@ void free_search(pFileEntry *pp){
 	free_safe(pp);
 }
 
-int * stat(WCHAR *str, pSearchEnv env){
+int * statistic(WCHAR *str, pSearchEnv env){
 	memset(stats_local,0,sizeof(stats_local));
 	if(emptyString(str)){
 		return 0;

@@ -1,6 +1,8 @@
 #include "env.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <time.h>
 #include <io.h>
 #include <process.h>
 #include "util.h"
@@ -157,7 +159,7 @@ static void send_response_search(HANDLE hNamedPipe, pSearchRequest req, pFileEnt
 
 static void send_response_stat(HANDLE hNamedPipe, pSearchRequest req){
 	char buffer[4096], *p1=buffer+sizeof(int), *p=p1;
-	int *stats = stat(req->str, &(req->env) );
+	int *stats = statistic(req->str, &(req->env) );
 	p += print_stat(stats,p);
 	{
 		DWORD nXfer;
@@ -241,14 +243,32 @@ static void send_response_index_status(HANDLE hNamedPipe){
 static BOOL print_db_visitor(char *db_name, void *data){
 		char **pp = (char **)data;
 		char *p = *pp;
-		*p++ = '"';
+	*p++ = '{';
+	{
+		memcpy(p,"\"name\":\"",8);
+		p += 8;
 		memcpy(p,db_name,strlen(db_name));
 		p += strlen(db_name);
-		*p++ = '"';
-		*p++ = ',';
+		*p++ ='"';
+		*p++ =',';
+	}
+	{
+		memcpy(p,"\"time\":\"",8);
+		p += 8;
+		{
+			struct stat statbuf;
+			stat(db_name, &statbuf);
+			//p += sprintf(p,"%s",ctime(&statbuf.st_mtime));
+			p += sprintf(p,"%d",statbuf.st_mtime);
+		}
+		*p++ ='"';
+	}
+	*p++ = '}';
+	*p++ =',';
 		*pp = p;
 		return 1;
 }
+
 
 static void send_response_cache_dbs(HANDLE hNamedPipe){
 	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;

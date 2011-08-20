@@ -18,7 +18,7 @@ extern "C" {
 extern DWORD search(WCHAR *str, pSearchEnv env,OUT pFileEntry **result);
 extern void free_search(pFileEntry *p);
 
-extern int * stat(WCHAR *str, pSearchEnv env);
+extern int * statistic(WCHAR *str, pSearchEnv env);
 extern int print_stat(int * stats, char *p);
 
 /**
