@@ -284,7 +284,7 @@ static void send_response_get_drives(HANDLE hNamedPipe){
 	}
 }
 
-static void send_response_rescan(HANDLE hNamedPipe){
+static void send_response_ok(HANDLE hNamedPipe){
 	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
 	*p++ = '1';
 	{
@@ -298,17 +298,21 @@ static void send_response_rescan(HANDLE hNamedPipe){
 static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 	if(wcsncmp(command,L"index_status",wcslen(L"index_status"))==0){
 		send_response_index_status(hNamedPipe);
-	}
-	if(wcsncmp(command,L"cache_dbs",wcslen(L"cache_dbs"))==0){
+	}else if(wcsncmp(command,L"cache_dbs",wcslen(L"cache_dbs"))==0){
 		send_response_cache_dbs(hNamedPipe);
-	}
-	if(wcsncmp(command,L"get_drives",wcslen(L"get_drives"))==0){
+	}else if(wcsncmp(command,L"get_drives",wcslen(L"get_drives"))==0){
 		send_response_get_drives(hNamedPipe);
-	}
-	if(wcsncmp(command,L"rescan",wcslen(L"rescan"))==0){
+	}else if(wcsncmp(command,L"rescan",wcslen(L"rescan"))==0){
 		int i = *(command+wcslen(L"rescan")) - L'0';
 		rescan(i);
-		send_response_rescan(hNamedPipe);
+		send_response_ok(hNamedPipe);
+	}else if(wcsncmp(command,L"del_offline_db",wcslen(L"del_offline_db"))==0){
+		int i0 = *(command+wcslen(L"del_offline_db")) - L'0';
+		int i1 = *(command+wcslen(L"del_offline_db?")) - L'0';
+		del_offline_db(i0*10+i1);
+		send_response_ok(hNamedPipe);
+	}else{
+		send_response_ok(hNamedPipe);
 	}
 }
 

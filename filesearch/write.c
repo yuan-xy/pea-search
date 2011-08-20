@@ -214,6 +214,14 @@ BOOL load_db(int i){
 	#endif
 }
 
+void del_offline_db(int i){
+	char cmd[64];
+	FILE_NAME(i);
+	g_loaded[i] = 0;
+	deleteDir(g_rootVols[i]);
+	sprintf(cmd,"del %s",name);
+	system(cmd);
+}
 
 static int load_offline_db_one(int i,char *file){
 	#ifdef USE_ZIP

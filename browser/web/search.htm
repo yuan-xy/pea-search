@@ -215,6 +215,7 @@
 		<TD>类型</TD>
 		<TD>格式</TD>
 		<TD>状态</TD>
+		<TD>删除索引</TD>
 	</TR>
 </thead>
 <tbody id="offline-index_status_result"> 
@@ -228,6 +229,7 @@
 				<TD>{$T.record.typename}</TD>
 				<TD>{$T.record.fsName}</TD>
 				<TD>{$T.record.indexed}</TD>
+				<TD align="center"><img src="images/delete.ico" title="删除此离线索引数据库" width="16" height="16" style="cursor:hand" onclick="del_offline_db(this.parentNode,{$T.record.id})"></TD>
 			</TR>
         </tr>
 		{#/for}

@@ -141,6 +141,7 @@ static void delete_file_from_parent_vector(pFileEntry file,pFileEntry parent){
 }
 
 void deleteDir(pFileEntry file){
+	if(file==NULL) return;
 	if(IsDir(file)){
 		pFileList children = (pFileList)file->children;
 		if(children!=NULL){

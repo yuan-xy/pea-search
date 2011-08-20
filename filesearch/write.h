@@ -30,6 +30,8 @@ extern BOOL load_db(int i);
  */
 extern int load_offline_dbs();
 
+extern void del_offline_db(int i);
+
 /**
  * 访问给定的db文件
  * @param db_name  db文件名

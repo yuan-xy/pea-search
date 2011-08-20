@@ -163,3 +163,13 @@ function rescan(td, i){
 	}	
 	setTimeout(rescan0,10);
 }
+
+function del_offline_db(td,i){
+	$(td).html('<img src="images/spinner.gif">');
+	function rescan0(){
+		plugin.search("[///del_offline_db"+i);
+		$("#dialog-index-status").dialog("close");
+		show_index_status();
+	}	
+	setTimeout(rescan0,10);
+}
