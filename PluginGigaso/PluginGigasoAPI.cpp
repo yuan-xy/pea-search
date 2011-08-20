@@ -9,6 +9,7 @@
 #include "DOM/Document.h"
 
 #include "PluginGigasoAPI.h"
+#include "DOM/Window.h"
 
 #include "sharelib.h"
 #include "common.h"
@@ -40,8 +41,15 @@ static void close_named_pipe(){
 		hNamedPipe=NULL;
 }
 
+bool PluginGigasoAPI::security_check(){
+	std::string location = m_host->getDOMWindow()->getLocation();
+	if(strncmp("http",location.c_str(),4)==0) return true;
+	return false;
+}
+
 PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::BrowserHostPtr& host) : m_plugin(plugin), m_host(host)
 {
+	if(security_check()) return;
 	registerMethod("history",      make_method(this, &PluginGigasoAPI::history));
 	registerMethod("his_thumb",      make_method(this, &PluginGigasoAPI::his_thumb));
 	registerMethod("his_del",      make_method(this, &PluginGigasoAPI::his_del));
@@ -360,6 +368,7 @@ bool PluginGigasoAPI::start_server(){
 }
 
 bool PluginGigasoAPI::save(const FB::variant& filename,const FB::variant& content){
+	if(security_check()) return false;
 	std::string name = filename.convert_cast<std::string>();
 	std::wstring s = content.convert_cast<std::wstring>();
 	const wchar_t *cs = s.c_str();

@@ -53,6 +53,7 @@ public:
     FB::variant search(const FB::variant& msg);
     FB::variant stat(const FB::variant& msg);
     FB::variant query(const FB::variant& msg, int rows);
+	bool security_check();
 
     FB::variant shell_open(const FB::variant& msg);
     FB::variant shell_edit(const FB::variant& msg);
