@@ -17,37 +17,52 @@
     <script type="text/javascript" src="disk.js"></script>
 </head>
 
-<body>
-<object id="plugin0" type="application/x-plugingigaso" width="10" height="10">
+<body style="margin:0px; padding:0px;">
+<div class="header-bg">
+<div class="icon-bg">
+<div class="header-left">
+<object id="plugin0" type="application/x-plugingigaso" width="0" height="0">
 </object>
 <img id="scanning" src="images/spinner.gif" style="visibility: hidden"/>
-<input type="button" value="刷新" onclick="refresh();">
-<input type="button" value="首页" onclick="return_history();">
-
+<input type="button" value="" onClick="return_history();" class="icon-01">
+<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
+<input type="button" value="" onClick="refresh();" class="icon-02">
+<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
+<input type="button" value="" onClick="cef.gigaso.zoom_in()" class="icon-03">
+<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
+<input type="button" value="" onClick="cef.gigaso.zoom_out()" class="icon-04">
+<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
 <input type="radio" name="case" id="case0">模糊查询
-<input type="radio" name="case" id="case1">精确查询 
-<input type="button" value="放大" onclick="cef.gigaso.zoom_in()">
-<input type="button" value="缩小" onclick="cef.gigaso.zoom_out()">
-
-<input type="button" value="最大文件" onclick="$('#search')[0].value='*'; searchf('*');orderby(2,true);">
-
-<input type="button" value="在线" onclick="online_db();">
-<input type="button" value="离线" onclick="offline_db();">
+<input type="radio" name="case" id="case1">精确查询
+</div>
+<div class="header-right">
+<input type="button" value="最大文件" onClick="$('#search')[0].value='*'; searchf('*');orderby(2,true);" class="icon-05">
+<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
+<input type="button" value="在线" onClick="online_db();" class="icon-06">
+<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
+<input type="button" value="离线" onClick="offline_db();" class="icon-07">
+<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
+<input type="button" value="状态" onClick="alert(plugin.search('[///index_status'));" class="icon-08">
 
 <input type="button" value="状态" onclick="show_index_status();">
 <input type="button" value="快捷键" onclick="show_hotkey();">
 <input type="button" value="导出" title="导出当前查询结果" onclick="show_export();">
 <input type="button" value="调试" onclick="cef.gigaso.dev_tool();">
 
-
-<center style="margin:10px;">
-搜索：<img id="loading" src="images/spinner.gif" style="visibility: hidden"/>
-<input id="dir" name="dir" type="text" size="20" value="" title="目录"><input id="search" name="s" type="text" size="50" value="" title="查询条件"><img src="images/find.ico">
+</div>
+</div>
+<center style="margin-top:20px;">
+<img src="images/logo.png" width="129" height="34">
+<input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:500px; height:34px; background:url(images/icon-search.png) no-repeat #FFF; padding-left:25px;">
 
 </center>
-
-<div id="historys">
 </div>
+
+<div id="historys" style="align:center; margin-top:20px;">
+</div>
+
+
+
 <textarea id="history_template" style="display:none"> 
 		{#foreach $T as record}
 		<div title="{$T.record.path}{$T.record.name}" class="history_file" style="cursor:hand; position:absolute; left:{$T.record.left}; top:{$T.record.top}">

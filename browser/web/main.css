@@ -97,3 +97,19 @@ background-color: #FFDDDD;
 #main_nav_tab {
 	font-size: 75%
 }
+
+.icon-01{background:url(images/icon-01.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:15px;}
+.icon-02{background:url(images/icon-02.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:15px;}
+.icon-03{background:url(images/icon-03.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:15px;}
+.icon-04{background:url(images/icon-04.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:15px;}
+.icon-05{background:url(images/icon-05.png) no-repeat; float:left; width:60px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:15px;}
+.icon-06{background:url(images/icon-06.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:5px;}
+.icon-07{background:url(images/icon-07.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:5px;}
+.icon-08{background:url(images/icon-08.png) no-repeat; float:left; width:30px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:5px;}
+
+.rightline{display:block;float:left; width:2px; height:44px;}
+
+.header-bg{background:url(images/header-bg.png) repeat-x; height:143px;}
+.icon-bg{background:url(images/icon-bg.png) repeat-x; height:44px;}
+.header-left{float:left; width:500px; height:44px; line-height:44px;}
+.header-right{float:right; width:210px; height:44px; line-height:44px;}
