@@ -18,17 +18,26 @@
 #include <stdlib.h>   
 #include <stdio.h>
 
-#define WIN_ERROR fprintf(stderr,"error code : %d , line %d in '%s'\n",GetLastError(), __LINE__, __FILE__);
-
 static HANDLE hNamedPipe=NULL;
 
-static BOOL connect_named_pipe(HANDLE *p){
+#define WIN_ERROR(host)  {\
+	char buffer[1024];\
+	sprintf(buffer,"error code : %d , line %d in '%s'\n",GetLastError(), __LINE__, __FILE__);\
+	std::string s(buffer);\
+	host->htmlLog(s);\
+}
+
+static BOOL connect_named_pipe(HANDLE *p, FB::BrowserHostPtr host){
 	HANDLE handle;
-	WaitNamedPipe(SERVER_PIPE, NMPWAIT_WAIT_FOREVER);
+	BOOL b = WaitNamedPipe(SERVER_PIPE, NMPWAIT_WAIT_FOREVER);
+	if(!b){
+		WIN_ERROR(host);
+		return 0;
+	}
 	handle = CreateFile(SERVER_PIPE, GENERIC_READ | GENERIC_WRITE, 0,
 			NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (handle == INVALID_HANDLE_VALUE) {
-		WIN_ERROR;
+		WIN_ERROR(host);
 		return 0;
 	}else{
 		*p = handle;
@@ -103,10 +112,12 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
     registerProperty("version",
                      make_property(this,
                         &PluginGigasoAPI::get_version));
-    
-    
+    registerProperty("connected",
+                     make_property(this,
+                        &PluginGigasoAPI::get_connected));    
+
     registerEvent("onfired");    
-	connect_named_pipe(&hNamedPipe);
+	connect_named_pipe(&hNamedPipe,m_host);
 	m_order=0;
 	m_case=0;
 	m_file_type=0;
@@ -150,6 +161,9 @@ bool PluginGigasoAPI::get_offline(){
 void PluginGigasoAPI::set_offline(bool val){
     m_offline = val;
 }
+bool PluginGigasoAPI::get_connected(){
+    return hNamedPipe!=NULL;
+}
 std::wstring PluginGigasoAPI::get_dir(){
 	return m_dir;
 }
@@ -177,7 +191,7 @@ static int MAX_ROW = 1000;
 
 FB::variant PluginGigasoAPI::query(const FB::variant& msg, int rows){
 	if(hNamedPipe==NULL){
-		if(!connect_named_pipe(&hNamedPipe)) return "error";
+		if(!connect_named_pipe(&hNamedPipe,m_host)) return "error";
 	}
 	SearchRequest req;
 	SearchResponse resp;
@@ -195,7 +209,7 @@ FB::variant PluginGigasoAPI::query(const FB::variant& msg, int rows){
 	if(s.length()==0) return "";
 	wcscpy(req.str,s.c_str());
 	if (!WriteFile(hNamedPipe, &req, sizeof(SearchRequest), &nWrite, NULL)) {
-		WIN_ERROR;
+		WIN_ERROR(m_host);
 		close_named_pipe();
 		return "error";
 	}

@@ -14,11 +14,6 @@ extern "C" {
 extern BOOL save_db(int i);
 
 /**
- * 将当前的所有文件信息写入硬盘
- */
-extern void save_db_all();
-
-/**
  * 从硬盘中读取给定驱动器的文件数据库
  * @param i 驱动器编号
  */

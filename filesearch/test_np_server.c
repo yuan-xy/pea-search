@@ -9,7 +9,7 @@ int main(){
 		WIN_ERROR;
 		return 3;
 	}
-	get_drive_space(10);
+	//get_drive_space(10);
 	gigaso_init();
 	if(start_named_pipe()){
 		CreateThread(NULL,0,Hotkey,NULL,0,0);

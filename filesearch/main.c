@@ -133,7 +133,7 @@ BOOL gigaso_init(){
 }
 
 BOOL gigaso_destory(){
-	save_db_all();
+	ValidDrivesIterator(save_db);
 	ValidFixDrivesIterator(StopMonitorThread);
 	StopDriveChangeMonitorThread();
 	ValidDrivesIterator(CloseVolumeHandle);

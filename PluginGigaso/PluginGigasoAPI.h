@@ -35,6 +35,8 @@ public:
 	bool get_offline();
     void set_offline(bool val);
 
+    bool get_connected();
+
 	int get_hk();
     void set_hk(int val);
 

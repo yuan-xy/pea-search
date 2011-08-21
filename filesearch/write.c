@@ -88,10 +88,6 @@ BOOL save_db(int i){
 	#endif
 }
 
-void save_db_all(){
-	ValidDrivesIterator(save_db);
-}
-
 BOOL readfile(int i, char *filename){
 	BOOL gen_root=0;
 	int count=0,d=0;

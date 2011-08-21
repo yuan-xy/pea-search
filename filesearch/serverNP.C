@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <aclapi.h>
 #include <time.h>
 #include <io.h>
 #include <process.h>
@@ -29,12 +30,89 @@ static unsigned int WINAPI Connect (void *);
 static HANDLE hSrvrThread[MAX_CLIENTS];
 static THREAD_ARG ThArgs[MAX_CLIENTS];
 
+static PSID pEveryoneSID[MAX_CLIENTS] = {}, pAdminSID[MAX_CLIENTS] = {};
+static PACL pACL[MAX_CLIENTS] = {};
+static PSECURITY_DESCRIPTOR pSD[MAX_CLIENTS] = {};
+static EXPLICIT_ACCESS ea[MAX_CLIENTS][2];
+static SID_IDENTIFIER_AUTHORITY SIDAuthWorld = SECURITY_WORLD_SID_AUTHORITY;
+static SID_IDENTIFIER_AUTHORITY SIDAuthNT = SECURITY_NT_AUTHORITY;
+static SECURITY_ATTRIBUTES sa[MAX_CLIENTS];
+
+static BOOL init_right(int i){
+    if(!AllocateAndInitializeSid(&SIDAuthWorld, 1,
+                     SECURITY_WORLD_RID,
+                     0, 0, 0, 0, 0, 0, 0,
+                     &pEveryoneSID[i]))
+    {
+        return 0; 
+    }
+ 
+    ZeroMemory(&ea[i], 2 * sizeof(EXPLICIT_ACCESS));
+    ea[i][0].grfAccessPermissions = KEY_READ | KEY_WRITE;
+    ea[i][0].grfAccessMode = SET_ACCESS;
+    ea[i][0].grfInheritance= NO_INHERITANCE;
+    ea[i][0].Trustee.TrusteeForm = TRUSTEE_IS_SID;
+    ea[i][0].Trustee.TrusteeType = TRUSTEE_IS_WELL_KNOWN_GROUP;
+    ea[i][0].Trustee.ptstrName  = (LPTSTR) pEveryoneSID[i];
+
+    if(! AllocateAndInitializeSid(&SIDAuthNT, 2,
+                     SECURITY_BUILTIN_DOMAIN_RID,
+                     DOMAIN_ALIAS_RID_ADMINS,
+                     0, 0, 0, 0, 0, 0,
+                     &pAdminSID[i])) 
+    {
+        return 0; 
+    }
+ 
+    ea[i][1].grfAccessPermissions = KEY_ALL_ACCESS;
+    ea[i][1].grfAccessMode = SET_ACCESS;
+    ea[i][1].grfInheritance= NO_INHERITANCE;
+    ea[i][1].Trustee.TrusteeForm = TRUSTEE_IS_SID;
+    ea[i][1].Trustee.TrusteeType = TRUSTEE_IS_GROUP;
+    ea[i][1].Trustee.ptstrName  = (LPTSTR) pAdminSID[i];
+
+    if (ERROR_SUCCESS != SetEntriesInAcl(2, ea[i], NULL, &pACL[i])) 
+    {
+        return 0; 
+    }
+ 
+    // Initialize a security descriptor.  
+    pSD[i] = (PSECURITY_DESCRIPTOR) LocalAlloc(LPTR, 
+                             SECURITY_DESCRIPTOR_MIN_LENGTH); 
+    if (NULL == pSD[i]) 
+    { 
+        return 0; 
+    } 
+ 
+    if (!InitializeSecurityDescriptor(pSD[i],
+            SECURITY_DESCRIPTOR_REVISION)) 
+    {  
+        return 0; 
+    } 
+ 
+    // Add the ACL to the security descriptor. 
+    if (!SetSecurityDescriptorDacl(pSD[i], 
+            TRUE,     // bDaclPresent flag   
+            pACL[i], 
+            FALSE))   // not a default DACL 
+    {  
+        return 0; 
+    } 
+ 
+    // Initialize a security attributes structure.
+    sa[i].nLength = sizeof (SECURITY_ATTRIBUTES);
+    sa[i].lpSecurityDescriptor = pSD[i];
+    sa[i].bInheritHandle = FALSE;
+	return 1;
+}
+
+
 BOOL start_named_pipe(){
 	int i;
 	for (i = 0; i < MAX_CLIENTS; i++) {
 		HANDLE hNp = CreateNamedPipe(SERVER_PIPE, PIPE_ACCESS_DUPLEX,
 				PIPE_READMODE_MESSAGE | PIPE_TYPE_MESSAGE | PIPE_WAIT,
-				MAX_CLIENTS, 0, 0, INFINITE, NULL);
+				MAX_CLIENTS, 0, 0, INFINITE ,NULL);
 		if (hNp == INVALID_HANDLE_VALUE) {
 			WIN_ERROR;
 			return 0;
