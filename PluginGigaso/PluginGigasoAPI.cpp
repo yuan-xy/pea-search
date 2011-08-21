@@ -65,6 +65,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	registerMethod("his_pin",      make_method(this, &PluginGigasoAPI::his_pin));
 	registerMethod("his_unpin",      make_method(this, &PluginGigasoAPI::his_unpin));
     registerMethod("search",      make_method(this, &PluginGigasoAPI::search));
+	registerMethod("search_async",      make_method(this, &PluginGigasoAPI::search_async));
     registerMethod("stat",      make_method(this, &PluginGigasoAPI::stat));
     registerMethod("start_server",      make_method(this, &PluginGigasoAPI::start_server));
     registerMethod("save",      make_method(this, &PluginGigasoAPI::save));
@@ -232,6 +233,17 @@ FB::variant PluginGigasoAPI::search(const FB::variant& msg){
 }
 FB::variant PluginGigasoAPI::stat(const FB::variant& msg){
 	return query(msg,-1);
+}
+
+void PluginGigasoAPI::search_async_thread( const FB::variant& msg, FB::JSObjectPtr &callback ){
+	FB::variant result = query(msg,MAX_ROW);
+    callback->InvokeAsync("", FB::variant_list_of(shared_from_this())(result));
+}
+
+bool PluginGigasoAPI::search_async(const FB::variant& msg, FB::JSObjectPtr &callback){
+    boost::thread t(boost::bind(&PluginGigasoAPI::search_async_thread,
+         this, msg, callback));
+    return true;
 }
 
 void PluginGigasoAPI::testEvent(const FB::variant& var)

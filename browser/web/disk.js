@@ -199,11 +199,9 @@ function do_export(){
 
 function rescan(td, i){
 	$(td).html('<img src="images/spinner.gif">');
-	function rescan0(){
-		plugin.search("[///rescan"+i);
+	plugin.search_async("[///rescan"+i, function(result){
 		$(td).html('<img src="images/tick.png" title="完成重建索引">');
-	}	
-	setTimeout(rescan0,10);
+	});
 }
 
 function del_offline_db(td,i){

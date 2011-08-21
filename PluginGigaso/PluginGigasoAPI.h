@@ -55,6 +55,8 @@ public:
     FB::variant search(const FB::variant& msg);
     FB::variant stat(const FB::variant& msg);
     FB::variant query(const FB::variant& msg, int rows);
+	void search_async_thread( const FB::variant& msg, FB::JSObjectPtr &callback );
+	bool search_async(const FB::variant& msg, FB::JSObjectPtr &callback);
 	bool security_check();
 
     FB::variant shell_open(const FB::variant& msg);
