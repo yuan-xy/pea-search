@@ -27,7 +27,7 @@ typedef struct searchResponse SearchResponse, *pSearchResponse;
 
 #define CS_TIMEOUT 3000
 
-#define MAX_CLIENTS  3 /* Maximum number of clients for serverNP */
+#define MAX_CLIENTS  6 /* Maximum number of clients for serverNP */
 
 #define SERVER_PIPE L"\\\\.\\PIPE\\GIGASOSERVER"
 

@@ -505,24 +505,70 @@ void shutdown_NP(){
 	}
 }
 
-DWORD WINAPI  Hotkey(PVOID pParam){
-    MSG msg = {0};
-    if (!RegisterHotKey(NULL,1, 0, VK_PAUSE)) {	//0x42 is 'b'
-        return 1;
-    }
-    wprintf(L"Hotkey 'ALT+b' registered, using MOD_NOREPEAT flag\n");
-    while(GetMessage(&msg, NULL, 0, 0) != 0){
-        if (msg.message == WM_HOTKEY){
-			wchar_t buffer1[MAX_PATH], buffer2[MAX_PATH];
-			wprintf(L"WM_HOTKEY received\n");
-			get_abs_path(L"search.exe",buffer1);
-			get_abs_path(L"",buffer2);
-			{
-				HINSTANCE  hi = ShellExecute(NULL, L"open", buffer1,NULL,buffer2,SW_SHOW); 
-				DWORD ret = GetLastError();
-				printf("%d",ret);
+/**
+*不限制连接数，当有新连接时启动新线程。
+*本模式的问题在于：当要求服务器强制退出时，要关闭所有打开过的线程和pipe，而无法得知那些线程/pipe已无效。
+DWORD WINAPI InstanceThread(LPVOID lpvParam){ 
+	HANDLE hNamedPipe = (HANDLE) lpvParam; 
+	DWORD nXfer;
+	SearchRequest req;
+	while (!ShutDown && ReadFile (hNamedPipe, &req, sizeof(SearchRequest), &nXfer, NULL)) { 
+			if(req.env.offline && !loaded_offline){
+				load_offline_dbs();
+				loaded_offline=1;
 			}
-		}
-    }
-	return 0;
+			if(req.rows==-1){
+				send_response_stat(hNamedPipe, &req);
+			}else if(wcsncmp(req.str,L"[///",4)==0){
+				WCHAR *command = req.str + 4;
+				command_exec(command, hNamedPipe);
+			}else{
+				pFileEntry *result=NULL;
+				int count = search(req.str,&(req.env),&result);
+				send_response_search(hNamedPipe,&req,result,count);
+				free_search(result);
+			}
+	}
+	FlushFileBuffers(hNamedPipe); 
+	DisconnectNamedPipe(hNamedPipe); 
+	CloseHandle(hNamedPipe); 
+	printf("InstanceThread exitting.\n");
+	return 1;
 }
+
+int _tmain0(VOID) { 
+	HANDLE hPipe = INVALID_HANDLE_VALUE, hThread = NULL; 
+	while (!ShutDown) { 
+		BOOL   fConnected = FALSE; 
+		DWORD  dwThreadId = 0; 
+		HANDLE hNp = CreateNamedPipe(SERVER_PIPE, PIPE_ACCESS_DUPLEX,
+				PIPE_READMODE_MESSAGE | PIPE_TYPE_MESSAGE | PIPE_WAIT,
+				PIPE_UNLIMITED_INSTANCES, 0, 0, 50 ,NULL);
+		if (hNp == INVALID_HANDLE_VALUE) {
+			WIN_ERROR;
+			return 0;
+		}
+		fConnected = ConnectNamedPipe(hPipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED); 
+		if (fConnected){ 
+			hThread = CreateThread(
+				NULL,              // no security attribute 
+				0,                 // default stack size 
+				InstanceThread,    // thread proc
+				(LPVOID) hPipe,    // thread parameter 
+				0,                 // not suspended 
+				&dwThreadId);      // returns thread ID 
+
+			if (hThread == NULL) {
+				return -1;
+			}else{
+				;;
+				CloseHandle(hThread); 
+			}
+		}else{
+			// The client could not connect, so close the pipe. 
+			CloseHandle(hPipe); 
+		}
+	} 
+	return 0; 
+} 
+*/
