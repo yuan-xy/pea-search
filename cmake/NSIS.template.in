@@ -639,11 +639,13 @@ Section "-Core installation"
   ;list of directories here in sync with the RMDir commands below.
 
   DetailPrint "寻找旧版本的记佳搜索..."
-  nsExec::ExecToStack 'net stop gigaso'
-  nsExec::ExecToStack 'taskkill /f /im gigaso.exe'
-  nsExec::ExecToStack 'taskkill /f /im gigasoln.exe'
-  nsExec::ExecToStack 'sc delete gigaso'
   nsExec::ExecToStack 'taskkill /f /im search.exe'
+  nsExec::ExecToStack 'taskkill /f /im gigasoln.exe'
+  DetailPrint "停止旧版本的记佳搜索..."
+  nsExec::ExecToStack 'net stop gigaso'
+  DetailPrint "删除旧版本的记佳搜索..."
+  nsExec::ExecToStack 'taskkill /f /im gigaso.exe'
+  nsExec::ExecToStack 'sc delete gigaso'
   DetailPrint "开始安装新版本的记佳搜索..."
 
 
@@ -835,10 +837,11 @@ FunctionEnd
 
 Section "Uninstall"
 
+  nsExec::ExecToStack 'taskkill /f /im search.exe'
   nsExec::ExecToStack 'net stop gigaso'
   nsExec::ExecToStack 'taskkill /f /im gigaso.exe'
+  nsExec::ExecToStack 'taskkill /f /im gigasoln.exe'
   nsExec::ExecToStack 'sc delete gigaso'
-  nsExec::ExecToStack 'taskkill /f /im search.exe'
   nsExec::ExecToStack 'RunDll32 advpack.dll, LaunchINFSection "$INSTDIR\gigaso.inf", DefaultUninstall'
 
   ReadRegStr $START_MENU SHCTX \

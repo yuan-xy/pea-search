@@ -20,6 +20,7 @@
 typedef struct { /* Argument to a server thread. */
 	HANDLE hNamedPipe; /* Named pipe instance. */
 	unsigned int ThreadNo;
+	HANDLE connThread;
 } THREAD_ARG;
 typedef THREAD_ARG *LPTHREAD_ARG;
 
@@ -112,7 +113,7 @@ BOOL start_named_pipe(){
 	for (i = 0; i < MAX_CLIENTS; i++) {
 		HANDLE hNp = CreateNamedPipe(SERVER_PIPE, PIPE_ACCESS_DUPLEX,
 				PIPE_READMODE_MESSAGE | PIPE_TYPE_MESSAGE | PIPE_WAIT,
-				MAX_CLIENTS, 0, 0, INFINITE ,NULL);
+				MAX_CLIENTS, 0, 0, 50 ,NULL);
 		if (hNp == INVALID_HANDLE_VALUE) {
 			WIN_ERROR;
 			return 0;
@@ -141,6 +142,8 @@ static void exit_conn_thread(HANDLE hConTh){
 	DWORD ConThStatus;
 	GetExitCodeThread (hConTh, &ConThStatus);
 	if (ConThStatus == STILL_ACTIVE) {
+		TerminateThread(hConTh,0);
+		return;
 		HANDLE hClient = CreateFile (SERVER_PIPE, GENERIC_READ | GENERIC_WRITE, 0, NULL,
 				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (hClient != INVALID_HANDLE_VALUE) CloseHandle (hClient);
@@ -432,18 +435,18 @@ static BOOL loaded_offline=0;
 
 static unsigned int WINAPI Server (void *pArg) {
 	LPTHREAD_ARG pThArg = (LPTHREAD_ARG)pArg;
-	HANDLE hNamedPipe= pThArg->hNamedPipe, hConTh = NULL;
+	HANDLE hNamedPipe= pThArg->hNamedPipe;
 	while (!ShutDown) {
 		DWORD nXfer;
 		SearchRequest req;
-		hConTh = (HANDLE)_beginthreadex (NULL, 0, Connect, hNamedPipe, 0, NULL);
-		if (hConTh == NULL) {
+		pThArg->connThread = (HANDLE)_beginthreadex (NULL, 0, Connect, hNamedPipe, 0, NULL);
+		if (pThArg->connThread == NULL) {
 			WIN_ERROR;
 			_endthreadex(2);
 		}
-		while (!ShutDown && WaitForSingleObject (hConTh, CS_TIMEOUT) == WAIT_TIMEOUT) {};
-		if (ShutDown) continue;
-		CloseHandle (hConTh); hConTh = NULL;
+		while (!ShutDown && WaitForSingleObject (pThArg->connThread, CS_TIMEOUT) == WAIT_TIMEOUT) {};
+		if (ShutDown) break;
+		CloseHandle (pThArg->connThread);
 		while (!ShutDown && ReadFile (hNamedPipe, &req, sizeof(SearchRequest), &nXfer, NULL)) {
 			if(req.env.offline && !loaded_offline){
 				load_offline_dbs();
@@ -464,7 +467,7 @@ static unsigned int WINAPI Server (void *pArg) {
 		if(!FlushFileBuffers(hNamedPipe)) WIN_ERROR;
 		if(!DisconnectNamedPipe(hNamedPipe)) WIN_ERROR;
 	}
-	if(hConTh!=NULL) exit_conn_thread(hConTh);
+	if(pThArg->connThread!=NULL) exit_conn_thread(pThArg->connThread);
 	printf("Exiting server thread number %d\n", pThArg->ThreadNo);
 	_endthreadex (0);
 	return 0;
@@ -485,16 +488,20 @@ BOOL WINAPI shutdown_handle(DWORD CtrlEvent) {
 	/* Shutdown the system */
 	printf("In console control handler\n");
 	ShutDown = TRUE;
+	shutdown_NP();
 	return TRUE;
 }
 
 void shutdown_NP(){
 	int i;
 	ShutDown = TRUE;
-	Sleep(5*1000);
 	for (i = 0; i < MAX_CLIENTS; i++) {
-		if(ThArgs[i].hNamedPipe !=NULL) CloseHandle(ThArgs[i].hNamedPipe);
+		if(ThArgs[i].connThread !=NULL) TerminateThread(ThArgs[i].connThread, 0);
 		if (hSrvrThread[i] != NULL) TerminateThread(hSrvrThread[i], 0);
+		if(ThArgs[i].hNamedPipe !=NULL){
+			DisconnectNamedPipe(ThArgs[i].hNamedPipe);//这条语句必须被执行，否则下次无法正常CreateNamedPipe。
+			CloseHandle(ThArgs[i].hNamedPipe);
+		}
 	}
 }
 

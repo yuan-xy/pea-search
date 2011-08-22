@@ -29,7 +29,7 @@ static HANDLE hNamedPipe=NULL;
 
 static BOOL connect_named_pipe(HANDLE *p, FB::BrowserHostPtr host){
 	HANDLE handle;
-	BOOL b = WaitNamedPipe(SERVER_PIPE, NMPWAIT_WAIT_FOREVER);
+	BOOL b = WaitNamedPipe(SERVER_PIPE, NMPWAIT_USE_DEFAULT_WAIT);
 	if(!b){
 		WIN_ERROR(host);
 		return 0;
@@ -122,6 +122,7 @@ PluginGigasoAPI::PluginGigasoAPI(const PluginGigasoPtr& plugin, const FB::Browse
 	m_order=0;
 	m_case=0;
 	m_file_type=0;
+	m_offline=false;
 	//m_dir = std::wstring(L"c:\\");
 	setPWD("npPluginGigaso.dll");
 }
