@@ -17,6 +17,8 @@
 #include "serverNP.h"
 #include "main.h"
 
+static BOOL loaded_offline=0;
+
 typedef struct { /* Argument to a server thread. */
 	HANDLE hNamedPipe; /* Named pipe instance. */
 	unsigned int ThreadNo;
@@ -410,6 +412,14 @@ static void send_response_ok(HANDLE hNamedPipe){
 	}
 }
 
+static void load_offline_dbs_t(void *p){
+	load_offline_dbs();
+}
+
+static void rescan_t(void *p){
+	rescan((int)p);
+}
+
 static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 	if(wcsncmp(command,L"index_status",wcslen(L"index_status"))==0){
 		send_response_index_status(hNamedPipe);
@@ -417,9 +427,15 @@ static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 		send_response_cache_dbs(hNamedPipe);
 	}else if(wcsncmp(command,L"get_drives",wcslen(L"get_drives"))==0){
 		send_response_get_drives(hNamedPipe);
+	}else if(wcsncmp(command,L"load_offline_db",wcslen(L"load_offline_db"))==0){
+		if(!loaded_offline){
+			loaded_offline=1;
+			_beginthread(load_offline_dbs_t,0,NULL);
+		}
+		send_response_ok(hNamedPipe);
 	}else if(wcsncmp(command,L"rescan",wcslen(L"rescan"))==0){
 		int i = *(command+wcslen(L"rescan")) - L'0';
-		rescan(i);
+		_beginthread(rescan_t,0,(void *)i);
 		send_response_ok(hNamedPipe);
 	}else if(wcsncmp(command,L"del_offline_db",wcslen(L"del_offline_db"))==0){
 		int i0 = *(command+wcslen(L"del_offline_db")) - L'0';
@@ -430,8 +446,6 @@ static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 		send_response_ok(hNamedPipe);
 	}
 }
-
-static BOOL loaded_offline=0;
 
 static unsigned int WINAPI Server (void *pArg) {
 	LPTHREAD_ARG pThArg = (LPTHREAD_ARG)pArg;
@@ -448,10 +462,6 @@ static unsigned int WINAPI Server (void *pArg) {
 		if (ShutDown) break;
 		CloseHandle (pThArg->connThread);
 		while (!ShutDown && ReadFile (hNamedPipe, &req, sizeof(SearchRequest), &nXfer, NULL)) {
-			if(req.env.offline && !loaded_offline){
-				load_offline_dbs();
-				loaded_offline=1;
-			}
 			if(req.rows==-1){
 				send_response_stat(hNamedPipe, &req);
 			}else if(wcsncmp(req.str,L"[///",4)==0){

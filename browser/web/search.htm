@@ -638,15 +638,6 @@
 		$("#search")[0].select();
 		searchf("*");
 	}
-	function offline_db(){
-		$("#loading").css("visibility","visible");
-		plugin.offline = true;
-		setTimeout(refresh,10);
-	}
-	function online_db(){
-		plugin.offline = false;
-		setTimeout(refresh,10);
-	}
 	function init_event(){
 		$("#dir").bind('keyup',function(event,t){
 			plugin.dire = $("#dir")[0].value;

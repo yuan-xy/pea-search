@@ -74,7 +74,7 @@ void scan(int i){
 }
 
 void rescan(int i){
-	if(i<0 || i>=DIRVE_COUNT) return;
+	if(i<0 || i>=DIRVE_COUNT || g_loaded[i] == 0) return;
 	g_loaded[i] = 0;
 	deleteDir(g_rootVols[i]);
 	scan(i);

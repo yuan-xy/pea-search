@@ -1,3 +1,5 @@
+var refreash_index_dialog_timeout;
+
 function drive_type_name(type){
 	if (type==0) return "未知"
 	if (type==1) return "无效"
@@ -162,6 +164,13 @@ function show_index_status(){
 	$("#dialog-index-status").dialog({modal: true, width:600});
 }
 
+function refreash_index_status(){
+	if($("#dialog-index-status").parent().css("display")=="block"){
+		show_index_status();
+		refreash_index_dialog_timeout = setTimeout(refreash_index_status,1000);
+	}
+}
+
 function show_hotkey(){
 	$("#select-hotkey").val(plugin.hotkey);
 	$("#dialog-set-hotkey").dialog({modal: true, width:600});
@@ -196,12 +205,11 @@ function do_export(){
 	show_info("查询结果导出成功！");
 }
 
-
 function rescan(td, i){
-	$(td).html('<img src="images/spinner.gif">');
-	plugin.search_async("[///rescan"+i, function(result){
-		$(td).html('<img src="images/tick.png" title="完成重建索引">');
-	});
+	clearTimeout(refreash_index_dialog_timeout);
+	$(td.parentNode.cells(td.cellIndex-1)).html('<img src="images/spinner.gif">');
+	plugin.search("[///rescan"+i);
+	refreash_index_dialog_timeout = setTimeout(refreash_index_status,3000);
 }
 
 function del_offline_db(td,i){
@@ -212,4 +220,16 @@ function del_offline_db(td,i){
 		show_index_status();
 	}	
 	setTimeout(rescan0,10);
+}
+
+function offline_db(){
+	$("#loading").css("visibility","visible");
+	plugin.offline = true;
+	plugin.search("[///load_offline_db");
+	//判断离线DB是否加载完成
+	setTimeout(refresh,2000);
+}
+function online_db(){
+	plugin.offline = false;
+	setTimeout(refresh,10);
 }
