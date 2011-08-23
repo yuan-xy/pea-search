@@ -131,8 +131,9 @@ BOOL readfile(int i, char *filename){
 				time_t last;
 				d=(int)fread(&last,sizeof(time_t),1,fp);
 				if(d<1) goto error;
-				if(now-last>3600*8)  g_expires[i]=1;
+				if(now-last>3600*24)  g_expires[i]=1;
 			}
+			if(g_expires[i]==1) goto error;
 		}else{
 			g_VolsInfo[i] = info;
 			if(IsNtfs(i)){

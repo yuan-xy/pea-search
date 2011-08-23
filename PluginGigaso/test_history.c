@@ -20,7 +20,7 @@ void check_ni_wi(){
 }
 
 int main(){
-	system("del history.ini");
+	history_remove();
 	history_load();
 	history_add(L"abcd");
 	assert( wcscmp(history_get(0),L"abcd")==0 );

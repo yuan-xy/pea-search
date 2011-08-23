@@ -13,7 +13,7 @@ extern "C" {
 /**
 * 将文件file添加到历史文件记录中。如果file在首页中已存在，则不重复添加。
 */
-extern void history_add(const wchar_t *file);
+extern BOOL history_add(const wchar_t *file);
 
 /**
 * 删除给定index位置的历史文件记录, 将下一个位置的历史文件记录补充到被删除的位置
@@ -43,6 +43,8 @@ extern BOOL history_save();
 * 从磁盘文件中加载历史文件记录
 */
 extern BOOL history_load();
+
+extern BOOL history_remove();
 
 /**
 * 初次安装时，从windows的Recent文件夹获取常用文档来初始化

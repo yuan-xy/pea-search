@@ -3,6 +3,7 @@
 #include "search.h"
 #include "main.h"
 #include "global.h"
+#include "common.h"
 
 #define EXPECT(cond) if(!(cond)) { fprintf(stderr,"ASSERT ERROR: line %d in '%s'\n",__LINE__, __FILE__);ret=1; goto error;}
 
@@ -21,6 +22,9 @@ void wait_c_ready(){
 int main(int argc, char *argv[]){
 	int ret = 0;
 	pFileEntry dir;
+	get_hotkey();
+	set_hotkey(3);
+	EXPECT(get_hotkey()==3);
 	gigaso_init();
 	wait_c_ready();
 	dir = find_file(L"c:",2);

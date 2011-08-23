@@ -121,14 +121,15 @@ static void containVisitor(wchar_t *file, int pin, void *context){
 	if(wcscmp(file,ctx->filename)==0) ctx->flag=1;
 }
 
-void history_add(const wchar_t *file){
+BOOL history_add(const wchar_t *file){
 	tmp_contain_context ctx;
 	ctx.filename = file;
 	ctx.flag = 0;
 	HistoryIterator(containVisitor,&ctx);
-	if(ctx.flag) return;
+	if(ctx.flag) return 0;
 	wcscpy(his_files[nstart],file);
 	inc_start();
+	return 1;
 }
 
 void history_delete(int wi){
@@ -191,9 +192,23 @@ wchar_t *history_get(int wi){
 	return his_files[n_index_form_w(wi)];
 }
 
+static BOOL get_history_filename(char *fbuffer){
+	DWORD size=MAX_PATH;
+	strcpy(fbuffer,"history");
+	return GetUserNameA(fbuffer+strlen("history"), &size);
+}
+
+BOOL history_remove(){
+	char fbuffer[MAX_PATH];
+	if(!get_history_filename(fbuffer)) return 0;
+	return remove(fbuffer)==0;
+}
+
 BOOL history_save(){
 	FILE *fp;
-	fp = fopen("history.ini", "wb");
+	char fbuffer[MAX_PATH];
+	if(!get_history_filename(fbuffer)) return 0;
+	fp = fopen(fbuffer, "wb");
 	if(fp==NULL) return 0;
 	fwrite(&nstart,sizeof(int),1,fp);
 	fwrite(PIN,sizeof(PIN[0]),VIEW_HISTORY,fp);
@@ -204,7 +219,9 @@ BOOL history_save(){
 
 BOOL history_load(){
 	FILE *fp;
-	fp = fopen("history.ini", "rb");//采用二进制流
+	char fbuffer[MAX_PATH];
+	if(!get_history_filename(fbuffer)) return 0;
+	fp = fopen(fbuffer, "rb");//采用二进制流
 	//unicode编码的中文“业”的hex值为“4e 1a”，其中1a是Ctrl-Z，被windows认为是文件结束标志。
 	if(fp==NULL){
 		init_from_recent();

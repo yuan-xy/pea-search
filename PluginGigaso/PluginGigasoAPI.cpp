@@ -183,6 +183,16 @@ void PluginGigasoAPI::set_hk(int val){
 }
 
 std::wstring PluginGigasoAPI::get_version(){
+	{
+		char fbuffer[MAX_PATH];
+		DWORD size=MAX_PATH;
+		if(GetUserNameA(fbuffer, &size)){
+			std::string s(fbuffer);
+			m_host->htmlLog(s);
+		}else{
+			WIN_ERROR(m_host);
+		}
+	}
 	wchar_t buffer[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH,buffer);
 	std::wstring ret(buffer,wcslen(buffer)) ;
@@ -258,8 +268,7 @@ static int shell_exec(const FB::variant& msg, const wchar_t *verb){
     HINSTANCE h = ShellExecuteW(NULL,verb,s.c_str(),NULL,NULL,SW_SHOWNORMAL);
 	int ret = (int)h > 32;
 	if(ret){
-		history_add(s.c_str());
-		history_save();
+		if( history_add(s.c_str()) ) history_save();
 	}
 	return ret;
 }
@@ -279,8 +288,7 @@ static int shell2_exec(const FB::variant& msg, const wchar_t *verb){
 	BOOL ret = ShellExecuteEx(&ShExecInfo);
 	if(ret){
 		if(verb==NULL || wcscmp(L"delete",verb)!=0){
-			history_add(s.c_str());
-			history_save();
+			if( history_add(s.c_str()) ) history_save();
 		}
 	}
 	return ret;

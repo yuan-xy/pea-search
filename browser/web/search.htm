@@ -592,9 +592,11 @@
 	}
 	function return_history(){
 		$("#loading").css("visibility","visible");
-		$("#tabs").fadeOut(1000);
+		$("#tabs").fadeOut(500);
 		$("#historys").show();
 		load_history();
+		$("#search").val("");
+		$("#search").focus();
 	}
 	var his_start=true;
 	function history_switch(){
