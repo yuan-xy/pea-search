@@ -68,7 +68,7 @@ int get_hotkey(){
 	wchar_t buffer[MAX_PATH];
 	DWORD size=MAX_PATH;
 	if(GetUserName(fbuffer, &size)){
-		wcscat(fbuffer,L".ini");
+		wcscat_s(fbuffer,MAX_PATH,L".ini");
 		get_abs_path(fbuffer,buffer);
 		GetPrivateProfileString(L"customize",L"hotkey",L"0",hotkey,2,buffer);
 		return hotkey[0]-L'0';
@@ -85,7 +85,7 @@ BOOL set_hotkey(int key){
 	if(GetUserName(fbuffer, &size)){
 		hotkey[0]=key+L'0';
 		hotkey[1]=L'\0';
-		wcscat(fbuffer,L".ini");
+		wcscat_s(fbuffer,MAX_PATH,L".ini");
 		get_abs_path(fbuffer,buffer);
 		return WritePrivateProfileString(L"customize",L"hotkey",hotkey,buffer);
 	}else{

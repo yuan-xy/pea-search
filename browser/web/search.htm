@@ -678,7 +678,18 @@
 		$('#tabs').tabs();
 		scan_img();
 	}
+	function regplugin(){
+			cef.gigaso.reg_plugin();
+			show_info("插件初始化成功！请重启本软件。");
+	}
 	$(function() {
+		try{
+			if(!plugin.search){
+				regplugin();
+			}
+		}catch(e){
+				regplugin();
+		}
 		if(plugin.caze){
 			$("#case1").click();
 		}else{

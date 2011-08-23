@@ -51,7 +51,7 @@ static BOOL init_right(int i){
     }
  
     ZeroMemory(&ea[i], 2 * sizeof(EXPLICIT_ACCESS));
-    ea[i][0].grfAccessPermissions = KEY_READ | KEY_WRITE;
+    ea[i][0].grfAccessPermissions = GENERIC_READ | GENERIC_WRITE;
     ea[i][0].grfAccessMode = SET_ACCESS;
     ea[i][0].grfInheritance= NO_INHERITANCE;
     ea[i][0].Trustee.TrusteeForm = TRUSTEE_IS_SID;
@@ -67,7 +67,7 @@ static BOOL init_right(int i){
         return 0; 
     }
  
-    ea[i][1].grfAccessPermissions = KEY_ALL_ACCESS;
+    ea[i][1].grfAccessPermissions = GENERIC_ALL | KEY_ALL_ACCESS;
     ea[i][1].grfAccessMode = SET_ACCESS;
     ea[i][1].grfInheritance= NO_INHERITANCE;
     ea[i][1].Trustee.TrusteeForm = TRUSTEE_IS_SID;
@@ -113,9 +113,10 @@ static BOOL init_right(int i){
 BOOL start_named_pipe(){
 	int i;
 	for (i = 0; i < MAX_CLIENTS; i++) {
+		init_right(i);
 		HANDLE hNp = CreateNamedPipe(SERVER_PIPE, PIPE_ACCESS_DUPLEX,
 				PIPE_READMODE_MESSAGE | PIPE_TYPE_MESSAGE | PIPE_WAIT,
-				MAX_CLIENTS, 0, 0, 50 ,NULL);
+				MAX_CLIENTS, 0, 0, 50 ,&sa[i]);
 		if (hNp == INVALID_HANDLE_VALUE) {
 			WIN_ERROR;
 			return 0;

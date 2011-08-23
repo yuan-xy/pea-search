@@ -62,6 +62,16 @@ public:
 		}
       return true;
     }
+    else if(name == "RegPlugin")
+    {
+		WinExec("regsvr32 /s npPluginGigaso.dll",SW_HIDE);
+		Sleep(10);
+		WinExec("search.exe",SW_SHOW);
+		PostQuitMessage(0);
+		TerminateProcess(GetCurrentProcess(),0);
+		return true;
+	  return true;
+    }
     return false;
   }
 
@@ -98,6 +108,10 @@ void InitExtensionTest()
     "    native function ShowDevTools();"
     "    return ShowDevTools();"
     "  };"
-    "})();";
+    "  cef.gigaso.reg_plugin = function() {"
+    "    native function RegPlugin();"
+    "    return RegPlugin();"
+    "  };"
+	"})();";
   CefRegisterExtension("v8/gigaso", code, new ClientV8ExtensionHandler());
 }
