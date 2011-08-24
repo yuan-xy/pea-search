@@ -16,7 +16,6 @@ VOID WINAPI ServerCtrlHandler(DWORD);
 void UpdateStatus (int, int);
 int  ServiceSpecific ();
 
-static FILE *hLogFile;
 static SERVICE_STATUS hServStatus;
 static SERVICE_STATUS_HANDLE hSStat; /* Service status handle for setting status */
 
@@ -36,10 +35,6 @@ VOID main (int argc, LPWSTR argv [])
 
 VOID WINAPI ServiceMain (DWORD argc, LPWSTR argv[]){
 	setPWD(NULL);
-	hLogFile = fopen ("SimpleServiceLog.txt", "a+");
-	if (hLogFile == NULL) return ;
-	fprintf(hLogFile, "Starting service. First log entry.");
-
 	hServStatus.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
 	hServStatus.dwCurrentState = SERVICE_START_PENDING;
 	hServStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_SHUTDOWN;
@@ -50,7 +45,6 @@ VOID WINAPI ServiceMain (DWORD argc, LPWSTR argv[]){
 
 	hSStat = RegisterServiceCtrlHandler( L"", ServerCtrlHandler);
 	if (hSStat == 0) {
-		fprintf(hLogFile, "Cannot register control handler");
 		hServStatus.dwCurrentState = SERVICE_STOPPED;
 		hServStatus.dwWin32ExitCode = ERROR_SERVICE_SPECIFIC_ERROR;
 		hServStatus.dwServiceSpecificExitCode = 1;
@@ -66,7 +60,6 @@ VOID WINAPI ServiceMain (DWORD argc, LPWSTR argv[]){
 		return;
 	}
 	UpdateStatus (SERVICE_STOPPED, 0);
-	fclose (hLogFile);
 	return;
 
 }

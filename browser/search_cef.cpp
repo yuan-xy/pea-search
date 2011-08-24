@@ -6,6 +6,7 @@
 #include "client_handler.h"
 #include <sstream>
 #include <string>
+#include "exception_dump.h"
 
 #define MAX_LOADSTRING 100
 #define MAX_URL_LENGTH  255
@@ -37,6 +38,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
+	breakpad_init();
 	setPWD(NULL);
 
   CefSettings settings;

@@ -1,3 +1,5 @@
+include_directories ("${BREAKPAD_DIR}")
+
 SET( SOURCES
     "webform.h"
     "webform.cpp"
@@ -33,6 +35,7 @@ SET( SOURCES
     "../filesearch/env.h"
     "../filesearch/common.h"
     "../filesearch/common.c"
+    "../filesearch/exception_dump.cpp"
     "../PluginGigaso/bitmap.h"
     "../PluginGigaso/bitmap.cpp"
     "../PluginGigaso/win_icon.h"
@@ -40,6 +43,10 @@ SET( SOURCES
     )
 add_executable (search  ${SOURCES})
 target_link_libraries (search "libcef.lib libcef_dll_wrapper.lib")
+target_link_libraries (search "${BREAKPAD_DIR}/client/windows/Release/lib/exception_handler.lib")
+target_link_libraries (search "${BREAKPAD_DIR}/client/windows/Release/lib/crash_generation_client.lib")
+target_link_libraries (search "${BREAKPAD_DIR}/client/windows/Release/lib/common.lib")
+
 set_target_properties(search PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
 
 install (TARGETS search DESTINATION .)

@@ -34,6 +34,8 @@
   Name "@CPACK_NSIS_PACKAGE_NAME@"
   OutFile "@CPACK_TOPLEVEL_DIRECTORY@/@CPACK_OUTPUT_FILE_NAME@"
 
+  Caption "@CPACK_NSIS_DISPLAY_NAME@ - 最好的文件搜索软件"
+
   ;Set compression
   SetCompressor @CPACK_NSIS_COMPRESSOR@
 
@@ -620,6 +622,17 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "Ukrainian"
   !insertmacro MUI_LANGUAGE "Welsh"
 
+VIProductVersion "@CPACK_PACKAGE_VERSION@.0"
+VIAddVersionKey ProductName "@CPACK_NSIS_DISPLAY_NAME@"
+VIAddVersionKey Comments "一款根据文件名瞬间查询文件位置的软件"
+VIAddVersionKey CompanyName Gigaso.com
+VIAddVersionKey LegalCopyright Gigaso.com
+VIAddVersionKey FileDescription "@CPACK_NSIS_DISPLAY_NAME@ - 最好的文件搜索软件"
+VIAddVersionKey FileVersion "@CPACK_PACKAGE_VERSION@"
+VIAddVersionKey ProductVersion "@CPACK_PACKAGE_VERSION@"
+;VIAddVersionKey InternalName "@CPACK_NSIS_DISPLAY_NAME@"
+VIAddVersionKey LegalTrademarks "Gigaso.com"
+VIAddVersionKey OriginalFilename "@CPACK_OUTPUT_FILE_NAME@"
 
 ;--------------------------------
 ;Reserve Files

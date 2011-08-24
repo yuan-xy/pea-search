@@ -22,6 +22,7 @@ if "%1" == "install" goto do_install
 :do_install
 	cd Release
 	cpack
+	signtool sign /v /f ../cmake/gigaso-exe.pfx Gigaso-1.0-x86.exe
 	cd ..
 	goto end
 

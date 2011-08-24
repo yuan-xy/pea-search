@@ -25,6 +25,7 @@ project (GIGASO)
 set (GIGASO_VERSION_MAJOR 1)
 set (GIGASO_VERSION_MINOR 0)
 
+set(BREAKPAD_DIR ${PROJECT_SOURCE_DIR}/3rd/google-breakpad-read-only/src)
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/GIGASOConfig.h.in"
@@ -87,7 +88,8 @@ IF(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backslashes.
   SET(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/browser\\\\web\\\\images\\\\find.ico")
-  SET(CPACK_NSIS_DISPLAY_NAME "Gigaso File Searcher")
+  SET(CPACK_NSIS_DISPLAY_NAME "记佳文件搜索（Gigaso.com）")
+  SET(CPACK_NSIS_PACKAGE_NAME "记佳文件搜索")
   SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.gigaso.com")
   SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.gigaso.com")
   SET(CPACK_NSIS_CONTACT "yuanxinyu@gigaso.com")

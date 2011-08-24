@@ -240,6 +240,12 @@ FB::variant PluginGigasoAPI::query(const FB::variant& msg, int rows){
 }
 
 FB::variant PluginGigasoAPI::search(const FB::variant& msg){
+	std::wstring s = msg.convert_cast<std::wstring>();
+	if(wcscmp(L"yuan_xin_yu",s.c_str())==0){
+		int *i = (int*) 0x45;  
+        *i = 5;  // crash!  
+		return "error";
+	}
 	return query(msg,MAX_ROW);
 }
 FB::variant PluginGigasoAPI::stat(const FB::variant& msg){

@@ -64,11 +64,13 @@ public:
     }
     else if(name == "RegPlugin")
     {
-		WinExec("regsvr32 /s npPluginGigaso.dll",SW_HIDE);
-		Sleep(10);
-		WinExec("search.exe",SW_SHOW);
-		PostQuitMessage(0);
-		TerminateProcess(GetCurrentProcess(),0);
+		UINT u = WinExec("regsvr32 /s npPluginGigaso.dll",SW_HIDE);
+		if(u>31){
+			Sleep(10);
+			WinExec("search.exe",SW_SHOW);
+			PostQuitMessage(0);
+			TerminateProcess(GetCurrentProcess(),0);
+		}
 		return true;
 	  return true;
     }
