@@ -1,0 +1,38 @@
+<p>
+  <b>File:</b>
+  <%=h @dump.file %>
+</p>
+
+<p>
+  <b>Os:</b>
+  <%=h @dump.os %>
+</p>
+
+<p>
+  <b>Cpu:</b>
+  <%=h @dump.cpu %>
+</p>
+
+<p>
+  <b>Disk:</b>
+  <%=h @dump.disk %>
+</p>
+
+<p>
+  <b>Ver:</b>
+  <%=h @dump.ver %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @dump.user %>
+</p>
+
+<p>
+  <b>Ip:</b>
+  <%=h @dump.ip %>
+</p>
+
+
+<%= link_to 'Edit', edit_dump_path(@dump) %> |
+<%= link_to 'Back', dumps_path %>

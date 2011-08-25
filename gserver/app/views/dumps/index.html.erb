@@ -1,0 +1,32 @@
+<h1>Listing dumps</h1>
+
+<table>
+  <tr>
+    <th>File</th>
+    <th>Os</th>
+    <th>Cpu</th>
+    <th>Disk</th>
+    <th>Ver</th>
+    <th>User</th>
+    <th>Ip</th>
+  </tr>
+
+<% @dumps.each do |dump| %>
+  <tr>
+    <td><%=h dump.file %></td>
+    <td><%=h dump.os %></td>
+    <td><%=h dump.cpu %></td>
+    <td><%=h dump.disk %></td>
+    <td><%=h dump.ver %></td>
+    <td><%=h dump.user %></td>
+    <td><%=h dump.ip %></td>
+    <td><%= link_to 'Show', dump %></td>
+    <td><%= link_to 'Edit', edit_dump_path(dump) %></td>
+    <td><%= link_to 'Destroy', dump, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New dump', new_dump_path %>

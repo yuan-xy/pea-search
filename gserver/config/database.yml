@@ -1,0 +1,27 @@
+test:
+  adapter: mysql
+  encoding: utf8
+  database: test_test
+  pool: 5
+  username: test
+  password: test1234
+  host: localhost
+
+development:
+  adapter: mysql
+  encoding: utf8
+  database: gtest 
+  pool: 5
+  username: gtest
+  password: gtest
+  host: localhost
+
+production:
+  adapter: mysql
+  encoding: utf8
+  database: gtest
+  pool: 5
+  username: gtest
+  password: gtest
+  host: localhost
+
