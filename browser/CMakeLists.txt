@@ -43,9 +43,11 @@ SET( SOURCES
     )
 add_executable (search  ${SOURCES})
 target_link_libraries (search "libcef.lib libcef_dll_wrapper.lib")
-target_link_libraries (search "${BREAKPAD_DIR}/client/windows/Release/lib/exception_handler.lib")
-target_link_libraries (search "${BREAKPAD_DIR}/client/windows/Release/lib/crash_generation_client.lib")
-target_link_libraries (search "${BREAKPAD_DIR}/client/windows/Release/lib/common.lib")
+target_link_libraries (search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/exception_handler.lib")
+target_link_libraries (search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/crash_generation_client.lib")
+target_link_libraries (search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/common.lib")
+target_link_libraries (search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/crash_report_sender.lib")
+target_link_libraries (search "Wininet.lib")
 
 set_target_properties(search PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
 

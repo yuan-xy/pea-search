@@ -221,7 +221,7 @@ DWORD WINAPI MonitorProc(PVOID pParam)
 
     for(;;)
     {
-        Sleep(1000);
+        Sleep(100);
         if(!DeviceIoControl(hVol,
             FSCTL_READ_USN_JOURNAL,
             &rujd,

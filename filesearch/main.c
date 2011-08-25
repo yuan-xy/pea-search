@@ -121,6 +121,7 @@ DWORD WINAPI  ScanAll(PVOID pParam){
 
 BOOL gigaso_init(){
 	breakpad_init();
+	request_dump();
 	init_chinese();
 	setlocale (LC_ALL, "");
 	my_assert(24 == sizeof(FileEntry), 0);

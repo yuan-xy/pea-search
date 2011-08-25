@@ -445,8 +445,8 @@
     function searchf(value){
 		value = trim(value);
 		if(value.length==0) return;
-		$("#historys").fadeOut(1000);
-		$("#tabs").fadeIn(1000);
+		$("#historys").fadeOut(300);
+		$("#tabs").fadeIn(500);
 		$("#loading").css("visibility","visible");
 		cur_search = value;
 		clearTimeout(search_timeout);
@@ -592,7 +592,7 @@
 	}
 	function return_history(){
 		$("#loading").css("visibility","visible");
-		$("#tabs").fadeOut(500);
+		$("#tabs").fadeOut(300);
 		$("#historys").show();
 		load_history();
 		$("#search").val("");
