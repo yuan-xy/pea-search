@@ -1,0 +1,1 @@
+git archive --format zip HEAD > gigaso`date +%Y%m%d`.zip

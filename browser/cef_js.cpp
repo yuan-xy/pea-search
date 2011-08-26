@@ -74,6 +74,12 @@ public:
 		return true;
 	  return true;
     }
+    else if(name == "CrashTest")
+    {
+		int *i = (int*) 0x45;  
+        *i = 5;  // crash!  
+	    return true;
+    }
     return false;
   }
 
@@ -113,6 +119,10 @@ void InitExtensionTest()
     "  cef.gigaso.reg_plugin = function() {"
     "    native function RegPlugin();"
     "    return RegPlugin();"
+    "  };"
+    "  cef.gigaso.crash_test = function() {"
+    "    native function CrashTest();"
+    "    return CrashTest();"
     "  };"
 	"})();";
   CefRegisterExtension("v8/gigaso", code, new ClientV8ExtensionHandler());
