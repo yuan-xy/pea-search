@@ -1,0 +1,33 @@
+<p>
+  <b>Os:</b>
+  <%=h @upgrade.os %>
+</p>
+
+<p>
+  <b>Cpu:</b>
+  <%=h @upgrade.cpu %>
+</p>
+
+<p>
+  <b>Disk:</b>
+  <%=h @upgrade.disk %>
+</p>
+
+<p>
+  <b>Ver:</b>
+  <%=h @upgrade.ver %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @upgrade.user %>
+</p>
+
+<p>
+  <b>Ip:</b>
+  <%=h @upgrade.ip %>
+</p>
+
+
+<%= link_to 'Edit', edit_upgrade_path(@upgrade) %> |
+<%= link_to 'Back', upgrades_path %>

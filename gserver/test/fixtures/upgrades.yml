@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  os: MyString
+  cpu: MyString
+  disk: MyString
+  ver: MyString
+  user: MyString
+  ip: MyString
+
+two:
+  os: MyString
+  cpu: MyString
+  disk: MyString
+  ver: MyString
+  user: MyString
+  ip: MyString

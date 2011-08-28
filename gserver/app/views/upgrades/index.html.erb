@@ -1,0 +1,30 @@
+<h1>Listing upgrades</h1>
+
+<table>
+  <tr>
+    <th>Os</th>
+    <th>Cpu</th>
+    <th>Disk</th>
+    <th>Ver</th>
+    <th>User</th>
+    <th>Ip</th>
+  </tr>
+
+<% @upgrades.each do |upgrade| %>
+  <tr>
+    <td><%=h upgrade.os %></td>
+    <td><%=h upgrade.cpu %></td>
+    <td><%=h upgrade.disk %></td>
+    <td><%=h upgrade.ver %></td>
+    <td><%=h upgrade.user %></td>
+    <td><%=h upgrade.ip %></td>
+    <td><%= link_to 'Show', upgrade %></td>
+    <td><%= link_to 'Edit', edit_upgrade_path(upgrade) %></td>
+    <td><%= link_to 'Destroy', upgrade, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New upgrade', new_upgrade_path %>

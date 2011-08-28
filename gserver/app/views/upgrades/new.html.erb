@@ -1,0 +1,35 @@
+<h1>New upgrade</h1>
+
+<% form_for(@upgrade) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :os %><br />
+    <%= f.text_field :os %>
+  </p>
+  <p>
+    <%= f.label :cpu %><br />
+    <%= f.text_field :cpu %>
+  </p>
+  <p>
+    <%= f.label :disk %><br />
+    <%= f.text_field :disk %>
+  </p>
+  <p>
+    <%= f.label :ver %><br />
+    <%= f.text_field :ver %>
+  </p>
+  <p>
+    <%= f.label :user %><br />
+    <%= f.text_field :user %>
+  </p>
+  <p>
+    <%= f.label :ip %><br />
+    <%= f.text_field :ip %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', upgrades_path %>

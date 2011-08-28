@@ -9,10 +9,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110825160704) do
+ActiveRecord::Schema.define(:version => 20110826095234) do
 
   create_table "dumps", :force => true do |t|
     t.string   "file"
+    t.string   "os"
+    t.string   "cpu"
+    t.string   "disk"
+    t.string   "ver"
+    t.string   "user"
+    t.string   "ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "upgrades", :force => true do |t|
     t.string   "os"
     t.string   "cpu"
     t.string   "disk"
