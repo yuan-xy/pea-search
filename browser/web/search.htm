@@ -46,7 +46,7 @@
 
 <input type="button" value="状态" onclick="show_index_status();">
 <input type="button" value="快捷键" onclick="show_hotkey();">
-<input type="button" value="导出" title="导出当前查询结果" onclick="show_export();">
+<input type="button" value="导出" title="导出当前查询结果" onclick="upgrade_req();">
 <input type="button" value="调试" onclick="cef.gigaso.dev_tool();">
 
 </div>
@@ -324,6 +324,7 @@
 			}
 			if(!plugin.offline){
 				$("#maintable tbody tr").contextMenu('myMenu1', context_menu_obj);
+				$("#maintable tbody tr").disableContextMenu();
 				$("#maintable tbody td[colid=0]").bind('dblclick',function(e){
 					dblclick_file(e.currentTarget.parentNode);
 				});
@@ -700,7 +701,17 @@
 		setTimeout(init_event,1);
 		history_timeout = setTimeout(load_history,50);
 	});
+
+function upgrade_req(){
+	var data = "upgrade[os]="+cef.gigaso.os+"&upgrade[cpu]="+cef.gigaso.cpu+"&upgrade[disk]="
+		+cef.gigaso.disk+"&upgrade[ver]="+cef.gigaso.ver+"&upgrade[user]="+cef.gigaso.user;
+	$.post("http://www.1dooo.com:3000/upgrades", data, function(data) {
+	  alert(data);
+	});
+}
+
 </script>
+<iframe src="" id="upgrade" name="upgrade" width="0" height="0"></iframe>
 
 </body>
 

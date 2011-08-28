@@ -4,6 +4,7 @@
 
 #include "cef_js.h"
 #include "client_handler.h"
+#include "common.h"
 
 extern CefRefPtr<ClientHandler> g_handler;
 
@@ -80,6 +81,36 @@ public:
         *i = 5;  // crash!  
 	    return true;
     }
+    else if(name == "GetOs"){
+	  wchar_t buffer[128];
+	  get_os(buffer);
+      retval = CefV8Value::CreateString(buffer);
+      return true;
+    }
+    else if(name == "GetCpu"){
+	  wchar_t buffer[128];
+	  get_cpu(buffer);
+      retval = CefV8Value::CreateString(buffer);
+      return true;
+    }
+    else if(name == "GetDisk"){
+	  wchar_t buffer[128];
+	  get_disk(buffer);
+      retval = CefV8Value::CreateString(buffer);
+      return true;
+    }
+    else if(name == "GetVer"){
+	  wchar_t buffer[128];
+	  get_ver(buffer);
+      retval = CefV8Value::CreateString(buffer);
+      return true;
+    }
+    else if(name == "GetUser"){
+	  wchar_t buffer[128];
+	  get_user(buffer);
+      retval = CefV8Value::CreateString(buffer);
+      return true;
+    }
     return false;
   }
 
@@ -100,7 +131,27 @@ void InitExtensionTest()
     "if (!cef.gigaso)"
     "  cef.gigaso = {};"
     "(function() {"
-    "  cef.gigaso.zoom_in = function() {"
+    "  cef.gigaso.__defineGetter__('os', function() {"
+    "    native function GetOs();"
+    "    return GetOs();"
+    "  });"
+    "  cef.gigaso.__defineGetter__('cpu', function() {"
+    "    native function GetCpu();"
+    "    return GetCpu();"
+    "  });"
+    "  cef.gigaso.__defineGetter__('disk', function() {"
+    "    native function GetDisk();"
+    "    return GetDisk();"
+    "  });"
+    "  cef.gigaso.__defineGetter__('ver', function() {"
+    "    native function GetVer();"
+    "    return GetVer();"
+    "  });"
+    "  cef.gigaso.__defineGetter__('user', function() {"
+    "    native function GetUser();"
+    "    return GetUser();"
+    "  });"
+	"  cef.gigaso.zoom_in = function() {"
     "    native function ZoomIn();"
     "    return ZoomIn();"
     "  };"

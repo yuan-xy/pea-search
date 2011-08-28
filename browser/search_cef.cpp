@@ -119,6 +119,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam){
 				GetClientRect(hWnd, &rect);
 				CefBrowserSettings settings;
 				settings.plugins_disabled = false;
+				settings.file_access_from_file_urls_allowed = true;
+				settings.universal_access_from_file_urls_allowed = true;
 				CefWindowInfo info;
 				info.SetAsChild(hWnd, rect);
 				wchar_t full_path[MAX_PATH];

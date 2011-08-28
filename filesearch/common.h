@@ -30,6 +30,21 @@ extern int get_hotkey();
 extern BOOL set_hotkey(int key);
 
 
+
+extern BOOL get_os(wchar_t *osbuf);
+
+extern BOOL get_cpu(wchar_t *cpubuf);
+
+extern BOOL get_disk(wchar_t *diskbuf);
+
+extern BOOL get_ver(wchar_t *verbuf);
+
+extern BOOL get_user(wchar_t *userbuf);
+
+
+
+
+
 #endif  // FILE_SEARCH_COMMON_H_
 
 #ifdef __cplusplus

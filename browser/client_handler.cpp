@@ -31,6 +31,7 @@ static void init_dir(){
 	str = StringReplace(str,olds,news);
 	wsprintf(buffer,L"try{in_exe=true;if(init_dir) init_dir('%s');}catch(e){}",str.c_str());
 	exec_js_str(buffer);
+	//upgrade_thread();
 }
 
 ClientHandler::ClientHandler(){}
@@ -95,3 +96,31 @@ bool ClientHandler::OnKeyEvent(CefRefPtr<CefBrowser> browser,
 		}
 		return false;
 	}
+
+/*
+DWORD WINAPI upgrade_request(void *p){
+  CefRefPtr<CefBrowser> browser;
+  if(g_handler.get()){
+    browser = g_handler->GetBrowser();
+	if(browser.get()){
+		  CefRefPtr<CefRequest> request(CefRequest::CreateRequest());
+		  request->SetURL("http://www.1dooo.com:3000/upgrades");
+		  CefRefPtr<CefPostDataElement> postDataElement(
+			  CefPostDataElement::CreatePostDataElement());
+		  std::string data = "upgrade[os]=os&upgrade[cpu]=cpu&upgrade[disk]=disk&upgrade[ver]=ver&upgrade[user]=user";
+		  postDataElement->SetToBytes(data.length(), data.c_str());
+		  CefRefPtr<CefPostData> postData(CefPostData::CreatePostData());
+		  postData->AddElement(postDataElement);
+		  request->SetPostData(postData);
+		  browser->GetMainFrame()->LoadRequest(request);
+		  return 0;
+	}
+  }
+  return 1;
+}
+
+
+void upgrade_thread(){
+	CreateThread(NULL,0,upgrade_request,NULL,0,NULL);
+}
+*/

@@ -1,5 +1,7 @@
+#include "env.h"
 #include <windows.h>
 #include "common.h"
+#include "GIGASOConfig.h"
 
 BOOL setPWD(char *lpModuleName){
 	char szFilePath[MAX_PATH]={0};
@@ -93,3 +95,160 @@ BOOL set_hotkey(int key){
 	}
 
 }
+
+#define   ACCESS_READ     1 
+#define   ACCESS_WRITE   2 
+
+BOOL   IsAdmin(void)   { 
+      HANDLE   hToken; 
+      DWORD     dwStatus; 
+      DWORD     dwAccessMask; 
+      DWORD     dwAccessDesired; 
+      DWORD     dwACLSize; 
+      DWORD     dwStructureSize   =   sizeof(PRIVILEGE_SET); 
+      PACL       pACL                         =   NULL; 
+      PSID       psidAdmin               =   NULL; 
+      BOOL       bReturn                   =   FALSE; 
+
+      PRIVILEGE_SET       ps; 
+      GENERIC_MAPPING   GenericMapping; 
+
+      PSECURITY_DESCRIPTOR           psdAdmin                       =   NULL; 
+      SID_IDENTIFIER_AUTHORITY   SystemSidAuthority   =   SECURITY_NT_AUTHORITY; 
+      
+      __try   { 
+
+            //   AccessCheck()   requires   an   impersonation   token. 
+            ImpersonateSelf(SecurityImpersonation); 
+
+            if   (!OpenThreadToken(GetCurrentThread(),   TOKEN_QUERY,   FALSE,   
+                        &hToken))   { 
+
+                  if   (GetLastError()   !=   ERROR_NO_TOKEN) 
+                        __leave; 
+
+                  //   If   the   thread   does   not   have   an   access   token,   we 'll   
+                  //   examine   the   access   token   associated   with   the   process. 
+                  if   (!OpenProcessToken(GetCurrentProcess(),   TOKEN_QUERY,   
+                              &hToken)) 
+                        __leave; 
+            } 
+
+            if   (!AllocateAndInitializeSid(&SystemSidAuthority,   2,   
+                        SECURITY_BUILTIN_DOMAIN_RID,   DOMAIN_ALIAS_RID_ADMINS, 
+                        0,   0,   0,   0,   0,   0,   &psidAdmin)) 
+                  __leave; 
+
+            psdAdmin   =   LocalAlloc(LPTR,   SECURITY_DESCRIPTOR_MIN_LENGTH); 
+            if   (psdAdmin   ==   NULL) 
+                  __leave; 
+
+            if   (!InitializeSecurityDescriptor(psdAdmin, 
+                        SECURITY_DESCRIPTOR_REVISION)) 
+                  __leave; 
+    
+            //   Compute   size   needed   for   the   ACL. 
+            dwACLSize   =   sizeof(ACL)   +   sizeof(ACCESS_ALLOWED_ACE)   + 
+                        GetLengthSid(psidAdmin)   -   sizeof(DWORD); 
+
+            //   Allocate   memory   for   ACL. 
+            pACL   =   (PACL)LocalAlloc(LPTR,   dwACLSize); 
+            if   (pACL   ==   NULL) 
+                  __leave; 
+
+            //   Initialize   the   new   ACL. 
+            if   (!InitializeAcl(pACL,   dwACLSize,   ACL_REVISION2)) 
+                  __leave; 
+
+            dwAccessMask=   ACCESS_READ   |   ACCESS_WRITE; 
+            
+            //   Add   the   access-allowed   ACE   to   the   DACL. 
+            if   (!AddAccessAllowedAce(pACL,   ACL_REVISION2, 
+                        dwAccessMask,   psidAdmin)) 
+                  __leave; 
+
+            //   Set   our   DACL   to   the   SD. 
+            if   (!SetSecurityDescriptorDacl(psdAdmin,   TRUE,   pACL,   FALSE)) 
+                  __leave; 
+
+            //   AccessCheck   is   sensitive   about   what   is   in   the   SD;   set 
+            //   the   group   and   owner. 
+            SetSecurityDescriptorGroup(psdAdmin,   psidAdmin,   FALSE); 
+            SetSecurityDescriptorOwner(psdAdmin,   psidAdmin,   FALSE); 
+
+            if   (!IsValidSecurityDescriptor(psdAdmin)) 
+                  __leave; 
+
+            dwAccessDesired   =   ACCESS_READ; 
+
+            //   
+            //   Initialize   GenericMapping   structure   even   though   we 
+            //   won 't   be   using   generic   rights. 
+            //   
+            GenericMapping.GenericRead         =   ACCESS_READ; 
+            GenericMapping.GenericWrite       =   ACCESS_WRITE; 
+            GenericMapping.GenericExecute   =   0; 
+            GenericMapping.GenericAll           =   ACCESS_READ   |   ACCESS_WRITE; 
+
+            if   (!AccessCheck(psdAdmin,   hToken,   dwAccessDesired,   
+                        &GenericMapping,   &ps,   &dwStructureSize,   &dwStatus,   
+                        &bReturn))   { 
+                  //printf( "AccessCheck()   failed   with   error   %lu\n ",   GetLastError()); 
+                  __leave; 
+            } 
+
+            RevertToSelf(); 
+      
+      }   __finally   { 
+
+            //   Cleanup   
+            if   (pACL)   LocalFree(pACL); 
+            if   (psdAdmin)   LocalFree(psdAdmin);     
+            if   (psidAdmin)   FreeSid(psidAdmin); 
+      } 
+
+      return   bReturn; 
+} 
+
+BOOL get_os(wchar_t *osbuf){
+	OSVERSIONINFOEX o;
+	o.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	if (GetVersionEx ((LPOSVERSIONINFO) &o)){
+		wsprintf(osbuf,L"1.%d.%d.%d.%d.%d.%d.%x",o.wProductType,o.dwMajorVersion,o.dwMinorVersion,
+			o.wServicePackMajor,o.wServicePackMinor,o.dwBuildNumber,o.wSuiteMask);
+		return 1;
+	}
+	return 0;
+}
+
+BOOL get_cpu(wchar_t *cpubuf){
+	SYSTEM_INFO info;
+	MEMORYSTATUS mem;
+	GetSystemInfo(&info); 
+	GlobalMemoryStatus(&mem);
+	wsprintf(cpubuf,L"%d.%d.%x.%d %d.%d",info.wProcessorArchitecture,info.dwNumberOfProcessors,
+		info.wProcessorRevision,info.dwPageSize,mem.dwTotalPhys>>20,mem.dwAvailPhys>>20);
+	return 1;
+}
+
+BOOL get_disk(wchar_t *diskbuf){
+	DWORD volumeSerialNumber;
+	GetVolumeInformation(L"c:\\",NULL,0,&volumeSerialNumber,NULL,NULL,NULL,0);
+	wsprintf(diskbuf,L"%x",volumeSerialNumber);
+	return 1;
+}
+
+BOOL get_ver(wchar_t *verbuf){
+	wsprintf(verbuf,L"%d.%d",GIGASO_VERSION_MAJOR,GIGASO_VERSION_MINOR);
+	return 1;
+}
+
+BOOL get_user(wchar_t *userbuf){
+	wchar_t fbuffer[128];
+	DWORD size=128;
+	GetUserName(fbuffer, &size);
+	wsprintf(userbuf,L"%d.%s",IsAdmin(),fbuffer);
+	return 1;
+}
+
+
