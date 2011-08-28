@@ -17,6 +17,7 @@
 #include "chinese.h"
 #include "serverNP.h"
 #include "exception_dump.h"
+#include "desktop.h"
 
 //TODO: log库、自动升级、win64移植、linux移植、全文检索、邮件搜索
 //TODO: 虚拟文件夹如控制面板，数据库过期时异步更新、文件系统监视代码排错、
@@ -116,12 +117,13 @@ DWORD WINAPI  ScanAll(PVOID pParam){
 	FatDrivesIterator(scan);
 	StartDriveChangeMonitorThread(DriveChangeListener);
 	ValidFixDrivesIterator(StartMonitorThread);
+	//scan_desktop();
 	return 0;
 }
 
 BOOL gigaso_init(){
 	breakpad_init();
-	request_dump();
+	//request_dump();
 	init_chinese();
 	setlocale (LC_ALL, "");
 	my_assert(24 == sizeof(FileEntry), 0);

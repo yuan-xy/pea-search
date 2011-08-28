@@ -4,6 +4,8 @@
 #include "fs_common.h"
 #include "search.h"
 #include "util.h"
+#include "desktop.h"
+
 #include <stdio.h>
 #include <algorithm>
 #include <functional>
@@ -74,10 +76,11 @@ void AllFilesIterate(pFileVisitor visitor, void *data, BOOL offline){
 				FilesIterate(g_rootVols[i],visitor,data);
 			}
 		}
+		if(get_desktop()!=NULL) FilesIterate(get_desktop(),visitor,data);
 	}
 }
 
-void addChildren(pFileEntry parent, pFileEntry file, int i){
+void addChildren(pFileEntry parent, pFileEntry file){
 	pFileList children;
 	file->up.parent = parent;
 	children = (FileList *)parent->children;

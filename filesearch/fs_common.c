@@ -15,7 +15,7 @@ BOOL attachParent(pFileEntry file, int i){
 		FERROR(file);
 		return 0;
 	}
-	addChildren(parent,file,i);
+	addChildren(parent,file);
 	return 1;
 }
 

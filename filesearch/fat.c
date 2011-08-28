@@ -32,7 +32,7 @@ static pFileEntry initFatFile(WIN32_FIND_DATA *pfd, pFileEntry parent, int i){
 	if(is_readonly_ffd(pfd)) ret->us.v.readonly = 1;
 	if(is_hidden_ffd(pfd)) ret->us.v.hidden = 1;
 	if(is_system_ffd(pfd)) ret->us.v.system = 1;
-	addChildren(parent,ret,i);
+	addChildren(parent,ret);
 	SuffixProcess(ret,NULL);
 	set_time(ret, &pfd->ftLastWriteTime);
 	if(IsDir(ret)){

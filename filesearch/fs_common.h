@@ -121,7 +121,7 @@ extern BOOL attachParent(pFileEntry file, int i);
 /**
  * 建立父子目录间的双向指针连接
  */
-extern void addChildren(pFileEntry parent, pFileEntry file, int i);
+extern void addChildren(pFileEntry parent, pFileEntry file);
 
 extern pFileEntry findFile(KEY frn,KEY pfrn,int i);
 
