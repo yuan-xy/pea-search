@@ -1,4 +1,6 @@
-body {font-size: 90%}
+body {font-size: 90%; margin:0px ; padding:0px; }
+
+ol,ul{list-style:none}
 
 #search {padding:0px; margin:0px; height:35px; width:600px; font-size: 120%;}
 #search_img {
@@ -10,21 +12,21 @@ body {font-size: 90%}
 		bottom: 0;
 }
 
-#maintable {font-size: 80%; line-height:1.5em; text-align:left; border-bottom:1px solid #888; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
+#maintable {font-size: 80%; line-height:1.5em; text-align:left; border-bottom:1px solid #6990b3; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
 #maintable th, #maintable td { padding:0 .3em; white-space:nowrap;}
-#maintable th { line-height:1.8em; background-color:#ECE9D8; border:1px solid #888;
-	background-image: url(./images/header.png);
+#maintable th { line-height:1.8em; background-color:#ECE9D8; border:1px solid #6990b3;
+	background-image: url(./images/header-hover.png);
 	background-repeat: repeat-x;
 }
 #maintable th:hover{
-	background-image: url(./images/header-hover.png);
+	background-image: url(./images/header.png);
 	border-bottom: 2px solid #FF9C08;
 }
-#maintable tr.d { background-color:#F4F4F4; }
-#maintable tr.d:hover, #maintable tr:hover, #maintable tr.hovered { background-color:#D0D8E0; }
-#maintable td { border-left:1px solid #888; border-right:1px solid #888; }
+#maintable tr.d { background-color:#f0f7fd; }
+#maintable tr.d:hover, #maintable tr:hover, #maintable tr.hovered { background-color:#d3e8fb; }
+#maintable td { border-left:1px solid #6990b3; border-right:1px solid #6990b3; }
 
-#maintable td:hover, #maintable td.hovered { background-color:#c0c8d0; }
+#maintable td:hover, #maintable td.hovered { background-color:#d3e8fb; }
 
 
 #message-area {
@@ -98,18 +100,20 @@ background-color: #FFDDDD;
 	font-size: 75%
 }
 
-.icon-01{background:url(images/icon-01.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:15px;}
-.icon-02{background:url(images/icon-02.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:15px;}
-.icon-03{background:url(images/icon-03.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:15px;}
-.icon-04{background:url(images/icon-04.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:15px;}
-.icon-05{background:url(images/icon-05.png) no-repeat; float:left; width:60px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:15px;}
-.icon-06{background:url(images/icon-06.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:5px;}
-.icon-07{background:url(images/icon-07.png) no-repeat; float:left; width:40px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:5px;}
-.icon-08{background:url(images/icon-08.png) no-repeat; float:left; width:30px; height:19px; text-indent:-9999px; border:none; margin-top:12px; margin-left:5px;}
 
+.topbar{background:url(images/header-bg.png) repeat-x; height:125px;}
+.topbar .iconbox{background:url(images/icon-bg.png) repeat-x; height:44px;}
+.topbar .leftbar{float:left; width:500px; height:44px; }
+.topbar .leftbar ul{padding-left:10px; line-height:44px;}
+.topbar .leftbar li{float:left; width:50px; height:44px; line-height:44px; text-align:left; font-size:12px; color:#246795;}
+
+.topbar .rightbar{float:right; width:300px; height:44px;}
+.topbar .rightbar li{float:left; width:65px; height:44px; line-height:44px; text-align:center;}
+.topbar .rightbar li ul{font-size:12px; text-align:left; width:80px; height:170px; border:1px #a0a0a0 solid; background-color:#f0f0f0; padding-left:20px; margin:0px; }
+.topbar .rightbar li ul li{text-align:left; width:80px;line-height:32px; height:32px;}
 .rightline{display:block;float:left; width:2px; height:44px;}
 
-.header-bg{background:url(images/header-bg.png) repeat-x; height:143px;}
-.icon-bg{background:url(images/icon-bg.png) repeat-x; height:44px;}
-.header-left{float:left; width:500px; height:44px; line-height:44px;}
-.header-right{float:right; width:210px; height:44px; line-height:44px;}
+
+.title-01{line-height:24px; border-bottom:1px #478fc0 solid; width:900px; margin:0 auto; text-align:right; height:24px; color:#246795; }
+.title-01-left{float:left; width:100px; height:24px; text-align:left;}
+.title-01-right{float:right; width:100px; height:24px; text-align:right}

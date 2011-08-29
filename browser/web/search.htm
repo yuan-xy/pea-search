@@ -15,57 +15,60 @@
     <script type="text/javascript" src="context.js"></script>
     <script type="text/javascript" src="scroll.js"></script>
     <script type="text/javascript" src="disk.js"></script>
+<script type="text/javascript" src="subnav.js"></script>
 </head>
+<body>
+<div class="topbar">
+  <div class="iconbox">
+    <div class="leftbar">
+      <object id="plugin0" type="application/x-plugingigaso" width="0" height="0">
+      </object>
+      <ul>
+        <li><a onClick="return_history();" title="主页"><img src="images/icon-01.png" width="21" height="19"></a></li>
+        <li><a onClick="refresh();"  title="刷新"><img src="images/icon-02.png" width="21" height="19"></a></li>
+        <li><a onClick="cef.gigaso.zoom_in()" title="放大"><img src="images/icon-03.png" width="21" height="19"></a></li>
+        <li><a onClick="cef.gigaso.zoom_out()" title="缩小"><img src="images/icon-04.png" width="21" height="19"></a></li>
+        <li style="width:150px;">
+          <input type="radio" name="case" id="case0">
+          模糊查询
+          <input type="radio" name="case" id="case1">
+          精确查询</li>
+      </ul>
+    </div>
 
-<body style="margin:0px; padding:0px;">
-<div class="header-bg">
-<div class="icon-bg">
-<div class="header-left">
-<object id="plugin0" type="application/x-plugingigaso" width="0" height="0">
-</object>
-<img id="scanning" src="images/spinner.gif" style="visibility: hidden"/>
-<input type="button" value="" onClick="return_history();" class="icon-01">
-<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
-<input type="button" value="" onClick="refresh();" class="icon-02">
-<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
-<input type="button" value="" onClick="cef.gigaso.zoom_in()" class="icon-03">
-<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
-<input type="button" value="" onClick="cef.gigaso.zoom_out()" class="icon-04">
-<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
-<input type="radio" name="case" id="case0">模糊查询
-<input type="radio" name="case" id="case1">精确查询
+    <div class="rightbar">
+      <ul>
+        <li><a onClick="$('#search')[0].value='*'; searchf('*');orderby(2,true);" title="最大文件"><img src="images/icon-05.png" width="51" height="16"></a></li>
+        <li><a onClick="online_db();" title="在线文件"><img src="images/icon-06.png" width="51" height="16"></a></li>
+        <li class=""><a onClick="offline_db();" title="离线文件"><img src="images/icon-07.png" width="51" height="16"></a></li>
+        <li style="width:34px;" onmouseover="layer_menu('m_sub1','1')" onmouseout="layer_menu('m_sub1','1')"><a href="#" title="设置"  _fcksavedurl="#"><img src="images/icon-08.png" width="34" height="16"></a>
+          <div style="position:relative;">
+            <div id=m_sub1 style="visibility:hidden; position:absolute; top:6px;left:-40px; z-index:99999;" >
+              <ul>
+                <li><img id="scanning" src="images/spinner.gif" style="visibility: hidden"/>
+<a href="#" onclick="show_index_status();return false;">硬盘状态</a></li>
+                <li><a href="#" onclick="show_hotkey();return false;">快捷键</a></li>
+                <li><a href="#" onclick="show_export();return false;">导出查询结果</a></li>
+                <li><a href="#">帮助</a></li>
+                <li><a href="#" onClick="cef.gigaso.dev_tool();return false;">调试</a></li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <center style="margin-top:10px;">
+    <img src="images/logo.png" width="129" height="34">
+    <input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:500px; height:34px; background:url(images/icon-search.png) no-repeat #FFF; padding-left:25px;"><img id="loading" src="images/spinner.gif" style="visibility: hidden"/><input type="text" id="dire">
+  </center>
 </div>
-<div class="header-right">
-<input type="button" value="最大文件" onClick="$('#search')[0].value='*'; searchf('*');orderby(2,true);" class="icon-05">
-<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
-<input type="button" value="在线" onClick="online_db();" class="icon-06">
-<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
-<input type="button" value="离线" onClick="offline_db();" class="icon-07">
-<span class="rightline"><img src="images/rightline.png" width="2" height="44"></span>
-<input type="button" value="状态" onClick="alert(plugin.search('[///index_status'));" class="icon-08">
-
-<input type="button" value="状态" onclick="show_index_status();">
-<input type="button" value="快捷键" onclick="show_hotkey();">
-<input type="button" value="导出" title="导出当前查询结果" onclick="upgrade_req();">
-<input type="button" value="调试" onclick="cef.gigaso.dev_tool();">
-
 </div>
-</div>
-<center style="margin-top:20px;">
-<img src="images/logo.png" width="129" height="34">
-<input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:500px; height:34px; background:url(images/icon-search.png) no-repeat #FFF; padding-left:25px;">
-
-</center>
-</div>
-
-<div id="historys" style="align:center; margin-top:20px;">
-</div>
-
-
-
+<div id="historys" style="align:center; "></div>
 <textarea id="history_template" style="display:none"> 
 		{#foreach $T as record}
-		<div title="{$T.record.path}{$T.record.name}" class="history_file" style="cursor:hand; position:absolute; left:{$T.record.left}; top:{$T.record.top}">
+        <div style="margin:0 auto; position:relative;">
+		<div title="{$T.record.path}{$T.record.name}" class="history_file" style="cursor:hand; position:absolute; left:{$T.record.left}; top:{$T.record.top}; margin-top:-80px;">
 			<div class="thumbnail-container">
 				<div class="edit-mode-border">
 					<div class="edit-bar">
@@ -82,10 +85,17 @@
 			</div>
 			<div style="width:150px;text-align: center;word-break:break-all;">{$T.record.name2}</div>
 		</div>
+        </div>
 		{#/for}
-<a onclick="history_switch();return false;">更多</a>
+<div class="title-01">
+<div class="title-01-left">常用文件</div>
+<div class="title-01-right"><a onClick="history_switch();return false;">更多</a></div>
+</div>
+</textarea>
 
-</textarea> 
+
+
+
 
 <div id="tabs" style="display:none">
 	<ul id="main_nav_tab">
@@ -324,7 +334,6 @@
 			}
 			if(!plugin.offline){
 				$("#maintable tbody tr").contextMenu('myMenu1', context_menu_obj);
-				$("#maintable tbody tr").disableContextMenu();
 				$("#maintable tbody td[colid=0]").bind('dblclick',function(e){
 					dblclick_file(e.currentTarget.parentNode);
 				});
@@ -711,8 +720,6 @@ function upgrade_req(){
 }
 
 </script>
-<iframe src="" id="upgrade" name="upgrade" width="0" height="0"></iframe>
-
 </body>
 
 </html>
