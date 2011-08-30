@@ -1,8 +1,10 @@
 class DumpsController < ApplicationController
+  before_filter :admin_authorize, :except => :create
+
   # GET /dumps
   # GET /dumps.xml
   def index
-    @dumps = Dump.all
+    @dumps = Dump.paginate(:page => params[:page], :per_page =>20)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -49,7 +51,7 @@ class DumpsController < ApplicationController
     @dump.ip=request.ip;
     respond_to do |format|
       if @dump.save
-        format.html { redirect_to(@dump, :notice => 'Dump was successfully created.') }
+        format.html { render :text => "ok" }
         format.xml  { render :xml => @dump, :status => :created, :location => @dump }
       else
         format.html { render :action => "new" }

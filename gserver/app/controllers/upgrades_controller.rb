@@ -1,8 +1,11 @@
 class UpgradesController < ApplicationController
+  before_filter :admin_authorize, :except => :create
+
   # GET /upgrades
   # GET /upgrades.xml
   def index
-    @upgrades = Upgrade.all
+    @upgrades = Upgrade.paginate(:page => params[:page], :per_page =>20)
+
 
     respond_to do |format|
       format.html # index.html.erb
@@ -44,10 +47,11 @@ class UpgradesController < ApplicationController
     @upgrade.ip = request.ip;
     respond_to do |format|
       if @upgrade.save
-        format.html { redirect_to(@upgrade, :notice => 'Upgrade was successfully created.') }
+        format.html { render :text => "ok" }
         format.xml  { render :xml => @upgrade, :status => :created, :location => @upgrade }
+        format.js
       else
-        format.html { render :action => "new" }
+        format.html { render :text => "error" }
         format.xml  { render :xml => @upgrade.errors, :status => :unprocessable_entity }
       end
     end

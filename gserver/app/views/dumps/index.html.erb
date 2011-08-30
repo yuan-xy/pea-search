@@ -30,3 +30,9 @@
 <br />
 
 <%= link_to 'New dump', new_dump_path %>
+
+<br />
+<div id="paginate" style="text-align: center">
+  <%= will_paginate @dumps%>
+</div>
+

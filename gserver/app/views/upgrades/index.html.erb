@@ -28,3 +28,9 @@
 <br />
 
 <%= link_to 'New upgrade', new_upgrade_path %>
+
+<br />
+<div id="paginate" style="text-align: center">
+  <%= will_paginate @upgrades%>
+</div>
+
