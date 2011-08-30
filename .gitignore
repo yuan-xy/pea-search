@@ -8,6 +8,7 @@ Thumbs.db
 Debug
 Release
 build
+GIGASOConfig.h
 PluginGigaso/common.c
 PluginGigaso/common.h
 PluginGigaso/env.h

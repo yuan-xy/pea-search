@@ -622,7 +622,7 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "Ukrainian"
   !insertmacro MUI_LANGUAGE "Welsh"
 
-VIProductVersion "@CPACK_PACKAGE_VERSION@.0"
+VIProductVersion "@CPACK_PACKAGE_VERSION@"
 VIAddVersionKey ProductName "@CPACK_NSIS_DISPLAY_NAME@"
 VIAddVersionKey Comments "一款根据文件名瞬间查询文件位置的软件"
 VIAddVersionKey CompanyName Gigaso.com
