@@ -235,16 +235,17 @@ function online_db(){
 }
 
 function upgrade_req2(){
+	var host = "http://www.1dooo.com:3000";
 	var data = "upgrade[os]="+cef.gigaso.os+"&upgrade[cpu]="+cef.gigaso.cpu+"&upgrade[disk]="
 		+cef.gigaso.disk+"&upgrade[ver]="+cef.gigaso.ver+"&upgrade[user]="+cef.gigaso.user;
 	var jqxhr = $.ajax({
 	  type: 'POST',
-	  url: "http://www.1dooo.com:3000/upgrades.js",
+	  url: host+"/upgrades.js",
 	  data: data,
 	  dataType: "json"
 	})
     .success(function(data, textStatus, jqXHR) { 
-		plugin.search("[///"+data.url+"?"+data.hash);
+		plugin.search("[///upgrade"+host+data.url+"?"+data.hash);
 	 })
     .error(function(jqXHR, textStatus, errorThrown) {
 		console.log(textStatus);

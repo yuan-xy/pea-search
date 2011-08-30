@@ -131,6 +131,13 @@ extern int file_size_unit(FSIZE size);
  */
 extern int file_size_amount(FSIZE size);
 
+#define MD5_LEN 16
+
+extern void MD5Str(char *string, char *md5);
+
+extern void MD5File(char *filename, char *md5);
+
+
 
 #endif  // FILE_SEARCH_UTIL_H_
 

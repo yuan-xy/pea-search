@@ -25,6 +25,7 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	util.c
 	write.c
 	common.c
+	md5c.c
 )
 
 # Generated files are stored in ${GENERATED} by the project configuration
@@ -50,7 +51,7 @@ target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD
 target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/crash_generation_client.lib")
 target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/common.lib")
 target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/crash_report_sender.lib")
-target_link_libraries (file_search "Wininet.lib")
+target_link_libraries (file_search "Wininet.lib Urlmon.lib")
 
 add_executable (gigaso "win_service.c" )
 target_link_libraries (gigaso "file_search")

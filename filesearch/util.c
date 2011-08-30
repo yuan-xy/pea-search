@@ -9,6 +9,7 @@
 #include <time.h>
 #include <assert.h>
 #include "util.h"
+#include "md5.h"
 
 
 void assert_debug(int exp){
@@ -158,3 +159,33 @@ wchar_t *wcsrchr_me(const wchar_t *name, int len, wchar_t C){
 		}
 	return NULL;
 }
+
+static void MD5Print(unsigned char *digest, char *digest_str){
+  int i;
+  for (i = 0; i < MD5_LEN; i++) sprintf (digest_str+i*2, "%02x", *(digest+i));
+}
+
+void MD5Str(char *string, char *md5){
+  MD5_CTX context;
+  unsigned char digest[MD5_LEN];
+  unsigned int len = strlen (string);
+  MD5Init (&context);
+  MD5Update (&context, string, len);
+  MD5Final (digest, &context);
+  MD5Print(digest,md5);
+}
+
+void MD5File(char *filename, char *md5){
+  FILE *file;
+  MD5_CTX context;
+  int len;
+  unsigned char buffer[1024], digest[MD5_LEN];
+  if ((file = fopen (filename, "rb")) == NULL) return;
+  MD5Init (&context);
+  while (len = fread (buffer, 1, 1024, file))
+    MD5Update (&context, buffer, len);
+  MD5Final (digest, &context);
+  fclose (file);
+  MD5Print(digest,md5);
+}
+

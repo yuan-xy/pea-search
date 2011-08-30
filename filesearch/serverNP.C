@@ -1,4 +1,6 @@
 #include "env.h"
+#include <Urlmon.h>
+#include <Wininet.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -421,6 +423,31 @@ static void rescan_t(void *p){
 	rescan((int)p);
 }
 
+static void download_t(void *str){
+	HRESULT hr;
+	WCHAR *filename;
+	WCHAR *url =(WCHAR *)str;
+	WCHAR *p = wcsrchr(url,L'?');
+	WCHAR *hash = p+1;
+	*p = L'\0';
+	filename = wcsrchr(url,L'/')+1;
+	DeleteUrlCacheEntry(url);
+	hr = URLDownloadToFile(NULL,url,filename,0,NULL);
+	if(hr==S_OK){
+		char md5_2[MD5_LEN*2+1];
+		char fname[MAX_PATH]={0};
+		char md5[MAX_PATH];
+		WideCharToMultiByte(CP_ACP, 0, filename, wcslen(filename), fname, wcslen(filename), NULL, NULL);
+		WideCharToMultiByte(CP_ACP, 0, hash, wcslen(hash), md5, MAX_PATH, NULL, NULL);		
+		MD5File(fname,md5_2);
+		if(strncmp(md5,md5_2,MD5_LEN*2)==0){
+			printf("%ls downloaded from %ls.\n",filename,url);
+		}else{
+			printf("hash %s != %s.\n",md5,md5_2);
+		}
+	}
+}
+
 static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 	if(wcsncmp(command,L"index_status",wcslen(L"index_status"))==0){
 		send_response_index_status(hNamedPipe);
@@ -442,6 +469,10 @@ static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 		int i0 = *(command+wcslen(L"del_offline_db")) - L'0';
 		int i1 = *(command+wcslen(L"del_offline_db?")) - L'0';
 		del_offline_db(i0*10+i1);
+		send_response_ok(hNamedPipe);
+	}else if(wcsncmp(command,L"upgrade",wcslen(L"upgrade"))==0){
+		WCHAR *url = command+wcslen(L"upgrade");
+		_beginthread(download_t,0,url);
 		send_response_ok(hNamedPipe);
 	}else{
 		send_response_ok(hNamedPipe);

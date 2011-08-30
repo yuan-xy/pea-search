@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 class UpgradesController < ApplicationController
   before_filter :admin_authorize, :except => :create
 
@@ -44,7 +46,9 @@ class UpgradesController < ApplicationController
   # POST /upgrades.xml
   def create
     @upgrade = Upgrade.new(params[:upgrade])
-    @upgrade.ip = request.ip;
+    @upgrade.ip = request.ip
+    @down_url = "/images/rails.png"
+    @hash = Digest::MD5.hexdigest(File.read("/home/dooo/gserver/public/images/rails.png"))
     respond_to do |format|
       if @upgrade.save
         format.html { render :text => "ok" }
