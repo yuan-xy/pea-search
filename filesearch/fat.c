@@ -124,10 +124,11 @@ void OpenFatHandle(int i) {
 }
 
 static void add_file(WCHAR *name, int len, int i){
-	WCHAR *p = wcsrchr_me(name,len,L'\\');
-	pFileEntry dir = find_file(name,p-name);
 	WIN32_FIND_DATA fd;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
+	WCHAR *p = wcsrchr_me(name,len,L'\\');
+	pFileEntry dir = find_file(name,p-name);
+	if(dir==NULL) return;
 	hFind = FindFirstFile(name, &fd);
 	if (INVALID_HANDLE_VALUE == hFind){
 		return;

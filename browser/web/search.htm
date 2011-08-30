@@ -60,7 +60,7 @@
   </div>
   <center style="margin-top:10px;">
     <img src="images/logo.png" width="129" height="34">
-    <input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:500px; height:34px; background:url(images/icon-search.png) no-repeat #FFF; padding-left:25px;"><img id="loading" src="images/spinner.gif" style="visibility: hidden"/><input type="text" id="dire">
+    <input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:500px; height:34px; background:url(images/icon-search.png) no-repeat #FFF; padding-left:25px;"><img id="loading" src="images/spinner.gif" style="visibility: hidden"/><input type="text" id="dir">
   </center>
 </div>
 </div>
@@ -553,12 +553,16 @@
 			hs[i].top = calc_top(i);
 			hs[i].path = fname.substring(0, fname.lastIndexOf("\\")+1);
 			hs[i].name = fname.substring(fname.lastIndexOf("\\")+1,fname.length);
-			if(in_exe){
-				hs[i].thumb = "gigaso://thumb/"+hs[i].path+hs[i].name;
-				hs[i].thumb = hs[i].thumb.replace(/\\/g,"\\\\");
-				hs[i].thumb = hs[i].thumb.replace(/ /g,"%20");
+			if(hs[i].name==""){
+				hs[i].thumb = "";
 			}else{
-				hs[i].thumb = hs[i].id+".jpg";
+				if(in_exe){
+					hs[i].thumb = "gigaso://thumb/"+hs[i].path+hs[i].name;
+					hs[i].thumb = hs[i].thumb.replace(/\\/g,"\\\\");
+					hs[i].thumb = hs[i].thumb.replace(/ /g,"%20");
+				}else{
+					hs[i].thumb = hs[i].id+".jpg";
+				}
 			}
 		}
 		file_name_trim2(hs);

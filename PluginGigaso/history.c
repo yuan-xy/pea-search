@@ -3,7 +3,7 @@
 #include "history.h"
 #include "win_misc.h"
 
-static wchar_t his_files[MAX_HISTORY][MAX_PATH];
+static wchar_t his_files[MAX_HISTORY][MAX_PATH] = {0};
 
 //采用匈牙利命名法区分外部位置和内部位置
 static int nstart=0; 
@@ -224,7 +224,7 @@ BOOL history_load(){
 	fp = fopen(fbuffer, "rb");//采用二进制流
 	//unicode编码的中文“业”的hex值为“4e 1a”，其中1a是Ctrl-Z，被windows认为是文件结束标志。
 	if(fp==NULL){
-		init_from_recent();
+		//init_from_recent();
 		return 0;
 	}
 	fread(&nstart,sizeof(int),1,fp);

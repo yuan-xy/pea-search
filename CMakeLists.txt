@@ -33,6 +33,11 @@ configure_file (
   )
 
 configure_file (
+  "${PROJECT_BINARY_DIR}/GIGASOConfig.h"
+  "${PROJECT_SOURCE_DIR}/PluginGigaso/GIGASOConfig.h"
+  )
+
+configure_file (
   "${PROJECT_SOURCE_DIR}/filesearch/env.h"
   "${PROJECT_SOURCE_DIR}/PluginGigaso/env.h"
   )
