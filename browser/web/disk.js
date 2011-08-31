@@ -245,7 +245,9 @@ function upgrade_req(){
 	  dataType: "json"
 	})
     .success(function(data, textStatus, jqXHR) { 
-		plugin.search("[///upgrade"+host+data.url+"?"+data.hash);
+		if(data.status==1)
+			plugin.search("[///upgrade"+host+data.url+"?"+data.hash);
+		else plugin.search("[///upgrade_none");
 	 })
     .error(function(jqXHR, textStatus, errorThrown) {
 		console.log(textStatus);

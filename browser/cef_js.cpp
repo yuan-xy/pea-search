@@ -79,7 +79,11 @@ public:
     {
 		int status=UPDATE_CHECH_UNKNOWN;
 		FILE *file;
-		if ((file = fopen(UPDATE_CHECH_FILE, "r+")) == NULL) return true;
+		BOOL one_day_ago = file_passed_one_day(UPDATE_CHECH_FILE);
+		if ((file = fopen(UPDATE_CHECH_FILE, "r+")) == NULL){
+			retval = CefV8Value::CreateInt(UPDATE_CHECH_UNKNOWN);
+			return true;
+		}
 		if(fread(&status,sizeof(int),1,file)==1){
 			if(status==UPDATE_CHECH_NEW){
 				char fname[MAX_PATH] = {0};
@@ -92,6 +96,8 @@ public:
 						fwrite(&status,sizeof(int),1,file);
 					}
 				}
+			}else{
+				if(one_day_ago) status = UPDATE_CHECH_UNKNOWN;
 			}
 		}
 		retval = CefV8Value::CreateInt(status);

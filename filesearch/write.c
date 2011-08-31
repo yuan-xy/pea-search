@@ -9,6 +9,7 @@
 #include "util.h"
 #include "search.h"
 #include "fs_common.h"
+#include "common.h"
 #include "bzip2/bzlib.h"
 #include "ntfs.h"
 #include "main.h"
@@ -127,11 +128,10 @@ BOOL readfile(int i, char *filename){
                 my_assert(next_usn<=g_curNextUSN[i],0);
                 if(next_usn < g_curFirstUSN[i]) g_expires[i]=1;
 			}else{
-				time_t now = time(NULL);
 				time_t last;
 				d=(int)fread(&last,sizeof(time_t),1,fp);
 				if(d<1) goto error;
-				if(now-last>3600*24)  g_expires[i]=1;
+				if(passed_one_day(last)) g_expires[i]=1;
 			}
 			if(g_expires[i]==1) goto error;
 		}else{

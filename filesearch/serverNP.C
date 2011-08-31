@@ -477,7 +477,16 @@ static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 		send_response_ok(hNamedPipe);
 	}else if(wcsncmp(command,L"upgrade",wcslen(L"upgrade"))==0){
 		WCHAR *url = command+wcslen(L"upgrade");
-		_beginthread(download_t,0,url);
+		if(wcsncmp(url,L"_none",wcslen(L"_none"))==0){
+			FILE *file;
+			if ((file = fopen (UPDATE_CHECH_FILE, "w")) != NULL){
+				int status = UPDATE_CHECH_DONE;
+				fwrite(&status,sizeof(int),1,file);
+				fclose (file);
+			}
+		}else{
+			_beginthread(download_t,0,url);
+		}
 		send_response_ok(hNamedPipe);
 	}else{
 		send_response_ok(hNamedPipe);

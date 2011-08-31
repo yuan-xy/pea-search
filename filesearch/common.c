@@ -1,5 +1,7 @@
 #include "env.h"
 #include <windows.h>
+#include <time.h>
+#include <sys/stat.h>
 #include "common.h"
 #include "GIGASOConfig.h"
 
@@ -252,3 +254,14 @@ BOOL get_user(wchar_t *userbuf){
 }
 
 
+BOOL passed_one_day(time_t last){
+	time_t now = time(NULL);
+	return now-last>3600*24;
+}
+
+BOOL file_passed_one_day(char *filename){
+	struct stat statbuf;
+	int ret=stat(filename, &statbuf);
+	if(ret==-1) return 1;
+	return passed_one_day(statbuf.st_mtime);
+}

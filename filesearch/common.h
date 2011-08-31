@@ -43,7 +43,9 @@ extern BOOL get_user(wchar_t *userbuf);
 
 extern BOOL is_admin(void);
 
+extern BOOL passed_one_day(time_t last);
 
+extern BOOL file_passed_one_day(char *filename);
 
 #endif  // FILE_SEARCH_COMMON_H_
 
