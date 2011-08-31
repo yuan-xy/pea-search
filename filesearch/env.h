@@ -64,6 +64,11 @@ typedef struct searchEnv SearchEnv, *pSearchEnv;
 #define WM_SET_HOTKEY WM_USER+1
 
 
+#define UPDATE_CHECH_FILE "gigaso_update"
+#define UPDATE_CHECH_DONE -1
+#define UPDATE_CHECH_UNKNOWN 0
+#define UPDATE_CHECH_NEW 1
+
 #endif  // FILE_SEARCH_ENV_H_
 
 #ifdef __cplusplus

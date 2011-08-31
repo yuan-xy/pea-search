@@ -68,7 +68,7 @@ extern "C" {
 		eh = new google_breakpad::ExceptionHandler(L".", NULL, SendReport, NULL,  
 			google_breakpad::ExceptionHandler::HANDLER_ALL); 
 		sender = new google_breakpad::CrashReportSender(L"gigaso_dump_send");
-		//sender->set_max_reports_per_day(5);
+		sender->set_max_reports_per_day(3);
 
 	}  
 

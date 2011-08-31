@@ -234,7 +234,7 @@ function online_db(){
 	setTimeout(refresh,10);
 }
 
-function upgrade_req2(){
+function upgrade_req(){
 	var host = "http://www.1dooo.com:3000";
 	var data = "upgrade[os]="+cef.gigaso.os+"&upgrade[cpu]="+cef.gigaso.cpu+"&upgrade[disk]="
 		+cef.gigaso.disk+"&upgrade[ver]="+cef.gigaso.ver+"&upgrade[user]="+cef.gigaso.user;

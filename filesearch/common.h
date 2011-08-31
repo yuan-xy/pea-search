@@ -41,7 +41,7 @@ extern BOOL get_ver(wchar_t *verbuf);
 
 extern BOOL get_user(wchar_t *userbuf);
 
-
+extern BOOL is_admin(void);
 
 
 

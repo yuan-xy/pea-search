@@ -711,18 +711,10 @@
 		}
 		$("#search").focus();
 		$("#search").bind('keyup',search_if_change);
+		if(cef.gigaso.check_update()==0) upgrade_req();
 		setTimeout(init_event,1);
 		history_timeout = setTimeout(load_history,50);
 	});
-
-function upgrade_req(){
-	var data = "upgrade[os]="+cef.gigaso.os+"&upgrade[cpu]="+cef.gigaso.cpu+"&upgrade[disk]="
-		+cef.gigaso.disk+"&upgrade[ver]="+cef.gigaso.ver+"&upgrade[user]="+cef.gigaso.user;
-	$.post("http://www.1dooo.com:3000/upgrades", data, function(data) {
-	  alert(data);
-	});
-}
-
 </script>
 </body>
 

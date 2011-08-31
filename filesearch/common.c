@@ -99,7 +99,7 @@ BOOL set_hotkey(int key){
 #define   ACCESS_READ     1 
 #define   ACCESS_WRITE   2 
 
-BOOL   IsAdmin(void)   { 
+BOOL is_admin(void){ 
       HANDLE   hToken; 
       DWORD     dwStatus; 
       DWORD     dwAccessMask; 
@@ -247,7 +247,7 @@ BOOL get_user(wchar_t *userbuf){
 	wchar_t fbuffer[128];
 	DWORD size=128;
 	GetUserName(fbuffer, &size);
-	wsprintf(userbuf,L"%d.%s",IsAdmin(),fbuffer);
+	wsprintf(userbuf,L"%d.%s",is_admin(),fbuffer);
 	return 1;
 }
 

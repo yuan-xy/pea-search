@@ -7,8 +7,6 @@
 
 
 int main(){
-	char str[MD5_LEN*2+1] = {0};
-	MD5File("rails.png",str);
 	if (!SetConsoleCtrlHandler(shutdown_handle, TRUE)) {
 		WIN_ERROR;
 		return 3;

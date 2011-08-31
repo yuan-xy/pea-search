@@ -441,7 +441,12 @@ static void download_t(void *str){
 		WideCharToMultiByte(CP_ACP, 0, hash, wcslen(hash), md5, MAX_PATH, NULL, NULL);		
 		MD5File(fname,md5_2);
 		if(strncmp(md5,md5_2,MD5_LEN*2)==0){
-			printf("%ls downloaded from %ls.\n",filename,url);
+			int status=UPDATE_CHECH_NEW;
+			FILE *file;
+			if ((file = fopen (UPDATE_CHECH_FILE, "w")) == NULL) return;
+			fwrite(&status,sizeof(int),1,file);
+			fwrite(fname,sizeof(char),MAX_PATH,file);
+			fclose (file);
 		}else{
 			printf("hash %s != %s.\n",md5,md5_2);
 		}

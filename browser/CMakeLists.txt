@@ -4,6 +4,7 @@ SET( SOURCES
     "webform.h"
     "webform.cpp"
     "search_ie.cpp"
+    "../filesearch/env.h"
     "../filesearch/common.h"
     "../filesearch/common.c"
     )

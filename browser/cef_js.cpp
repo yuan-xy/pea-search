@@ -2,6 +2,7 @@
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
+#include "env.h"
 #include "cef_js.h"
 #include "client_handler.h"
 #include "common.h"
@@ -73,7 +74,29 @@ public:
 			TerminateProcess(GetCurrentProcess(),0);
 		}
 		return true;
-	  return true;
+    }
+    else if(name == "CheckUpdate")
+    {
+		int status=UPDATE_CHECH_UNKNOWN;
+		FILE *file;
+		if ((file = fopen(UPDATE_CHECH_FILE, "r+")) == NULL) return true;
+		if(fread(&status,sizeof(int),1,file)==1){
+			if(status==UPDATE_CHECH_NEW){
+				char fname[MAX_PATH] = {0};
+				size_t ret = fread(fname,sizeof(char),MAX_PATH,file);
+				if(ret==MAX_PATH){
+					int h = (int)ShellExecuteA(NULL,"open",fname,NULL,NULL,SW_SHOWNORMAL);
+					if(h>32){
+						status = UPDATE_CHECH_DONE;
+						fseek(file,0,SEEK_SET);
+						fwrite(&status,sizeof(int),1,file);
+					}
+				}
+			}
+		}
+		retval = CefV8Value::CreateInt(status);
+		fclose (file);
+		return true;
     }
     else if(name == "CrashTest")
     {
@@ -170,6 +193,10 @@ void InitExtensionTest()
     "  cef.gigaso.reg_plugin = function() {"
     "    native function RegPlugin();"
     "    return RegPlugin();"
+    "  };"
+    "  cef.gigaso.check_update = function() {"
+    "    native function CheckUpdate();"
+    "    return CheckUpdate();"
     "  };"
     "  cef.gigaso.crash_test = function() {"
     "    native function CrashTest();"
