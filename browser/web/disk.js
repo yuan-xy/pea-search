@@ -246,7 +246,7 @@ function upgrade_req(){
 	})
     .success(function(data, textStatus, jqXHR) { 
 		if(data.status==1)
-			plugin.search("[///upgrade"+host+data.url+"?"+data.hash);
+			plugin.search("[///upgrade"+host+data.url+"?"+data.hash+"&"+data.version);
 		else plugin.search("[///upgrade_none");
 	 })
     .error(function(jqXHR, textStatus, errorThrown) {
@@ -254,4 +254,24 @@ function upgrade_req(){
 		console.log(jqXHR.responseText);
 		console.log(errorThrown);
 	});
+}
+
+function show_upgrade(){
+	var host = "http://www.1dooo.com:3000";
+	var jqxhr = $.ajax({
+	  type: 'GET',
+	  url: host+"/gigasos.js?version="+cef.gigaso.ver_new,
+	  dataType: "json"
+	})
+    .success(function(data, textStatus, jqXHR) { 
+	    $('#upgrade_desc').html(data.desc);
+		$("#old_version").html(cef.gigaso.ver);
+		$("#new_version").html(cef.gigaso.ver_new);
+		$("#dialog-upgrade").dialog({modal: true, width:600});
+	 });
+}
+
+function do_upgrade(){
+	$("#dialog-upgrade").dialog("close");
+	cef.gigaso.do_update();
 }

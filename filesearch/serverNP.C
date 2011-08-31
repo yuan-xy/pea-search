@@ -423,13 +423,16 @@ static void rescan_t(void *p){
 	rescan((int)p);
 }
 
-static void download_t(void *str){
+static void download_t(void *str){// "http://host/filename?hash&version"
 	HRESULT hr;
 	WCHAR *filename;
 	WCHAR *url =(WCHAR *)str;
 	WCHAR *p = wcsrchr(url,L'?');
+	WCHAR *p2 = wcsrchr(url,L'&');
 	WCHAR *hash = p+1;
+	WCHAR *version = p2+1;
 	*p = L'\0';
+	*p2 = L'\0';
 	filename = wcsrchr(url,L'/')+1;
 	DeleteUrlCacheEntry(url);
 	hr = URLDownloadToFile(NULL,url,filename,0,NULL);
@@ -447,6 +450,7 @@ static void download_t(void *str){
 			fwrite(&status,sizeof(int),1,file);
 			fwrite(fname,sizeof(char),MAX_PATH,file);
 			fclose (file);
+			set_prop(L"version",version);
 		}else{
 			printf("hash %s != %s.\n",md5,md5_2);
 		}

@@ -80,8 +80,24 @@ public:
 		int status=UPDATE_CHECH_UNKNOWN;
 		FILE *file;
 		BOOL one_day_ago = file_passed_one_day(UPDATE_CHECH_FILE);
+		if(one_day_ago){
+			status = UPDATE_CHECH_UNKNOWN;
+		}else{
+			if ((file = fopen(UPDATE_CHECH_FILE, "r+")) == NULL){
+				retval = CefV8Value::CreateInt(UPDATE_CHECH_UNKNOWN);
+				return true;
+			}
+			fread(&status,sizeof(int),1,file);
+			fclose (file);
+		}
+		retval = CefV8Value::CreateInt(status);
+		return true;
+    }
+    else if(name == "DoUpdate")
+    {
+		int status=UPDATE_CHECH_UNKNOWN;
+		FILE *file;
 		if ((file = fopen(UPDATE_CHECH_FILE, "r+")) == NULL){
-			retval = CefV8Value::CreateInt(UPDATE_CHECH_UNKNOWN);
 			return true;
 		}
 		if(fread(&status,sizeof(int),1,file)==1){
@@ -96,11 +112,8 @@ public:
 						fwrite(&status,sizeof(int),1,file);
 					}
 				}
-			}else{
-				if(one_day_ago) status = UPDATE_CHECH_UNKNOWN;
 			}
 		}
-		retval = CefV8Value::CreateInt(status);
 		fclose (file);
 		return true;
     }
@@ -131,6 +144,12 @@ public:
     else if(name == "GetVer"){
 	  wchar_t buffer[128];
 	  get_ver(buffer);
+      retval = CefV8Value::CreateString(buffer);
+      return true;
+    }
+    else if(name == "GetVerNew"){
+	  wchar_t buffer[128];
+	  get_prop(L"version",buffer,128);
       retval = CefV8Value::CreateString(buffer);
       return true;
     }
@@ -176,6 +195,10 @@ void InitExtensionTest()
     "    native function GetVer();"
     "    return GetVer();"
     "  });"
+    "  cef.gigaso.__defineGetter__('ver_new', function() {"
+    "    native function GetVerNew();"
+    "    return GetVerNew();"
+    "  });"
     "  cef.gigaso.__defineGetter__('user', function() {"
     "    native function GetUser();"
     "    return GetUser();"
@@ -203,6 +226,10 @@ void InitExtensionTest()
     "  cef.gigaso.check_update = function() {"
     "    native function CheckUpdate();"
     "    return CheckUpdate();"
+    "  };"
+    "  cef.gigaso.do_update = function() {"
+    "    native function DoUpdate();"
+    "    return DoUpdate();"
     "  };"
     "  cef.gigaso.crash_test = function() {"
     "    native function CrashTest();"
