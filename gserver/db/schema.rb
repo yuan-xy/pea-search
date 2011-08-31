@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110826095234) do
+ActiveRecord::Schema.define(:version => 20110831131107) do
 
   create_table "dumps", :force => true do |t|
     t.string   "file"
@@ -19,6 +19,14 @@ ActiveRecord::Schema.define(:version => 20110826095234) do
     t.string   "ver"
     t.string   "user"
     t.string   "ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "gigasos", :force => true do |t|
+    t.string   "version"
+    t.string   "desc"
+    t.string   "path"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

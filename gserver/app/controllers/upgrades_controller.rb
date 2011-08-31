@@ -47,8 +47,10 @@ class UpgradesController < ApplicationController
   def create
     @upgrade = Upgrade.new(params[:upgrade])
     @upgrade.ip = request.ip
-    @down_url = "/images/rails.png"
-    @hash = Digest::MD5.hexdigest(File.read("/home/dooo/gserver/public/images/rails.png"))
+    lg = Gigaso.last
+    @down_url = lg.path
+    @version = lg.version
+    @hash = Digest::MD5.hexdigest(File.read("/home/dooo/gserver/public"+@down_url))
     respond_to do |format|
       if @upgrade.save
         format.html { render :text => "ok" }

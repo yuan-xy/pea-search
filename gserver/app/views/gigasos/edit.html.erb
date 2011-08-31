@@ -1,0 +1,24 @@
+<h1>Editing gigaso</h1>
+
+<% form_for(@gigaso) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :version %><br />
+    <%= f.text_field :version %>
+  </p>
+  <p>
+    <%= f.label :desc %><br />
+    <%= f.text_area :desc %>
+  </p>
+  <p>
+    <%= f.label :path %><br />
+    <%= f.text_field :path %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @gigaso %> |
+<%= link_to 'Back', gigasos_path %>

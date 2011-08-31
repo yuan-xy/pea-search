@@ -1,0 +1,30 @@
+<h1>Listing gigasos</h1>
+
+<table>
+  <tr>
+    <th>Version</th>
+    <th>Desc</th>
+    <th>Path</th>
+  </tr>
+
+<% @gigasos.each do |gigaso| %>
+  <tr>
+    <td><%=h gigaso.version %></td>
+    <td><%=h gigaso.desc %></td>
+    <td><%=h gigaso.path %></td>
+    <td><%= link_to 'Show', gigaso %></td>
+    <td><%= link_to 'Edit', edit_gigaso_path(gigaso) %></td>
+    <td><%= link_to 'Destroy', gigaso, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New gigaso', new_gigaso_path %>
+
+<br />
+<div id="paginate" style="text-align: center">
+  <%= will_paginate @gigasos%>
+</div>
+

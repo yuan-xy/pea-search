@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :gigasos
+
   map.resources :upgrades
 
   map.resources :dumps
