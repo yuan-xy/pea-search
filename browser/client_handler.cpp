@@ -1,9 +1,11 @@
 #include "../3rd/cef_binary/include/cef.h"
+#include "../filesearch/common.h"
 #include "client_handler.h"
 #include "string_util.h"
 #include <sstream>
 #include <stdio.h>
 #include <string>
+#include "GIGASOConfig.h"
 
 extern CefRefPtr<ClientHandler> g_handler;
 
@@ -31,7 +33,15 @@ static void init_dir(){
 	str = StringReplace(str,olds,news);
 	wsprintf(buffer,L"try{in_exe=true;if(init_dir) init_dir('%s');}catch(e){}",str.c_str());
 	exec_js_str(buffer);
-	//upgrade_thread();
+}
+
+static void load_str(const CefString& url){
+	if(g_handler.get()){
+		CefRefPtr<CefBrowser> browser = g_handler->GetBrowser();
+		if(browser.get()){
+			browser->GetMainFrame()->LoadStringW(web_source,url);
+		}
+	}
 }
 
 ClientHandler::ClientHandler(){}
@@ -56,7 +66,13 @@ void ClientHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
                               CefRefPtr<CefFrame> frame,
                               int httpStatusCode)
 {
-	init_dir();
+	if(wcscmp(frame->GetURL().ToWString().c_str(),L"about:blank")==0){
+		wchar_t full_path[MAX_PATH];
+		get_abs_path(L"web\\search2.htm",full_path);
+		load_str(full_path);
+	}else{
+		init_dir();
+	}
 }
 
 bool ClientHandler::OnLoadError(CefRefPtr<CefBrowser> browser,

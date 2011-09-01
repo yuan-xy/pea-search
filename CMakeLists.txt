@@ -24,7 +24,7 @@ project (GIGASO)
 
 set (GIGASO_VERSION_MAJOR 1)
 set (GIGASO_VERSION_MINOR 0)
-set (GIGASO_VERSION_BUILD 7)
+set (GIGASO_VERSION_BUILD 8)
 
 set(BREAKPAD_DIR ${PROJECT_SOURCE_DIR}/3rd/google-breakpad-read-only/src)
 
@@ -32,6 +32,8 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/GIGASOConfig.h.in"
   "${PROJECT_BINARY_DIR}/GIGASOConfig.h"
   )
+
+EXEC_PROGRAM("ruby ../html_embed.rb" "${PROJECT_BINARY_DIR}")
 
 configure_file (
   "${PROJECT_BINARY_DIR}/GIGASOConfig.h"
