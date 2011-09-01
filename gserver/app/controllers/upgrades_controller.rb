@@ -6,7 +6,7 @@ class UpgradesController < ApplicationController
   # GET /upgrades
   # GET /upgrades.xml
   def index
-    @upgrades = Upgrade.paginate(:page => params[:page], :per_page =>20)
+    @upgrades = Upgrade.paginate(:page => params[:page], :per_page =>20, :order => " id desc")
 
 
     respond_to do |format|
@@ -42,26 +42,30 @@ class UpgradesController < ApplicationController
     @upgrade = Upgrade.find(params[:id])
   end
 
-  # POST /upgrades
-  # POST /upgrades.xml
   def create
     @upgrade = Upgrade.new(params[:upgrade])
     @upgrade.ip = request.ip
     lg = Gigaso.last
-    @down_url = lg.path
-    @version = lg.version
-    @hash = Digest::MD5.hexdigest(File.read("/home/dooo/gserver/public"+@down_url))
-    respond_to do |format|
-      if @upgrade.save
-        format.html { render :text => "ok" }
-        format.xml  { render :xml => @upgrade, :status => :created, :location => @upgrade }
-        format.js
-      else
-        format.html { render :text => "error" }
-        format.xml  { render :xml => @upgrade.errors, :status => :unprocessable_entity }
-      end
-    end
+    if @upgrade.ver == lg.version
+	@upgrade.save
+        render :text => '{"status":0}'
+    else
+	    @down_url = lg.path
+	    @version = lg.version
+	    @hash = Digest::MD5.hexdigest(File.read("/home/dooo/gserver/public"+@down_url))
+	    respond_to do |format|
+	      if @upgrade.save
+		format.html { render :text => "ok" }
+		format.xml  { render :xml => @upgrade, :status => :created, :location => @upgrade }
+		format.js
+	      else
+		format.html { render :text => "error" }
+		format.xml  { render :xml => @upgrade.errors, :status => :unprocessable_entity }
+	      end
+	    end
+     end
   end
+
 
   # PUT /upgrades/1
   # PUT /upgrades/1.xml

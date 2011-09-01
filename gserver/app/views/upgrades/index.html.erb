@@ -1,23 +1,27 @@
 <h1>Listing upgrades</h1>
 
-<table>
+<table border="1">
   <tr>
+    <th>id</th>
     <th>Os</th>
     <th>Cpu</th>
     <th>Disk</th>
     <th>Ver</th>
     <th>User</th>
     <th>Ip</th>
+    <th>Created_at</th>
   </tr>
 
 <% @upgrades.each do |upgrade| %>
   <tr>
+    <td><%=h upgrade.id %></td>
     <td><%=h upgrade.os %></td>
     <td><%=h upgrade.cpu %></td>
     <td><%=h upgrade.disk %></td>
     <td><%=h upgrade.ver %></td>
     <td><%=h upgrade.user %></td>
     <td><%=h upgrade.ip %></td>
+    <td><%=h upgrade.created_at %></td>
     <td><%= link_to 'Show', upgrade %></td>
     <td><%= link_to 'Edit', edit_upgrade_path(upgrade) %></td>
     <td><%= link_to 'Destroy', upgrade, :confirm => 'Are you sure?', :method => :delete %></td>

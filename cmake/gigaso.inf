@@ -10,7 +10,7 @@ HKCR,Directory\Shell\gigaso,,,"%MENUITEM%"
 HKCR,Directory\Shell\gigaso\command,,,"%EXEPATH%\search.exe ""%1"""
 HKCR,Drive\Shell\gigaso
 HKCR,Drive\Shell\gigaso,,,"%MENUITEM%"
-HKCR,Drive\Shell\gigaso\command,,,"%EXEPATH% ""%1"""
+HKCR,Drive\Shell\gigaso\command,,,"%EXEPATH%\search.exe ""%1"""
 HKLM,SOFTWARE\Microsoft\Windows\CurrentVersion\Run, "Gigaso Listener", FLG_ADDREG_TYPE_SZ, "%EXEPATH%\gigasoln.exe"		
 [Strings]
 MENUITEM = "¼Ç¼ÑËÑË÷(&S)..."

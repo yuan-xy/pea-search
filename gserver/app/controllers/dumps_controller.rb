@@ -4,7 +4,7 @@ class DumpsController < ApplicationController
   # GET /dumps
   # GET /dumps.xml
   def index
-    @dumps = Dump.paginate(:page => params[:page], :per_page =>20)
+    @dumps = Dump.paginate(:page => params[:page], :per_page =>20, :order => " id desc")
 
     respond_to do |format|
       format.html # index.html.erb
