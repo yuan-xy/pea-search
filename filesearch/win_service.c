@@ -84,7 +84,7 @@ VOID WINAPI ServerCtrlHandler( DWORD Control){
 	case SERVICE_CONTROL_SHUTDOWN:
 	case SERVICE_CONTROL_STOP:
 		UpdateStatus (SERVICE_STOP_PENDING, -1);
-		shutdown_NP();
+		shutdown_handle(0);
 		gigaso_destory();
 		return;
 	case SERVICE_CONTROL_PAUSE:

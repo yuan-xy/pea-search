@@ -19,7 +19,8 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	main.c
 	ntfs.c
 	search.c
-	serverNP.C
+	server.c
+	serverNP.c
 	str_match.c
 	suffix.c
 	util.c

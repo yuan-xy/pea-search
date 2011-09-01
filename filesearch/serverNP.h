@@ -6,8 +6,9 @@ extern "C" {
 #define FILE_SEARCH_SERVERNP_H_
 
 extern BOOL start_named_pipe();
+
 extern void wait_stop_named_pipe();
-extern void shutdown_NP();
+
 extern BOOL WINAPI shutdown_handle(DWORD CtrlEvent);
 
 #endif  // FILE_SEARCH_SERVERNP_H_
