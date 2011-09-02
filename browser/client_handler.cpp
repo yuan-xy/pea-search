@@ -5,7 +5,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <string>
-#include "GIGASOConfig.h"
+#include "html_source.h"
 
 extern CefRefPtr<ClientHandler> g_handler;
 

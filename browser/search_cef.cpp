@@ -122,15 +122,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam){
 				settings.universal_access_from_file_urls_allowed = true;
 				CefWindowInfo info;
 				info.SetAsChild(hWnd, rect);
-#ifdef MY_DEBUG
 				wchar_t full_path[MAX_PATH];
 				get_abs_path(L"web\\search.htm",full_path);
-				CefBrowser::CreateBrowser(info,
-					static_cast<CefRefPtr<CefClient>>(g_handler), full_path,settings);
-#else
-				CefBrowser::CreateBrowser(info,
-					static_cast<CefRefPtr<CefClient>>(g_handler), L"about:blank",settings);
-#endif
+				if(_waccess(full_path,0)==0){
+					CefBrowser::CreateBrowser(info,
+						static_cast<CefRefPtr<CefClient>>(g_handler), full_path,settings);
+				}else{
+					CefBrowser::CreateBrowser(info,
+						static_cast<CefRefPtr<CefClient>>(g_handler), L"about:blank",settings);
+				}
 			}
 			return 0;
 		case WM_ACTIVATE:
