@@ -235,7 +235,6 @@ function online_db(){
 }
 
 function upgrade_req(){
-	var host = "http://www.1dooo.com:3000";
 	var data = "upgrade[os]="+cef.gigaso.os+"&upgrade[cpu]="+cef.gigaso.cpu+"&upgrade[disk]="
 		+cef.gigaso.disk+"&upgrade[ver]="+cef.gigaso.ver+"&upgrade[user]="+cef.gigaso.user;
 	var jqxhr = $.ajax({
@@ -257,7 +256,6 @@ function upgrade_req(){
 }
 
 function show_upgrade(){
-	var host = "http://www.1dooo.com:3000";
 	var jqxhr = $.ajax({
 	  type: 'GET',
 	  url: host+"/gigasos.js?version="+cef.gigaso.ver_new,
@@ -274,4 +272,13 @@ function show_upgrade(){
 function do_upgrade(){
 	$("#dialog-upgrade").dialog("close");
 	cef.gigaso.do_update();
+}
+
+function check_upgrade(){
+		var update_status = cef.gigaso.check_update();
+		if(update_status==0){
+			upgrade_req();
+		}else if(update_status==1){
+			show_upgrade();
+		}
 }

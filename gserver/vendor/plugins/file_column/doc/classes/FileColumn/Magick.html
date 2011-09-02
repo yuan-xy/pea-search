@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: FileColumn::Magick</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">FileColumn::Magick</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/lib/magick_file_column_rb.html">
+                lib/magick_file_column.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+If you are using file_column to upload images, you can directly process the
+images with RMagick, a ruby extension for accessing the popular imagemagick
+libraries. You can find more information about RMagick at <a
+href="http://rmagick.rubyforge.org">rmagick.rubyforge.org</a>.
+</p>
+<p>
+You can control what to do by adding a <tt>:magick</tt> option to your
+options hash. All operations are performed immediately after a new file is
+assigned to the file_column attribute.
+</p>
+<p>
+To resize the uploaded image according to an imagemagick geometry string,
+just use the <tt>:geometry</tt> option:
+</p>
+<pre>
+   file_column :image, :magick =&gt; {:geometry =&gt; &quot;800x600&gt;&quot;}
+</pre>
+<p>
+You can also create additional versions of your image, for example
+thumb-nails, like this:
+</p>
+<pre>
+   file_column :image, :magick =&gt; {:versions =&gt;
+     { &quot;thumb&quot; =&gt; &quot;50x50&quot;, &quot;medium&quot; =&gt; &quot;640x480&gt;&quot; }
+   }
+</pre>
+<p>
+These versions can later be accessed via file_column&#8217;s
+<em>suffix</em> mechanism. So if the uploaded image was named
+&quot;vancouver.jpg&quot;, you can access the additional versions like
+this:
+</p>
+<pre>
+   o.image(&quot;thumb&quot;) # produces &quot;.../vancouver-thumb.jpg&quot;
+   o.image_relative_path(&quot;medium&quot;) # produces &quot;.../vancouver-medium.jpg&quot;
+</pre>
+<p>
+The same mechanism can be used in the <tt>url_for_file_column</tt> helper:
+</p>
+<pre>
+   &lt;%= url_for_file_column &quot;entry&quot;, &quot;image&quot;, &quot;thumb&quot; %&gt;
+</pre>
+<p>
+<b>Note:</b> You&#8216;ll need the rmagick extension installed as a gem in
+order to use file_column&#8217;s rmagick integration.
+</p>
+
+    </div>
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

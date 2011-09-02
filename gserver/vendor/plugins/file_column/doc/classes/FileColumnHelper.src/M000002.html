@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>url_for_file_column (FileColumnHelper)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/file_column_helper.rb, line 57</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">url_for_file_column</span>(<span class="ruby-identifier">object_name</span>, <span class="ruby-identifier">method</span>, <span class="ruby-identifier">suffix</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-identifier">object</span> = <span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-node">&quot;@#{object_name.to_s}&quot;</span>)
+    <span class="ruby-identifier">relative_path</span> = <span class="ruby-identifier">object</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;#{method}_relative_path&quot;</span>, <span class="ruby-identifier">suffix</span>)
+    <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">relative_path</span>
+    <span class="ruby-identifier">url</span> = <span class="ruby-value str">&quot;&quot;</span>
+    <span class="ruby-identifier">url</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-ivar">@request</span>.<span class="ruby-identifier">relative_url_root</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">&quot;/&quot;</span>
+    <span class="ruby-identifier">url</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;#{method}_options&quot;</span>)[<span class="ruby-identifier">:base_url</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">&quot;/&quot;</span>
+    <span class="ruby-identifier">url</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">relative_path</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

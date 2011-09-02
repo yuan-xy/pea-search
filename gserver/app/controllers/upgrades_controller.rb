@@ -50,9 +50,9 @@ class UpgradesController < ApplicationController
 	@upgrade.save
         render :text => '{"status":0}'
     else
-	    @down_url = lg.path
+	    @down_url = lg.path2
 	    @version = lg.version
-	    @hash = Digest::MD5.hexdigest(File.read("/home/dooo/gserver/public"+@down_url))
+	    @hash = Digest::MD5.hexdigest(File.read(lg.path))
 	    respond_to do |format|
 	      if @upgrade.save
 		format.html { render :text => "ok" }

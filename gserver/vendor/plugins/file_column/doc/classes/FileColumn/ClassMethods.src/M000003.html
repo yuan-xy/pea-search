@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>file_column (FileColumn::ClassMethods)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/file_column.rb, line 546</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">file_column</span>(<span class="ruby-identifier">attr</span>, <span class="ruby-identifier">options</span>={})
+      <span class="ruby-identifier">options</span> = <span class="ruby-constant">DEFAULT_OPTIONS</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>
+      
+      <span class="ruby-identifier">my_options</span> = <span class="ruby-constant">FileColumn</span><span class="ruby-operator">::</span><span class="ruby-identifier">init_options</span>(<span class="ruby-identifier">options</span>, 
+                                            <span class="ruby-constant">Inflector</span>.<span class="ruby-identifier">underscore</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">name</span>).<span class="ruby-identifier">to_s</span>,
+                                            <span class="ruby-identifier">attr</span>.<span class="ruby-identifier">to_s</span>)
+      
+      <span class="ruby-identifier">state_attr</span> = <span class="ruby-node">&quot;@#{attr}_state&quot;</span>.<span class="ruby-identifier">to_sym</span>
+      <span class="ruby-identifier">state_method</span> = <span class="ruby-node">&quot;#{attr}_state&quot;</span>.<span class="ruby-identifier">to_sym</span>
+      
+      <span class="ruby-identifier">define_method</span> <span class="ruby-identifier">state_method</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">result</span> = <span class="ruby-identifier">instance_variable_get</span> <span class="ruby-identifier">state_attr</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">result</span>.<span class="ruby-identifier">nil?</span>
+          <span class="ruby-identifier">result</span> = <span class="ruby-constant">FileColumn</span><span class="ruby-operator">::</span><span class="ruby-identifier">create_state</span>(<span class="ruby-identifier">my_options</span>, <span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">attr</span>.<span class="ruby-identifier">to_s</span>)
+          <span class="ruby-identifier">instance_variable_set</span> <span class="ruby-identifier">state_attr</span>, <span class="ruby-identifier">result</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">result</span>
+      <span class="ruby-keyword kw">end</span>
+      
+      <span class="ruby-identifier">private</span> <span class="ruby-identifier">state_method</span>
+      
+      <span class="ruby-identifier">define_method</span> <span class="ruby-identifier">attr</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-operator">*</span><span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">send</span>(<span class="ruby-identifier">state_method</span>).<span class="ruby-identifier">absolute_path</span> <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>
+      <span class="ruby-keyword kw">end</span>
+      
+      <span class="ruby-identifier">define_method</span> <span class="ruby-node">&quot;#{attr}_relative_path&quot;</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-operator">*</span><span class="ruby-identifier">args</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">send</span>(<span class="ruby-identifier">state_method</span>).<span class="ruby-identifier">relative_path</span> <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-identifier">define_method</span> <span class="ruby-node">&quot;#{attr}_dir&quot;</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">send</span>(<span class="ruby-identifier">state_method</span>).<span class="ruby-identifier">absolute_dir</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-identifier">define_method</span> <span class="ruby-node">&quot;#{attr}_relative_dir&quot;</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">send</span>(<span class="ruby-identifier">state_method</span>).<span class="ruby-identifier">relative_dir</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-identifier">define_method</span> <span class="ruby-node">&quot;#{attr}=&quot;</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">instance_variable_set</span> <span class="ruby-identifier">state_attr</span>, <span class="ruby-identifier">send</span>(<span class="ruby-identifier">state_method</span>).<span class="ruby-identifier">assign</span>(<span class="ruby-identifier">file</span>)
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">my_options</span>[<span class="ruby-identifier">:after_assign</span>]
+          <span class="ruby-identifier">my_options</span>[<span class="ruby-identifier">:after_assign</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">sym</span><span class="ruby-operator">|</span>
+            <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">sym</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      
+      <span class="ruby-identifier">define_method</span> <span class="ruby-node">&quot;#{attr}_temp&quot;</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">send</span>(<span class="ruby-identifier">state_method</span>).<span class="ruby-identifier">temp_path</span>
+      <span class="ruby-keyword kw">end</span>
+      
+      <span class="ruby-identifier">define_method</span> <span class="ruby-node">&quot;#{attr}_temp=&quot;</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">temp_path</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">instance_variable_set</span> <span class="ruby-identifier">state_attr</span>, <span class="ruby-identifier">send</span>(<span class="ruby-identifier">state_method</span>).<span class="ruby-identifier">assign_temp</span>(<span class="ruby-identifier">temp_path</span>)
+      <span class="ruby-keyword kw">end</span>
+      
+      <span class="ruby-identifier">after_save_method</span> = <span class="ruby-node">&quot;#{attr}_after_save&quot;</span>.<span class="ruby-identifier">to_sym</span>
+      
+      <span class="ruby-identifier">define_method</span> <span class="ruby-identifier">after_save_method</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">instance_variable_set</span> <span class="ruby-identifier">state_attr</span>, <span class="ruby-identifier">send</span>(<span class="ruby-identifier">state_method</span>).<span class="ruby-identifier">after_save</span>
+      <span class="ruby-keyword kw">end</span>
+      
+      <span class="ruby-identifier">after_save</span> <span class="ruby-identifier">after_save_method</span>
+      
+      <span class="ruby-identifier">after_destroy_method</span> = <span class="ruby-node">&quot;#{attr}_after_destroy&quot;</span>.<span class="ruby-identifier">to_sym</span>
+      
+      <span class="ruby-identifier">define_method</span> <span class="ruby-identifier">after_destroy_method</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">send</span>(<span class="ruby-identifier">state_method</span>).<span class="ruby-identifier">after_destroy</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">after_destroy</span> <span class="ruby-identifier">after_destroy_method</span>
+      
+      <span class="ruby-identifier">define_method</span> <span class="ruby-node">&quot;#{attr}_just_uploaded?&quot;</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">send</span>(<span class="ruby-identifier">state_method</span>).<span class="ruby-identifier">just_uploaded?</span>
+      <span class="ruby-keyword kw">end</span>
+      
+      <span class="ruby-identifier">define_method</span> <span class="ruby-node">&quot;#{attr}_options&quot;</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">send</span>(<span class="ruby-identifier">state_method</span>).<span class="ruby-identifier">options</span>
+      <span class="ruby-keyword kw">end</span>
+      
+      <span class="ruby-identifier">private</span> <span class="ruby-identifier">after_save_method</span>, <span class="ruby-identifier">after_destroy_method</span>
+
+      <span class="ruby-constant">FileColumn</span><span class="ruby-operator">::</span><span class="ruby-constant">Magick</span><span class="ruby-operator">::</span><span class="ruby-identifier">file_column</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">attr</span>, <span class="ruby-identifier">my_options</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:magick</span>]
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

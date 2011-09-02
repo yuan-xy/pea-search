@@ -1,6 +1,6 @@
 <h1>New gigaso</h1>
 
-<% form_for(@gigaso) do |f| %>
+<% form_for(@gigaso,:html => { :multipart => true}) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -13,7 +13,7 @@
   </p>
   <p>
     <%= f.label :path %><br />
-    <%= f.text_field :path %>
+    <%= file_column_field 'gigaso', 'path' %>
   </p>
   <p>
     <%= f.submit 'Create' %>
