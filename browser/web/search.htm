@@ -6,16 +6,16 @@
     <link rel="stylesheet" href="./thumbnail.css" type="text/css" />
     <link rel="shortcut icon" href="./favicon.ico" type="image/ico" />
     <link rel="icon" href="./favicon.ico" type="image/ico" />
+    <link type="text/css" href="jquery-ui-1.8.12.custom.css" rel="stylesheet" />	
 	<script type="text/javascript" src="jquery-1.6.min.js"></script>
 	<script type="text/javascript" src="jquery-jtemplates.js"></script>
     <script type="text/javascript" src="jquery.contextmenu.r2.js"></script>
     <script type="text/javascript" src="jquery-ui-1.8.12.custom.min.js"></script>
-	<link type="text/css" href="jquery-ui-1.8.12.custom.css" rel="stylesheet" />	
     <script type="text/javascript" src="message.js"></script>
     <script type="text/javascript" src="context.js"></script>
     <script type="text/javascript" src="scroll.js"></script>
     <script type="text/javascript" src="disk.js"></script>
-<script type="text/javascript" src="subnav.js"></script>
+    <script type="text/javascript" src="subnav.js"></script>
 </head>
 <body>
 <div class="topbar">
@@ -23,32 +23,32 @@
     <div class="leftbar">
       <object id="plugin0" type="application/x-plugingigaso" width="0" height="0">
       </object>
-      <ul>
-        <li><a onClick="return_history();" title="主页"><img src="images/icon-01.png" width="21" height="19"></a></li>
-        <li><a onClick="refresh();"  title="刷新"><img src="images/icon-02.png" width="21" height="19"></a></li>
-        <li><a onClick="cef.gigaso.zoom_in()" title="放大"><img src="images/icon-03.png" width="21" height="19"></a></li>
-        <li><a onClick="cef.gigaso.zoom_out()" title="缩小"><img src="images/icon-04.png" width="21" height="19"></a></li>
-        <li style="width:150px;">
-          <input type="radio" name="case" id="case0">
-          模糊查询
-          <input type="radio" name="case" id="case1">
-          精确查询</li>
+      <ul style="position:relative;">
+        <li><a onClick="return_history();" title="主页" style="cursor:pointer;"><img src="images/icon-01.png" width="21" height="19"></a></li>
+        <li style="position:absolute; width:2px; left:45px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
+        <li><a onClick="refresh();"  title="刷新"  style="cursor:pointer;"><img src="images/icon-02.png" width="21" height="19"></a></li>
+        <li style="position:absolute; width:2px; left:95px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
+        <li style="width:35px;"><a onClick="cef.gigaso.zoom_in()" title="放大"  style="cursor:pointer;"><img src="images/icon-03.png" width="21" height="19"></a></li>
+        <li><a onClick="cef.gigaso.zoom_out()" title="缩小"  style="cursor:pointer;"><img src="images/icon-04.png" width="21" height="19"></a></li>
+        <li style="position:absolute; width:2px; left:180px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
+        <li style="width:150px;vertical-align:middle; position:absolute; top:-10px; left:190px;"><input type="radio" name="case" id="case0" >模糊查询 <input type="radio" name="case" id="case1">精确查询</li>
       </ul>
     </div>
-
     <div class="rightbar">
-      <ul>
-        <li><a onClick="$('#search')[0].value='*'; searchf('*');orderby(2,true);" title="最大文件"><img src="images/icon-05.png" width="51" height="16"></a></li>
-        <li><a onClick="online_db();" title="在线文件"><img src="images/icon-06.png" width="51" height="16"></a></li>
-        <li class=""><a onClick="offline_db();" title="离线文件"><img src="images/icon-07.png" width="51" height="16"></a></li>
-        <li style="width:34px;" onmouseover="layer_menu('m_sub1','1')" onmouseout="layer_menu('m_sub1','1')"><a href="#" title="设置"  _fcksavedurl="#"><img src="images/icon-08.png" width="34" height="16"></a>
+      <ul style="position:relative;">
+        <li><a onClick="$('#search')[0].value='*'; searchf('*');orderby(2,true);" title="最大文件"  style="cursor:pointer;"><img src="images/icon-05.png" width="51" height="16"></a></li>
+        <li style="position:absolute; width:2px; left:110px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
+        <li><a onClick="online_db();" title="在线文件"  style="cursor:pointer;"><img src="images/icon-06.png" width="51" height="16"></a></li>
+        <li style="position:absolute; width:2px; left:180px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
+        <li class=""><a onClick="offline_db();" title="离线文件"  style="cursor:pointer;"><img src="images/icon-07.png" width="51" height="16"></a></li>
+        <li style="position:absolute; width:2px; left:247px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
+        <li style="width:34px;" onMouseOver="layer_menu('m_sub1','1')" onMouseOut="layer_menu('m_sub1','1')"><a href="#" title="设置"  _fcksavedurl="#"><img src="images/icon-08.png" width="34" height="16"></a>
           <div style="position:relative;">
-            <div id=m_sub1 style="visibility:hidden; position:absolute; top:6px;left:-40px; z-index:99999;" >
+            <div id=m_sub1 style="visibility:hidden; position:absolute; top:6px;left:-60px; z-index:99999;" >
               <ul>
-                <li><img id="scanning" src="images/spinner.gif" style="visibility: hidden"/>
-<a href="#" onclick="show_index_status();return false;">硬盘状态</a></li>
-                <li><a href="#" onclick="show_hotkey();return false;">快捷键</a></li>
-                <li><a href="#" onclick="show_export();return false;">导出查询结果</a></li>
+                <li><a href="#" onClick="show_index_status();return false;">硬盘状态</a></li>
+                <li><a href="#" onClick="show_hotkey();return false;">快捷键</a></li>
+                <li><a href="#" onClick="show_export();return false;">导出查询结果</a></li>
                 <li><a href="#">帮助</a></li>
                 <li><a href="#" onClick="cef.gigaso.dev_tool();return false;">调试</a></li>
               </ul>
@@ -67,7 +67,7 @@
 <div id="historys" style="align:center; "></div>
 <textarea id="history_template" style="display:none"> 
 		{#foreach $T as record}
-        <div style="margin:0 auto; position:relative;">
+        <div style="width:980px; margin:0 auto; position:relative;">
 		<div title="{$T.record.path}{$T.record.name}" class="history_file" style="cursor:hand; position:absolute; left:{$T.record.left}; top:{$T.record.top}; margin-top:-80px;">
 			<div class="thumbnail-container">
 				<div class="edit-mode-border">
@@ -92,55 +92,50 @@
 <div class="title-01-right"><a onClick="history_switch();return false;">更多</a></div>
 </div>
 </textarea>
-
-
-
-
-
 <div id="tabs" style="display:none">
 	<ul id="main_nav_tab">
 		<li>
-			<a id="all-" href="#tab-1" onclick="file_type_search(0);return true;"><img src="icons/file.ico" class="icon"/>全部
+			<a id="all-" href="#tab-1" onClick="file_type_search(0);return true;"><img src="icons/file.ico" class="icon"/>全部
 			<br/><span id="all_file">0</span></a>
 		</li>
 		<li>
-			<a id="dir-" href="#tab-1" onclick="file_type_search(2);return true;"><img src="icons/dir.ico" class="icon"/>文件夹
+			<a id="dir-" href="#tab-1" onClick="file_type_search(2);return true;"><img src="icons/dir.ico" class="icon"/>文件夹
 			<br/><span id="dir_file">0</span></a></li>
 		<li>
-			<a id="compress-" href="#tab-1" onclick="file_type_search(129);return true;"><img src="icons/zip.ico" class="icon"/>压缩包
+			<a id="compress-" href="#tab-1" onClick="file_type_search(129);return true;"><img src="icons/zip.ico" class="icon"/>压缩包
 			<br/><span id="compress_file">0</span></a></li>
 		<li>
-			<a id="program-" href="#tab-1" onclick="file_type_search(130);return true;"><img src="icons/exe.ico" class="icon"/>程序<img src="images/arrow-asc.png" valign="center" border="0"/>
+			<a id="program-" href="#tab-1" onClick="file_type_search(130);return true;"><img src="icons/exe.ico" class="icon"/>程序<img src="images/arrow-asc.png" valign="center" border="0"/>
 			<br/><span id="program_file">0</span></a></li>
 		<li>
-			<a id="media-" href="#tab-1" onclick="file_type_search(131);return true;"><img src="icons/media.ico" class="icon"/>多媒体<img src="images/arrow-asc.png" valign="center" border="0"/>
+			<a id="media-" href="#tab-1" onClick="file_type_search(131);return true;"><img src="icons/media.ico" class="icon"/>多媒体<img src="images/arrow-asc.png" valign="center" border="0"/>
 			<br/><span id="media_file">0</span></a></li>
 		<li>
-			<a id="archive-" href="#tab-1" onclick="file_type_search(132);return true;"><img src="icons/txt.ico" class="icon"/>文档<img src="images/arrow-asc.png" valign="center" border="0"/>
+			<a id="archive-" href="#tab-1" onClick="file_type_search(132);return true;"><img src="icons/txt.ico" class="icon"/>文档<img src="images/arrow-asc.png" valign="center" border="0"/>
 			<br/><span id="archive_file">0</span></a></li>
 		<li>
-			<a id="other-" href="#tab-1" onclick="file_type_search(143);return true;"><img src="icons/unknown.ico" class="icon"/>其它
+			<a id="other-" href="#tab-1" onClick="file_type_search(143);return true;"><img src="icons/unknown.ico" class="icon"/>其它
 			<br/><span id="other_file">0</span></a>
 		</li>
 	</ul>
 	<div id="tab-1">
 		<div class="subnav" style="display:none; left:220px" id="program-div">
-			<span class="subnav-span"><a onclick="file_type_search(17);return false;"><img src="icons/exe.ico" class="icon"/>程序(<span id="exe_file">0</span>)</a></span>
-			<span class="subnav-span"><a onclick="file_type_search(18);return false;"><img src="icons/lnk.ico" class="icon"/>快捷方式(<span id="link_file">0</span>)</a></span>
-			<span class="subnav-span"><a onclick="file_type_search(19);return false;"><img src="icons/script.ico" class="icon"/>脚本(<span id="script_file">0</span>)</a></span>
-			<span class="subnav-span"><a onclick="file_type_search(20);return false;"><img src="icons/lib.ico" class="icon"/>库(<span id="lib_file">0</span>)</a></li>
+			<span class="subnav-span"><a onClick="file_type_search(17);return false;"><img src="icons/exe.ico" class="icon"/>程序(<span id="exe_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(18);return false;"><img src="icons/lnk.ico" class="icon"/>快捷方式(<span id="link_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(19);return false;"><img src="icons/script.ico" class="icon"/>脚本(<span id="script_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(20);return false;"><img src="icons/lib.ico" class="icon"/>库(<span id="lib_file">0</span>)</a></li>
 		</div>
 		<div class="subnav" style="display:none; left:310px" id="media-div">
-			<span class="subnav-span"><a onclick="file_type_search(49);return false;"><img src="icons/music.ico" class="icon"/>音乐(<span id="music_file">0</span>)</a></span>
-			<span class="subnav-span"><a onclick="file_type_search(50);return false;"><img src="icons/photo.ico" class="icon"/>图片(<span id="photo_file">0</span>)</a></span>
-			<span class="subnav-span"><a onclick="file_type_search(51);return false;"><img src="icons/video.ico" class="icon"/>视频(<span id="video_file">0</span>)</a></span>
-			<span class="subnav-span"><a onclick="file_type_search(52);return false;"><img src="icons/animation.ico" class="icon"/>动画(<span id="animation_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(49);return false;"><img src="icons/music.ico" class="icon"/>音乐(<span id="music_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(50);return false;"><img src="icons/photo.ico" class="icon"/>图片(<span id="photo_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(51);return false;"><img src="icons/video.ico" class="icon"/>视频(<span id="video_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(52);return false;"><img src="icons/animation.ico" class="icon"/>动画(<span id="animation_file">0</span>)</a></span>
 		</div>
 		<div class="subnav" style="display:none; left:410px" id="archive-div">
-			<span class="subnav-span"><a onclick="file_type_search(133);return false;"><img src="icons/word.ico" class="icon"/>office文档(<span id="office_file">0</span>)</a></span>
-			<span class="subnav-span"><a onclick="file_type_search(134);return false;"><img src="icons/pdf.ico" class="icon"/>电子书(<span id="ebook_file">0</span>)</a></span>
-			<span class="subnav-span"><a onclick="file_type_search(121);return false;"><img src="icons/htm.ico" class="icon"/>网页(<span id="htm_file">0</span>)</a></span>
-			<span class="subnav-span"><a onclick="file_type_search(135);return false;"><img src="icons/source.ico" class="icon"/>其它文档(<span id="text_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(133);return false;"><img src="icons/word.ico" class="icon"/>office文档(<span id="office_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(134);return false;"><img src="icons/pdf.ico" class="icon"/>电子书(<span id="ebook_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(121);return false;"><img src="icons/htm.ico" class="icon"/>网页(<span id="htm_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(135);return false;"><img src="icons/source.ico" class="icon"/>其它文档(<span id="text_file">0</span>)</a></span>
 		</div>
 		<table id="maintable" width="100%" cellspacing="0">
 			<thead>
@@ -230,7 +225,7 @@
 				<TD>{$T.record.totalMB}</TD>
 				<TD>{$T.record.totalFreeMB}</TD>
 				<TD align="center"><img src="{$T.record.indexed}"></TD>
-				<TD align="center"><img src="icons/disk.ico" title="重新扫描硬盘，建立索引" width="16" height="16" style="cursor:hand;{$T.record.display}" onclick="rescan(this.parentNode,{$T.record.id})"></TD>
+				<TD align="center"><img src="icons/disk.ico" title="重新扫描硬盘，建立索引" width="16" height="16" style="cursor:hand;{$T.record.display}" onClick="rescan(this.parentNode,{$T.record.id})"></TD>
 			</TR>
         </tr>
 		{#/for}
@@ -265,7 +260,7 @@
 				<TD>{$T.record.totalMB}</TD>
 				<TD>{$T.record.totalFreeMB}</TD>
 				<TD>{$T.record.indexed}</TD>
-				<TD align="center"><img src="images/delete.ico" title="删除此离线索引数据库" width="16" height="16" style="cursor:hand" onclick="del_offline_db(this.parentNode,{$T.record.id})"></TD>
+				<TD align="center"><img src="images/delete.ico" title="删除此离线索引数据库" width="16" height="16" style="cursor:hand" onClick="del_offline_db(this.parentNode,{$T.record.id})"></TD>
 			</TR>
         </tr>
 		{#/for}
@@ -284,7 +279,7 @@
 		<option value="6">F9</option>
 		<option value="7">ALT + F9</option>
 	</select>
-	<input type="button" value="确定" onclick="set_hotkey();">
+	<input type="button" value="确定" onClick="set_hotkey();">
 </div>
 
 <div id="dialog-export" title="导出当前查询结果" style="display:none;">
@@ -297,7 +292,7 @@
 导出文件名：
 	<input type="text" id="export-filename" size="40" readonly="readonly">
 <br>
-	<input type="button" value="确定" onclick="do_export();">
+	<input type="button" value="确定" onClick="do_export();">
 </div>
 
 
@@ -309,7 +304,7 @@
 主要更新的功能：<br>
 <p id="upgrade_desc"></p>
 <br>
-	<input type="button" value="立即安装" onclick="do_upgrade();">
+	<input type="button" value="立即安装" onClick="do_upgrade();">
 	<input type="button" value="以后再说" onclick='$("#dialog-upgrade").dialog("close");'>
 
 </div>
