@@ -24,7 +24,7 @@ project (GIGASO)
 
 set (GIGASO_VERSION_MAJOR 1)
 set (GIGASO_VERSION_MINOR 0)
-set (GIGASO_VERSION_BUILD 8)
+set (GIGASO_VERSION_BUILD 9)
 
 set(BREAKPAD_DIR ${PROJECT_SOURCE_DIR}/3rd/google-breakpad-read-only/src)
 
@@ -34,32 +34,6 @@ configure_file (
   )
 
 EXEC_PROGRAM("ruby ../html_embed.rb" "${PROJECT_BINARY_DIR}")
-
-configure_file (
-  "${PROJECT_BINARY_DIR}/GIGASOConfig.h"
-  "${PROJECT_SOURCE_DIR}/PluginGigaso/GIGASOConfig.h"
-  )
-
-configure_file (
-  "${PROJECT_SOURCE_DIR}/filesearch/env.h"
-  "${PROJECT_SOURCE_DIR}/PluginGigaso/env.h"
-  )
-
-configure_file (
-  "${PROJECT_SOURCE_DIR}/filesearch/sharelib.h"
-  "${PROJECT_SOURCE_DIR}/PluginGigaso/sharelib.h"
-  )
-
-configure_file (
-  "${PROJECT_SOURCE_DIR}/filesearch/common.h"
-  "${PROJECT_SOURCE_DIR}/PluginGigaso/common.h"
-  )
-
-configure_file (
-  "${PROJECT_SOURCE_DIR}/filesearch/common.c"
-  "${PROJECT_SOURCE_DIR}/PluginGigaso/common.c"
-  )
-
 
 # add the binary tree to the search path for include files
 # so that we will find GIGASOConfig.h
@@ -75,7 +49,6 @@ add_subdirectory (console-example)
 include_directories ("${PROJECT_SOURCE_DIR}/browser")
 add_subdirectory (browser)
 
-install (FILES "${PROJECT_SOURCE_DIR}/../firebreath-1.4/release/bin/PluginGigaso/npPluginGigaso.dll"   DESTINATION .)
 install (FILES "${PROJECT_SOURCE_DIR}/cmake/gigaso.inf"   DESTINATION .)
 
 

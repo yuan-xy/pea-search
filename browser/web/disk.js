@@ -39,8 +39,8 @@ function gen_offline_dir_name(file, d_infos){
 }
 
 function get_loaded_offline_dbs(){
-	var done = eval(plugin.search("[///index_status"));
-	var drives = eval(plugin.search("[///get_drives"));
+	var done = eval(cef.plugin.search("[///index_status"));
+	var drives = eval(cef.plugin.search("[///get_drives"));
 	var offline = [];
 	$.each(done, function (index, ele) { 
 		if(!contain(ele.id,drives)){
@@ -52,11 +52,11 @@ function get_loaded_offline_dbs(){
 
 
 function get_offline_dbs(){
-	var dbs = eval(plugin.search("[///cache_dbs"));
+	var dbs = eval(cef.plugin.search("[///cache_dbs"));
 	dbs_name = dbs.map(function(ele){
 		return ele.name;
 	})
-	var drives = eval(plugin.search("[///get_drives"));
+	var drives = eval(cef.plugin.search("[///get_drives"));
 	$.each(drives, function (index, ele) { 
 		var i = $.inArray(ele.serialNumber+".db", dbs_name);
 		if(i!=-1) dbs_name.splice(i, 1);
@@ -65,7 +65,7 @@ function get_offline_dbs(){
 }
 
 function add_time_info(objs){
-	var dbs = eval(plugin.search("[///cache_dbs"));
+	var dbs = eval(cef.plugin.search("[///cache_dbs"));
 	dbs_name = dbs.map(function(ele){
 		return ele.name;
 	})
@@ -100,8 +100,8 @@ function has_offline_dbs(){
 }
 
 function todo_dirves(){
-	var done = eval(plugin.search("[///index_status"));
-	var drives = eval(plugin.search("[///get_drives"));
+	var done = eval(cef.plugin.search("[///index_status"));
+	var drives = eval(cef.plugin.search("[///get_drives"));
 	done_sn = done.map(function(ele){
 		return ele.serialNumber;
 	})
@@ -133,8 +133,8 @@ function scan_img(){
 }
 
 function show_index_status(){
-	var done = eval(plugin.search("[///index_status"));
-	var drives = eval(plugin.search("[///get_drives"));
+	var done = eval(cef.plugin.search("[///index_status"));
+	var drives = eval(cef.plugin.search("[///get_drives"));
 	$.each(drives, function (index, ele) { 
 		if(!ele.volumeName) ele.volumeName="未命名";
 		ele.panfu = String.fromCharCode(65+ele.id*1);
@@ -172,11 +172,11 @@ function refreash_index_status(){
 }
 
 function show_hotkey(){
-	$("#select-hotkey").val(plugin.hotkey);
+	$("#select-hotkey").val(cef.plugin.hotkey);
 	$("#dialog-set-hotkey").dialog({modal: true, width:600});
 }
 function set_hotkey(){
-	plugin.hotkey = $("#select-hotkey").val();
+	cef.plugin.hotkey = $("#select-hotkey").val();
 	$("#dialog-set-hotkey").dialog("close");
 	show_info("快捷键设置成功！");
 }
@@ -200,7 +200,7 @@ function do_export(){
 		}
 		s += "\r\n";
 	});
-	plugin.save($("#export-filename").val(),s);
+	cef.plugin.save($("#export-filename").val(),s);
 	$("#dialog-export").dialog("close");
 	show_info("查询结果导出成功！");
 }
@@ -208,14 +208,14 @@ function do_export(){
 function rescan(td, i){
 	clearTimeout(refreash_index_dialog_timeout);
 	$(td.parentNode.cells(td.cellIndex-1)).html('<img src="images/spinner.gif">');
-	plugin.search("[///rescan"+i);
+	cef.plugin.search("[///rescan"+i);
 	refreash_index_dialog_timeout = setTimeout(refreash_index_status,3000);
 }
 
 function del_offline_db(td,i){
 	$(td).html('<img src="images/spinner.gif">');
 	function rescan0(){
-		plugin.search("[///del_offline_db"+i);
+		cef.plugin.search("[///del_offline_db"+i);
 		$("#dialog-index-status").dialog("close");
 		show_index_status();
 	}	
@@ -224,13 +224,13 @@ function del_offline_db(td,i){
 
 function offline_db(){
 	$("#loading").css("visibility","visible");
-	plugin.offline = true;
-	plugin.search("[///load_offline_db");
+	cef.plugin.offline = true;
+	cef.plugin.search("[///load_offline_db");
 	//判断离线DB是否加载完成
 	setTimeout(refresh,2000);
 }
 function online_db(){
-	plugin.offline = false;
+	cef.plugin.offline = false;
 	setTimeout(refresh,10);
 }
 
@@ -245,8 +245,8 @@ function upgrade_req(){
 	})
     .success(function(data, textStatus, jqXHR) { 
 		if(data.status==1)
-			plugin.search("[///upgrade"+host+data.url+"?"+data.hash+"&"+data.version);
-		else plugin.search("[///upgrade_none");
+			cef.plugin.search("[///upgrade"+host+data.url+"?"+data.hash+"&"+data.version);
+		else cef.plugin.search("[///upgrade_none");
 	 })
     .error(function(jqXHR, textStatus, errorThrown) {
 		console.log(textStatus);

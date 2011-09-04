@@ -3,6 +3,7 @@
 #include "../filesearch/common.h"
 #include "cef_scheme.h"
 #include "cef_js.h"
+#include "cef_plugin.h"
 #include "client_handler.h"
 #include <sstream>
 #include <string>
@@ -56,8 +57,10 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
   CefInitialize(settings);
 	InitSchemeTest();
 	InitExtensionTest();
+	InitPlugin();
 	MyRegisterClass(hInstance);
 	if (!InitInstance (hInstance, nCmdShow)) return FALSE;
+	connect_named_pipe();
 	SetForegroundWindow(hMainWin);
 	SetFocus(hMainWin);
 	MSG msg;
@@ -69,6 +72,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+	close_named_pipe();
 	CefShutdown();
 	return (int) msg.wParam;
 }

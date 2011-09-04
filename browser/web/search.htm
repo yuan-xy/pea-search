@@ -21,7 +21,6 @@
 <div class="topbar">
   <div class="iconbox">
     <div class="leftbar">
-      <object id="plugin0" type="application/x-plugingigaso" width="0" height="0">
       </object>
       <ul style="position:relative;">
         <li><a onClick="return_history();" title="主页" style="cursor:pointer;"><img src="images/icon-01.png" width="21" height="19"></a></li>
@@ -74,7 +73,7 @@
 					<div class="edit-bar">
 					 <div class="pin"></div>
 					 <div class="spacer"></div>
-					 <div class="remove" title="不要显示" onclick="plugin.his_del({$T.record.id});$(this).parents('.history_file').hide();refresh();return false;"></div>
+					 <div class="remove" title="不要显示" onclick="cef.plugin.his_del({$T.record.id});$(this).parents('.history_file').hide();refresh();return false;"></div>
 					</div>
 					<span class="thumbnail-wrapper" style="background-image: url({$T.record.thumb})">
 					 <span class="thumbnail"></span>
@@ -324,7 +323,6 @@
 		chars = chars || "\\s";
 		return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
 	}
-	var plugin = document.getElementById('plugin0');
 	function ieTrOver(){this.oldClassName=this.className;this.className="hovered"}
 	function ieTrOut(){this.className=this.oldClassName}
 	function table_over(){
@@ -340,7 +338,7 @@
 					this.onmouseout = ieTrOut;
 				});
 			}
-			if(!plugin.offline){
+			if(!cef.plugin.offline){
 				$("#maintable tbody tr").contextMenu('myMenu1', context_menu_obj);
 				$("#maintable tbody td[colid=0]").bind('dblclick',function(e){
 					dblclick_file(e.currentTarget.parentNode);
@@ -377,7 +375,7 @@
 					html.substring(fi+$("#search").val().length, html.length);
 			});
 			icon_replace_index=0;
-			if(in_exe && !plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
+			if(in_exe && !cef.plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
 			$("#loading").css("visibility","hidden");
 	  }
 </script>
@@ -436,13 +434,13 @@
 			files = [];
 			page_from = 0;
 			page();
-			plugin.start_server();
+			cef.plugin.start_server();
 	}
 	function searchf0(){
 		stat_timeout = setTimeout(stat_search,10);
 		$("#loading").css("visibility","visible");
 		clearTimeout(highlight_timeout);
-		var s = plugin.search(cur_search);
+		var s = cef.plugin.search(cur_search);
 		if(changed()) return; //查询已过期
 		try{
 			files = eval(s);
@@ -451,7 +449,7 @@
 			$("#loading").css("visibility","hidden");
 			return;
 		}
-		if(plugin.offline){
+		if(cef.plugin.offline){
 			var d_infos = get_loaded_offline_dbs();
 			for(var f_index=0; f_index<files.length; f_index++)
 				gen_offline_dir_name(files[f_index],d_infos);
@@ -496,7 +494,7 @@
 		$("#loading").css("visibility","visible");
 		order_col = col;
 		order_desc = desc;
-		plugin.order = col*2+desc+1;
+		cef.plugin.order = col*2+desc+1;
 		if(!desc){
 			$("#maintable th span").html("");
 			$("#orderspan"+col).html("<img src='images/s_asc.png' />");
@@ -511,7 +509,7 @@
 	}
 	function file_type_search(ft){
 		$("#loading").css("visibility","visible");
-		plugin.file_type=ft;
+		cef.plugin.file_type=ft;
 		if($("#search").val()=="") return;
 		clearTimeout(search_timeout);
 		search_timeout = setTimeout(searchf0,5);
@@ -540,7 +538,7 @@
 	function stat_search(){
 		if(changed()) return; //查询已过期
 		if(cur_search=="") return;
-		var s = plugin.stat(cur_search);
+		var s = cef.plugin.stat(cur_search);
 		try{
 			var stats = eval("("+s+")");
 			stat_num_set(stats);
@@ -550,7 +548,7 @@
 	}
 	function history_parse(start_index){
 		if(arguments.length==0) start_index=0;
-		var hs = plugin.history().replace(/\\/g,"\\\\");
+		var hs = cef.plugin.history().replace(/\\/g,"\\\\");
 		hs = eval(hs);
 		for( var i=0;i<hs.length;i++){
 			var fname = hs[i].name;
@@ -589,24 +587,23 @@
 				$(p).addClass("pinned");
 				p.title = "取消固定";
 				$(p).bind('click',function(e){
-					plugin.his_unpin(e.currentTarget.idx);
+					cef.plugin.his_unpin(e.currentTarget.idx);
 					$(e.currentTarget).attr("title",'固定在此显示');
 					$(e.currentTarget).removeClass("pinned");
 				});
 			}else{
 				p.title = "固定在此显示";
 				$(p).bind('click',function(e){
-					plugin.his_pin(e.currentTarget.idx);
+					cef.plugin.his_pin(e.currentTarget.idx);
 					$(e.currentTarget).attr("title",'取消固定');
 					$(e.currentTarget).addClass("pinned");
 				});
 			}
 		}
 		$("#loading").css("visibility","hidden");
-		//$("div.pin first").addClass("pinned")
 	}
 	function history_thumb(){
-		if(!in_exe) plugin.his_thumb();
+		//if(!in_exe) cef.plugin.his_thumb();
 		history_parse_timeout = setTimeout(history_parse,1);
 	}
 	function load_history(){
@@ -657,7 +654,7 @@
 		}
 		if(ss.length<=1) return;
 		clearTimeout(history_timeout);
-		plugin.dire = ss;
+		cef.plugin.dire = ss;
 		$("#dir")[0].value = ss;
 		$("#search")[0].value = "*";
 		$("#search")[0].select();
@@ -665,14 +662,14 @@
 	}
 	function init_event(){
 		$("#dir").bind('keyup',function(event,t){
-			plugin.dire = $("#dir")[0].value;
+			cef.plugin.dire = $("#dir")[0].value;
 		});
 		$("#case0").bind('click',function(event,t){
-			plugin.caze = false;
+			cef.plugin.caze = false;
 			searchf($("#search").val());
 		});
 		$("#case1").bind('click',function(event,t){
-			plugin.caze = true;
+			cef.plugin.caze = true;
 			searchf($("#search").val());
 		});
 		$("#result1").setTemplateElement("template");
@@ -701,19 +698,8 @@
 		$('#tabs').tabs();
 		scan_img();
 	}
-	function regplugin(){
-			cef.gigaso.reg_plugin();
-			show_info("插件初始化成功！请重启本软件。");
-	}
 	$(function() {
-		try{
-			if(!plugin.search){
-				regplugin();
-			}
-		}catch(e){
-				regplugin();
-		}
-		if(plugin.caze){
+		if(cef.plugin.caze){
 			$("#case1").click();
 		}else{
 			$("#case0").click();

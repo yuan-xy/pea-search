@@ -64,17 +64,6 @@ public:
 		}
       return true;
     }
-    else if(name == "RegPlugin")
-    {
-		UINT u = WinExec("regsvr32 /s npPluginGigaso.dll",SW_HIDE);
-		if(u>31){
-			Sleep(10);
-			WinExec("search.exe",SW_SHOW);
-			PostQuitMessage(0);
-			TerminateProcess(GetCurrentProcess(),0);
-		}
-		return true;
-    }
     else if(name == "CheckUpdate")
     {
 		int status=UPDATE_CHECH_UNKNOWN;
@@ -218,10 +207,6 @@ void InitExtensionTest()
     "  cef.gigaso.dev_tool = function() {"
     "    native function ShowDevTools();"
     "    return ShowDevTools();"
-    "  };"
-    "  cef.gigaso.reg_plugin = function() {"
-    "    native function RegPlugin();"
-    "    return RegPlugin();"
     "  };"
     "  cef.gigaso.check_update = function() {"
     "    native function CheckUpdate();"

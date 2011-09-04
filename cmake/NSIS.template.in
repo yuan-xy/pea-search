@@ -747,7 +747,6 @@ Section "-Core installation"
   nsExec::ExecToStack 'net start gigaso'
   DetailPrint "准备初次运行的数据..."
   Sleep 3000
-  nsExec::ExecToStack 'regsvr32 /s "$INSTDIR\npPluginGigaso.dll"'
   CreateShortCut "$DESKTOP\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
   CreateShortCut "$QUICKLAUNCH\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
   CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Gigaso文件查询.lnk"  "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0

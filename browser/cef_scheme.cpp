@@ -2,7 +2,7 @@
 #include "cef_scheme.h"
 #include "string_util.h"
 #include "cef_util.h"
-#include "../PluginGigaso/bitmap.h"
+#include "bitmap.h"
 #include <gdiplus.h>
 #include <atlimage.h>
 #include <atlbase.h>
