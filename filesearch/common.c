@@ -77,7 +77,7 @@ int get_hotkey(){
 		GetPrivateProfileString(L"customize",L"hotkey",L"0",hotkey,2,buffer);
 		return hotkey[0]-L'0';
 	}else{
-		return 0;
+		return 6;//VK_F9
 	}
 }
 
