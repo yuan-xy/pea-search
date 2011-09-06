@@ -375,13 +375,12 @@
 					html.substring(fi+$("#search").val().length, html.length);
 			});
 			icon_replace_index=0;
-			if(in_exe && !cef.plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
+			if(!cef.plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
 			$("#loading").css("visibility","hidden");
 	  }
 </script>
 <script type="text/javascript">
 	var host = "http://www.1dooo.com:3000";
-	var in_exe = false;
 	var order_col;
 	var order_desc;
 	var cur_search;
@@ -563,13 +562,9 @@
 			if(hs[i].name==""){
 				hs[i].thumb = "";
 			}else{
-				if(in_exe){
 					hs[i].thumb = "gigaso://thumb/"+hs[i].path+hs[i].name;
 					hs[i].thumb = hs[i].thumb.replace(/\\/g,"\\\\");
 					hs[i].thumb = hs[i].thumb.replace(/ /g,"%20");
-				}else{
-					hs[i].thumb = hs[i].id+".jpg";
-				}
 			}
 		}
 		file_name_trim2(hs);
@@ -602,13 +597,9 @@
 		}
 		$("#loading").css("visibility","hidden");
 	}
-	function history_thumb(){
-		//if(!in_exe) cef.plugin.his_thumb();
-		history_parse_timeout = setTimeout(history_parse,1);
-	}
 	function load_history(){
 		$("#loading").css("visibility","visible");
-		history_thumb_timeout = setTimeout(history_thumb,1);
+		history_parse_timeout = setTimeout(history_parse,1);
 	}
 	function return_history(){
 		$("#loading").css("visibility","visible");

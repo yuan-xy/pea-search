@@ -31,7 +31,7 @@ static void init_dir(){
 	wchar_t *cmdLine = GetCommandLineW();
 	std::wstring str(cmdLine), olds(L"\\"), news(L"\\\\");
 	str = StringReplace(str,olds,news);
-	wsprintf(buffer,L"try{in_exe=true;if(init_dir) init_dir('%s');}catch(e){}",str.c_str());
+	wsprintf(buffer,L"try{if(init_dir) init_dir('%s');}catch(e){}",str.c_str());
 	exec_js_str(buffer);
 }
 
