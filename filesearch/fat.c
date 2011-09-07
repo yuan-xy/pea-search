@@ -144,23 +144,27 @@ static DWORD WINAPI MonitorFat(PVOID pParam) {
 	char buf[(sizeof(FILE_NOTIFY_INFORMATION) + MAX_PATH) * 2] = { 0 };
 	FILE_NOTIFY_INFORMATION* pNotify = (FILE_NOTIFY_INFORMATION*) buf;
 	while (1) {
-		ReadDirectoryChangesW(
+		BOOL flag = ReadDirectoryChangesW(
 				g_hVols[i],
 				pNotify,
 				sizeof(buf),
 				TRUE,
 				FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_DIR_NAME, &dwBytesReturned, NULL,
-				NULL);
-		if (pNotify->Action > 0) {
+				NULL);//TODO: 检查调用是否成功
+		if (flag && pNotify->Action > 0) {
 			int len = pNotify->FileNameLength+3*sizeof(WCHAR);
 			int size = len/sizeof(WCHAR);
-			WCHAR *name = (WCHAR *)malloc_safe(len);
-			wsprintf(name,L"%c:\\%s",i+'A',pNotify->FileName);
-			switch(pNotify->Action){
-				case FILE_ACTION_ADDED: add_file(name,size,i);break;
-				case FILE_ACTION_REMOVED: deleteFile(find_file(name,size)); break;
-				case FILE_ACTION_RENAMED_OLD_NAME: deleteFile(find_file(name,size)); break;
-				case FILE_ACTION_RENAMED_NEW_NAME: add_file(name,size,i);break;
+			if(size<MAX_PATH && size>0){
+				WCHAR *name = (WCHAR *)malloc_safe(len);
+				wsprintf(name,L"%c:\\%s",i+'A',pNotify->FileName);
+				switch(pNotify->Action){
+					case FILE_ACTION_ADDED: add_file(name,size,i);break;
+					case FILE_ACTION_REMOVED: deleteFile(find_file(name,size)); break;
+					case FILE_ACTION_RENAMED_OLD_NAME: deleteFile(find_file(name,size)); break;
+					case FILE_ACTION_RENAMED_NEW_NAME: add_file(name,size,i);break;
+				}
+			}else{
+				fprintf(stderr,"%s , line %d in '%s'\n",pNotify->FileName, __LINE__, __FILE__);
 			}
 		}
 	}

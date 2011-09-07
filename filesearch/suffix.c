@@ -58,7 +58,7 @@ static char MUSIC4[][5] = { "flac","midi","ttpl","ttbl","aifc","aiff"};
 
 static char PHOTO1[][2] = { 0};
 static char PHOTO2[][3] = { 0};
-static char PHOTO3[][4] = { "jpg","jpe","git","png","bmp","dib","tif","pcx","ico","pcd","psd"};
+static char PHOTO3[][4] = { "jpg","jpe","gif","png","bmp","dib","tif","pcx","ico","pcd","psd"};
 static char PHOTO4[][5] = { "jpeg","jeif","tiff"};
 
 static char VEDIO1[][2] = { 0};

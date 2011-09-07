@@ -24,7 +24,7 @@ project (GIGASO)
 
 set (GIGASO_VERSION_MAJOR 1)
 set (GIGASO_VERSION_MINOR 0)
-set (GIGASO_VERSION_BUILD 9)
+set (GIGASO_VERSION_BUILD 10)
 
 set(BREAKPAD_DIR ${PROJECT_SOURCE_DIR}/3rd/google-breakpad-read-only/src)
 

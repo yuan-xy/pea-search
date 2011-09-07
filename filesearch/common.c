@@ -216,7 +216,7 @@ BOOL get_os(wchar_t *osbuf){
 	OSVERSIONINFOEX o;
 	o.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 	if (GetVersionEx ((LPOSVERSIONINFO) &o)){
-		wsprintf(osbuf,L"1.%d.%d.%d.%d.%d.%d.%x",o.wProductType,o.dwMajorVersion,o.dwMinorVersion,
+		wsprintf(osbuf,L"1.%d.%d_%d.%d_%d.%d.%x",o.wProductType,o.dwMajorVersion,o.dwMinorVersion,
 			o.wServicePackMajor,o.wServicePackMinor,o.dwBuildNumber,o.wSuiteMask);
 		return 1;
 	}
@@ -224,11 +224,12 @@ BOOL get_os(wchar_t *osbuf){
 }
 
 BOOL get_cpu(wchar_t *cpubuf){
-	SYSTEM_INFO info;
+	SYSTEM_INFO info, info2;
 	MEMORYSTATUS mem;
 	GetSystemInfo(&info); 
+	GetNativeSystemInfo(&info2); 
 	GlobalMemoryStatus(&mem);
-	wsprintf(cpubuf,L"%d.%d.%x.%d %d.%d",info.wProcessorArchitecture,info.dwNumberOfProcessors,
+	wsprintf(cpubuf,L"%d_%d.%d.%x.%d %d.%d",info.wProcessorArchitecture,info2.wProcessorArchitecture,info.dwNumberOfProcessors,
 		info.wProcessorRevision,info.dwPageSize,mem.dwTotalPhys>>20,mem.dwAvailPhys>>20);
 	return 1;
 }
