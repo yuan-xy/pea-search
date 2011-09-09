@@ -14,11 +14,11 @@ if "%1" == "install" goto do_install
 	if "%1" == "gigaso_install" goto do_install	
 :do_install
 	cd Release
-	signtool sign /v /f ../cmake/gigaso-exe.pfx browser/search.exe
-	signtool sign /v /f ../cmake/gigaso-exe.pfx filesearch/gigaso.exe
-	signtool sign /v /f ../cmake/gigaso-exe.pfx filesearch/gigasoln.exe
+	signtool sign /v /f ../cmake/gigaso-exe.pfx browser/peasrch.exe
+	signtool sign /v /f ../cmake/gigaso-exe.pfx filesearch/peadaemo.exe
+	signtool sign /v /f ../cmake/gigaso-exe.pfx filesearch/pealn.exe
 	cpack
-	signtool sign /v /f ../cmake/gigaso-exe.pfx Gigaso-1.0-x86.exe
+	signtool sign /v /f ../cmake/gigaso-exe.pfx PeaSearch-1.0-x86.exe
 	cd ..
 	goto end
 

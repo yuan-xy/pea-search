@@ -24,7 +24,7 @@ project (GIGASO)
 
 set (GIGASO_VERSION_MAJOR 1)
 set (GIGASO_VERSION_MINOR 0)
-set (GIGASO_VERSION_BUILD 10)
+set (GIGASO_VERSION_BUILD 11)
 
 set(BREAKPAD_DIR ${PROJECT_SOURCE_DIR}/3rd/google-breakpad-read-only/src)
 
@@ -54,26 +54,26 @@ install (FILES "${PROJECT_SOURCE_DIR}/cmake/gigaso.inf"   DESTINATION .)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
-set(CPACK_PACKAGE_NAME "Gigaso")
+set(CPACK_PACKAGE_NAME "PeaSearch")
 set(CPACK_PACKAGE_DESCRIPTION "Do the file search")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A longer description about our Gigaso app.")
-set(CPACK_PACKAGE_CONTACT "yuanxinyu@gigaso.com")
-set(CPACK_PACKAGE_VENDOR "Gigaso.com")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A longer description about our PeaSearch app.")
+set(CPACK_PACKAGE_CONTACT "yuanxinyu@peasrch.com")
+set(CPACK_PACKAGE_VENDOR "PeaSrch.com")
 set(CPACK_RESOURCE_FILE_LICENSE  "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
 set(CPACK_PACKAGE_VERSION_MAJOR "${GIGASO_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${GIGASO_VERSION_MINOR}.${GIGASO_VERSION_BUILD}")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${GIGASO_VERSION_MINOR}-${CMAKE_SYSTEM_PROCESSOR}") 
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "gigaso")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Wandouss")
 
 IF(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backslashes.
   SET(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/browser\\\\web\\\\images\\\\find.ico")
-  SET(CPACK_NSIS_DISPLAY_NAME "¼Ç¼ÑÎÄ¼þËÑË÷£¨Gigaso.com£©")
-  SET(CPACK_NSIS_PACKAGE_NAME "¼Ç¼ÑÎÄ¼þËÑË÷")
-  SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.gigaso.com")
-  SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.gigaso.com")
-  SET(CPACK_NSIS_CONTACT "yuanxinyu@gigaso.com")
+  SET(CPACK_NSIS_DISPLAY_NAME "Íã¶¹ËÑË÷£¨wandouss.com£©")
+  SET(CPACK_NSIS_PACKAGE_NAME "Íã¶¹ËÑË÷")
+  SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.wandouss.com")
+  SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.wandouss.com")
+  SET(CPACK_NSIS_CONTACT "yuanxinyu@peasrch.com")
 ENDIF(WIN32 AND NOT UNIX)
 
 INCLUDE(CPack)

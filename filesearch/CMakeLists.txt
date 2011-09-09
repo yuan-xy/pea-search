@@ -54,10 +54,10 @@ target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD
 target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/crash_report_sender.lib")
 target_link_libraries (file_search "Wininet.lib Urlmon.lib")
 
-add_executable (gigaso "win_service.c" )
-target_link_libraries (gigaso "file_search")
-set_target_properties(gigaso PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\"") 
-install (TARGETS gigaso  DESTINATION .)
+add_executable (peadaemo "win_service.c" )
+target_link_libraries (peadaemo "file_search")
+set_target_properties(peadaemo PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\"") 
+install (TARGETS peadaemo  DESTINATION .)
 install (FILES "${PROJECT_SOURCE_DIR}/libs/hz.lib"   DESTINATION .)
 
 
@@ -83,6 +83,6 @@ add_executable (ctest_find_path "ctest_find_path.c" )
 target_link_libraries (ctest_find_path "file_search")
 ADD_TEST(find_path ${CMAKE_CURRENT_BINARY_DIR}/ctest_find_path)
 
-add_executable (gigasoln "hotkey_listener.c" "common.c")
-set_target_properties(gigasoln PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
-install (TARGETS gigasoln  DESTINATION .)
+add_executable (pealn "hotkey_listener.c" "common.c")
+set_target_properties(pealn PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+install (TARGETS pealn  DESTINATION .)

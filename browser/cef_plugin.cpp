@@ -193,7 +193,7 @@ static bool save(CefString filename,CefString content){
 }
 
 static bool start_server(){
-	return WinExec("net start gigaso",0) > 31;
+	return WinExec("net start PeaSearch",0) > 31;
 }
 
 static CefString history(){

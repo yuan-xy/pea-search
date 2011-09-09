@@ -9,8 +9,4 @@ Debug
 Release
 build
 GIGASOConfig.h
-PluginGigaso/common.c
-PluginGigaso/common.h
-PluginGigaso/env.h
-PluginGigaso/sharelib.h
 gserver/public/dumps/

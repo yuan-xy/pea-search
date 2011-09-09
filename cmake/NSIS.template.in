@@ -561,7 +561,7 @@ FunctionEnd
   @CPACK_NSIS_PAGE_COMPONENTS@
 
   !insertmacro MUI_PAGE_INSTFILES
-  !define MUI_FINISHPAGE_RUN "$INSTDIR\search.exe"
+  !define MUI_FINISHPAGE_RUN "$INSTDIR\peasrch.exe"
   !insertmacro MUI_PAGE_FINISH
 
   !insertmacro MUI_UNPAGE_CONFIRM
@@ -625,13 +625,13 @@ FunctionEnd
 VIProductVersion "@CPACK_PACKAGE_VERSION@"
 VIAddVersionKey ProductName "@CPACK_NSIS_DISPLAY_NAME@"
 VIAddVersionKey Comments "一款根据文件名瞬间查询文件位置的软件"
-VIAddVersionKey CompanyName Gigaso.com
-VIAddVersionKey LegalCopyright Gigaso.com
+VIAddVersionKey CompanyName WanDouss.com
+VIAddVersionKey LegalCopyright WanDouss.com
 VIAddVersionKey FileDescription "@CPACK_NSIS_DISPLAY_NAME@ - 最好的文件搜索软件"
 VIAddVersionKey FileVersion "@CPACK_PACKAGE_VERSION@"
 VIAddVersionKey ProductVersion "@CPACK_PACKAGE_VERSION@"
 ;VIAddVersionKey InternalName "@CPACK_NSIS_DISPLAY_NAME@"
-VIAddVersionKey LegalTrademarks "Gigaso.com"
+VIAddVersionKey LegalTrademarks "WanDouss.com"
 VIAddVersionKey OriginalFilename "@CPACK_OUTPUT_FILE_NAME@"
 
 ;--------------------------------
@@ -651,15 +651,15 @@ Section "-Core installation"
   ;Use the entire tree produced by the INSTALL target.  Keep the
   ;list of directories here in sync with the RMDir commands below.
 
-  DetailPrint "寻找旧版本的记佳搜索..."
-  nsExec::ExecToStack 'taskkill /f /im search.exe'
-  nsExec::ExecToStack 'taskkill /f /im gigasoln.exe'
-  DetailPrint "停止旧版本的记佳搜索..."
-  nsExec::ExecToStack 'net stop gigaso'
-  DetailPrint "删除旧版本的记佳搜索..."
-  nsExec::ExecToStack 'taskkill /f /im gigaso.exe'
-  nsExec::ExecToStack 'sc delete gigaso'
-  DetailPrint "开始安装新版本的记佳搜索..."
+  DetailPrint "寻找旧版本的豌豆搜索..."
+  nsExec::ExecToStack 'taskkill /f /im peasrch.exe'
+  nsExec::ExecToStack 'taskkill /f /im pealn.exe'
+  DetailPrint "停止旧版本的豌豆搜索..."
+  nsExec::ExecToStack 'net stop PeaSearch'
+  DetailPrint "删除旧版本的豌豆搜索..."
+  nsExec::ExecToStack 'taskkill /f /im peadaemo.exe'
+  nsExec::ExecToStack 'sc delete PeaSearch'
+  DetailPrint "开始安装新版本的豌豆搜索..."
 
 
   SetOutPath "$INSTDIR"
@@ -741,20 +741,20 @@ Section "-Core installation"
   Push "$INSTALL_DESKTOP"
   Call ConditionalAddToRegisty
 
-  nsExec::ExecToStack 'sc create gigaso binPath= "$INSTDIR\gigaso.exe"  start= auto  type= interact type= own DisplayName= "Gigaso file searcher"'
-  nsExec::ExecToStack 'sc description gigaso "A fast file name searcher"'
+  nsExec::ExecToStack 'sc create PeaSearch binPath= "$INSTDIR\peadaemo.exe"  start= auto  type= interact type= own DisplayName= "Pea File Searcher"'
+  nsExec::ExecToStack 'sc description PeaSearch "A fast file name searcher"'
   DetailPrint "获得磁盘信息..."
-  nsExec::ExecToStack 'net start gigaso'
+  nsExec::ExecToStack 'net start PeaSearch'
   DetailPrint "准备初次运行的数据..."
   Sleep 3000
-  CreateShortCut "$DESKTOP\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
-  CreateShortCut "$QUICKLAUNCH\Gigaso文件查询.lnk" "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
-  CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Gigaso文件查询.lnk"  "$INSTDIR\search.exe" "" "$INSTDIR\web\icons\animation.ico" 0
+  CreateShortCut "$DESKTOP\豌豆文件搜索.lnk" "$INSTDIR\peasrch.exe" "" "$INSTDIR\web\icons\animation.ico" 0
+  CreateShortCut "$QUICKLAUNCH\豌豆文件搜索.lnk" "$INSTDIR\peasrch.exe" "" "$INSTDIR\web\icons\animation.ico" 0
+  CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\豌豆文件搜索.lnk"  "$INSTDIR\peasrch.exe" "" "$INSTDIR\web\icons\animation.ico" 0
   WriteINIStr "$INSTDIR\gigaso.inf" Strings EXEPATH "$INSTDIR"
   nsExec::ExecToStack 'RunDll32 advpack.dll, LaunchINFSection "$INSTDIR\gigaso.inf", DefaultInstall'
   DetailPrint "完成安装..."
   Sleep 1500
-  Exec '$INSTDIR\gigasoln.exe'
+  Exec '$INSTDIR\pealn.exe'
   !insertmacro MUI_STARTMENU_WRITE_END
 
 @CPACK_NSIS_EXTRA_INSTALL_COMMANDS@
@@ -779,7 +779,7 @@ Function InstallOptionsPage
 FunctionEnd
 
 function .onInstSuccess
-	;exec "$INSTDIR\search.exe"
+	;exec "$INSTDIR\peasrch.exe"
 functionend
 
 ;--------------------------------
@@ -849,11 +849,11 @@ FunctionEnd
 
 Section "Uninstall"
 
-  nsExec::ExecToStack 'taskkill /f /im search.exe'
-  nsExec::ExecToStack 'net stop gigaso'
-  nsExec::ExecToStack 'taskkill /f /im gigaso.exe'
-  nsExec::ExecToStack 'taskkill /f /im gigasoln.exe'
-  nsExec::ExecToStack 'sc delete gigaso'
+  nsExec::ExecToStack 'taskkill /f /im peasrch.exe'
+  nsExec::ExecToStack 'net stop PeaSearch'
+  nsExec::ExecToStack 'taskkill /f /im peadaemo.exe'
+  nsExec::ExecToStack 'taskkill /f /im pealn.exe'
+  nsExec::ExecToStack 'sc delete PeaSearch'
   nsExec::ExecToStack 'RunDll32 advpack.dll, LaunchINFSection "$INSTDIR\gigaso.inf", DefaultUninstall'
 
   ReadRegStr $START_MENU SHCTX \
@@ -899,9 +899,9 @@ Section "Uninstall"
   !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
 
 
-  Delete "$DESKTOP\Gigaso文件查询.lnk"
-  Delete "$QUICKLAUNCH\Gigaso文件查询.lnk"
-  Delete "$SMPROGRAMS\$MUI_TEMP\Gigaso文件查询.lnk"
+  Delete "$DESKTOP\豌豆文件搜索.lnk"
+  Delete "$QUICKLAUNCH\豌豆文件搜索.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\豌豆文件搜索.lnk"
 
   Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
 @CPACK_NSIS_DELETE_ICONS@

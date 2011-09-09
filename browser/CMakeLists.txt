@@ -33,17 +33,17 @@ SET( SOURCES
     "../filesearch/exception_dump.cpp"
     )
 
-add_executable (search  ${SOURCES})
-target_link_libraries (search "libcef.lib libcef_dll_wrapper.lib")
-target_link_libraries (search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/exception_handler.lib")
-target_link_libraries (search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/crash_generation_client.lib")
-target_link_libraries (search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/common.lib")
-target_link_libraries (search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/crash_report_sender.lib")
-target_link_libraries (search "Wininet.lib")
+add_executable (peasrch  ${SOURCES})
+target_link_libraries (peasrch "libcef.lib libcef_dll_wrapper.lib")
+target_link_libraries (peasrch "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/exception_handler.lib")
+target_link_libraries (peasrch "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/crash_generation_client.lib")
+target_link_libraries (peasrch "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/common.lib")
+target_link_libraries (peasrch "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/crash_report_sender.lib")
+target_link_libraries (peasrch "Wininet.lib")
 
-set_target_properties(search PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
+set_target_properties(peasrch PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
 
-install (TARGETS search DESTINATION .)
+install (TARGETS peasrch DESTINATION .)
 #install (FILES "${CEF_DLL_DIR}/avcodec-52.dll" DESTINATION .)
 #install (FILES "${CEF_DLL_DIR}/avformat-52.dll" DESTINATION .)
 #install (FILES "${CEF_DLL_DIR}/avutil-50.dll" DESTINATION .)

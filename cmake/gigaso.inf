@@ -5,13 +5,13 @@ AddReg=Reg.Settings
 [DefaultUninstall]
 DelReg=Reg.Settings
 [Reg.Settings]
-HKCR,Directory\Shell\gigaso
-HKCR,Directory\Shell\gigaso,,,"%MENUITEM%"
-HKCR,Directory\Shell\gigaso\command,,,"%EXEPATH%\search.exe ""%1"""
-HKCR,Drive\Shell\gigaso
-HKCR,Drive\Shell\gigaso,,,"%MENUITEM%"
-HKCR,Drive\Shell\gigaso\command,,,"%EXEPATH%\search.exe ""%1"""
-HKLM,SOFTWARE\Microsoft\Windows\CurrentVersion\Run, "Gigaso Listener", FLG_ADDREG_TYPE_SZ, "%EXEPATH%\gigasoln.exe"		
+HKCR,Directory\Shell\peasrch
+HKCR,Directory\Shell\peasrch,,,"%MENUITEM%"
+HKCR,Directory\Shell\peasrch\command,,,"%EXEPATH%\peasrch.exe ""%1"""
+HKCR,Drive\Shell\peasrch
+HKCR,Drive\Shell\peasrch,,,"%MENUITEM%"
+HKCR,Drive\Shell\peasrch\command,,,"%EXEPATH%\peasrch.exe ""%1"""
+HKLM,SOFTWARE\Microsoft\Windows\CurrentVersion\Run, "peasrch Listener", FLG_ADDREG_TYPE_SZ, "%EXEPATH%\pealn.exe"		
 [Strings]
-MENUITEM = "¼Ç¼ÑËÑË÷(&S)..."
-EXEPATH	= "C:\PROGRA~1\gigaso\"
+MENUITEM = "Íã¶¹ËÑË÷(&S)..."
+EXEPATH	= "C:\PROGRA~1\peasrch\"
