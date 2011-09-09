@@ -318,8 +318,8 @@ void preBNDM(pUTF8 x, int m, int prestr[], BOOL case_sensitive){
 
 BOOL BNDM(pUTF8 x, int m, pUTF8 y, int n, int preNext[], BOOL case_sensitive) {
 	//Backward Nondeterministic Dawg Matching algorithm
-	//if (m > WORD_SIZE) error
 	int i, j, d, last;
+	if (m > 8*sizeof(void *) ) m=8*sizeof(void *); //查询字符串长度不能大于CPU位宽
 	j = 0;
 	while (j <= n - m) {
 		i = m - 1;

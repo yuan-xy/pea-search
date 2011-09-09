@@ -1,9 +1,22 @@
-#include "tcmalloc.h"
-//#pragma comment(linker, "/include:__tcmalloc")
+#include "GIGASOConfig.h"
+
+#ifdef HAVE_64_BIT
+	#define TC_MALLOC malloc
+	#define TC_REALLOC realloc
+	#define TC_FREE free
+#else
+	#include "tcmalloc.h"
+	//#pragma comment(linker, "/include:__tcmalloc")
+	#define TC_MALLOC tc_malloc
+	#define TC_REALLOC tc_realloc
+	#define TC_FREE tc_free
+#endif
 
 #ifdef WIN32
 #include <windows.h>
 #endif
+
+
 
 #include <stdio.h>
 #include <time.h>
@@ -84,7 +97,7 @@ int time_passed_ret(int (*f)(),int *ret_data){
 
 
 void * malloc_safe(size_t len){
-	void *ret = tc_malloc(len);
+	void *ret = TC_MALLOC(len);
 	if(ret==NULL){
 		MEM_ERROR;
 		exit(EXIT_FAILURE);
@@ -93,7 +106,7 @@ void * malloc_safe(size_t len){
 }
 
 void * realloc_safe(void *ptr, size_t len){
-	void *ret = tc_realloc(ptr,len);
+	void *ret = TC_REALLOC(ptr,len);
 	if(ret==NULL){
 		MEM_ERROR;
 		exit(EXIT_FAILURE);
@@ -105,7 +118,7 @@ void free_safe(void *ptr){
 #ifdef MY_DEBUG
 	assert(ptr);
 #endif
-	if (ptr) tc_free(ptr);
+	if (ptr) TC_FREE(ptr);
 	ptr = NULL;
 }
 
@@ -152,7 +165,7 @@ WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
     }
 }
 
-wchar_t *wcsrchr_me(const wchar_t *name, int len, wchar_t C){
+wchar_t *wcsrchr_me(const wchar_t *name, int len, const wchar_t C){
 	int index=len-1;
 		for(;index>0;index--){
 			if( *(name+index) == C) return name+index;

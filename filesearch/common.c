@@ -66,7 +66,7 @@ void set_prop(LPCWSTR key, LPWSTR str){
 	WritePrivateProfileString(L"customize",key,str,buffer);
 }
 
-#define DEFAULT_HOT_KEY
+#define DEFAULT_HOT_KEY 6
 int get_hotkey(){
 	wchar_t hotkey[2];
 	wchar_t fbuffer[MAX_PATH];

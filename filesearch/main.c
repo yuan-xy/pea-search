@@ -122,12 +122,15 @@ DWORD WINAPI  ScanAll(PVOID pParam){
 }
 
 BOOL gigaso_init(){
+	if(4 == sizeof(void *)){
+		my_assert(24 == sizeof(FileEntry), 0);
+	}else{
+		printf("file entry size:%d\n",sizeof(FileEntry));
+	}
 	breakpad_init();
 	//request_dump();
 	init_chinese();
-	setlocale (LC_ALL, "");
-	my_assert(24 == sizeof(FileEntry), 0);
-	my_assert(WORD_SIZE == sizeof(void *), 0);
+	setlocale(LC_ALL, "");
 	InitDrives();
 	//DrivesIterator(PrintDriveDetails);
 	ValidDrivesIterator(load_online_db);

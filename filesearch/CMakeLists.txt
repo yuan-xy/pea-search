@@ -47,12 +47,12 @@ SET( SOURCES
 
 add_library (file_search STATIC ${SOURCES} )
 #set_target_properties(file_search PROPERTIES LINK_FLAGS "/include:__tcmalloc") 
-target_link_libraries (file_search "${PROJECT_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/libtcmalloc_minimal.lib")
-target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/exception_handler.lib")
-target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/crash_generation_client.lib")
-target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/common.lib")
-target_link_libraries (file_search "${BREAKPAD_DIR}/client/windows/${CMAKE_BUILD_TYPE}/lib/crash_report_sender.lib")
-target_link_libraries (file_search "Wininet.lib Urlmon.lib")
+target_link_libraries (file_search "${3RD_LIB_PATH}/libtcmalloc_minimal.lib")
+target_link_libraries (file_search "${3RD_LIB_PATH}/exception_handler.lib")
+target_link_libraries (file_search "${3RD_LIB_PATH}/crash_generation_client.lib")
+target_link_libraries (file_search "${3RD_LIB_PATH}/common.lib")
+target_link_libraries (file_search "${3RD_LIB_PATH}/crash_report_sender.lib")
+target_link_libraries (file_search "Wininet.lib Urlmon.lib Shlwapi.lib")
 
 add_executable (peadaemo "win_service.c" )
 target_link_libraries (peadaemo "file_search")

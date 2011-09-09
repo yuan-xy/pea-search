@@ -25,11 +25,16 @@ extern "C" {
 
 #define MY_DEBUG
 
-#define WORD_SIZE 4
-
 #include <windows.h>
 
-typedef unsigned int KEY; //NTFS文件的FileReferenceNumber类型，唯一标识一个文件。
+#include "GIGASOConfig.h"
+
+#ifdef HAVE_64_BIT
+	typedef unsigned long KEY; //NTFS文件的FileReferenceNumber类型，唯一标识一个文件。
+#else
+	typedef unsigned int KEY; //NTFS文件的FileReferenceNumber类型，唯一标识一个文件。
+#endif
+
 typedef unsigned char FILE_NAME_LEN; //文件名长度类型
 typedef unsigned int MINUTE; //以分钟表示的时间类型
 typedef unsigned short FSIZE; //文件大小类型

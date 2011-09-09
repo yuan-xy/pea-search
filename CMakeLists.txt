@@ -1,5 +1,5 @@
-cmake_minimum_required (VERSION 2.6)
-set (CMAKE_BACKWARDS_COMPATIBILITY 2.6)
+cmake_minimum_required (VERSION 2.8)
+set (CMAKE_BACKWARDS_COMPATIBILITY 2.8)
 set (CMAKE_VERBOSE_MAKEFILE on)
 
 #	-DCMAKE_BUILD_TYPE=Release ..
@@ -24,7 +24,21 @@ project (GIGASO)
 
 set (GIGASO_VERSION_MAJOR 1)
 set (GIGASO_VERSION_MINOR 0)
-set (GIGASO_VERSION_BUILD 11)
+set (GIGASO_VERSION_BUILD 12)
+
+
+message(STATUS "size of pointer: ${CMAKE_SIZEOF_VOID_P}  ")
+IF( ${CMAKE_SIZEOF_VOID_P} EQUAL  4 )
+    message(STATUS "32 bits")
+ELSE(${CMAKE_SIZEOF_VOID_P} EQUAL "4")
+    set( HAVE_64_BIT 1 )
+    set( CMAKE_SYSTEM_PROCESSOR "x64" ) 
+    message(STATUS "64 bits")
+ENDIF()
+message(STATUS "size of pointer: ${CMAKE_SYSTEM_PROCESSOR}  ")
+
+SET(3RD_LIB_PATH "${PROJECT_SOURCE_DIR}/libs/${CMAKE_SYSTEM_PROCESSOR}/${CMAKE_BUILD_TYPE}")
+message(STATUS ${3RD_LIB_PATH})
 
 set(BREAKPAD_DIR ${PROJECT_SOURCE_DIR}/3rd/google-breakpad-read-only/src)
 
@@ -33,7 +47,7 @@ configure_file (
   "${PROJECT_BINARY_DIR}/GIGASOConfig.h"
   )
 
-EXEC_PROGRAM("ruby ../html_embed.rb" "${PROJECT_BINARY_DIR}")
+EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/html_embed.rb" "${PROJECT_BINARY_DIR}")
 
 # add the binary tree to the search path for include files
 # so that we will find GIGASOConfig.h

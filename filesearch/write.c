@@ -49,7 +49,8 @@ void FileWriteVisitor(pFileEntry file, void *data){
 	}
 	{
 		char *p = (char *) file;
-		fwrite(p+WORD_SIZE*3,FILE_ENTRY_SIZE(file)-WORD_SIZE*3,1,fp);
+		int offset_of_us = sizeof(KEY)*2 + sizeof(void *);
+		fwrite(p+offset_of_us,FILE_ENTRY_SIZE(file)-offset_of_us,1,fp);
 	}
 }
 
@@ -155,7 +156,7 @@ BOOL readfile(int i, char *filename){
 	}
 	do{
 		NEW0(FileEntry,file);
-		d = (int)fread(file,WORD_SIZE,2,fp);
+		d = (int)fread(file,sizeof(KEY),2,fp);
 		if(d<2){
 				if(feof(fp)) goto ok;
 				else goto error;
