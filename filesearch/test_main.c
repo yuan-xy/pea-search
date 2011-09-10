@@ -7,7 +7,7 @@
 void search0(void *name){
 	pFileEntry *result=NULL;
 	int count=0,i;
-		NEW(SearchEnv, sEnv);
+		NEW0(SearchEnv, sEnv);
 		sEnv->case_sensitive=0;
 		sEnv->order=0;
 		sEnv->file_type=0;

@@ -282,3 +282,58 @@ function check_upgrade(){
 			show_upgrade();
 		}
 }
+
+var first_grid=true;
+function file_grid(){
+	$("#lgrid").jqGrid({ data: files, 
+						datatype: "local", 
+						width : "1000",
+						height: "auto",
+						pager: false,
+						colNames:['文件名','文件夹','','大小','修改日期'], 
+						colModel:[ 
+									{name:'name',index:'name', width:"40%"},
+									{name:'path',index:'path', width:"38%"},
+									{name:'type',index:'type', width:"0%", hidden:true},
+									{name:'size',index:'size', width:"7%", align:"right"},
+									{name:'time',index:'time', width:"15%", align:"right"}
+								], 
+						rowNum:1001,
+						gridview: true,
+						forceFit : true,
+						multiselect: false,
+						sortable: true});
+	$("#lgrid").jqGrid('bindKeys', {"onEnter":function( rowid ) { alert("You enter a row with id:"+rowid)} } );
+	grid_auto_width();
+	$(window).bind('resize',function(event){
+		grid_auto_width();
+	});
+	$("#lgrid tr:nth-child(even)").addClass("d");
+	if(!cef.plugin.offline){
+		$(".jqgrow", "#lgrid").contextMenu('myMenu1', context_menu_obj);
+		$("#maintable tbody td[colid=0]").bind('dblclick',function(e){
+			dblclick_file(e.currentTarget.parentNode);
+		});
+		$("#maintable tbody td[colid=1]").bind('dblclick',function(e){
+			dblclick_path(e.currentTarget.parentNode);
+		});
+	}else{
+		$(".jqgrow", "#lgrid").contextMenu('myMenu2', context_menu_obj);
+	}
+	$(".jqgrow", "#lgrid").each(function(index,e){
+		var s = files[index].icon+$(e).find("td")[0].innerHTML;
+		$(e).find("td")[0].innerHTML = s;
+	});
+	first_grid=false;
+	highlight_timeout = setTimeout(highlight,1);
+}
+function grid_auto_width(){
+	$("#lgrid").jqGrid('setGridWidth',$("#tab-1").width());
+}
+function view_grid(){
+	if(first_grid) file_grid();
+	else{
+		$("#lgrid").jqGrid('GridUnload');
+		file_grid();
+	}
+}

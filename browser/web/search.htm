@@ -13,9 +13,11 @@
     <script type="text/javascript" src="jquery-ui-1.8.12.custom.min.js"></script>
     <script type="text/javascript" src="message.js"></script>
     <script type="text/javascript" src="context.js"></script>
-    <script type="text/javascript" src="scroll.js"></script>
     <script type="text/javascript" src="disk.js"></script>
     <script type="text/javascript" src="subnav.js"></script>
+    <link type="text/css" href="ui.jqgrid.css" rel="stylesheet" />	
+	<script src="grid.locale-cn.js" type="text/javascript"></script>
+	<script src="jquery.jqGrid.min.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="topbar">
@@ -148,6 +150,7 @@
 			<tbody id="result1"> 
 			</tbody> 
 		</table>
+		<table id="lgrid"></table>
 	</div>
 </div>
 
@@ -323,34 +326,6 @@
 		chars = chars || "\\s";
 		return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
 	}
-	function ieTrOver(){this.oldClassName=this.className;this.className="hovered"}
-	function ieTrOut(){this.className=this.oldClassName}
-	function table_over(){
-			$("#maintable tr:nth-child(even)").addClass("d");
-			if(window.ActiveXObject){
-				$('tr').each(function(n){
-					this.onmouseover = ieTrOver;
-					this.onmouseout = ieTrOut;
-					this.onselectstart = function(){return false};
-				});
-				$('td').each(function(n){
-					this.onmouseover = ieTrOver;
-					this.onmouseout = ieTrOut;
-				});
-			}
-			if(!cef.plugin.offline){
-				$("#maintable tbody tr").contextMenu('myMenu1', context_menu_obj);
-				$("#maintable tbody td[colid=0]").bind('dblclick',function(e){
-					dblclick_file(e.currentTarget.parentNode);
-				});
-				$("#maintable tbody td[colid=1]").bind('dblclick',function(e){
-					dblclick_path(e.currentTarget.parentNode);
-				});
-			}else{
-				$("#maintable tbody tr").contextMenu('myMenu2', context_menu_obj);
-			}
-			highlight_timeout = setTimeout(highlight,1);
-	  }
 	  var icon_replace_index=0;
 	  function icon_replace(){
 			var finished = true;
@@ -392,33 +367,6 @@
 	var pagerow = 100;
 	var page_from = 0;
 
-	function page(){
-		var to = page_from + pagerow;
-		if(changed()) return; //查询已过期
-		if(page_from==0){
-			$("#result1").processTemplate(files.slice(page_from,to));
-		}else{
-			if(files.length<=page_from) return;
-			$("#result1").processTemplateAppend(files.slice(page_from,to));
-		}
-		page_from=to;
-		if(files.length<=to){
-			//show_info("分页完成");
-		}
-		table_over();
-	}
-	function file_name_trim(files){
-		$(files).each( function sub(i,obj){
-			if(obj.name.length>53){
-				obj.name2 = obj.name;
-				obj.name = obj.name2.substring(0, 25)+"..."+obj.name2.substring(obj.name2.length-25, obj.name2.length);
-			}
-			if(obj.path.length>52){
-				obj.path2 = obj.path;
-				obj.path = obj.path2.substring(0, 24)+"..."+obj.path2.substring(obj.path2.length-25, obj.path2.length);
-			}
-		});
-	}
 	function file_name_trim2(files){
 		$(files).each( function sub(i,obj){
 			if(obj.name.length>53){
@@ -453,10 +401,15 @@
 			for(var f_index=0; f_index<files.length; f_index++)
 				gen_offline_dir_name(files[f_index],d_infos);
 		}
-		file_name_trim(files);
-		if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示"});
+		$.each(files, function (index, ele) { 
+			ele.icon = '<img width="16" height="16" style="margin-right:3px" src="icons/'+ele.type+'.ico" />';
+		});
+		
+
+		if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示",size:"",time:""});
 		page_from = 0;
-		page();
+		//page();
+		view_grid();
 	}
     function searchf(value){
 		value = trim(value);
@@ -676,12 +629,6 @@
 			}
 		});
 		orderby(0,0);
-		$(window).bind('scroll',function(e){
-			if(files.length > page_from){
-				//show_info(page_from);
-				if(reachBottom()) page();
-			}
-		});
 		$("#tabs ul li a").bind('click',function(e){
 			$(".subnav").hide();
 			$("#"+e.target.id+"div").show();
