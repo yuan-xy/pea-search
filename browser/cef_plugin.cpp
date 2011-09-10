@@ -289,7 +289,7 @@ public:
       return true;
     }
     else if(name == "set_order"){
-      if(arguments.size() != 1 || !arguments[0]->IsInt())
+      if(arguments.size() != 1)
         return false;
       m_order = arguments[0]->GetIntValue();
       return true;
@@ -309,7 +309,7 @@ public:
       return true;
 	}
     else if(name == "set_file_type"){
-      if(arguments.size() != 1 || !arguments[0]->IsInt())
+      if(arguments.size() != 1)
         return false;
       m_file_type = arguments[0]->GetIntValue();
       return true;
@@ -339,11 +339,11 @@ public:
       return true;
     }
     else if(name == "set_hotkey"){
-      if(arguments.size() != 1 || !arguments[0]->IsInt())
-        return false;
+      if(arguments.size() != 1) return false;
       set_hotkey(arguments[0]->GetIntValue());
       HWND wnd = FindWindow(ListenerWindowClass,NULL);
-      if(wnd!=NULL) SendMessage(wnd,WM_SET_HOTKEY,NULL,NULL);
+      if(wnd==NULL) return false;
+	  SendMessage(wnd,WM_SET_HOTKEY,NULL,NULL);
       return true;
     }
     return false;

@@ -68,15 +68,13 @@ void set_prop(LPCWSTR key, LPWSTR str){
 
 #define DEFAULT_HOT_KEY 6
 int get_hotkey(){
-	wchar_t hotkey[2];
 	wchar_t fbuffer[MAX_PATH];
 	wchar_t buffer[MAX_PATH];
 	DWORD size=MAX_PATH;
 	if(GetUserName(fbuffer, &size)){
 		wcscat_s(fbuffer,MAX_PATH,L".ini");
 		get_abs_path(fbuffer,buffer);
-		GetPrivateProfileString(L"customize",L"hotkey",L"DEFAULT_HOT_KEY",hotkey,2,buffer);
-		return hotkey[0]-L'0';
+		return GetPrivateProfileInt(L"customize",L"hotkey",DEFAULT_HOT_KEY,buffer);
 	}else{
 		return DEFAULT_HOT_KEY;//VK_F9
 	}

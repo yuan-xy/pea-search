@@ -12,7 +12,8 @@ static BOOL ExistListener(){
 
 static BOOL register_hotkey(){
 	BOOL flag;
-	switch(get_hotkey()){
+	int key = get_hotkey();
+	switch(key){
 		case 1: 	flag = RegisterHotKey(NULL,1, MOD_ALT, VK_PAUSE);break;
 		case 2: 	flag = RegisterHotKey(NULL,1, 0, VK_F7);break;
 		case 3: 	flag = RegisterHotKey(NULL,1, MOD_ALT, VK_F7);break;
@@ -66,15 +67,15 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
 {
     MSG msg = {0};
 	if(ExistListener()) return 1;
-    if (!register_hotkey()) return 1;
 	setPWD(NULL);
+    if (!register_hotkey()) return 1;
 	MyRegisterClass(hInstance);
 	if (!InitInstance (hInstance, iCmdShow)) return 1;
     while(GetMessage(&msg, NULL, 0, 0) != 0){
 		if (msg.message == WM_HOTKEY){
 			HWND wnd = FindWindow(SearchWindowClass,SearchWindowTitle);
 			if(wnd==NULL){
-				HINSTANCE  hi = ShellExecute(NULL, L"open", L"search.exe",NULL,NULL,SW_SHOW); 
+				HINSTANCE  hi = ShellExecute(NULL, L"open", L"peasrch.exe",NULL,NULL,SW_SHOW); 
 				DWORD ret = GetLastError();
 			}else{
 				ShowWindow(wnd, SW_SHOW);  // Make the window visible if it was hidden
