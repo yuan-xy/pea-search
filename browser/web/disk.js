@@ -285,7 +285,7 @@ function check_upgrade(){
 
 var first_grid=true;
 function file_grid(){
-	$("#lgrid").jqGrid({ data: files, 
+	$("#maintable").jqGrid({ data: files, 
 						datatype: "local", 
 						width : "1000",
 						height: "auto",
@@ -298,29 +298,31 @@ function file_grid(){
 									{name:'size',index:'size', width:"7%", align:"right"},
 									{name:'time',index:'time', width:"15%", align:"right"}
 								], 
-						rowNum:1001,
+						rowNum:201,
 						gridview: true,
 						forceFit : true,
 						multiselect: false,
 						sortable: true});
-	$("#lgrid").jqGrid('bindKeys', {"onEnter":function( rowid ) { alert("You enter a row with id:"+rowid)} } );
+	$("#maintable").jqGrid('bindKeys', {
+		"onEnter":function( rowid ) {dblclick_file($(".jqgrow", "#maintable")[rowid]);} 
+	} );
 	grid_auto_width();
 	$(window).bind('resize',function(event){
 		grid_auto_width();
 	});
-	$("#lgrid tr:nth-child(even)").addClass("d");
+	$("#maintable tr:nth-child(even)").addClass("d");
 	if(!cef.plugin.offline){
-		$(".jqgrow", "#lgrid").contextMenu('myMenu1', context_menu_obj);
-		$("#maintable tbody td[colid=0]").bind('dblclick',function(e){
+		$(".jqgrow", "#maintable").contextMenu('myMenu1', context_menu_obj);
+		$(".jqgrow td:nth-child(1)").bind('dblclick',function(e){
 			dblclick_file(e.currentTarget.parentNode);
 		});
-		$("#maintable tbody td[colid=1]").bind('dblclick',function(e){
+		$(".jqgrow td:nth-child(2)").bind('dblclick',function(e){
 			dblclick_path(e.currentTarget.parentNode);
 		});
 	}else{
-		$(".jqgrow", "#lgrid").contextMenu('myMenu2', context_menu_obj);
+		$(".jqgrow", "#maintable").contextMenu('myMenu2', context_menu_obj);
 	}
-	$(".jqgrow", "#lgrid").each(function(index,e){
+	$(".jqgrow", "#maintable").each(function(index,e){
 		var s = files[index].icon+$(e).find("td")[0].innerHTML;
 		$(e).find("td")[0].innerHTML = s;
 	});
@@ -328,12 +330,12 @@ function file_grid(){
 	highlight_timeout = setTimeout(highlight,1);
 }
 function grid_auto_width(){
-	$("#lgrid").jqGrid('setGridWidth',$("#tab-1").width());
+	$("#maintable").jqGrid('setGridWidth',$("#tab-1").width());
 }
 function view_grid(){
 	if(first_grid) file_grid();
 	else{
-		$("#lgrid").jqGrid('GridUnload');
+		$("#maintable").jqGrid('GridUnload');
 		file_grid();
 	}
 }

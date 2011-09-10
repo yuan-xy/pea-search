@@ -26,8 +26,6 @@ ol,ul{list-style:none}
 #maintable tr.d:hover, #maintable tr:hover, #maintable tr.hovered { background-color:#d3e8fb; }
 #maintable td { border-left:1px solid #6990b3; border-right:1px solid #6990b3; }
 
-#maintable td:hover, #maintable td.hovered { background-color:#d3e8fb; }
-
 
 #message-area {
 	font-size: 12px;

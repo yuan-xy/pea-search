@@ -138,45 +138,9 @@
 			<span class="subnav-span"><a onClick="file_type_search(121);return false;"><img src="icons/htm.ico" class="icon"/>网页(<span id="htm_file">0</span>)</a></span>
 			<span class="subnav-span"><a onClick="file_type_search(135);return false;"><img src="icons/source.ico" class="icon"/>其它文档(<span id="text_file">0</span>)</a></span>
 		</div>
-		<table id="maintable" width="100%" cellspacing="0">
-			<thead>
-				<tr unselectable="on" class="unselectable">
-					<th style="width:42%" colid="0">文件名<span id="orderspan0"></span></th>
-					<th style="width:42%" colid="1">文件夹<span id="orderspan1"></span></th>
-					<th style="width:5%" align="right" colid="2">大小<span id="orderspan2"></span></th>
-					<th style="width:11%" align="right" colid="3">修改日期<span id="orderspan3"></span></th>
-				</tr>
-			</thead>
-			<tbody id="result1"> 
-			</tbody> 
-		</table>
-		<table id="lgrid"></table>
+		<table id="maintable"></table>
 	</div>
 </div>
-
-
-<textarea id="template" style="display:none"> 
-		{#foreach $T as record}
-        <tr unselectable="on" class="unselectable">
-            <td colid="0">
-				<img width="16" height="16" src="icons/{$T.record.type}.ico" />
-				<input type="hidden" value="{$T.record.type}">
-				<input type="hidden" value="{$T.record.name}">
-				<input type="hidden" value="{$T.record.path}">
-				<span title="{$T.record.name2}">{$T.record.name}</span>
-            </td>
-            <td colid="1">
-				<span title="{$T.record.path2}">{$T.record.path}</span>
-            </td>
-            <td align="right" colid="2">
-				<span>{$T.record.size}</span>
-            </td>
-            <td align="right" colid="3">
-				<span>{$T.record.time}</span>
-            </td>
-        </tr>
-		{#/for}
-</textarea> 
 
 <div id="message-area" style="opacity: 0; border-radius: 3px">no message.</div> 
 
@@ -329,7 +293,7 @@
 	  var icon_replace_index=0;
 	  function icon_replace(){
 			var finished = true;
-			$("#maintable tbody tr").slice(icon_replace_index,icon_replace_index+10).each(function(i,o){
+			$(".jqgrow").slice(icon_replace_index,icon_replace_index+10).each(function(i,o){
 				get_file_path(o);
 				var full_path = path+file;
 				if(full_path.indexOf('%')!=-1) return;
@@ -341,7 +305,7 @@
 			highlight_timeout = setTimeout(icon_replace,1);
 	  }
 	  function highlight(){
-			$("#maintable tbody td[colid=0] span").each(function(i,o){
+			$("#maintable tbody  td:nth-child(1)").each(function(i,o){
 				var html = o.innerHTML;
 				var fi = html.toLowerCase().indexOf($("#search").val().toLowerCase());
 				if(fi==-1) return;
@@ -364,8 +328,6 @@
 	var highlight_timeout;
 	var history_timeout;
 	var stat_timeout;
-	var pagerow = 100;
-	var page_from = 0;
 
 	function file_name_trim2(files){
 		$(files).each( function sub(i,obj){
@@ -379,8 +341,7 @@
 	function restart_when_error(){
 			show_error("搜索服务失去响应。请稍后重试！");
 			files = [];
-			page_from = 0;
-			page();
+			view_grid();
 			cef.plugin.start_server();
 	}
 	function searchf0(){
@@ -404,11 +365,7 @@
 		$.each(files, function (index, ele) { 
 			ele.icon = '<img width="16" height="16" style="margin-right:3px" src="icons/'+ele.type+'.ico" />';
 		});
-		
-
 		if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示",size:"",time:""});
-		page_from = 0;
-		//page();
 		view_grid();
 	}
     function searchf(value){
@@ -424,7 +381,6 @@
 		$("#tabs ul span").html("0");
 		$("#tab-1 span span").html("0");
 		if(value==""){
-			$("#result1").html("");
 			$("#loading").css("visibility","hidden");
 			return;
 		}
@@ -439,7 +395,12 @@
 		value = trim(value);
 		return value != cur_search;
 	}
-	function search_if_change(){
+	function search_if_change(e){
+		if(e.keyCode==13){
+			 $("#maintable").setSelection(1); 
+			 $(".jqgrow", "#maintable")[0].focus();
+			 return;
+		}
 		if(changed()) searchf(value);
 	}
 	function orderby(col,desc){
@@ -616,7 +577,6 @@
 			cef.plugin.caze = true;
 			searchf($("#search").val());
 		});
-		$("#result1").setTemplateElement("template");
 		$(document).bind("contextmenu", function(e){
 			return false;
 		});
