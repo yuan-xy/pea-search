@@ -16,7 +16,7 @@
 			MATCH_SUFFIX(LIB,len);			\
 			MATCH_SUFFIX(MUSIC,len);			\
 			MATCH_SUFFIX(PHOTO,len);			\
-			MATCH_SUFFIX(VEDIO,len);			\
+			MATCH_SUFFIX(VIDEO,len);			\
 			MATCH_SUFFIX(ANIMATION,len);			\
 			MATCH_SUFFIX(WORD,len);			\
 			MATCH_SUFFIX(EXCEL,len);			\
@@ -61,10 +61,10 @@ static char PHOTO2[][3] = { 0};
 static char PHOTO3[][4] = { "jpg","jpe","gif","png","bmp","dib","tif","pcx","ico","pcd","psd"};
 static char PHOTO4[][5] = { "jpeg","jeif","tiff"};
 
-static char VEDIO1[][2] = { 0};
-static char VEDIO2[][3] = { 0};
-static char VEDIO3[][4] = { "avi","asf","wmv","avs","flv","mkv","mov","3gp","mp4","mpg","ogm","vob","rm","ts","tp","ifo","nsv"};
-static char VEDIO4[][5] = { "mpeg","rmvb"};
+static char VIDEO1[][2] = { 0};
+static char VIDEO2[][3] = { 0};
+static char VIDEO3[][4] = { "avi","asf","wmv","avs","flv","mkv","mov","3gp","mp4","mpg","ogm","vob","rm","ts","tp","ifo","nsv"};
+static char VIDEO4[][5] = { "mpeg","rmvb"};
 
 static char ANIMATION1[][2] = { 0};
 static char ANIMATION2[][3] = { 0};
@@ -211,7 +211,7 @@ int print_suffix_type(pFileEntry file, char *buffer){
 		case SF_LIB	: 		strcpy(buffer,"lib");return 3;
 		case SF_MUSIC: 			strcpy(buffer,"music");return 5;
 		case SF_PHOTO: 			strcpy(buffer,"photo");return 5;
-		case SF_VEDIO: 			strcpy(buffer,"vedio");return 5;
+		case SF_VIDEO: 			strcpy(buffer,"video");return 5;
 		case SF_ANIMATION: 		strcpy(buffer,"animation");return 9;
 		case SF_WORD	: 		strcpy(buffer,"word");return 4;
 		case SF_EXCEL: 			strcpy(buffer,"excel");return 5;
@@ -244,7 +244,7 @@ int print_suffix_type2(int index, char *buffer){
 		case 10:	strcpy(buffer,"lib");return 3;
 		case 11:	strcpy(buffer,"music");return 5;
 		case 12:	strcpy(buffer,"photo");return 5;
-		case 13:	strcpy(buffer,"vedio");return 5;
+		case 13:	strcpy(buffer,"video");return 5;
 		case 14:	strcpy(buffer,"animation");return 9;
 		case 15:	strcpy(buffer,"word");return 4;
 		case 16:	strcpy(buffer,"excel");return 5;

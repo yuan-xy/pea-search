@@ -207,7 +207,7 @@ static void stat_count(int stats[], pFileEntry file){
 		case  SF_LIB		:	stats[10]+=1;break;
 		case  SF_MUSIC	:		stats[11]+=1;break;
 		case  SF_PHOTO	:		stats[12]+=1;break;
-		case  SF_VEDIO	:		stats[13]+=1;break;
+		case  SF_VIDEO	:		stats[13]+=1;break;
 		case  SF_ANIMATION	:	stats[14]+=1;break;
 		case  SF_WORD		:	stats[15]+=1;break;
 		case  SF_EXCEL	:		stats[16]+=1;break;
