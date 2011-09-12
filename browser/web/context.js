@@ -43,7 +43,7 @@ var context_menu_obj = {
 */
                   onContextMenu : function(event, menu){
                                   var rowId = $(event.target).parent("tr").attr("id");
-                                  var grid = $("#lgrid");
+                                  var grid = $("#maintable");
                                   grid.setSelection(rowId);                   
                                   return true;
                   },

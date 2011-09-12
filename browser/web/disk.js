@@ -290,27 +290,44 @@ function file_grid(){
 						width : "1000",
 						height: "auto",
 						pager: false,
-						colNames:['文件名','文件夹','','大小','修改日期'], 
+						colNames:['文件名','文件夹','大小','修改日期',''], 
 						colModel:[ 
-									{name:'name',index:'name', width:"40%"},
-									{name:'path',index:'path', width:"38%"},
-									{name:'type',index:'type', width:"0%", hidden:true},
-									{name:'size',index:'size', width:"7%", align:"right"},
-									{name:'time',index:'time', width:"15%", align:"right"}
+									{name:'name', width:"40%",sortable:false },
+									{name:'path', width:"38%",sortable:false},
+									{name:'size', width:"7%", align:"right",sortable:false},
+									{name:'time', width:"15%", align:"right",sortable:false},
+									{name:'type', width:"0%", hidden:true,sortable:false}
 								], 
 						rowNum:201,
 						gridview: true,
 						forceFit : true,
 						multiselect: false,
-						sortable: true});
-	$("#maintable").jqGrid('bindKeys', {
-		"onEnter":function( rowid ) {dblclick_file($(".jqgrow", "#maintable")[rowid]);} 
-	} );
+						sortable: false});
+	$(".ui-jqgrid-htable th").bind('click',function(event,t){
+		if(this.id=="maintable_name") var index=0;
+		if(this.id=="maintable_path") var index=1;
+		if(this.id=="maintable_size") var index=2;
+		if(this.id=="maintable_time") var index=3;
+		if(index==order_col){
+			orderby(index,!order_desc);
+		}else{
+			orderby(index,1);
+		}
+	});
+	first_grid=false;
+	set_order_arrow(order_col+1,order_desc);
 	grid_auto_width();
+	gird_event();
+}
+function gird_event(){
 	$(window).bind('resize',function(event){
 		grid_auto_width();
 	});
 	$("#maintable tr:nth-child(even)").addClass("d");
+	$("#maintable").jqGrid('bindKeys', {
+		"onEnter":function( rowid ) {dblclick_file($(".jqgrow", "#maintable")[rowid]);} ,
+		scrollingRows: false
+	} );
 	if(!cef.plugin.offline){
 		$(".jqgrow", "#maintable").contextMenu('myMenu1', context_menu_obj);
 		$(".jqgrow td:nth-child(1)").bind('dblclick',function(e){
@@ -326,7 +343,6 @@ function file_grid(){
 		var s = files[index].icon+$(e).find("td")[0].innerHTML;
 		$(e).find("td")[0].innerHTML = s;
 	});
-	first_grid=false;
 	highlight_timeout = setTimeout(highlight,1);
 }
 function grid_auto_width(){
@@ -335,7 +351,8 @@ function grid_auto_width(){
 function view_grid(){
 	if(first_grid) file_grid();
 	else{
-		$("#maintable").jqGrid('GridUnload');
-		file_grid();
+		$("#maintable").clearGridData();
+		$("#maintable").setGridParam({data: files}).trigger("reloadGrid");
+		gird_event();
 	}
 }
