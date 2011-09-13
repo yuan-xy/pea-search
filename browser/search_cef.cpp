@@ -40,6 +40,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	breakpad_init();
+	OleInitialize(NULL);
 	setPWD(NULL);
 
   CefSettings settings;
@@ -74,6 +75,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	}
 	close_named_pipe();
 	CefShutdown();
+	OleUninitialize();
 	return (int) msg.wParam;
 }
 

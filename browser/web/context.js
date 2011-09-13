@@ -103,3 +103,38 @@ var context_menu_obj = {
 					  }
 					}
 				  }
+
+var context_menu_obj3 = {
+				  menuStyle: {
+					width : "150px"
+				  },
+				  itemStyle: {
+				  },
+				  itemHoverStyle: {
+				  },
+				  bindings: {
+					  'default': function(t,menuitem) {
+						var fs = gird_selectd_files();
+						var ret = cef.plugin.batch_open(fs);
+						info_or_error(ret, fs, menuitem.lastChild.data);
+					  },
+					  'copy': function(t,menuitem) {
+						var fs = gird_selectd_files();
+						var ret = cef.plugin.batch_copy(fs);
+						info_or_error(ret, fs, menuitem.lastChild.data);
+					  },
+					  'cut': function(t,menuitem) {
+						var fs = gird_selectd_files();
+						var ret = cef.plugin.batch_cut(fs);
+						info_or_error(ret, fs, menuitem.lastChild.data);
+					  },
+					  'delete': function(t,menuitem) {
+						var fs = gird_selectd_files();
+						if(window.confirm("您确定要删除 '"+file+"' 吗?")){
+							var ret = cef.plugin.batch_delete(fs);
+							refresh();
+							info_or_error(ret, fs, menuitem.lastChild.data);
+						}
+					  }
+					}
+				  }

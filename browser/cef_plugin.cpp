@@ -5,6 +5,7 @@
 #include "common.h"
 #include "history.h"
 #include "win_icon.h"
+#include "explorer++/FileOperations.h"
 
 extern CefRefPtr<ClientHandler> g_handler;
 
@@ -89,8 +90,7 @@ static CefString stat(CefString msg){
 	return query(msg,-1);
 }
 
-static bool shell_exec(CefString msg, const wchar_t *verb){
-	std::wstring s = msg.ToWString();
+static bool shell_exec(std::wstring s, const wchar_t *verb){
 	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
     HINSTANCE h = ShellExecuteW(NULL,verb,s.c_str(),NULL,NULL,SW_SHOWNORMAL);
 	bool ret = (int)h > 32;
@@ -100,14 +100,13 @@ static bool shell_exec(CefString msg, const wchar_t *verb){
 	return ret;
 }
 
-static bool shell2_exec(CefString msg, const wchar_t *verb){
-	std::wstring s = msg.ToWString();
+static bool shell2_exec0(const wchar_t *file,const wchar_t *verb){
 	SHELLEXECUTEINFO ShExecInfo ={0};
 	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 	ShExecInfo.fMask = SEE_MASK_INVOKEIDLIST ;
 	ShExecInfo.hwnd = NULL;
 	ShExecInfo.lpVerb = verb;
-	ShExecInfo.lpFile = s.c_str();
+	ShExecInfo.lpFile = file;
 	ShExecInfo.lpParameters = NULL; 
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;
@@ -115,53 +114,56 @@ static bool shell2_exec(CefString msg, const wchar_t *verb){
 	bool ret = ShellExecuteEx(&ShExecInfo);
 	if(ret){
 		if(verb==NULL || wcscmp(L"delete",verb)!=0){
-			if( history_add(s.c_str()) ) history_save();
+			if( history_add(file) ) history_save();
 		}
 	}
 	return ret;
 }
+static bool shell2_exec(std::wstring s, const wchar_t *verb){
+	return shell2_exec0(s.c_str(),verb);
+}
 
 static bool shell_default(CefString msg){
-	return shell_exec(msg,NULL);
+	return shell_exec(msg.ToWString(),NULL);
 }
 
 static bool shell_open(CefString msg){
-	return shell_exec(msg,L"open");
+	return shell_exec(msg.ToWString(),L"open");
 }
 
 static bool shell_edit(CefString msg){
-	return shell_exec(msg,L"edit");
+	return shell_exec(msg.ToWString(),L"edit");
 }
 
 
 static bool shell_explore(CefString msg){
-	return shell_exec(msg,L"explore");
+	return shell_exec(msg.ToWString(),L"explore");
 }
 
 
 static bool shell_find(CefString msg){
-	return shell_exec(msg,L"find");
+	return shell_exec(msg.ToWString(),L"find");
 }
 
 static bool shell_print(CefString msg){
-	return shell_exec(msg,L"print");
+	return shell_exec(msg.ToWString(),L"print");
 }
 
 static bool shell2_prop(CefString msg){
-	return shell2_exec(msg, L"properties");
+	return shell2_exec(msg.ToWString(), L"properties");
 }
 
 static bool shell2_openas(CefString msg){
-	return shell2_exec(msg, L"openas");
+	return shell2_exec(msg.ToWString(), L"openas");
 }
 
 static bool shell2_default(CefString msg){
-	return shell2_exec(msg, NULL);
+	return shell2_exec(msg.ToWString(), NULL);
 }
 
 static bool shell2(CefString msg, CefString verb){
 	std::wstring s = verb.ToWString();
-	return shell2_exec(msg, s.c_str());
+	return shell2_exec(msg.ToWString(), s.c_str());
 }
 
 static bool copy_str(CefString msg){
@@ -284,6 +286,47 @@ public:
       retval = CefV8Value::CreateBool(true);
       return true;
     }
+
+#define PARSE_FILE \
+      if(arguments.size() != 1 || !arguments[0]->IsString()) return false;\
+	  std::wstring ssss = arguments[0]->GetStringValue().ToWString();\
+	  wchar_t *files = (wchar_t *)ssss.c_str();\
+	  int len = (int)wcslen(files);\
+	  if(*(files+len-1)!=L'|') return false;\
+	  for(int i=0;i<len;i++){\
+		  if(*(files+i)==L'|') *(files+i)=L'\0';\
+	  }
+
+    if(name == "batch_copy"){
+	  PARSE_FILE;
+	  IDataObject *pClipboardDataObject;
+	  CopyFiles(files,(len+1) * sizeof(wchar_t),&pClipboardDataObject);
+	  retval = CefV8Value::CreateBool(true);
+      return true;
+    }
+    if(name == "batch_cut"){
+	  PARSE_FILE;
+	  IDataObject *pClipboardDataObject;
+	  CutFiles(files,(len+1) * sizeof(wchar_t),&pClipboardDataObject);
+	  retval = CefV8Value::CreateBool(true);
+      return true;
+    }
+    if(name == "batch_delete"){
+	  PARSE_FILE;
+	  DeleteFilesToRecycleBin(NULL,files);
+	  retval = CefV8Value::CreateBool(true);
+      return true;
+    }
+    if(name == "batch_open"){
+	  PARSE_FILE;
+	  wchar_t *pfile=files;
+	  do{
+		shell2_exec0(pfile,L"open");
+		while((pfile-files<len) && *pfile++ != L'\0');
+	  }while(pfile-files<len);
+	  retval = CefV8Value::CreateBool(true);
+      return true;
+    }
     if(name == "get_order"){
       retval = CefV8Value::CreateInt(m_order);
       return true;
@@ -352,6 +395,24 @@ public:
   IMPLEMENT_REFCOUNTING(PluginHandler);
 };
 
+/*
+#include "explorer++/Buffer.h"
+static void aaaa(){
+  IDataObject *pClipboardDataObject;
+  IBufferManager	*pBufferManager = NULL;
+  TCHAR			*szFileNameList = NULL;
+	DWORD			dwBufSize;
+	HRESULT			hr;
+  pBufferManager = new CBufferManager();
+  pBufferManager->WriteListEntry(L"c:\\boot.ini");
+  pBufferManager->WriteListEntry(L"e:\\test.cpp");
+  pBufferManager->QueryBufferSize(&dwBufSize);
+  szFileNameList = (TCHAR *)malloc(dwBufSize * sizeof(TCHAR));
+  pBufferManager->QueryBuffer(szFileNameList,dwBufSize);
+  CopyFiles(szFileNameList,dwBufSize * sizeof(TCHAR),&pClipboardDataObject);
+  CopyFiles(L"c:\\boot.ini\0d:\\bootmgr\0",24 * sizeof(TCHAR),&pClipboardDataObject);
+}
+*/
 
 void InitPlugin(){
   std::string code = "var plugin;"
@@ -483,6 +544,22 @@ void InitPlugin(){
 	"  cef.plugin.his_unpin = function(b) {"
     "    native function his_unpin();"
     "    return his_unpin(b);"
+    "  };"
+	"  cef.plugin.batch_open = function(b) {"
+    "    native function batch_open();"
+    "    return batch_open(b);"
+    "  };"
+	"  cef.plugin.batch_copy = function(b) {"
+    "    native function batch_copy();"
+    "    return batch_copy(b);"
+    "  };"
+	"  cef.plugin.batch_cut = function(b) {"
+    "    native function batch_cut();"
+    "    return batch_cut(b);"
+    "  };"
+	"  cef.plugin.batch_delete = function(b) {"
+    "    native function batch_delete();"
+    "    return batch_delete(b);"
     "  };"
 	"})();";
   CefRegisterExtension("v8/gigaso.plugin", code, new PluginHandler());

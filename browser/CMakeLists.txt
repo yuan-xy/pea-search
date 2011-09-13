@@ -8,6 +8,8 @@ set(CEF_DLL_DIR ${CEF_DIR}/build/${CMAKE_BUILD_TYPE})
 link_directories("${CEF_DIR}/lib/${CMAKE_BUILD_TYPE}")
 
 file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    explorer++/[^.]*.cpp
+    explorer++/[^.]*.h
     [^.]*.cpp
     [^.]*.h
     "history.c"

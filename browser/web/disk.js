@@ -301,7 +301,23 @@ function file_grid(){
 						rowNum:201,
 						gridview: true,
 						forceFit : true,
+						scrollrows: false,
 						multiselect: false,
+						/*
+							gridComplete : function() {
+								var tm = jQuery("#maintable").jqGrid('getGridParam','totaltime');
+								$("#dir").val("Render time: "+ tm+" ms ");
+							},
+						*/
+					   onSelectRow: function(id,status){ 
+						  idd=id*1+1; //id从1起，但是jggrow从2起
+						  if(status){
+							if($("#maintable").jqGrid('getGridParam','selarrrow').length>1)
+						      $(".jqgrow:nth-child("+idd+")").contextMenu('myMenu3', context_menu_obj3);
+						  }else{
+						   $(".jqgrow:nth-child("+idd+")").contextMenu('myMenu1', context_menu_obj);
+						  }
+					   },
 						sortable: false});
 	$(".ui-jqgrid-htable th").bind('click',function(event,t){
 		if(this.id=="maintable_name") var index=0;
@@ -320,6 +336,7 @@ function file_grid(){
 	gird_event();
 }
 function gird_event(){
+	$("#maintable").setGridParam({multiselect: true});
 	$(window).bind('resize',function(event){
 		grid_auto_width();
 	});
@@ -351,8 +368,21 @@ function grid_auto_width(){
 function view_grid(){
 	if(first_grid) file_grid();
 	else{
+		$("#maintable").setGridParam({multiselect: false});
 		$("#maintable").clearGridData();
 		$("#maintable").setGridParam({data: files}).trigger("reloadGrid");
 		gird_event();
 	}
+}
+
+function gird_selectd_files(){
+	var selectd_file_ids = $("#maintable").jqGrid('getGridParam','selarrrow');
+	var ret="";
+	$.each(selectd_file_ids, function (index, ele) { 
+		var file = files[ele-1];
+		ret += file.path;
+		ret += file.name;
+		ret += "|";
+	});
+	return ret;
 }
