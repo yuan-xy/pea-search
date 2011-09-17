@@ -298,10 +298,11 @@ function file_grid(){
 									{name:'time', width:"15%", align:"right",sortable:false},
 									{name:'type', width:"0%", hidden:true,sortable:false}
 								], 
-						rowNum:201,
+						rowNum:200,
 						gridview: true,
 						forceFit : true,
 						scrollrows: false,
+						scroll: false,
 						multiselect: false,
 						/*
 							gridComplete : function() {
@@ -311,6 +312,7 @@ function file_grid(){
 						*/
 					   onSelectRow: function(id,status){ 
 						  idd=id*1+1; //id从1起，但是jggrow从2起
+						  console.log(id+":"+idd);
 						  if(status){
 							if($("#maintable").jqGrid('getGridParam','selarrrow').length>1)
 						      $(".jqgrow:nth-child("+idd+")").contextMenu('myMenu3', context_menu_obj3);
@@ -341,10 +343,19 @@ function gird_event(){
 		grid_auto_width();
 	});
 	$("#maintable tr:nth-child(even)").addClass("d");
-	$("#maintable").jqGrid('bindKeys', {
-		"onEnter":function( rowid ) {dblclick_file($(".jqgrow", "#maintable")[rowid]);} ,
-		scrollingRows: false
-	} );
+	$(".jqgrow", "#maintable").bind('keyup',function(e){
+		console.log(e.keyCode);
+		if(e.keyCode==13){
+			dblclick_file($(".jqgrow", "#maintable")[this.id-1]);
+		}else if(e.keyCode==46){
+			delete_file($(".jqgrow", "#maintable")[this.id-1]);
+		}else if(e.keyCode==67){
+			copy_file($(".jqgrow", "#maintable")[this.id-1]);
+		}else if(e.keyCode==88){
+			cut_file($(".jqgrow", "#maintable")[this.id-1]);
+		}
+	});
+
 	if(!cef.plugin.offline){
 		$(".jqgrow", "#maintable").contextMenu('myMenu1', context_menu_obj);
 		$(".jqgrow td:nth-child(1)").bind('dblclick',function(e){
@@ -373,6 +384,12 @@ function view_grid(){
 		$("#maintable").setGridParam({data: files}).trigger("reloadGrid");
 		gird_event();
 	}
+}
+
+function gird_add_files(){
+	$("#maintable").setGridParam({multiselect: false});
+	$("#maintable").addRowData( 11, files.slice(10,14), "last");
+	//gird_event();
 }
 
 function gird_selectd_files(){

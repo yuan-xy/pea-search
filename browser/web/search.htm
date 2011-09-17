@@ -164,10 +164,10 @@
 </div>
 <div id="myMenu3" style="display:none;">
   <ul>
-    <li id="default"><img width="16" height="16" src="./images/win.png"> 打开</li>
-    <li id="copy"><img  width="16" height="16" src="./images/copy.ico"> 复制</li>
-    <li id="cut"><img  width="16" height="16" src="./images/cut.ico"> 剪切</li>
-    <li id="delete"><img  width="16" height="16" src="./images/delete.ico"> 删除</li>
+    <li id="default"><img width="16" height="16" src="./images/win.png"> 全部打开</li>
+    <li id="copy"><img  width="16" height="16" src="./images/copy.ico"> 全部复制</li>
+    <li id="cut"><img  width="16" height="16" src="./images/cut.ico"> 全部剪切</li>
+    <li id="delete"><img  width="16" height="16" src="./images/delete.ico"> 全部删除</li>
   </ul>
 </div>
 
@@ -408,7 +408,7 @@
 	}
 	function search_if_change(e){
 		if(e.keyCode==13){
-			 $("#maintable").setSelection(1); 
+			 $("#maintable").setSelection(1);
 			 $(".jqgrow", "#maintable")[0].focus();
 			 return;
 		}
@@ -429,10 +429,10 @@
 		cef.plugin.order = col*2+desc+1;
 	}
 	function set_order_arrow(col_add,desc){
-		$(".ui-jqgrid-htable th span").html("");
+		$(".ui-jqgrid-htable th div span").html("");
 		var target_th = $(".ui-jqgrid-htable th:nth-child("+col_add+") div");
 		if(desc){
-			target_th.html(target_th.html()+"<span style='display:inline'><img src='images/s_desc.png' /></span>");
+			target_th.html(target_th.html()+"<span><img src='images/s_desc.png' /></span>");
 		}else{
 			target_th.html(target_th.html()+"<span><img src='images/s_asc.png' /></span>");
 		}

@@ -13,11 +13,31 @@ function get_file_path(tr){
 	}
 }
 
+function delete_file(t){
+	get_file_path(t);
+	if(window.confirm("您确定要删除 '"+file+"' 吗?")){
+		var ret = cef.plugin.shell2(path+file, "delete");
+		refresh();
+		info_or_error(ret, file, "删除");
+	}
+}
+function copy_file(t){
+	get_file_path(t);
+	var ret = cef.plugin.shell2(path+file, "copy");
+	info_or_error(ret, file, "复制");
+}
+function cut_file(t){
+	get_file_path(t);
+	var ret = cef.plugin.shell2(path+file, "cut");
+	info_or_error(ret, file, "剪切");
+}
+
 function dblclick_file(target){
 	get_file_path(target);
 	var ret = cef.plugin.shell2_default(path+file);
 	info_if_error(ret, file, "打开");
 }
+
 
 function dblclick_path(target){
 	get_file_path(target);
@@ -43,6 +63,7 @@ var context_menu_obj = {
 */
                   onContextMenu : function(event, menu){
                                   var rowId = $(event.target).parent("tr").attr("id");
+								  console.log(rowId);
                                   var grid = $("#maintable");
                                   grid.setSelection(rowId);                   
                                   return true;
@@ -70,14 +91,10 @@ var context_menu_obj = {
 						info_or_error(ret, path+file, menuitem.lastChild.data);
 					  },
 					  'copy': function(t,menuitem) {
-					    get_file_path(t);
-						var ret = cef.plugin.shell2(path+file, "copy");
-						info_or_error(ret, file, menuitem.lastChild.data);
+						copy_file(t);
 					  },
 					  'cut': function(t,menuitem) {
-					    get_file_path(t);
-						var ret = cef.plugin.shell2(path+file, "cut");
-						info_or_error(ret, file, menuitem.lastChild.data);
+						cut_file(t);
 					  },
 					  'paste': function(t,menuitem) {
 					    get_file_path(t);
@@ -89,12 +106,7 @@ var context_menu_obj = {
 						}
 					  },
 					  'delete': function(t,menuitem) {
-					    get_file_path(t);
-						if(window.confirm("您确定要删除 '"+file+"' 吗?")){
-							var ret = cef.plugin.shell2(path+file, "delete");
-							refresh();
-							info_or_error(ret, file, menuitem.lastChild.data);
-						}
+						delete_file(t);
 					  },
 					  'prop': function(t,menuitem) {
 					    get_file_path(t);
