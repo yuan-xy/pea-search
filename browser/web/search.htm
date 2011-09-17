@@ -13,6 +13,7 @@
     <script type="text/javascript" src="jquery-ui-1.8.12.custom.min.js"></script>
     <script type="text/javascript" src="message.js"></script>
     <script type="text/javascript" src="context.js"></script>
+    <script type="text/javascript" src="scroll.js"></script>
     <script type="text/javascript" src="disk.js"></script>
     <script type="text/javascript" src="subnav.js"></script>
     <link type="text/css" href="ui.jqgrid.css" rel="stylesheet" />	
@@ -301,7 +302,7 @@
 	  var icon_replace_index=0;
 	  function icon_replace(){
 			var finished = true;
-			$(".jqgrow").slice(icon_replace_index,icon_replace_index+10).each(function(i,o){
+			$("#maintable tr:gt("+grid_start_id()+")").slice(icon_replace_index,icon_replace_index+20).each(function(i,o){
 				get_file_path(o);
 				var full_path = path+file;
 				if(full_path.indexOf('%')!=-1) return;
@@ -309,11 +310,11 @@
 				finished = false;
 			});
 			if(finished) return;
-			icon_replace_index+=10;
+			icon_replace_index+=20;
 			highlight_timeout = setTimeout(icon_replace,1);
 	  }
 	  function highlight(){
-			$("#maintable tbody  td:nth-child(1)").each(function(i,o){
+			$("#maintable .jqgrow:not(.ped) td:nth-child(1)").each(function(i,o){
 				var html = o.innerHTML;
 				var fi = html.toLowerCase().indexOf($("#search").val().toLowerCase());
 				if(fi==-1) return;
@@ -322,6 +323,7 @@
 					html.substring(fi+$("#search").val().length, html.length);
 			});
 			icon_replace_index=0;
+			$("#maintable .jqgrow:not(.ped)").addClass("ped");
 			if(!cef.plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
 			$("#loading").css("visibility","hidden");
 	  }
@@ -600,6 +602,9 @@
 		$("#tabs ul li a").bind('click',function(e){
 			$(".subnav").hide();
 			$("#"+e.target.id+"div").show();
+		});
+		$(window).bind('scroll',function(e){
+			if(reachBottom()) grid_add_files();
 		});
 		$('#tabs').tabs();
 		scan_img();

@@ -284,6 +284,8 @@ function check_upgrade(){
 }
 
 var first_grid=true;
+var page_row=100;
+var cur_page_end=200;
 function file_grid(){
 	$("#maintable").jqGrid({ data: files, 
 						datatype: "local", 
@@ -298,7 +300,7 @@ function file_grid(){
 									{name:'time', width:"15%", align:"right",sortable:false},
 									{name:'type', width:"0%", hidden:true,sortable:false}
 								], 
-						rowNum:200,
+						rowNum:cur_page_end,
 						gridview: true,
 						forceFit : true,
 						scrollrows: false,
@@ -335,15 +337,19 @@ function file_grid(){
 	first_grid=false;
 	set_order_arrow(order_col+1,order_desc);
 	grid_auto_width();
-	gird_event();
+	grid_event();
 }
-function gird_event(){
+function grid_start_id(){
+	if(cur_page_end==200) return 0;
+	else return cur_page_end-page_row;
+}
+function grid_event(){
 	$("#maintable").setGridParam({multiselect: true});
 	$(window).bind('resize',function(event){
 		grid_auto_width();
 	});
 	$("#maintable tr:nth-child(even)").addClass("d");
-	$(".jqgrow", "#maintable").bind('keyup',function(e){
+	$("#maintable .jqgrow:not(.ped)").bind('keyup',function(e){
 		console.log(e.keyCode);
 		if(e.keyCode==13){
 			dblclick_file($(".jqgrow", "#maintable")[this.id-1]);
@@ -355,19 +361,18 @@ function gird_event(){
 			cut_file($(".jqgrow", "#maintable")[this.id-1]);
 		}
 	});
-
 	if(!cef.plugin.offline){
-		$(".jqgrow", "#maintable").contextMenu('myMenu1', context_menu_obj);
-		$(".jqgrow td:nth-child(1)").bind('dblclick',function(e){
+		$("#maintable .jqgrow:not(.ped)").contextMenu('myMenu1', context_menu_obj);
+		$("#maintable .jqgrow:not(.ped) td:nth-child(1)").bind('dblclick',function(e){
 			dblclick_file(e.currentTarget.parentNode);
 		});
-		$(".jqgrow td:nth-child(2)").bind('dblclick',function(e){
+		$("#maintable .jqgrow:not(.ped) td:nth-child(2)").bind('dblclick',function(e){
 			dblclick_path(e.currentTarget.parentNode);
 		});
 	}else{
-		$(".jqgrow", "#maintable").contextMenu('myMenu2', context_menu_obj);
+		$("#maintable .jqgrow:not(.ped)").contextMenu('myMenu2', context_menu_obj);
 	}
-	$(".jqgrow", "#maintable").each(function(index,e){
+	$("#maintable .jqgrow:not(.ped)").each(function(index,e){
 		var s = files[index].icon+$(e).find("td")[0].innerHTML;
 		$(e).find("td")[0].innerHTML = s;
 	});
@@ -382,17 +387,20 @@ function view_grid(){
 		$("#maintable").setGridParam({multiselect: false});
 		$("#maintable").clearGridData();
 		$("#maintable").setGridParam({data: files}).trigger("reloadGrid");
-		gird_event();
+		grid_event();
 	}
 }
-
-function gird_add_files(){
+function grid_add_files(){
 	$("#maintable").setGridParam({multiselect: false});
-	$("#maintable").addRowData( 11, files.slice(10,14), "last");
-	//gird_event();
+	$("#maintable").addRowData(cur_page_end+1, files.slice(cur_page_end,cur_page_end+page_row), "last");
+	$("#maintable tr:gt("+cur_page_end+")").each(function(idx,t){
+		$(t).attr("id",cur_page_end+idx+1);
+	});
+	cur_page_end += page_row;
+	grid_event();
 }
 
-function gird_selectd_files(){
+function grid_selectd_files(){
 	var selectd_file_ids = $("#maintable").jqGrid('getGridParam','selarrrow');
 	var ret="";
 	$.each(selectd_file_ids, function (index, ele) { 
