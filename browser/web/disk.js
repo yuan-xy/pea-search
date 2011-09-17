@@ -411,3 +411,25 @@ function grid_selectd_files(){
 	});
 	return ret;
 }
+function grid_selectd_filenames(){
+	var selectd_file_ids = $("#maintable").jqGrid('getGridParam','selarrrow');
+	var ret="";
+	$.each(selectd_file_ids, function (index, ele) { 
+		var file = files[ele-1];
+		ret += file.name;
+		ret += "\n";
+	});
+	return ret;
+}
+function grid_batch_unselect(){
+	$("#maintable .jqgrow").contextMenu('myMenu1', context_menu_obj);
+	$("#maintable").resetSelection();
+}
+function has_row_selected(rowid){
+	var selectd_file_ids = $("#maintable").jqGrid('getGridParam','selarrrow');
+	var ret=false;
+	$.each(selectd_file_ids, function (index, ele) { 
+		if(ele==rowid+'') ret=true;
+	});
+	return ret;
+}

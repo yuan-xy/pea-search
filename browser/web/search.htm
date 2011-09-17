@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>文件搜索</title>
+    <title>豌豆搜索</title>
     <link rel="stylesheet" href="./main.css" type="text/css" />
     <link rel="stylesheet" href="./thumbnail.css" type="text/css" />
     <link rel="shortcut icon" href="./favicon.ico" type="image/ico" />
@@ -322,9 +322,16 @@
 					"<span class='highlight-match'>"+html.substring(fi, fi+$("#search").val().length)+"</span>" + 
 					html.substring(fi+$("#search").val().length, html.length);
 			});
-			icon_replace_index=0;
+			$("#maintable .jqgrow:not(.ped)").each(function(i,o){
+				get_file_path(o);
+				var full_path = path+file;
+				if(full_path.indexOf('%')!=-1) return;
+				if(full_path.match(/exe$/i)!=null || full_path.match(/lnk$/i)!=null) 
+					$(o).find("img")[0].src = "gigaso://icon/"+full_path;
+			});
+			//icon_replace_index=0;
 			$("#maintable .jqgrow:not(.ped)").addClass("ped");
-			if(!cef.plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
+			//if(!cef.plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
 			$("#loading").css("visibility","hidden");
 	  }
 </script>

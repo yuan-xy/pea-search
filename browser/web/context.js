@@ -63,9 +63,10 @@ var context_menu_obj = {
 */
                   onContextMenu : function(event, menu){
                                   var rowId = $(event.target).parent("tr").attr("id");
-								  console.log(rowId);
-                                  var grid = $("#maintable");
-                                  grid.setSelection(rowId);                   
+								  if(!has_row_selected(rowId)){
+									grid_batch_unselect();
+									$("#maintable").setSelection(rowId);
+								  }
                                   return true;
                   },
 				  bindings: {
@@ -126,23 +127,23 @@ var context_menu_obj3 = {
 				  },
 				  bindings: {
 					  'default': function(t,menuitem) {
-						var fs = gird_selectd_files();
+						var fs = grid_selectd_files();
 						var ret = cef.plugin.batch_open(fs);
 						info_or_error(ret, fs, menuitem.lastChild.data);
 					  },
 					  'copy': function(t,menuitem) {
-						var fs = gird_selectd_files();
+						var fs = grid_selectd_files();
 						var ret = cef.plugin.batch_copy(fs);
 						info_or_error(ret, fs, menuitem.lastChild.data);
 					  },
 					  'cut': function(t,menuitem) {
-						var fs = gird_selectd_files();
+						var fs = grid_selectd_files();
 						var ret = cef.plugin.batch_cut(fs);
 						info_or_error(ret, fs, menuitem.lastChild.data);
 					  },
 					  'delete': function(t,menuitem) {
-						var fs = gird_selectd_files();
-						if(window.confirm("您确定要删除 '"+file+"' 吗?")){
+						var fs = grid_selectd_files();
+						if(window.confirm("您确定要删除 \n"+grid_selectd_filenames()+"这些文件吗?")){
 							var ret = cef.plugin.batch_delete(fs);
 							refresh();
 							info_or_error(ret, fs, menuitem.lastChild.data);
