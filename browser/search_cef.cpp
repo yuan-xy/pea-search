@@ -30,8 +30,6 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 
 static void trans_focus();
 
-
-
 int APIENTRY wWinMain(HINSTANCE hInstance,
 					  HINSTANCE hPrevInstance,
 					  LPTSTR    lpCmdLine,
@@ -40,7 +38,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	breakpad_init();
-	OleInitialize(NULL);
 	setPWD(NULL);
 
   CefSettings settings;
@@ -61,6 +58,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	InitPlugin();
 	MyRegisterClass(hInstance);
 	if (!InitInstance (hInstance, nCmdShow)) return FALSE;
+	if(OleInitialize(NULL)!=S_OK) MessageBox(NULL,L"warn",L"ole init failed.",MB_OK);
 	connect_named_pipe();
 	SetForegroundWindow(hMainWin);
 	SetFocus(hMainWin);
@@ -74,8 +72,8 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 		DispatchMessage(&msg);
 	}
 	close_named_pipe();
-	CefShutdown();
 	OleUninitialize();
+	CefShutdown();
 	return (int) msg.wParam;
 }
 

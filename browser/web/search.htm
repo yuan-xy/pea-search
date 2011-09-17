@@ -62,7 +62,7 @@
   </div>
   <center style="margin-top:10px;">
     <img src="images/logo.png" width="129" height="34">
-    <input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:500px; height:34px; background:url(images/icon-search.png) no-repeat #FFF; padding-left:25px;"><img id="loading" src="images/spinner.gif" style="visibility: hidden"/><input type="text" id="dir">
+    <input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:500px; height:34px; background:url(images/icon-search.png) no-repeat #FFF; padding-left:25px;"><img id="loading" src="images/spinner.gif" style="visibility: hidden"/><input type="text" id="dir"><input type="button" onclick="search_dir(cef.gigaso.select_dir());return false;">
   </center>
 </div>
 </div>
@@ -585,11 +585,18 @@
 		}
 		if(ss.length<=1) return;
 		clearTimeout(history_timeout);
+		search_dir(ss);
+	}
+	function search_dir(ss){
 		cef.plugin.dire = ss;
 		$("#dir")[0].value = ss;
-		$("#search")[0].value = "*";
-		$("#search")[0].select();
-		searchf("*");
+		if($("#search").val()==""){
+			$("#search")[0].value = "*";
+			$("#search")[0].select();
+			searchf("*");
+		}else{
+			searchf($("#search").val()); 
+		}
 	}
 	function init_event(){
 		$("#dir").bind('keyup',function(event,t){

@@ -1,11 +1,8 @@
-// Copyright (c) 2008-2009 The Chromium Embedded Framework Authors. All rights
-// reserved. Use of this source code is governed by a BSD-style license that
-// can be found in the LICENSE file.
-
 #include "env.h"
 #include "cef_js.h"
 #include "client_handler.h"
 #include "common.h"
+#include <Shlobj.h>
 
 extern CefRefPtr<ClientHandler> g_handler;
 
@@ -61,6 +58,24 @@ public:
           browser = g_handler->GetBrowser();
           if(browser.get())
             browser->ShowDevTools();
+		}
+      return true;
+    }
+    else if(name == "SelectDir")
+    {
+		BROWSEINFO bi;
+		wchar_t Buffer[MAX_PATH];
+		bi.hwndOwner = NULL;
+		bi.pidlRoot = NULL;
+		bi.pszDisplayName = Buffer;
+		bi.lpszTitle = L"Ñ¡ÔñÄ¿Â¼";
+		bi.ulFlags = BIF_RETURNONLYFSDIRS;
+		bi.lpfn = NULL;
+		bi.iImage = 0;
+		LPITEMIDLIST pIDList = SHBrowseForFolder(&bi);
+		if(pIDList){
+			SHGetPathFromIDList(pIDList, Buffer);
+			retval = CefV8Value::CreateString(Buffer);
 		}
       return true;
     }
@@ -207,6 +222,10 @@ void InitExtensionTest()
     "  cef.gigaso.dev_tool = function() {"
     "    native function ShowDevTools();"
     "    return ShowDevTools();"
+    "  };"
+    "  cef.gigaso.select_dir = function() {"
+    "    native function SelectDir();"
+    "    return SelectDir();"
     "  };"
     "  cef.gigaso.check_update = function() {"
     "    native function CheckUpdate();"
