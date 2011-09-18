@@ -23,6 +23,7 @@
 ;Include Modern UI
 
   !include "MUI.nsh"
+  !define MUI_ICON g:\gigaso\browser\web\logo.ico
 
   ;Default installation folder
   InstallDir "@CPACK_NSIS_INSTALL_ROOT@\@CPACK_PACKAGE_INSTALL_DIRECTORY@"
@@ -556,7 +557,7 @@ FunctionEnd
   !define MUI_STARTMENUPAGE_REGISTRY_ROOT "SHCTX" 
   !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\@CPACK_PACKAGE_VENDOR@\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@" 
   !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Start Menu Folder"
-  !insertmacro MUI_PAGE_STARTMENU Application $STARTMENU_FOLDER
+  !define MUI_STARTMENUPAGE_Application_VARIABLE $STARTMENU_FOLDER
 
   @CPACK_NSIS_PAGE_COMPONENTS@
 
@@ -747,9 +748,9 @@ Section "-Core installation"
   nsExec::ExecToStack 'net start PeaSearch'
   DetailPrint "准备初次运行的数据..."
   Sleep 3000
-  CreateShortCut "$DESKTOP\豌豆文件搜索.lnk" "$INSTDIR\peasrch.exe" "" "$INSTDIR\web\icons\animation.ico" 0
-  CreateShortCut "$QUICKLAUNCH\豌豆文件搜索.lnk" "$INSTDIR\peasrch.exe" "" "$INSTDIR\web\icons\animation.ico" 0
-  CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\豌豆文件搜索.lnk"  "$INSTDIR\peasrch.exe" "" "$INSTDIR\web\icons\animation.ico" 0
+  CreateShortCut "$DESKTOP\豌豆搜索.lnk" "$INSTDIR\peasrch.exe" "" "$INSTDIR\web\logo.ico" 0
+  CreateShortCut "$QUICKLAUNCH\豌豆搜索.lnk" "$INSTDIR\peasrch.exe" "" "$INSTDIR\web\logo.ico" 0
+  CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\豌豆搜索.lnk"  "$INSTDIR\peasrch.exe" "" "$INSTDIR\web\logo.ico" 0
   WriteINIStr "$INSTDIR\gigaso.inf" Strings EXEPATH "$INSTDIR"
   nsExec::ExecToStack 'RunDll32 advpack.dll, LaunchINFSection "$INSTDIR\gigaso.inf", DefaultInstall'
   DetailPrint "完成安装..."

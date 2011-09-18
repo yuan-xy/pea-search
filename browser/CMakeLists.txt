@@ -28,6 +28,7 @@ SOURCE_GROUP(Generated FILES
 SET( SOURCES
     ${GENERAL}
     ${GENERATED}
+    "peasrch.rc"
     "../filesearch/env.h"
     "../filesearch/sharelib.h"
     "../filesearch/common.h"

@@ -38,35 +38,36 @@
     </div>
     <div class="rightbar">
       <ul style="position:relative;">
-        <li><a onClick="$('#search')[0].value='*'; searchf('*');orderby(2,true);" title="最大文件"  style="cursor:pointer;"><img src="images/icon-05.png" width="51" height="16"></a></li>
-        <li style="position:absolute; width:2px; left:110px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
-		<div id="online_offline">
-        <li><a onClick="online_db();" title="在线文件"  style="cursor:pointer;"><img src="images/icon-06.png" width="51" height="16"></a></li>
-        <li style="position:absolute; width:2px; left:180px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
-        <li class=""><a onClick="offline_db();" title="离线文件"  style="cursor:pointer;"><img src="images/icon-07.png" width="51" height="16"></a></li>
-        <li style="position:absolute; width:2px; left:247px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
-		</div>
-        <li style="width:34px;" onMouseOver="layer_menu('m_sub1','1')" onMouseOut="layer_menu('m_sub1','1')"><a href="#" title="设置"  _fcksavedurl="#"><img src="images/icon-08.png" width="34" height="16"></a>
+      <li style="width:34px;" onMouseOver="layer_menu('m_sub1','1')" onMouseOut="layer_menu('m_sub1','1')"><a href="#" title="设置"  _fcksavedurl="#"><img src="images/icon-08.png" width="34" height="16"></a>
           <div style="position:relative;">
-            <div id=m_sub1 style="visibility:hidden; position:absolute; top:6px;left:-60px; z-index:99999;" >
+            <div id=m_sub1 style="visibility:hidden; position:absolute; top:6px;left:-70px; z-index:99999;" >
               <ul>
                 <li><a href="#" onClick="show_index_status();return false;">硬盘状态</a></li>
                 <li><a href="#" onClick="show_hotkey();return false;">快捷键</a></li>
                 <li><a href="#" onClick="show_export();return false;">导出查询结果</a></li>
-                <li><a href="#">帮助</a></li>
+                <li><a href="help.htm" target="_blank">帮助</a></li>
                 <li><a href="#" onClick="cef.gigaso.dev_tool();return false;">调试</a></li>
               </ul>
             </div>
-          </div>
+            </div>
+       <span id="online_offline">
+        <li class=""><a onClick="offline_db();" title="离线文件"  style="cursor:pointer;"><img src="images/icon-07.png" width="51" height="16"></a></li>
+        <li style="position:absolute; width:2px; left:263px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
+        <li><a onClick="online_db();" title="在线文件"  style="cursor:pointer;"><img src="images/icon-06.png" width="51" height="16"></a></li>
+        <li style="position:absolute; width:2px; left:195px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
+        </span>
+        
+        <li><a onClick="$('#search')[0].value='*'; searchf('*');orderby(2,true);" title="最大文件"  style="cursor:pointer;"><img src="images/icon-05.png" width="51" height="16"></a></li>
+        <li style="position:absolute; width:2px; left:125px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
         </li>
       </ul>
     </div>
   </div>
-  <center style="margin-top:10px;">
-    <img src="images/logo.png" width="129" height="34">
-	<input type="image" src="images/icon-search.png" onclick="search_dir(cef.gigaso.select_dir());return false;" title="选择一个目录"><span id="dir" style="display:none"></span>
-	<input type="text" id="dir2" style="display:none;height:34px;padding:0px;margin:0px" readonly="readonly"><input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:600px; height:34px; background:url(images/icon-search.png) no-repeat #FFF; padding-left:0px;margin-left:0px"><img id="loading" src="images/spinner.gif" style="visibility: hidden"/>
-  </center>
+  <div style="width:950px; margin:0 auto; margin-top:25px;">
+  <div style="float:left; width:160px; height:34px;"> <img src="images/logo.png" ></div>
+  <div style="float:left; width:24px; height:29px; line-height:34px; padding-top:5px;"> <input type="image" src="images/folder_add.png" width="24" height="24" onClick="search_dir(cef.gigaso.select_dir());return false;" title="选择一个目录"  align="absmiddle" style="margin::0px 10px;"><span id="dir" style="display:none"></span></div>
+  <div style="float:left; widht:760px; height:34px; line-height:34px; padding-left:10px;"> <input type="text" id="dir2" style="display:none; height:32px; padding:0px; margin:0px; background:#e7f5fc;" readonly="readonly"><input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:720px; height:32px; background:url(images/icon-search.png) no-repeat #FFF; background-position:right; padding-left:0px;"><img id="loading" src="images/spinner.gif" style="visibility: hidden"/></div>
+  </div>
 </div>
 </div>
 <div id="historys" style="align:center; "></div>

@@ -89,7 +89,7 @@ extern "C" {
 #define IS_OTHER(x) (x==0 || x==1)
 #define IS_COMPRESS(x) (x >> 3)==1 || (x==SF_DISK)
 #define IS_PROGRAM(x)  (x >> 4)==1
-#define IS_MEDIA(x)		(x >> 4)==3
+#define IS_MEDIA(x)		(x >> 4)==3  && (x!=SF_PHOTO)
 #define IS_ARCHIVE(x)		(x >> 5)==3
 #define IS_OFFICE(x)		(x >> 3)==015
 #define IS_EBOOK(x)			(x >> 3)==016
