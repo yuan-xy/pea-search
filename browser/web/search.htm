@@ -66,7 +66,7 @@
   <div style="width:950px; margin:0 auto; margin-top:25px;">
   <div style="float:left; width:160px; height:34px;"> <img src="images/logo.png" ></div>
   <div style="float:left; width:24px; height:29px; line-height:34px; padding-top:5px;"> <input type="image" src="images/folder_add.png" width="24" height="24" onClick="search_dir(cef.gigaso.select_dir());return false;" title="选择一个目录"  align="absmiddle" style="margin::0px 10px;"><span id="dir" style="display:none"></span></div>
-  <div style="float:left; widht:760px; height:34px; line-height:34px; padding-left:10px;"> <input type="text" id="dir2" style="display:none; height:32px; padding:0px; margin:0px; background:#e7f5fc;" readonly="readonly"><input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:720px; height:32px; background:url(images/icon-search.png) no-repeat #FFF; background-position:right; padding-left:0px;"><img id="loading" src="images/spinner.gif" style="visibility: hidden"/></div>
+  <div style="float:left; widht:760px; height:34px; line-height:34px; padding-left:10px;"> <input type="text" id="dir2" style="display:none; height:32px; padding:0px; margin:0px; background:#e7f5fc;" readonly="readonly"><input id="search" name="s" type="text" size="50" value="" title="查询条件" style=""><img id="loading" src="images/spinner.gif" style="visibility: hidden"/></div>
   </div>
 </div>
 </div>
@@ -603,15 +603,17 @@
 		cef.plugin.dire = ss;
 		$("#dir").html(ss);
 		var dir_show = ss;
-		if(ss.length>28) dir_show=ss.substring(0, 13)+".."+ss.substring(ss.length-13,ss.length);
-		dir_show = "在\""+dir_show+"\"下搜索:";
+		if(ss.length>38) dir_show=ss.substring(0, 18)+"..."+ss.substring(ss.length-18,ss.length);
+		dir_show = "在 \""+dir_show+"\" 下搜索:";
 		$("#dir2").val(dir_show);
 		$("#dir2").attr("title",ss);
 		$("#dir2").css("display","inline");
 		$("#dir2").attr("size",dir_show.length+chsum(dir_show)/2);
-		$("#search").css("width","300px");
+		var s_width=720-$("#dir2").width();
+		$("#search").css("width",s_width+"px");
 		$("#search").css("border-left","0px")
 		$("#dir2").css("border-right","0px")
+		$("#search").addClass("dir_search");
 		if($("#search").val()==""){
 			$("#search")[0].value = "*";
 			$("#search")[0].select();
@@ -624,8 +626,9 @@
 		cef.plugin.dire = '';
 		$("#dir").html('');
 		$("#dir2").css("display","none");
-		$("#search").css("width","600px");
+		$("#search").css("width","720px");
 		$("#search").css("border-left","1px")
+		$("#search").removeClass("dir_search");
 	}
 	function chsum(chars){
 		var sum = 0; 

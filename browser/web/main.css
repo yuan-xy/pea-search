@@ -2,14 +2,14 @@ body {font-size: 90%; margin:0px ; padding:0px; }
 
 ol,ul{list-style:none}
 
-#search {padding:0px; margin:0px; height:35px; width:600px; font-size: 120%;}
-#search_img {
-		width: 16px;
-		height: 16px;
-		position: absolute;
-		display: block;
-		right: 0;
-		bottom: 0;
+#search {
+	width:720px; height:32px; 
+	background:url(images/icon-search.png) no-repeat #FFF; background-position:right; 
+	padding:0px; margin:0px; font-size: 120%;
+}
+
+.dir_search:focus {
+  outline: none;
 }
 
 #maintable {font-size: 80%; line-height:1.5em; text-align:left; border-bottom:1px solid #6990b3; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
