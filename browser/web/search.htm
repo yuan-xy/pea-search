@@ -40,10 +40,12 @@
       <ul style="position:relative;">
         <li><a onClick="$('#search')[0].value='*'; searchf('*');orderby(2,true);" title="最大文件"  style="cursor:pointer;"><img src="images/icon-05.png" width="51" height="16"></a></li>
         <li style="position:absolute; width:2px; left:110px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
+		<div id="online_offline">
         <li><a onClick="online_db();" title="在线文件"  style="cursor:pointer;"><img src="images/icon-06.png" width="51" height="16"></a></li>
         <li style="position:absolute; width:2px; left:180px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
         <li class=""><a onClick="offline_db();" title="离线文件"  style="cursor:pointer;"><img src="images/icon-07.png" width="51" height="16"></a></li>
         <li style="position:absolute; width:2px; left:247px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
+		</div>
         <li style="width:34px;" onMouseOver="layer_menu('m_sub1','1')" onMouseOut="layer_menu('m_sub1','1')"><a href="#" title="设置"  _fcksavedurl="#"><img src="images/icon-08.png" width="34" height="16"></a>
           <div style="position:relative;">
             <div id=m_sub1 style="visibility:hidden; position:absolute; top:6px;left:-60px; z-index:99999;" >
@@ -62,7 +64,8 @@
   </div>
   <center style="margin-top:10px;">
     <img src="images/logo.png" width="129" height="34">
-    <input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:500px; height:34px; background:url(images/icon-search.png) no-repeat #FFF; padding-left:25px;"><img id="loading" src="images/spinner.gif" style="visibility: hidden"/><input type="text" id="dir"><input type="button" onclick="search_dir(cef.gigaso.select_dir());return false;">
+	<input type="image" src="images/icon-search.png" onclick="search_dir(cef.gigaso.select_dir());return false;" title="选择一个目录"><span id="dir" style="display:none"></span>
+	<input type="text" id="dir2" style="display:none;height:34px;padding:0px;margin:0px" readonly="readonly"><input id="search" name="s" type="text" size="50" value="" title="查询条件" style="width:600px; height:34px; background:url(images/icon-search.png) no-repeat #FFF; padding-left:0px;margin-left:0px"><img id="loading" src="images/spinner.gif" style="visibility: hidden"/>
   </center>
 </div>
 </div>
@@ -90,7 +93,7 @@
         </div>
 		{#/for}
 <div class="title-01">
-<div class="title-01-left">常用文件</div>
+<div class="title-01-left">搜索历史</div>
 <div class="title-01-right"><a onClick="history_switch();return false;">更多</a></div>
 </div>
 </textarea>
@@ -110,7 +113,10 @@
 			<a id="program-" href="#tab-1" onClick="file_type_search(130);return true;"><img src="icons/exe.ico" class="icon"/>程序<img src="images/arrow-asc.png" valign="center" border="0"/>
 			<br/><span id="program_file">0</span></a></li>
 		<li>
-			<a id="media-" href="#tab-1" onClick="file_type_search(131);return true;"><img src="icons/media.ico" class="icon"/>多媒体<img src="images/arrow-asc.png" valign="center" border="0"/>
+			<a id="photo-" href="#tab-1" onClick="file_type_search(50);return true;"><img src="icons/photo.ico" class="icon"/>图片
+			<br/><span id="photo_file">0</span></a></li>
+		<li>
+			<a id="media-" href="#tab-1" onClick="file_type_search(131);return true;"><img src="icons/media.ico" class="icon"/>音视频<img src="images/arrow-asc.png" valign="center" border="0"/>
 			<br/><span id="media_file">0</span></a></li>
 		<li>
 			<a id="archive-" href="#tab-1" onClick="file_type_search(132);return true;"><img src="icons/txt.ico" class="icon"/>文档<img src="images/arrow-asc.png" valign="center" border="0"/>
@@ -129,7 +135,6 @@
 		</div>
 		<div class="subnav" style="display:none; left:310px" id="media-div">
 			<span class="subnav-span"><a onClick="file_type_search(49);return false;"><img src="icons/music.ico" class="icon"/>音乐(<span id="music_file">0</span>)</a></span>
-			<span class="subnav-span"><a onClick="file_type_search(50);return false;"><img src="icons/photo.ico" class="icon"/>图片(<span id="photo_file">0</span>)</a></span>
 			<span class="subnav-span"><a onClick="file_type_search(51);return false;"><img src="icons/video.ico" class="icon"/>视频(<span id="video_file">0</span>)</a></span>
 			<span class="subnav-span"><a onClick="file_type_search(52);return false;"><img src="icons/animation.ico" class="icon"/>动画(<span id="animation_file">0</span>)</a></span>
 		</div>
@@ -421,6 +426,12 @@
 			 $(".jqgrow", "#maintable")[0].focus();
 			 return;
 		}
+		if(e.keyCode==46 || e.keyCode==8){
+			if($("#dir2").val()!="" && $("#search").val()==""){
+				if(cur_search!='') cur_search='';
+				else remove_dir();
+			}
+		}
 		if(changed()) searchf(value);
 	}
 	function orderby(col,desc){
@@ -589,7 +600,17 @@
 	}
 	function search_dir(ss){
 		cef.plugin.dire = ss;
-		$("#dir")[0].value = ss;
+		$("#dir").html(ss);
+		var dir_show = ss;
+		if(ss.length>28) dir_show=ss.substring(0, 13)+".."+ss.substring(ss.length-13,ss.length);
+		dir_show = "在\""+dir_show+"\"下搜索:";
+		$("#dir2").val(dir_show);
+		$("#dir2").attr("title",ss);
+		$("#dir2").css("display","inline");
+		$("#dir2").attr("size",dir_show.length+chsum(dir_show)/2);
+		$("#search").css("width","300px");
+		$("#search").css("border-left","0px")
+		$("#dir2").css("border-right","0px")
 		if($("#search").val()==""){
 			$("#search")[0].value = "*";
 			$("#search")[0].select();
@@ -598,10 +619,26 @@
 			searchf($("#search").val()); 
 		}
 	}
+	function remove_dir(){
+		cef.plugin.dire = '';
+		$("#dir").html('');
+		$("#dir2").css("display","none");
+		$("#search").css("width","600px");
+		$("#search").css("border-left","1px")
+	}
+	function chsum(chars){
+		var sum = 0; 
+		for (var i=0; i<chars.length; i++) { 
+		   var c = chars.charCodeAt(i); 
+		   if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) { 
+			 //sum++; 
+		   }else {     
+		     sum++; 
+		   } 
+		}
+		return sum;
+	}
 	function init_event(){
-		$("#dir").bind('keyup',function(event,t){
-			cef.plugin.dire = $("#dir")[0].value;
-		});
 		$("#case0").bind('click',function(event,t){
 			cef.plugin.caze = false;
 			searchf($("#search").val());
@@ -622,6 +659,7 @@
 		});
 		$('#tabs').tabs();
 		scan_img();
+		if(get_offline_dbs().length==0) $("#online_offline").hide();
 	}
 	$(function() {
 		if(cef.plugin.caze){

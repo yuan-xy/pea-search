@@ -143,7 +143,7 @@ var context_menu_obj3 = {
 					  },
 					  'delete': function(t,menuitem) {
 						var fs = grid_selectd_files();
-						if(window.confirm("您确定要删除 \n"+grid_selectd_filenames()+"这些文件吗?")){
+						if(true || window.confirm("您确定要删除 \n"+grid_selectd_filenames()+"这些文件吗?")){
 							var ret = cef.plugin.batch_delete(fs);
 							refresh();
 							info_or_error(ret, fs, menuitem.lastChild.data);
