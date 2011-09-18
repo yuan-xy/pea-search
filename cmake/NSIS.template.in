@@ -557,7 +557,9 @@ FunctionEnd
   !define MUI_STARTMENUPAGE_REGISTRY_ROOT "SHCTX" 
   !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\@CPACK_PACKAGE_VENDOR@\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@" 
   !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Start Menu Folder"
-  !define MUI_STARTMENUPAGE_Application_VARIABLE $STARTMENU_FOLDER
+  !define MUI_PAGE_CUSTOMFUNCTION_PRE skipfunction
+  !insertmacro MUI_PAGE_STARTMENU Application $STARTMENU_FOLDER
+
 
   @CPACK_NSIS_PAGE_COMPONENTS@
 
@@ -900,9 +902,9 @@ Section "Uninstall"
   !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
 
 
-  Delete "$DESKTOP\Íã¶¹ÎÄ¼þËÑË÷.lnk"
-  Delete "$QUICKLAUNCH\Íã¶¹ÎÄ¼þËÑË÷.lnk"
-  Delete "$SMPROGRAMS\$MUI_TEMP\Íã¶¹ÎÄ¼þËÑË÷.lnk"
+  Delete "$DESKTOP\Íã¶¹ËÑË÷.lnk"
+  Delete "$QUICKLAUNCH\Íã¶¹ËÑË÷.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\Íã¶¹ËÑË÷.lnk"
 
   Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
 @CPACK_NSIS_DELETE_ICONS@
@@ -957,6 +959,10 @@ SectionEnd
 ; first visible page and sets up $INSTDIR properly...
 ; Choose different default installation folder based on SV_ALLUSERS...
 ; "Program Files" for AllUsers, "My Documents" for JustMe...
+
+Function skipfunction
+	Abort
+FunctionEnd
 
 Function .onInit
   ; Reads components status for registry

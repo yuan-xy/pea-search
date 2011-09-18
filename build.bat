@@ -18,7 +18,7 @@ if "%1" == "install" goto do_install
 	signtool sign /v /f ../cmake/gigaso-exe.pfx filesearch/peadaemo.exe
 	signtool sign /v /f ../cmake/gigaso-exe.pfx filesearch/pealn.exe
 	cpack
-	signtool sign /v /f ../cmake/gigaso-exe.pfx PeaSearch-1.0-x86.exe
+	signtool sign /v /f ../cmake/gigaso-exe.pfx PeaSearch-1.0.14-x86.exe
 	cd ..
 	goto end
 
