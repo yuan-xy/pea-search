@@ -320,7 +320,7 @@
 			highlight_timeout = setTimeout(icon_replace,1);
 	  }
 	  function highlight(){
-			$("#maintable .jqgrow:not(.ped) td:nth-child(1)").each(function(i,o){
+			$("#maintable .jqgrow:not(.ped) td:nth-child(1) span").each(function(i,o){
 				var html = o.innerHTML;
 				var fi = html.toLowerCase().indexOf($("#search").val().toLowerCase());
 				if(fi==-1) return;
@@ -382,7 +382,7 @@
 				gen_offline_dir_name(files[f_index],d_infos);
 		}
 		$.each(files, function (index, ele) { 
-			ele.icon = '<img width="16" height="16" style="margin-right:3px" src="icons/'+ele.type+'.ico" />';
+			ele.icon_name = '<img width="16" height="16" style="margin-right:3px" src="icons/'+ele.type+'.ico" /><span>'+ele.name+'</span>';
 		});
 		if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示",size:"",time:""});
 	}

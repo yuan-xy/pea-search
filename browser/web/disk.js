@@ -294,7 +294,7 @@ function file_grid(){
 						pager: false,
 						colNames:['文件名','文件夹','大小','修改日期',''], 
 						colModel:[ 
-									{name:'name', width:"40%",sortable:false },
+									{name:'icon_name', width:"40%",sortable:false },
 									{name:'path', width:"38%",sortable:false},
 									{name:'size', width:"7%", align:"right",sortable:false},
 									{name:'time', width:"15%", align:"right",sortable:false},
@@ -372,10 +372,6 @@ function grid_event(){
 	}else{
 		$("#maintable .jqgrow:not(.ped)").contextMenu('myMenu2', context_menu_obj);
 	}
-	$("#maintable .jqgrow:not(.ped)").each(function(index,e){
-		var s = files[index].icon+$(e).find("td")[0].innerHTML;
-		$(e).find("td")[0].innerHTML = s;
-	});
 	highlight_timeout = setTimeout(highlight,1);
 }
 function grid_auto_width(){
