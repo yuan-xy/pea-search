@@ -3,6 +3,7 @@ if "%1" == "clean" goto do_clean
 if "%1" == "gigaso" goto do_build
 if "%1" == "gigaso_install" goto do_build
 if "%1" == "install" goto do_install
+if "%1" == "sign" goto do_sign
 
 :do_build
 	cd Release
@@ -18,8 +19,9 @@ if "%1" == "install" goto do_install
 	signtool sign /v /f ../cmake/gigaso-exe.pfx filesearch/peadaemo.exe
 	signtool sign /v /f ../cmake/gigaso-exe.pfx filesearch/pealn.exe
 	cpack
-	signtool sign /v /f ../cmake/gigaso-exe.pfx PeaSearch-1.0.14-x86.exe
 	cd ..
+:do_sign
+	for %%f in (Release/PeaSearch*.exe) do signtool sign /v /f cmake/gigaso-exe.pfx Release/%%f 
 	goto end
 
 :do_clean

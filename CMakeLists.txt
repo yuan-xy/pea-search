@@ -82,7 +82,7 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "Wandouss")
 IF(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backslashes.
-  SET(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/browser\\\\web\\\\images\\\\find.ico")
+  SET(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/browser\\\\web\\\\logo.ico")
   SET(CPACK_NSIS_DISPLAY_NAME "Íã¶¹ËÑË÷£¨wandouss.com£©")
   SET(CPACK_NSIS_PACKAGE_NAME "Íã¶¹ËÑË÷")
   SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.wandouss.com")
@@ -91,6 +91,4 @@ IF(WIN32 AND NOT UNIX)
 ENDIF(WIN32 AND NOT UNIX)
 
 INCLUDE(CPack)
-
-
 

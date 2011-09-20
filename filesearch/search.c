@@ -792,7 +792,7 @@ int print_stat(int * stats, char *buffer){
 	p += sprintf(p,"\"other\":%d,", sum_stat(stats,0,2));
 	p += sprintf(p,"\"compress\":%d,",sum_stat(stats,3,7));
 	p += sprintf(p,"\"program\":%d,", sum_stat(stats,7,11));
-	p += sprintf(p,"\"media\":%d,", sum_stat(stats,11,15));
+	p += sprintf(p,"\"media\":%d,", sum_stat(stats,11,15)-*(stats+12));
 	p += sprintf(p,"\"archive\":%d,", sum_stat(stats,15,NON_VIRTUAL_TYPE_SIZE));
 	p += sprintf(p,"\"office\":%d,", sum_stat(stats,15,19));
 	p += sprintf(p,"\"ebook\":%d,", sum_stat(stats,19,22));

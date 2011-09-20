@@ -49,10 +49,12 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// PNG
+// Icon
 //
 
-IDB_PNG1                PNG                     "G:\\gigaso\\logo.png"
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON1               ICON                    "web\logo.ico"
 #endif    // 中文(中华人民共和国) resources
 /////////////////////////////////////////////////////////////////////////////
 
