@@ -129,10 +129,11 @@ extern pFileEntry findFile(KEY frn,KEY pfrn,int i);
  * 文件删除时，同时删除对应的内存结构
  */
 extern void deleteFile(pFileEntry file);
+
 /**
- * 删除目录以及目录下的所有文件
+ * 文件重命名
  */
-extern void deleteDir(pFileEntry file);
+extern void renameFile(pFileEntry file, wchar_t *new_name, int strlen);
 
 /**
  * 启动文件系统变动监视线程。该线程只能被启动一次。

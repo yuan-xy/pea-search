@@ -136,36 +136,51 @@ static void add_file(WCHAR *name, int len, int i){
 	initFatFile(&fd,dir,i);
 }
 
+static wchar_t RENAMED_OLD_NAME[MAX_PATH];
+
 static DWORD WINAPI MonitorFat(PVOID pParam) {
-	//TODO: fix类型驱动器监视是否存在性能问题？
 	pFileEntry root = (pFileEntry)pParam;
     int i = getDrive(root);
 	DWORD dwBytesReturned;
-	char buf[(sizeof(FILE_NOTIFY_INFORMATION) + MAX_PATH) * 2] = { 0 };
-	FILE_NOTIFY_INFORMATION* pNotify = (FILE_NOTIFY_INFORMATION*) buf;
+	size_t nBufSize = (sizeof(FILE_NOTIFY_INFORMATION) + MAX_PATH) * 2;
+	FILE_NOTIFY_INFORMATION* pBuffer = (FILE_NOTIFY_INFORMATION*)calloc(1, nBufSize);
+	FILE_NOTIFY_INFORMATION* pNotify;
 	while (1) {
 		BOOL flag = ReadDirectoryChangesW(
 				g_hVols[i],
-				pNotify,
-				sizeof(buf),
+				pBuffer,
+				nBufSize,
 				TRUE,
 				FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_DIR_NAME, &dwBytesReturned, NULL,
-				NULL);//TODO: 检查调用是否成功
-		if (flag && pNotify->Action > 0) {
-			int len = pNotify->FileNameLength+3*sizeof(WCHAR);
-			int size = len/sizeof(WCHAR);
-			if(size<MAX_PATH && size>0){
-				WCHAR *name = (WCHAR *)malloc_safe(len);
-				wsprintf(name,L"%c:\\%s",i+'A',pNotify->FileName);
-				switch(pNotify->Action){
-					case FILE_ACTION_ADDED: add_file(name,size,i);break;
-					case FILE_ACTION_REMOVED: deleteFile(find_file(name,size)); break;
-					case FILE_ACTION_RENAMED_OLD_NAME: deleteFile(find_file(name,size)); break;
-					case FILE_ACTION_RENAMED_NEW_NAME: add_file(name,size,i);break;
-				}
+				NULL);
+		pNotify = pBuffer;
+		while (flag && pNotify!=NULL) {
+			if(pNotify->Action==FILE_ACTION_RENAMED_NEW_NAME){
+				pFileEntry pmodify = find_file(RENAMED_OLD_NAME,wcslen(RENAMED_OLD_NAME));
+				renameFile(pmodify ,pNotify->FileName,pNotify->FileNameLength);
 			}else{
-				fprintf(stderr,"%s , line %d in '%s'\n",pNotify->FileName, __LINE__, __FILE__);
+				int len = pNotify->FileNameLength+3*sizeof(WCHAR);
+				int size = len/sizeof(WCHAR);
+				if(size<MAX_PATH && size>0){
+					WCHAR *name = (WCHAR *)malloc_safe(len);
+					wsprintf(name,L"%c:\\%s",i+'A',pNotify->FileName);
+					switch(pNotify->Action){
+						case FILE_ACTION_ADDED: add_file(name,size,i);break;
+						case FILE_ACTION_REMOVED: deleteFile(find_file(name,size)); break;
+						case FILE_ACTION_RENAMED_OLD_NAME: {
+							memset(RENAMED_OLD_NAME,0,sizeof(wchar_t));
+							memcpy(RENAMED_OLD_NAME,name,len); 
+							break;
+						}
+					}
+				}else{
+					fprintf(stderr,"%s , line %d in '%s'\n",pNotify->FileName, __LINE__, __FILE__);
+				}
 			}
+			if (pNotify->NextEntryOffset)
+				pNotify = (FILE_NOTIFY_INFORMATION*)(((BYTE*)pNotify) + pNotify->NextEntryOffset);
+			else
+				pNotify = NULL;
 		}
 	}
 }

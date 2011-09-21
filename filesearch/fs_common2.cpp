@@ -143,7 +143,25 @@ static void delete_file_from_parent_vector(pFileEntry file,pFileEntry parent){
 	}
 }
 
-void deleteDir(pFileEntry file){
+void renameFile(pFileEntry file, wchar_t *new_name, int str_len){
+	if(file==NULL){
+		return;
+	}else{
+		int len = WCHAR_TO_UTF8_LEN(new_name,str_len);
+		NEW0_FILE(ret,len);
+		memcpy(ret,file,sizeof(pFileEntry));
+		ret->us.v.FileNameLength = len;
+		ret->us.v.StrLen = str_len;
+		WCHAR_TO_UTF8(new_name,str_len,ret->FileName,len);
+		if(file->up.parent!=NULL){
+			addChildren(file->up.parent,ret);
+		}
+		delete_file_from_parent_vector(file,file->up.parent);
+		free_safe(file);
+	}
+}
+
+static void deleteDir(pFileEntry file){
 	if(file==NULL) return;
 	if(IsDir(file)){
 		pFileList children = (pFileList)file->children;
@@ -158,6 +176,7 @@ void deleteDir(pFileEntry file){
 		file->children = NULL;
 	}
 	free_safe(file);
+	ALL_FILE_COUNT--;
 }
 
 void deleteFile(pFileEntry file){
@@ -165,12 +184,12 @@ void deleteFile(pFileEntry file){
 	if(file->up.parent!=NULL){
 		delete_file_from_parent_vector(file,file->up.parent);
 	}
-	//if(IsDir(file)){
-	//	pFileList children = (pFileList)file->children;
-	//	my_assert(children == NULL || children->size()==0, );
-	//}
-	free_safe(file);
-	ALL_FILE_COUNT--;
+	if(IsDir(file)){
+		deleteDir(file);
+	}else{
+		free_safe(file);
+		ALL_FILE_COUNT--;
+	}
 }
 
 }// extern "C"

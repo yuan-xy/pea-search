@@ -56,7 +56,7 @@ extern int time_passed_ret(int (*f)(),int *ret_data);
 
 #define WCHAR_TO_UTF8_LEN(wstr, wstrlen) WideCharToMultiByte(CP_UTF8, 0, (wstr), (wstrlen), NULL, 0, NULL, NULL)
 
-#define WCHAR_TO_UTF8(wstr, wstrlen, ustr, ustrlen) WideCharToMultiByte(CP_UTF8, 0, (wstr), (wstrlen), (ustr), (ustrlen), NULL, NULL)
+#define WCHAR_TO_UTF8(wstr, wstrlen, ustr, ustrlen) WideCharToMultiByte(CP_UTF8, 0, (wstr), (wstrlen), ((LPSTR)ustr), (ustrlen), NULL, NULL)
 
 /**
  * ½«unicode±àÂëµÄ×Ö·û´®in×ª»»Îªutf-8±àÂëµÄ×Ö·û´®
