@@ -163,18 +163,22 @@ static void genFileEntryOne(PUSN_RECORD r,int i){
 
 #define FIND_FILE_0(r,i)	findFile((KEY)(r)->FileReferenceNumber,(KEY)(r)->ParentFileReferenceNumber,i);
 
+static DWORDLONG old_frn,old_pfrn;
+int old_i;
+
 void updateFileEntry(PUSN_RECORD r,int i){
 	DWORD dwReason = r->Reason;
+	printf("%x: %ls\n",r->Reason,r->FileName);
     if((USN_REASON_FILE_CREATE&dwReason)&&(USN_REASON_CLOSE&dwReason)){//增
 		genFileEntryOne(r,i);
-    }else if((USN_REASON_RENAME_NEW_NAME&dwReason) && (dwReason&USN_REASON_CLOSE)){//重命名
-    	pFileEntry file = FIND_FILE_0(r,i);
-		if(file==NULL){
-			FERROR(file);
-			genFileEntryOne(r,i);
-		}else{
-			deleteFile(file);
-			genFileEntryOne(r,i);
+	}else if(USN_REASON_RENAME_OLD_NAME&dwReason){
+		old_frn = r->FileReferenceNumber;		
+		old_pfrn = r->ParentFileReferenceNumber;
+		old_i = i;
+	}else if((USN_REASON_RENAME_NEW_NAME&dwReason) && (dwReason&USN_REASON_CLOSE)){//重命名
+		if(old_i==i){
+			pFileEntry pmodify = findFile(old_frn,old_pfrn,i);
+			renameFile(pmodify ,r->FileName,r->FileNameLength);
 		}
     }else if((dwReason&USN_REASON_FILE_DELETE)&&(USN_REASON_CLOSE&dwReason)){//删
         	pFileEntry file = FIND_FILE_0(r,i);

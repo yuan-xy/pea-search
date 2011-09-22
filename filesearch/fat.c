@@ -168,7 +168,7 @@ static DWORD WINAPI MonitorFat(PVOID pParam) {
 						case FILE_ACTION_ADDED: add_file(name,size,i);break;
 						case FILE_ACTION_REMOVED: deleteFile(find_file(name,size)); break;
 						case FILE_ACTION_RENAMED_OLD_NAME: {
-							memset(RENAMED_OLD_NAME,0,sizeof(wchar_t));
+							memset(RENAMED_OLD_NAME,0,sizeof(wchar_t)*MAX_PATH);
 							memcpy(RENAMED_OLD_NAME,name,len); 
 							break;
 						}
