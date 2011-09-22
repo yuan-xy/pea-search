@@ -149,12 +149,18 @@ void renameFile(pFileEntry file, wchar_t *new_name, int str_len){
 	}else{
 		int len = WCHAR_TO_UTF8_LEN(new_name,str_len);
 		NEW0_FILE(ret,len);
-		memcpy(ret,file,sizeof(pFileEntry));
+		memcpy(ret,file,sizeof(FileEntry));
 		ret->us.v.FileNameLength = len;
 		ret->us.v.StrLen = str_len;
 		WCHAR_TO_UTF8(new_name,str_len,ret->FileName,len);
 		if(file->up.parent!=NULL){
 			addChildren(file->up.parent,ret);
+		}
+		pFileList children = (pFileList)file->children;
+		if(children!=NULL){
+			for(FileList::const_iterator it = children->begin(); it!= children->end(); ++it) {
+				pFileEntry(*it)->up.parent = ret;
+			}
 		}
 		delete_file_from_parent_vector(file,file->up.parent);
 		free_safe(file);
