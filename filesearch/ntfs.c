@@ -1,6 +1,7 @@
 #include "env.h"
 #include <windows.h>
 #include <winioctl.h>
+#include <assert.h>
 #include <stdio.h>
 #include "ntfs.h"
 #include "util.h"
@@ -168,7 +169,7 @@ int old_i;
 
 void updateFileEntry(PUSN_RECORD r,int i){
 	DWORD dwReason = r->Reason;
-	printf("%x: %ls\n",r->Reason,r->FileName);
+	//printf("%x: %ls\n",r->Reason,r->FileName);
     if((USN_REASON_FILE_CREATE&dwReason)&&(USN_REASON_CLOSE&dwReason)){//Ôö
 		genFileEntryOne(r,i);
 	}else if(USN_REASON_RENAME_OLD_NAME&dwReason){
@@ -176,9 +177,16 @@ void updateFileEntry(PUSN_RECORD r,int i){
 		old_pfrn = r->ParentFileReferenceNumber;
 		old_i = i;
 	}else if((USN_REASON_RENAME_NEW_NAME&dwReason) && (dwReason&USN_REASON_CLOSE)){//ÖØÃüÃû
-		if(old_i==i){
+		if(old_pfrn==r->ParentFileReferenceNumber && i==old_i){
 			pFileEntry pmodify = findFile(old_frn,old_pfrn,i);
 			renameFile(pmodify ,r->FileName,r->FileNameLength);
+		}else{
+			pFileEntry pnew = findDir(r->ParentFileReferenceNumber,i);
+			pFileEntry file = findFile(old_frn,old_pfrn,old_i);
+			#ifdef MY_DEBUG
+				assert(file->FileReferenceNumber==(KEY)r->FileReferenceNumber);
+			#endif
+			moveFile(file,pnew);
 		}
     }else if((dwReason&USN_REASON_FILE_DELETE)&&(USN_REASON_CLOSE&dwReason)){//É¾
         	pFileEntry file = FIND_FILE_0(r,i);

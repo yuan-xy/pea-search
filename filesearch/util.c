@@ -118,7 +118,11 @@ void free_safe(void *ptr){
 #ifdef MY_DEBUG
 	assert(ptr);
 #endif
-	if (ptr) TC_FREE(ptr);
+	__try{
+		if (ptr) TC_FREE(ptr);
+	} __finally{
+		;
+	}
 	ptr = NULL;
 }
 

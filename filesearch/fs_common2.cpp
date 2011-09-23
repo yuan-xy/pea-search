@@ -168,6 +168,13 @@ void renameFile(pFileEntry file, wchar_t *new_name, int name_byte_len){
 	}
 }
 
+void moveFile(pFileEntry file, pFileEntry pnew){
+	if(file==NULL || pnew==NULL) return;
+	delete_file_from_parent_vector(file,file->up.parent);
+	file->up.parent = pnew;
+	addChildren(pnew,file);
+}
+
 static void deleteDir(pFileEntry file){
 	if(file==NULL) return;
 	if(IsDir(file)){

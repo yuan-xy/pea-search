@@ -155,6 +155,7 @@ static DWORD WINAPI MonitorFat(PVOID pParam) {
 				NULL);
 		pNotify = pBuffer;
 		while (flag && pNotify!=NULL) {
+			printf("%x: %ls\n",pNotify->Action, pNotify->FileName);
 			if(pNotify->Action==FILE_ACTION_RENAMED_NEW_NAME){
 				pFileEntry pmodify = find_file(RENAMED_OLD_NAME,wcslen(RENAMED_OLD_NAME));
 				renameFile(pmodify ,pNotify->FileName,pNotify->FileNameLength);

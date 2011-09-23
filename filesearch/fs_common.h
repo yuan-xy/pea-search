@@ -136,6 +136,13 @@ extern void deleteFile(pFileEntry file);
 extern void renameFile(pFileEntry file, wchar_t *new_name, int name_byte_len);
 
 /**
+ * 文件移动
+ * @param file 被移动的文件
+ * @param pnew 移动到的新文件夹
+ */
+void moveFile(pFileEntry file, pFileEntry pnew);
+
+/**
  * 启动文件系统变动监视线程。该线程只能被启动一次。
  * @param i 驱动器编号
  */

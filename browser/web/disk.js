@@ -324,7 +324,7 @@ function file_grid(){
 					   },
 						sortable: false});
 	$(".ui-jqgrid-htable th").bind('click',function(event,t){
-		if(this.id=="maintable_name") var index=0;
+		if(this.id=="maintable_icon_name") var index=0;
 		if(this.id=="maintable_path") var index=1;
 		if(this.id=="maintable_size") var index=2;
 		if(this.id=="maintable_time") var index=3;
