@@ -62,6 +62,11 @@ void FilesIterate(pFileEntry file,pFileVisitor visitor, void *data){
 	}
 }
 
+BOOL is_recycle(pFileEntry pf,int i){
+	return (strnicmp((const char *)pf->FileName,"RECYCLER",8)==0 && IsNtfs(i)) ||
+	(strnicmp((const char *)pf->FileName,"Recycled",8)==0 && !IsNtfs(i));
+}
+
 void AllFilesIterate(pFileVisitor visitor, void *data, BOOL offline){
 	int i=0;
 	if(offline){
@@ -73,7 +78,14 @@ void AllFilesIterate(pFileVisitor visitor, void *data, BOOL offline){
 	}else{
 		for(;i<26;i++){
 			if(g_loaded[i] && g_rootVols[i]!=NULL){
-				FilesIterate(g_rootVols[i],visitor,data);
+				pFileList children = (pFileList)g_rootVols[i]->children;
+				if(children==NULL) return;
+				for(FileList::const_iterator it = children->begin(); it!= children->end(); ++it) {
+					pFileEntry pf = pFileEntry(*it);
+					if(!is_recycle(pf,i)){
+						FilesIterate(pf,visitor,data);
+					}
+				}
 			}
 		}
 		if(get_desktop()!=NULL) FilesIterate(get_desktop(),visitor,data);
