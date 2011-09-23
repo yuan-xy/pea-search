@@ -715,7 +715,7 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 		list = (pFileEntry *)malloc_safe(sizeof(pFileEntry)*ALL_FILE_COUNT);
 		*result = list;
 		if(dir != NULL){
-			FilesIterate(dir,FileSearchVisitor,sOpt);
+			SubDirIterate(dir,FileSearchVisitor,sOpt);
 		}else{
 			AllFilesIterate(FileSearchVisitor,sOpt, sEnv->offline);
 		}
@@ -760,7 +760,7 @@ int * statistic(WCHAR *str, pSearchEnv env){
 		preProcessSearchOpt(sOpt);
 		preProcessPinyin(sOpt);
 		if(dir != NULL){
-			FilesIterate(dir,FileStatVisitor,sOpt);
+			SubDirIterate(dir,FileStatVisitor,sOpt);
 		}else{
 			AllFilesIterate(FileStatVisitor,sOpt, sEnv->offline);
 		}

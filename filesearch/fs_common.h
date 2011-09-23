@@ -137,6 +137,8 @@ extern void renameFile(pFileEntry file, wchar_t *new_name, int name_byte_len);
 
 /**
  * 文件移动
+ 对于ntfs系统，cut/paste导致重命名操作，删除到回收站也是一个重命名操作。但其实是一个移动操作。
+ 对于fat系统，cut导致一个删除后接一个添加操作。删除到回收站也是一个删除后接一个添加操作。
  * @param file 被移动的文件
  * @param pnew 移动到的新文件夹
  */

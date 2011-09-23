@@ -160,11 +160,11 @@ static DWORD WINAPI MonitorFat(PVOID pParam) {
 				pFileEntry pmodify = find_file(RENAMED_OLD_NAME,wcslen(RENAMED_OLD_NAME));
 				renameFile(pmodify ,pNotify->FileName,pNotify->FileNameLength);
 			}else{
-				int len = pNotify->FileNameLength+3*sizeof(WCHAR);
+				int len = pNotify->FileNameLength+strlen("c:\\")*sizeof(WCHAR);
 				int size = len/sizeof(WCHAR);
 				if(size<MAX_PATH && size>0){
-					WCHAR *name = (WCHAR *)malloc_safe(len);
-					wsprintf(name,L"%c:\\%s",i+'A',pNotify->FileName);
+					WCHAR *name = (WCHAR *)malloc_safe(len+sizeof(WCHAR));
+					swprintf(name,size+1,L"%c:\\%s",i+'A',pNotify->FileName);
 					switch(pNotify->Action){
 						case FILE_ACTION_ADDED: add_file(name,size,i);break;
 						case FILE_ACTION_REMOVED: deleteFile(find_file(name,size)); break;
