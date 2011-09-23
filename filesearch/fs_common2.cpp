@@ -143,10 +143,11 @@ static void delete_file_from_parent_vector(pFileEntry file,pFileEntry parent){
 	}
 }
 
-void renameFile(pFileEntry file, wchar_t *new_name, int str_len){
+void renameFile(pFileEntry file, wchar_t *new_name, int name_byte_len){
 	if(file==NULL){
 		return;
 	}else{
+		int str_len = name_byte_len/sizeof(wchar_t);
 		int len = WCHAR_TO_UTF8_LEN(new_name,str_len);
 		NEW0_FILE(ret,len);
 		memcpy(ret,file,sizeof(FileEntry));

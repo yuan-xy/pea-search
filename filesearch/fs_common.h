@@ -133,7 +133,7 @@ extern void deleteFile(pFileEntry file);
 /**
  * 文件重命名
  */
-extern void renameFile(pFileEntry file, wchar_t *new_name, int strlen);
+extern void renameFile(pFileEntry file, wchar_t *new_name, int name_byte_len);
 
 /**
  * 启动文件系统变动监视线程。该线程只能被启动一次。
