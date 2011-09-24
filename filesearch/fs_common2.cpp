@@ -62,6 +62,15 @@ void FilesIterate(pFileEntry file,pFileVisitor visitor, void *data){
 	}
 }
 
+void DirIterateWithoutSelf(pFileEntry file,pFileVisitor visitor, void *data){
+	if(!IsDir(file)) return;
+	pFileList children = (pFileList)file->children;
+	if(children==NULL) return;
+	for(FileList::const_iterator it = children->begin(); it!= children->end(); ++it) {
+		FilesIterate(pFileEntry(*it),visitor,data);
+	}
+}
+
 BOOL is_recycle(pFileEntry pf,int i){
 	return (strnicmp((const char *)pf->FileName,"RECYCLER",8)==0 && IsNtfs(i)) ||
 	(strnicmp((const char *)pf->FileName,"Recycled",8)==0 && !IsNtfs(i));

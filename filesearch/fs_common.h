@@ -205,6 +205,7 @@ extern pFileEntry SubDirIterateB(pFileEntry dir, pFileVisitorB visitor, void *da
  * @param data 环境数据
  */
 extern void FilesIterate(pFileEntry file,pFileVisitor visitor, void *data);
+extern void DirIterateWithoutSelf(pFileEntry file,pFileVisitor visitor, void *data);
 /**
  * 递归遍历访问当前文件系统的所有文件，执行给定的访问函数。
  * @param visitor 访问函数
