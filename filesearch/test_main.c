@@ -3,6 +3,7 @@
 #include "global.h"
 #include "util.h"
 #include "search.h"
+#include "desktop.h"
 
 void search0(void *name){
 	pFileEntry *result=NULL;
@@ -31,6 +32,7 @@ void search0(void *name){
 int main(){
 	WCHAR ss[64];
 	gigaso_init();
+	scan_desktop();
 	do{
 		//wscanf_s(L"%[^\n]",ss,31);
 		fgetws(ss,63,stdin);

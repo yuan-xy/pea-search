@@ -177,8 +177,13 @@ function show_hotkey(){
 }
 function set_hotkey(){
 	cef.plugin.hotkey = $("#select-hotkey").val();
-	$("#dialog-set-hotkey").dialog("close");
-	show_info("快捷键设置成功！");
+	if($("#select-hotkey").val()==cef.plugin.hotkey){
+		$("#dialog-set-hotkey").dialog("close");
+		show_info("快捷键设置成功！");
+	}else{
+		$("#dialog-set-hotkey").dialog("close");
+		show_error("快捷键设置失败！");
+	}
 }
 
 function show_export(){

@@ -383,7 +383,7 @@ public:
     }
     else if(name == "set_hotkey"){
       if(arguments.size() != 1) return false;
-      set_hotkey(arguments[0]->GetIntValue());
+      if(!set_hotkey(arguments[0]->GetIntValue())) return false;
       HWND wnd = FindWindow(ListenerWindowClass,NULL);
       if(wnd==NULL) return false;
 	  SendMessage(wnd,WM_SET_HOTKEY,NULL,NULL);
