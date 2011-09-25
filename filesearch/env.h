@@ -59,6 +59,7 @@ struct searchEnv{ //搜索的环境配置
 	BOOL offline; //查询offline文件还是online文件
 	int path_len; //如果指定了搜索的路径，该路径名的字符长度
 	WCHAR path_name[MAX_PATH]; ////指定搜索的路径
+	WCHAR user_name[MAX_PATH]; ////执行搜索的当前用户名
 };
 typedef struct searchEnv SearchEnv, *pSearchEnv;
 

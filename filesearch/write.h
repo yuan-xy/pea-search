@@ -39,6 +39,9 @@ typedef BOOL (*pDbVisitor)(char *db_name, void *data);
  */
 extern void DbIterator(pDbVisitor, void *data);
 
+extern BOOL save_desktop(wchar_t *user_name, pFileEntry desktop);
+
+extern BOOL load_desktop(wchar_t *user_name);
 
 #endif  // FILE_SEARCH_WRITE_H_
 

@@ -60,6 +60,10 @@ static CefString query(CefString msg, int rows){
 	req.env.file_type = m_file_type;
 	req.env.path_len = m_dir.length();
 	if(req.env.path_len>0) wcsncpy(req.env.path_name, m_dir.c_str(), MAX_PATH);
+	{
+		DWORD size=MAX_PATH;
+		GetUserName(req.env.user_name, &size);
+	}
 	std::wstring s = msg.ToWString();
 	if(s.length()==0) return "";
 	wcscpy(req.str,s.c_str());

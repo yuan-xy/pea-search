@@ -86,3 +86,7 @@ ADD_TEST(find_path ${CMAKE_CURRENT_BINARY_DIR}/ctest_find_path)
 add_executable (pealn "hotkey_listener.c" "common.c")
 set_target_properties(pealn PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
 install (TARGETS pealn  DESTINATION .)
+
+add_executable (peadeskg "user_desk_gen.c" )
+target_link_libraries (peadeskg "file_search")
+install (TARGETS peadeskg  DESTINATION .)

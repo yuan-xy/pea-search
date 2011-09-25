@@ -7,10 +7,13 @@
 #include "global.h"
 #include "util.h"
 #include "fs_common.h"
+#include "write.h"
 
 #include <shlobj.h>
 #include <shlwapi.h>
 #include <iostream>
+
+#include <google/sparse_hash_map>
 
 static int depth=0;
 static pFileEntry desktop=NULL;
@@ -96,21 +99,43 @@ static void scan_desktop0(IShellFolder *f, pFileEntry desktop){
 	ppenum->Release();
 }
 
-void scan_desktop(){
+BOOL scan_desktop(){
 	HRESULT hr;
     IShellFolder *psfDeskTop = NULL;
     CoInitialize( NULL );
     hr = SHGetDesktopFolder(&psfDeskTop);
-	if(hr!=S_OK) return;
+	if(hr!=S_OK) return 0;
 	desktop = genDesktopFileEntry();
 	scan_desktop0(psfDeskTop, desktop);
     psfDeskTop->Release();
     CoUninitialize();
+	{
+		wchar_t fbuffer[MAX_PATH];
+		DWORD size=MAX_PATH;
+		if(GetUserName(fbuffer, &size)){
+			save_desktop(fbuffer,desktop);
+			return 1;
+		}else{
+			return 0;
+		}
+	}
 }
 
-pFileEntry get_desktop(){
-	return desktop;
+typedef google::sparse_hash_map<wchar_t *, pFileEntry> user_desktop;
+user_desktop ud;
+
+pFileEntry get_desktop(wchar_t *user_name){
+	pFileEntry desktop = ud[user_name];
+	if(desktop!=NULL) return desktop;
+	load_desktop(user_name);
+	return ud[user_name];
 }
+
+void put_desktop(wchar_t *user_name, pFileEntry desktop){
+	ud[user_name] = desktop;
+}
+
+
 
 
 }// extern "C"

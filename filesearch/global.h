@@ -33,13 +33,6 @@ extern PBYTE       g_pOutBuffer[];//每个盘的文件块记录地址 初始时分配 结束时消
 
 extern unsigned int ALL_FILE_COUNT; //当前所有文件的总数
 
-extern unsigned char FILE_SEARCH_MAJOR_VERSION ;
-extern unsigned char FILE_SEARCH_MINOR_VERSION ;
-
-
-
-
-
 
 
 

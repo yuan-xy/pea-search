@@ -13,6 +13,11 @@
 #include "bzip2/bzlib.h"
 #include "ntfs.h"
 #include "main.h"
+#include "desktop.h"
+#include "GIGASOConfig.h"
+
+static unsigned char FILE_SEARCH_MAJOR_VERSION = GIGASO_VERSION_MAJOR;
+static unsigned char FILE_SEARCH_MINOR_VERSION = GIGASO_VERSION_MINOR;
 
 static unsigned short MAGIC = 0x1234;
 static short MAGIC_LEN = sizeof(MAGIC);
@@ -53,6 +58,85 @@ void FileWriteVisitor(pFileEntry file, void *data){
 		fwrite(p+offset_of_us,FILE_ENTRY_SIZE(file)-offset_of_us,1,fp);
 	}
 }
+
+BOOL save_desktop(wchar_t *user_name, pFileEntry desktop){
+	FILE *fp;
+	fp = _wfopen(user_name, L"wb");
+	if(fp==NULL) return 0;
+	fwrite(&MAGIC,MAGIC_LEN,1,fp);
+	fwrite(&FILE_SEARCH_MAJOR_VERSION,1,1,fp);
+	fwrite(&FILE_SEARCH_MINOR_VERSION,1,1,fp);
+	fwrite(user_name,sizeof(wchar_t),MAX_PATH,fp);
+	is_ntfs_cur_drive = 0;
+	{
+		time_t start = time(NULL);
+		fwrite(&start,sizeof(time_t),1,fp);
+	}
+	FilesIterate(desktop,FileWriteVisitor,(void *)fp);
+	fclose(fp);
+	return 1;
+}
+
+BOOL load_desktop(wchar_t *user_name){
+	BOOL gen_root=0;
+	int count=0,d=0;
+	int i=0;
+	FILE *fp;
+	fp = _wfopen(user_name, L"rb");
+	if(fp==NULL) return 0;
+	{
+		unsigned short magic;
+		unsigned short major_ver;
+		unsigned short minor_ver;
+		wchar_t username[MAX_PATH];
+		fread(&magic,MAGIC_LEN,1,fp);
+		if(magic!=MAGIC) goto error;
+		d=(int)fread(&major_ver,1,1,fp);
+		if(d<1) goto error;
+		d=(int)fread(&minor_ver,1,1,fp);
+		if(d<1) goto error;
+		fread(username,sizeof(wchar_t),MAX_PATH,fp);
+		{
+			time_t last;
+			d=(int)fread(&last,sizeof(time_t),1,fp);
+			if(d<1) goto error;
+		}
+	}
+	do{
+		NEW0(FileEntry,file);
+		d = (int)fread(file,sizeof(KEY),2,fp);
+		if(d<2){
+				if(feof(fp)) goto ok;
+				else goto error;
+		}
+		d = (int)fread(&file->us.value,sizeof(file->us),2,fp);
+		if(d<2) goto error;
+		file = (pFileEntry) realloc_safe(file,FILE_ENTRY_SIZE(file));
+		d = (int)fread(file->FileName,sizeof(char),file->us.v.FileNameLength,fp);
+		if(d<file->us.v.FileNameLength) goto error;
+		file->children = NULL;
+		add2Map(file,i);
+		if(!gen_root){
+			if(file->up.ParentFileReferenceNumber!=0) goto error;
+			put_desktop(user_name,file);
+			gen_root=1;
+		}
+		ALL_FILE_COUNT +=1;
+		count++;
+	}while(1);
+ok:
+#ifdef MY_DEBUG
+	printf("load %d from file for drive %c\n",count, i<26? i+'A':i );
+#endif
+	fclose(fp);
+	build_dir(i);
+	resetMap(i);
+	return 1;
+error:
+	fclose(fp);
+	return 0;
+}
+
 
 BOOL save2file0(int i){
 	FILE *fp;

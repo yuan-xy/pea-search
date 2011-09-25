@@ -14,6 +14,10 @@ void search0(void *name){
 		sEnv->file_type=0;
 		wcscpy(sEnv->path_name, L"E:\\backup");
 		sEnv->path_len=0;
+		{
+			DWORD size=MAX_PATH;
+			GetUserName(sEnv->user_name, &size);
+		}
 	count = search((WCHAR *)name,sEnv,&result);
 	for(i=0;i<count;i++){
 		pFileEntry file = *(result+i);

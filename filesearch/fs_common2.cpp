@@ -97,7 +97,6 @@ void AllFilesIterate(pFileVisitor visitor, void *data, BOOL offline){
 				}
 			}
 		}
-		if(get_desktop()!=NULL) FilesIterate(get_desktop(),visitor,data);
 	}
 }
 

@@ -12,6 +12,7 @@
 #include "str_match.h"
 #include "fs_common.h"
 #include "chinese.h"
+#include "desktop.h"
 
 #define AND_LOGIC 1 //空格分隔的搜索项
 #define OR_LOGIC 2  // | 搜索项
@@ -717,6 +718,8 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 		if(dir != NULL){
 			DirIterateWithoutSelf(dir,FileSearchVisitor,sOpt);
 		}else{
+			pFileEntry desktop = get_desktop(sEnv->user_name);
+			if(desktop!=NULL) FilesIterate(desktop,FileSearchVisitor,sOpt);
 			AllFilesIterate(FileSearchVisitor,sOpt, sEnv->offline);
 		}
 		freeSearchOpt(sOpt);

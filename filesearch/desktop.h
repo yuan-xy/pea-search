@@ -10,11 +10,14 @@ extern "C" {
 
 
 /**
- * 扫描Shell命名空间，从根位置Desktop开始。
+ * 扫描Shell命名空间，从根位置Desktop开始，并保存到文件中。
  */
-extern void scan_desktop();
+extern BOOL scan_desktop();
 
-extern pFileEntry get_desktop();
+extern pFileEntry get_desktop(wchar_t *user_name);
+
+extern void put_desktop(wchar_t *user_name, pFileEntry desktop);
+
 
 #endif  // FILE_SEARCH_DESKTOP_H_
 
