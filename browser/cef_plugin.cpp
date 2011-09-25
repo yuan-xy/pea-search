@@ -5,6 +5,7 @@
 #include "common.h"
 #include "history.h"
 #include "win_icon.h"
+#include "string_util.h"
 #include "explorer++/FileOperations.h"
 
 extern CefRefPtr<ClientHandler> g_handler;
@@ -141,7 +142,10 @@ static bool shell_edit(CefString msg){
 
 
 static bool shell_explore(CefString msg){
-	return shell_exec(msg.ToWString(),L"explore");
+	char buffer[MAX_PATH*2];
+	std::string as = WStringToString(msg.ToWString());
+	_snprintf(buffer,MAX_PATH*2,"explorer /n, /Select, \"%s\"\0",as.c_str());
+	return WinExec(buffer, SW_NORMAL) > 31;
 }
 
 
