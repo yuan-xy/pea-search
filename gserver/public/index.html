@@ -1,275 +1,67 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-  <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <title>Ruby on Rails: Welcome aboard</title>
-    <style type="text/css" media="screen">
-      body {
-        margin: 0;
-        margin-bottom: 25px;
-        padding: 0;
-        background-color: #f0f0f0;
-        font-family: "Lucida Grande", "Bitstream Vera Sans", "Verdana";
-        font-size: 13px;
-        color: #333;
-      }
-      
-      h1 {
-        font-size: 28px;
-        color: #000;
-      }
-      
-      a  {color: #03c}
-      a:hover {
-        background-color: #03c;
-        color: white;
-        text-decoration: none;
-      }
-      
-      
-      #page {
-        background-color: #f0f0f0;
-        width: 750px;
-        margin: 0;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      
-      #content {
-        float: left;
-        background-color: white;
-        border: 3px solid #aaa;
-        border-top: none;
-        padding: 25px;
-        width: 500px;
-      }
-      
-      #sidebar {
-        float: right;
-        width: 175px;
-      }
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>豌豆搜索 最好的文件搜索软件</title>
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	font-size:13px;
+	width:950px;
+	margin:0 auto;
+	line-height:18px;
+	background:#f1f9fd;
+}
+h2{ font-size:13px; background-color:#ceebf9; line-height:20px;}
+-->
+</style>
+<link href="*.css" rel="stylesheet" type="text/css" />
+</head>
 
-      #footer {
-        clear: both;
-      }
-      
-
-      #header, #about, #getting-started {
-        padding-left: 75px;
-        padding-right: 30px;
-      }
-
-
-      #header {
-        background-image: url("images/rails.png");
-        background-repeat: no-repeat;
-        background-position: top left;
-        height: 64px;
-      }
-      #header h1, #header h2 {margin: 0}
-      #header h2 {
-        color: #888;
-        font-weight: normal;
-        font-size: 16px;
-      }
-      
-      
-      #about h3 {
-        margin: 0;
-        margin-bottom: 10px;
-        font-size: 14px;
-      }
-      
-      #about-content {
-        background-color: #ffd;
-        border: 1px solid #fc0;
-        margin-left: -11px;
-      }
-      #about-content table {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        font-size: 11px;
-        border-collapse: collapse;
-      }
-      #about-content td {
-        padding: 10px;
-        padding-top: 3px;
-        padding-bottom: 3px;
-      }
-      #about-content td.name  {color: #555}
-      #about-content td.value {color: #000}
-      
-      #about-content.failure {
-        background-color: #fcc;
-        border: 1px solid #f00;
-      }
-      #about-content.failure p {
-        margin: 0;
-        padding: 10px;
-      }
-      
-      
-      #getting-started {
-        border-top: 1px solid #ccc;
-        margin-top: 25px;
-        padding-top: 15px;
-      }
-      #getting-started h1 {
-        margin: 0;
-        font-size: 20px;
-      }
-      #getting-started h2 {
-        margin: 0;
-        font-size: 14px;
-        font-weight: normal;
-        color: #333;
-        margin-bottom: 25px;
-      }
-      #getting-started ol {
-        margin-left: 0;
-        padding-left: 0;
-      }
-      #getting-started li {
-        font-size: 18px;
-        color: #888;
-        margin-bottom: 25px;
-      }
-      #getting-started li h2 {
-        margin: 0;
-        font-weight: normal;
-        font-size: 18px;
-        color: #333;
-      }
-      #getting-started li p {
-        color: #555;
-        font-size: 13px;
-      }
-      
-      
-      #search {
-        margin: 0;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        font-size: 11px;
-      }
-      #search input {
-        font-size: 11px;
-        margin: 2px;
-      }
-      #search-text {width: 170px}
-      
-      
-      #sidebar ul {
-        margin-left: 0;
-        padding-left: 0;
-      }
-      #sidebar ul h3 {
-        margin-top: 25px;
-        font-size: 16px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #ccc;
-      }
-      #sidebar li {
-        list-style-type: none;
-      }
-      #sidebar ul.links li {
-        margin-bottom: 5px;
-      }
-      
-    </style>
-    <script type="text/javascript" src="javascripts/prototype.js"></script>
-    <script type="text/javascript" src="javascripts/effects.js"></script>
-    <script type="text/javascript">
-      function about() {
-        if (Element.empty('about-content')) {
-          new Ajax.Updater('about-content', 'rails/info/properties', {
-            method:     'get',
-            onFailure:  function() {Element.classNames('about-content').add('failure')},
-            onComplete: function() {new Effect.BlindDown('about-content', {duration: 0.25})}
-          });
-        } else {
-          new Effect[Element.visible('about-content') ? 
-            'BlindUp' : 'BlindDown']('about-content', {duration: 0.25});
-        }
-      }
-      
-      window.onload = function() {
-        $('search-text').value = '';
-        $('search').onsubmit = function() {
-          $('search-text').value = 'site:rubyonrails.org ' + $F('search-text');
-        }
-      }
-    </script>
-  </head>
-  <body>
-    <div id="page">
-      <div id="sidebar">
-        <ul id="sidebar-items">
-          <li>
-            <form id="search" action="http://www.google.com/search" method="get">
-              <input type="hidden" name="hl" value="en" />
-              <input type="text" id="search-text" name="q" value="site:rubyonrails.org " />
-              <input type="submit" value="Search" /> the Rails site
-            </form>
-          </li>
-        
-          <li>
-            <h3>Join the community</h3>
-            <ul class="links">
-              <li><a href="http://www.rubyonrails.org/">Ruby on Rails</a></li>
-              <li><a href="http://weblog.rubyonrails.org/">Official weblog</a></li>
-              <li><a href="http://wiki.rubyonrails.org/">Wiki</a></li>
-            </ul>
-          </li>
-          
-          <li>
-            <h3>Browse the documentation</h3>
-            <ul class="links">
-              <li><a href="http://api.rubyonrails.org/">Rails API</a></li>
-              <li><a href="http://stdlib.rubyonrails.org/">Ruby standard library</a></li>
-              <li><a href="http://corelib.rubyonrails.org/">Ruby core</a></li>
-              <li><a href="http://guides.rubyonrails.org/">Rails Guides</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-
-      <div id="content">
-        <div id="header">
-          <h1>Welcome aboard</h1>
-          <h2>You&rsquo;re riding Ruby on Rails!</h2>
-        </div>
-
-        <div id="about">
-          <h3><a href="rails/info/properties" onclick="about(); return false">About your application&rsquo;s environment</a></h3>
-          <div id="about-content" style="display: none"></div>
-        </div>
-        
-        <div id="getting-started">
-          <h1>Getting started</h1>
-          <h2>Here&rsquo;s how to get rolling:</h2>
-          
-          <ol>          
-            <li>
-              <h2>Use <tt>script/generate</tt> to create your models and controllers</h2>
-              <p>To see all available options, run it without parameters.</p>
-            </li>
-            
-            <li>
-              <h2>Set up a default route and remove or rename this file</h2>
-              <p>Routes are set up in config/routes.rb.</p>
-            </li>
-
-            <li>
-              <h2>Create your database</h2>
-              <p>Run <tt>rake db:migrate</tt> to create your database. If you're not using SQLite (the default), edit <tt>config/database.yml</tt> with your username and password.</p>
-            </li>
-          </ol>
-        </div>
-      </div>
-      
-      <div id="footer">&nbsp;</div>
-    </div>
-  </body>
+<body>
+<h1 style="text-align:center; line-height:40px;">常见问题</h1>
+<h2>1、什么是“豌豆搜索”？</h2>
+<p> “豌豆搜索”是一个文件快速搜索软件。目前仅支持windows xp, win7操作系统。和window资源管理器自带的搜索相比，它的最大特点是输入的同时瞬间完成搜索。目前“豌豆搜索”仅支持文件名搜索，不支持文件内容搜索。</p>
+<h2>2、“豌豆搜索”软件是免费的吗？</h2>
+<p>是的，个人可以免费使用“豌豆搜索”。</p>
+<h2>3、“豌豆搜索”支持那些媒体类型和文件系统格式。</h2>
+<p>“豌豆搜索”支持本地硬盘、软盘、U盘、光盘等媒体格式，不支持网络硬盘。“豌豆搜索”支持所有文件系统格式，如FAT16/32、NTFS等。</p>
+<h2>4、使用“豌豆搜索”如何查找文件</h2>
+<p>只需要在查询框中输入带查找文件的部分文件名，匹配的查询结果会立刻出现。居然你可以根据文件类型来筛选查询结果，也可以按文件名/文件大小/文件时间来排序查询结果。</p>
+<h2>5、“豌豆搜索”的查询条件支持那些逻辑操作？</h2>
+<p>豌豆搜索支持所有的三种逻辑操作。<br />
+  逻辑与的符号为空格，比如查询条件“a b”查找文件名中即包含a又包含b的文件。<br />
+  逻辑或的符号为“|”， 比如查询条件&quot;a | b&quot;查找文件名中包含a或者包含b的文件。<br />
+  逻辑非的符号为“-”， 比如查询条件&quot;a -b&quot;查找文件名中包含a但是不包含b的文件。</p>
+<h2>6、“豌豆搜索”的模糊查询和精确查询是什么意思？</h2>
+<p>精确查询只匹配查询条件，且英文大小写敏感；模糊查询除了匹配查询条件，还将查询条件视为汉语拼音进行模糊拼音查询，且不区分英文大小写。比如“fang&quot;在精确查询是只匹配文件名中包含“fang&quot;的文件；“fang&quot;的模糊查询即匹配“fang&quot;也匹配“FANG&quot;，还匹配拼音为“fang&quot;的所有汉字，和拼音为”fan“的所有汉字。</p>
+<h2>7、“豌豆搜索”的模糊拼音查询功能支持那些模糊拼音？</h2>
+<p>目前支持的模糊拼音对为“l=n, c=ch, z=zh, s=sh, an=ang, en=eng, in=ing”。暂不支持模糊拼音规则的自定义。此外豌豆搜索支持模糊拼音分割。比如查询&quot;fangan&quot;会被智能分割为&quot;fang'an&quot;和&quot;fan'gan&quot;，然后可以匹配&quot;方案&quot;和&quot;反感&quot;。</p>
+<h2>8、“豌豆搜索”的在线和离线查询是什么意思？</h2>
+<p>在线查询的意思是搜索目前连接在本地电脑上的所有文件；离线查询则查询所有不再连接到电脑上的文件。离线查询是“豌豆搜索”特有的功能。当各种U盘和光盘连接到电脑时，“豌豆搜索”会给这些盘建立索引。当这些盘不再连接到电脑时，你仍然可以搜索其中的文件。</p>
+<h2>9、“豌豆搜索”是否支持通配符</h2>
+<p>“豌豆搜索”支持“*”符号的通配符。<br />
+  “*”表示搜索所有文件<br />
+  “*.”表示搜索所有不包含后缀名的文件<br />
+  “*abc”表示搜索所有以abc结尾的文件<br />
+  “abc*”表示搜索所有以abc开始的文件<br />
+</p>
+<h2>10、如何查询带特定后缀名的文件，比如所有的MP3文件</h2>
+<p>在查询框中输入“*.mp3”可以查询所有的MP3文件<br />
+</p>
+<h2>11、如何查询带逻辑符号和通配符的文件名</h2>
+<p>如果查询条件中包含逻辑符号和通配符,即“空格|-*”，需要将查询条件以引号括起来。比如带空格查询“program files”匹配文件名中即包括program,又包括files的文件；而“&quot;program files&quot;”匹配“program空格files&quot;的文件。</p>
+<h2>12、“豌豆搜索”支持那些快捷键</h2>
+<p>“Pause”快速启动（可以自定义为其它按键），“Esc”退出，“F5”刷新。</p>
+<h2>13、“豌豆搜索”为什么需要管理员权限。</h2>
+<p>豌豆搜索需要扫描所有的硬盘文件并建立索引数据库，所以需要管理员权限。</p>
+<h2>14、“豌豆搜索”为什么会被一些杀毒软件报告为病毒或恶意软件。</h2>
+<p>豌豆搜索会扫描所有的硬盘文件并建立索引数据库，同时还会实时监控文件系统变化，所以可能会被误报为间谍软件或病毒。“豌豆搜索”绝对不包含任何恶意代码和病毒。</p>
+<br />
+<br />
+</body>
 </html>

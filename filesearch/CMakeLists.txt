@@ -89,4 +89,4 @@ install (TARGETS pealn  DESTINATION .)
 
 add_executable (peadeskg "user_desk_gen.c" )
 target_link_libraries (peadeskg "file_search")
-install (TARGETS peadeskg  DESTINATION .)
+#install (TARGETS peadeskg  DESTINATION .)

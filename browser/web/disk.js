@@ -279,12 +279,15 @@ function do_upgrade(){
 	cef.gigaso.do_update();
 }
 
-function check_upgrade(){
+function check_upgrade(mannual){
 		var update_status = cef.gigaso.check_update();
 		if(update_status==0){
 			upgrade_req();
+			if(mannual) show_info("正在下载更新...");
 		}else if(update_status==1){
 			show_upgrade();
+		}else{
+			if(mannual) show_info("没有更新。");
 		}
 }
 

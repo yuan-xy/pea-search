@@ -40,26 +40,24 @@
       <ul style="position:relative;">
       <li style="width:34px;" onMouseOver="layer_menu('m_sub1','1')" onMouseOut="layer_menu('m_sub1','1')"><a href="#" title="设置"  _fcksavedurl="#"><img src="images/icon-08.png" width="34" height="16"></a>
           <div style="position:relative;">
-            <div id=m_sub1 style="visibility:hidden; position:absolute; top:6px;left:-70px; z-index:99999;" >
+            <div id="m_sub1" style="visibility:hidden; position:absolute; top:6px;left:-70px; z-index:99999;" >
               <ul>
                 <li><a href="#" onClick="show_index_status();return false;">硬盘状态</a></li>
                 <li><a href="#" onClick="show_hotkey();return false;">快捷键</a></li>
                 <li><a href="#" onClick="show_export();return false;">导出查询结果</a></li>
-                <li><a href="help.htm" target="_blank">帮助</a></li>
-                <li><a href="#" onClick="cef.gigaso.dev_tool();return false;">调试</a></li>
+                <li ondblclick="cef.gigaso.dev_tool();return false;"><a href="help.htm" target="_blank">帮助</a></li>
+                <li><a href="#" onClick="check_upgrade(true);return false;">检查更新</a></li>
               </ul>
             </div>
             </div>
-       <span id="online_offline">
-        <li class=""><a onClick="offline_db();" title="离线文件"  style="cursor:pointer;"><img src="images/icon-07.png" width="51" height="16"></a></li>
-        <li style="position:absolute; width:2px; left:263px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
-        <li><a onClick="online_db();" title="在线文件"  style="cursor:pointer;"><img src="images/icon-06.png" width="51" height="16"></a></li>
-        <li style="position:absolute; width:2px; left:195px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
-        </span>
-        
-        <li><a onClick="$('#search')[0].value='*'; searchf('*');orderby(2,true);" title="最大文件"  style="cursor:pointer;"><img src="images/icon-05.png" width="51" height="16"></a></li>
-        <li style="position:absolute; width:2px; left:125px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
         </li>
+        <li style="width:2px;height:30px;"><img src="images/rightline.png" height="30"></li>
+		<li><a onClick="$('#search')[0].value='*'; searchf('*');orderby(2,true);" title="最大文件"  style="cursor:pointer;"><img src="images/icon-05.png" width="51" height="16"></a></li>
+        <li class="online_offline" style="width:2px;height:30px"><img src="images/rightline.png" height="30"></li>
+
+        <li class="online_offline" ><a onClick="offline_db();" title="离线文件"  style="cursor:pointer;"><img src="images/icon-07.png" width="51" height="16"></a></li>
+
+        <li class="online_offline"><a onClick="online_db();" title="在线文件"  style="cursor:pointer;"><img src="images/icon-06.png" width="51" height="16"></a></li>
       </ul>
     </div>
   </div>
@@ -132,7 +130,7 @@
 	<div id="tab-1">
 		<div class="subnav" style="display:none; left:220px" id="program-div">
 			<span class="subnav-span"><a onClick="file_type_search(17);return false;"><img src="icons/exe.ico" class="icon"/>程序(<span id="exe_file">0</span>)</a></span>
-			<span class="subnav-span"><a onClick="file_type_search(18);return false;"><img src="icons/lnk.ico" class="icon"/>快捷方式(<span id="link_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(18);return false;"><img src="icons/link.ico" class="icon"/>快捷方式(<span id="link_file">0</span>)</a></span>
 			<span class="subnav-span"><a onClick="file_type_search(19);return false;"><img src="icons/script.ico" class="icon"/>脚本(<span id="script_file">0</span>)</a></span>
 			<span class="subnav-span"><a onClick="file_type_search(20);return false;"><img src="icons/lib.ico" class="icon"/>库(<span id="lib_file">0</span>)</a></li>
 		</div>
@@ -344,7 +342,7 @@
 	  }
 </script>
 <script type="text/javascript">
-	var host = "http://www.1dooo.com:3000";
+	var host = "http://60.191.119.190:3333";
 	var order_col;
 	var order_desc;
 	var cur_search;
@@ -673,7 +671,9 @@
 		});
 		$('#tabs').tabs();
 		scan_img();
-		if(get_offline_dbs().length==0) $("#online_offline").hide();
+		if(get_offline_dbs().length==0){
+			$(".online_offline").hide();
+		}
 	}
 	$(function() {
 		if(cef.plugin.caze){
