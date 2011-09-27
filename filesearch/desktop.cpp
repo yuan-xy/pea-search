@@ -16,7 +16,6 @@
 #include <google/sparse_hash_map>
 
 static int depth=0;
-static pFileEntry desktop=NULL;
 
 enum FileType { LOCAL, NETWORK, VIRTUAL };
 
@@ -146,7 +145,7 @@ static BOOL isFolder(IShellFolder *f, LPITEMIDLIST pidlItems){
 	return uAttr & SFGAO_FOLDER;
 }
 
-static void scan_desktop0(IShellFolder *f, pFileEntry dir, LPITEMIDLIST pidlComplete){
+static void scan_desktop0(IShellFolder *f, LPITEMIDLIST pidlComplete, pFileEntry dir){
 	HRESULT hr;
 	LPENUMIDLIST ppenum = NULL;
 	LPITEMIDLIST pidlItems = NULL;
@@ -159,13 +158,12 @@ static void scan_desktop0(IShellFolder *f, pFileEntry dir, LPITEMIDLIST pidlComp
 			BOOL isDir = isFolder(f,pidlItems);
 			wchar_t name[MAX_PATH];
 			get_name(f,pidlItems,SHGDN_NORMAL,name);
-			open_pidl(pidlComplete,pidlItems);
 			pFileEntry file = initDesktopFile(name,dir,isDir);
             if(isDir && ft==VIRTUAL){
 				IShellFolder *psfFirstFolder = NULL;
                 hr = f->BindToObject(pidlItems, NULL, IID_IShellFolder, (LPVOID *) &psfFirstFolder);
 				LPITEMIDLIST	pidlComplete2 = ILCombine(pidlComplete,pidlItems);			
-				scan_desktop0(psfFirstFolder,file,pidlComplete2);
+				scan_desktop0(psfFirstFolder,pidlComplete2,file);
 				CoTaskMemFree(pidlComplete2);	
 				psfFirstFolder->Release();
             }
@@ -175,55 +173,27 @@ static void scan_desktop0(IShellFolder *f, pFileEntry dir, LPITEMIDLIST pidlComp
 	ppenum->Release();
 }
 
-/*
-如何根据parseing name执行该文件？如何根据pidl打开它呢？SHELLEXECUTEINFO
-
-控制面板的parseing name为：
-::{20D04FE0-3AEA-1069-A2D8-08002B30309D}\::{21EC2020-3AEA-1069-A2DD-08002B30309D}
-可以直接运行，或者运行explorer ::{20D04FE0-3AEA-1069-A2D8-08002B30309D}\::{21EC2020-3AEA-1069-A2DD-08002B30309D}
-
-另外一种运行方式为：
-rundll32.exe shell32.dll,Control_RunDLL
-
-添加或删除程序的parseing name为自身，这是如何执行它？
-如下命令可以运行: rundll32.exe shell32.dll,Control_RunDLL appwiz.cpl
-但是如何知道appwiz.cpl就是添加或删除程序。
-
-
-
-*/
-static void parse_name(){
-	HRESULT hr;
-    IShellFolder *psfDeskTop = NULL;
-	LPITEMIDLIST pidl;
-	ULONG cbEaten;
-    CoInitialize( NULL );
-    hr = SHGetDesktopFolder(&psfDeskTop);
-	hr = psfDeskTop->ParseDisplayName(NULL,NULL,L"::{20D04FE0-3AEA-1069-A2D8-08002B30309D}\\::{21EC2020-3AEA-1069-A2DD-08002B30309D}",&cbEaten, &pidl,NULL);
-    psfDeskTop->Release();
-    CoUninitialize();
+static BOOL save_desktop_self(pFileEntry desktop){
+	wchar_t fbuffer[MAX_PATH];
+	DWORD size=MAX_PATH;
+	if(GetUserName(fbuffer, &size)){
+		save_desktop(fbuffer,desktop);
+		return 1;
+	}else{
+		return 0;
+	}
 }
 
 BOOL scan_desktop(){
-	HRESULT hr;
-    IShellFolder *psfDeskTop = NULL;
+	pFileEntry desktop=NULL;
+    IShellFolder *root = NULL;
     CoInitialize( NULL );
-    hr = SHGetDesktopFolder(&psfDeskTop);
-	if(hr!=S_OK) return 0;
+	if(SHGetDesktopFolder(&root) != S_OK) return 0;
 	desktop = genDesktopFileEntry();
-	scan_desktop0(psfDeskTop, desktop, NULL);
-    psfDeskTop->Release();
+	scan_desktop0(root, NULL, desktop);
+    root->Release();
     CoUninitialize();
-	{
-		wchar_t fbuffer[MAX_PATH];
-		DWORD size=MAX_PATH;
-		if(GetUserName(fbuffer, &size)){
-			save_desktop(fbuffer,desktop);
-			return 1;
-		}else{
-			return 0;
-		}
-	}
+	save_desktop_self(desktop);
 }
 
 typedef google::sparse_hash_map<wchar_t *, pFileEntry> user_desktop;
@@ -240,5 +210,50 @@ void put_desktop(wchar_t *user_name, pFileEntry desktop){
 	ud[user_name] = desktop;
 }
 
+
+
+static BOOL exec_desktop0(IShellFolder *f, LPITEMIDLIST pidlComplete,wchar_t *str){
+	BOOL ret=0;
+	HRESULT hr;
+	LPENUMIDLIST ppenum = NULL;
+	LPITEMIDLIST pidlItems = NULL;
+	ULONG celtFetched;
+    hr = f->EnumObjects(NULL,SHCONTF_FOLDERS | SHCONTF_NONFOLDERS | SHCONTF_INCLUDEHIDDEN | SHCONTF_INCLUDESUPERHIDDEN, &ppenum);
+	if(hr!=S_OK) return ret;
+    while( hr = ppenum->Next(1,&pidlItems, &celtFetched) == S_OK && (celtFetched) == 1){
+		wchar_t name[MAX_PATH];
+		get_name(f,pidlItems,SHGDN_NORMAL,name);
+		if(wcsncmp(name,str,wcslen(name))==0){
+			if(wcslen(name)==wcslen(str)){
+				open_pidl(pidlComplete,pidlItems);
+				ret = 1;
+			}else{
+				wchar_t *nstr = str+wcslen(name);
+				if(*nstr==L'\\'){
+					IShellFolder *psfFirstFolder = NULL;
+					hr = f->BindToObject(pidlItems, NULL, IID_IShellFolder, (LPVOID *) &psfFirstFolder);
+					LPITEMIDLIST	pidlComplete2 = ILCombine(pidlComplete,pidlItems);			
+					ret = exec_desktop0(psfFirstFolder,pidlComplete2,nstr+1);
+					CoTaskMemFree(pidlComplete2);
+					psfFirstFolder->Release();
+				}
+			}
+			break;
+		}
+	}
+	CoTaskMemFree(pidlItems);
+	ppenum->Release();
+	return ret;
+}
+
+BOOL exec_desktop(wchar_t *str){
+	if(str==NULL || *str!=L'\\') return 0;
+    IShellFolder *root = NULL;
+	if(SHGetDesktopFolder(&root) != S_OK) return 0;
+	BOOL ret = exec_desktop0(root, NULL, str+1);
+    root->Release();
+    CoUninitialize();
+	return ret;
+}
 
 }// extern "C"
