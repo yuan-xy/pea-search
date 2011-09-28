@@ -41,8 +41,14 @@ function dblclick_file(target){
 
 function dblclick_path(target){
 	get_file_path(target);
-	var ret = cef.plugin.shell_explore(path+file);
-	info_if_error(ret, path, "资源管理器");
+	if(path.substr(0,1)=="\\"){
+		var file = path.substr(0,path.length-1);
+		var ret = cef.plugin.shell2_default(file);
+		info_if_error(ret, file, "打开");
+	}else{
+		var ret = cef.plugin.shell_explore(path+file);
+		info_if_error(ret, path, "资源管理器");
+	}
 }
 
 var context_menu_obj = {

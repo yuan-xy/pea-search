@@ -67,6 +67,9 @@ typedef struct searchEnv SearchEnv, *pSearchEnv;
 #define SearchWindowClass L"PeaSearch"
 #define ListenerWindowClass L"PeaSearch_Listener"
 
+#define ALL_DESKTOP L"desktop.all"
+
+
 #define WM_SET_HOTKEY WM_USER+1
 
 

@@ -324,10 +324,14 @@ function file_grid(){
 						  idd=id*1+1; //id从1起，但是jggrow从2起
 						  console.log(id+":"+idd);
 						  if(status){
-							if($("#maintable").jqGrid('getGridParam','selarrrow').length>1)
+							if($("#maintable").jqGrid('getGridParam','selarrrow').length>1){
 						      $(".jqgrow:nth-child("+idd+")").contextMenu('myMenu3', context_menu_obj3);
+							}
 						  }else{
-						   $(".jqgrow:nth-child("+idd+")").contextMenu('myMenu1', context_menu_obj);
+						    $(".jqgrow:nth-child("+idd+")").contextMenu('myMenu1', context_menu_obj);
+						  }
+						  if($(".jqgrow:nth-child("+idd+") td")[1].title.substr(0,1)=="\\"){
+						      $(".jqgrow:nth-child("+idd+")").contextMenu('',{});
 						  }
 					   },
 						sortable: false});

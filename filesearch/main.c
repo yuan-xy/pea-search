@@ -117,7 +117,6 @@ DWORD WINAPI  ScanAll(PVOID pParam){
 	FatDrivesIterator(scan);
 	StartDriveChangeMonitorThread(DriveChangeListener);
 	ValidFixDrivesIterator(StartMonitorThread);
-	//scan_desktop();
 	return 0;
 }
 

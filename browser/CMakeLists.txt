@@ -33,6 +33,8 @@ SET( SOURCES
     "../filesearch/sharelib.h"
     "../filesearch/common.h"
     "../filesearch/common.c"
+    "../filesearch/desktop_exec.h"
+    "../filesearch/desktop_exec.cpp"
     "../filesearch/exception_dump.cpp"
     )
 

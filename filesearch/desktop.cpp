@@ -21,70 +21,6 @@ enum FileType { LOCAL, NETWORK, VIRTUAL };
 
 extern "C" {
 
-BOOL ExecuteFileAction(HWND hwnd,TCHAR *szVerb,TCHAR *szStartDirectory,LPCITEMIDLIST pidl)
-{
-	SHELLEXECUTEINFO ExecInfo;
-
-	ExecInfo.cbSize			= sizeof(SHELLEXECUTEINFO);
-	ExecInfo.fMask			= SEE_MASK_INVOKEIDLIST;
-	ExecInfo.lpVerb			= szVerb;
-	ExecInfo.lpIDList		= (LPVOID)pidl;
-	ExecInfo.hwnd			= hwnd;
-	ExecInfo.nShow			= SW_SHOW;
-	ExecInfo.lpParameters	= L"";
-	ExecInfo.lpDirectory	= szStartDirectory;
-	ExecInfo.lpFile			= NULL;
-	ExecInfo.hInstApp		= NULL;
-
-	return ShellExecuteEx(&ExecInfo);
-}
-
-HRESULT GetDisplayName(LPITEMIDLIST pidlDirectory,TCHAR *szDisplayName,DWORD uFlags)
-{
-	IShellFolder	*pShellFolder = NULL;
-	LPITEMIDLIST	pidlRelative = NULL;
-	STRRET			str;
-	HRESULT			hr;
-
-	hr = SHBindToParent(pidlDirectory,IID_IShellFolder,(void **)&pShellFolder,
-	(LPCITEMIDLIST *)&pidlRelative);
-
-	if(SUCCEEDED(hr))
-	{
-		hr = pShellFolder->GetDisplayNameOf(pidlRelative,uFlags,&str);
-
-		if(SUCCEEDED(hr))
-		{
-			StrRetToBuf(&str,pidlDirectory,szDisplayName,MAX_PATH);
-		}
-
-		pShellFolder->Release();
-	}
-
-	return hr;
-}
-
-static void open_pidl0(LPITEMIDLIST pidlItem){
-	TCHAR			szItemDirectory[MAX_PATH];
-	LPITEMIDLIST	pidlParent = NULL;
-	pidlParent = ILClone(pidlItem);
-	ILRemoveLastID(pidlParent);
-	GetDisplayName(pidlParent,szItemDirectory,SHGDN_FORPARSING);
-	ExecuteFileAction(NULL,L"",szItemDirectory,(LPCITEMIDLIST)pidlItem);
-	CoTaskMemFree(pidlParent);
-}
-
-static void open_pidl(LPITEMIDLIST	pidl, LPITEMIDLIST	ridl){
-	if(pidl==NULL){
-		open_pidl0(ridl);
-	}else{
-		LPITEMIDLIST	pidlComplete = NULL;
-		pidlComplete = ILCombine(pidl,ridl);
-		open_pidl0(pidlComplete);
-		CoTaskMemFree(pidlComplete);
-	}
-}
-
 static pFileEntry genDesktopFileEntry(){
 	NEW0(FileEntry, ret);
 	ret->FileReferenceNumber = ROOT_NUMBER;
@@ -173,18 +109,9 @@ static void scan_desktop0(IShellFolder *f, LPITEMIDLIST pidlComplete, pFileEntry
 	ppenum->Release();
 }
 
-static BOOL save_desktop_self(pFileEntry desktop){
-	wchar_t fbuffer[MAX_PATH];
-	DWORD size=MAX_PATH;
-	if(GetUserName(fbuffer, &size)){
-		save_desktop(fbuffer,desktop);
-		return 1;
-	}else{
-		return 0;
-	}
-}
 
-BOOL scan_desktop(){
+
+pFileEntry scan_desktop(){
 	pFileEntry desktop=NULL;
     IShellFolder *root = NULL;
     CoInitialize( NULL );
@@ -193,7 +120,7 @@ BOOL scan_desktop(){
 	scan_desktop0(root, NULL, desktop);
     root->Release();
     CoUninitialize();
-	save_desktop_self(desktop);
+	return desktop;
 }
 
 typedef google::sparse_hash_map<wchar_t *, pFileEntry> user_desktop;
@@ -210,50 +137,5 @@ void put_desktop(wchar_t *user_name, pFileEntry desktop){
 	ud[user_name] = desktop;
 }
 
-
-
-static BOOL exec_desktop0(IShellFolder *f, LPITEMIDLIST pidlComplete,wchar_t *str){
-	BOOL ret=0;
-	HRESULT hr;
-	LPENUMIDLIST ppenum = NULL;
-	LPITEMIDLIST pidlItems = NULL;
-	ULONG celtFetched;
-    hr = f->EnumObjects(NULL,SHCONTF_FOLDERS | SHCONTF_NONFOLDERS | SHCONTF_INCLUDEHIDDEN | SHCONTF_INCLUDESUPERHIDDEN, &ppenum);
-	if(hr!=S_OK) return ret;
-    while( hr = ppenum->Next(1,&pidlItems, &celtFetched) == S_OK && (celtFetched) == 1){
-		wchar_t name[MAX_PATH];
-		get_name(f,pidlItems,SHGDN_NORMAL,name);
-		if(wcsncmp(name,str,wcslen(name))==0){
-			if(wcslen(name)==wcslen(str)){
-				open_pidl(pidlComplete,pidlItems);
-				ret = 1;
-			}else{
-				wchar_t *nstr = str+wcslen(name);
-				if(*nstr==L'\\'){
-					IShellFolder *psfFirstFolder = NULL;
-					hr = f->BindToObject(pidlItems, NULL, IID_IShellFolder, (LPVOID *) &psfFirstFolder);
-					LPITEMIDLIST	pidlComplete2 = ILCombine(pidlComplete,pidlItems);			
-					ret = exec_desktop0(psfFirstFolder,pidlComplete2,nstr+1);
-					CoTaskMemFree(pidlComplete2);
-					psfFirstFolder->Release();
-				}
-			}
-			break;
-		}
-	}
-	CoTaskMemFree(pidlItems);
-	ppenum->Release();
-	return ret;
-}
-
-BOOL exec_desktop(wchar_t *str){
-	if(str==NULL || *str!=L'\\') return 0;
-    IShellFolder *root = NULL;
-	if(SHGetDesktopFolder(&root) != S_OK) return 0;
-	BOOL ret = exec_desktop0(root, NULL, str+1);
-    root->Release();
-    CoUninitialize();
-	return ret;
-}
 
 }// extern "C"

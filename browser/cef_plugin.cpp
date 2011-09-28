@@ -5,6 +5,7 @@
 #include "common.h"
 #include "history.h"
 #include "win_icon.h"
+#include "desktop_exec.h"
 #include "string_util.h"
 #include "explorer++/FileOperations.h"
 
@@ -166,7 +167,17 @@ static bool shell2_openas(CefString msg){
 }
 
 static bool shell2_default(CefString msg){
-	return shell2_exec(msg.ToWString(), NULL);
+	std::wstring str = msg.ToWString();
+	const wchar_t *c = str.c_str();
+	if(*c==L'\\'){
+		BOOL ret = exec_desktop(c);
+		if(ret){
+			if( history_add(c) ) history_save();
+		}
+		return ret;
+	}else{
+		return shell2_exec(str, NULL);
+	}
 }
 
 static bool shell2(CefString msg, CefString verb){

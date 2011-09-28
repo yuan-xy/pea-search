@@ -89,4 +89,5 @@ install (TARGETS pealn  DESTINATION .)
 
 add_executable (peadeskg "user_desk_gen.c" )
 target_link_libraries (peadeskg "file_search")
-#install (TARGETS peadeskg  DESTINATION .)
+set_target_properties(peadeskg PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\"") 
+install (TARGETS peadeskg  DESTINATION .)
