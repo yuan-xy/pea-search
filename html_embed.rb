@@ -1,6 +1,8 @@
 $KCODE='u'  
 require "iconv"
 
+web = "#{File.dirname(__FILE__)}/browser/web"
+
 #require 'pathname'
 #puts Pathname.new(__FILE__).realpath
 #puts File.dirname(__FILE__)
@@ -10,13 +12,25 @@ puts "begin process html source ...\n"
 
 s='wchar_t web_source[]=';
 
-File.open("#{File.dirname(__FILE__)}/browser/web/search.htm").each_line do |x| 
+def convert_line(s,x)
   x.gsub!(/\n/,'')
   x.gsub!(/\\/,"\\\\\\\\")
   x.gsub!(/\"/,'\"')
   s << 'L"'
   s << x
   s << "\\n\"\n"
+end
+
+def convert_file(s,file)
+	File.open("#{web}/#{file}").each_line do |x| 
+		convert_line(s,x)
+	end
+end
+
+File.open("#{web}/search.htm").each_line do |x| 
+	next if x.include? 'script src="'
+	convert_line(s, '<script src="../jz.lib" type="text/javascript"></script>') if x.include? '</head>'
+	convert_line(s,x)
 end
 
 s = Iconv.conv("gbk", "utf-8", s)

@@ -4,36 +4,36 @@
     <title>豌豆搜索</title>
     <link rel="stylesheet" href="./main.css" type="text/css" />
     <link rel="stylesheet" href="./thumbnail.css" type="text/css" />
-    <link rel="shortcut icon" href="./favicon.ico" type="image/ico" />
-    <link rel="icon" href="./favicon.ico" type="image/ico" />
-    <link type="text/css" href="jquery-ui-1.8.12.custom.css" rel="stylesheet" />	
-	<script type="text/javascript" src="jquery-1.6.min.js"></script>
-	<script type="text/javascript" src="jquery-jtemplates.js"></script>
-    <script type="text/javascript" src="jquery.contextmenu.r2.js"></script>
-    <script type="text/javascript" src="jquery-ui-1.8.12.custom.min.js"></script>
-    <script type="text/javascript" src="message.js"></script>
-    <script type="text/javascript" src="context.js"></script>
-    <script type="text/javascript" src="scroll.js"></script>
-    <script type="text/javascript" src="disk.js"></script>
-    <script type="text/javascript" src="subnav.js"></script>
-    <link type="text/css" href="ui.jqgrid.css" rel="stylesheet" />	
+    <link rel="stylesheet" type="text/css" href="jquery-ui-1.8.12.custom.css"/>
+    <link rel="stylesheet" type="text/css" href="ui.jqgrid.css"/>	
+	<script src="jquery-1.6.min.js" type="text/javascript"></script>
+	<script src="jquery-jtemplates.js" type="text/javascript"></script>
+    <script src="jquery.contextmenu.r2.js" type="text/javascript"></script>
+    <script src="jquery-ui-1.8.12.custom.min.js" type="text/javascript"></script>
 	<script src="grid.locale-cn.js" type="text/javascript"></script>
 	<script src="jquery.jqGrid.min.js" type="text/javascript"></script>
+    <script src="message.js" type="text/javascript"></script>
+    <script src="context.js" type="text/javascript"></script>
+    <script src="scroll.js" type="text/javascript"></script>
+    <script src="disk.js" type="text/javascript"></script>
+    <script src="subnav.js" type="text/javascript"></script>
+    <script src="search.js" type="text/javascript"></script>
 </head>
 <body onselectstart="return false">
 <div class="topbar">
   <div class="iconbox">
     <div class="leftbar">
-      </object>
       <ul style="position:relative;">
-        <li><a onClick="return_history();" title="主页" style="cursor:pointer;"><img src="images/icon-01.png" width="21" height="19"></a></li>
-        <li style="position:absolute; width:2px; left:45px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
-        <li><a onClick="refresh();"  title="刷新"  style="cursor:pointer;"><img src="images/icon-02.png" width="21" height="19"></a></li>
-        <li style="position:absolute; width:2px; left:95px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
-        <li style="width:35px;"><a onClick="cef.gigaso.zoom_in()" title="放大"  style="cursor:pointer;"><img src="images/icon-03.png" width="21" height="19"></a></li>
-        <li><a onClick="cef.gigaso.zoom_out()" title="缩小"  style="cursor:pointer;"><img src="images/icon-04.png" width="21" height="19"></a></li>
-        <li style="position:absolute; width:2px; left:180px; top:-14px;"><img src="images/rightline.png" width="2" height="44"></li>
-        <li style="width:150px;vertical-align:middle; position:absolute; top:-10px; left:190px;"><input type="radio" name="case" id="case0" >模糊查询 <input type="radio" name="case" id="case1">精确查询</li>
+        <li id="home_bt" class="libutton" title="主页"><img src="images/icon-01.png"></li>
+        <li class="rightline"></li>
+        <li id="refresh_bt" class="libutton" title="刷新"><img src="images/icon-02.png"></li>
+        <li class="rightline"></li>
+
+        <li id="zoomin_bt" class="libutton" title="放大" style="margin-right:5px"><img src="images/icon-03.png"></li>
+        <li id="zoomout_bt" class="libutton" title="缩小"><img src="images/icon-04.png"></li>
+        <li class="rightline"></li>
+
+        <li style="vertical-align:middle; position:absolute; top:-10px; left:180px;"><input type="radio" name="case" id="case0" >模糊查询 <input type="radio" name="case" id="case1">精确查询</li>
       </ul>
     </div>
     <div class="rightbar">
@@ -42,29 +42,29 @@
           <div style="position:relative;">
             <div id="m_sub1" style="visibility:hidden; position:absolute; top:6px;left:-70px; z-index:99999;" >
               <ul>
-                <li><a href="#" onClick="show_index_status();return false;">硬盘状态</a></li>
-                <li><a href="#" onClick="show_hotkey();return false;">快捷键</a></li>
-                <li><a href="#" onClick="show_export();return false;">导出查询结果</a></li>
+                <li id="index_st_bt">硬盘状态</li>
+                <li id="hotkey_bt">快捷键</li>
+                <li id="export_bt">导出查询结果</li>
                 <li ondblclick="cef.gigaso.dev_tool();return false;"><a href="help.htm" target="_blank">帮助</a></li>
-                <li><a href="#" onClick="check_upgrade(true);return false;">检查更新</a></li>
+                <li id="upgrade_bt">检查更新</li>
               </ul>
             </div>
             </div>
         </li>
-        <li style="width:2px;height:30px;"><img src="images/rightline.png" height="30"></li>
-		<li><a onClick="$('#search')[0].value='*'; searchf('*');orderby(2,true);" title="最大文件"  style="cursor:pointer;"><img src="images/icon-05.png" width="51" height="16"></a></li>
-        <li class="online_offline" style="width:2px;height:30px"><img src="images/rightline.png" height="30"></li>
+        <li class="rightline"></li>
+		<li id="largefile_bt" title="最大文件"><img src="images/icon-05.png" width="51" height="16"></li>
+        <li class="rightline"></li>
 
-        <li class="online_offline" ><a onClick="offline_db();" title="离线文件"  style="cursor:pointer;"><img src="images/icon-07.png" width="51" height="16"></a></li>
+        <li id="offline_bt" class="online_offline" title="离线文件"><img src="images/icon-07.png" width="51" height="16"></li>
 
-        <li class="online_offline"><a onClick="online_db();" title="在线文件"  style="cursor:pointer;"><img src="images/icon-06.png" width="51" height="16"></a></li>
+        <li id="online_bt" class="online_offline" title="在线文件" style="margin-right:10px"><img src="images/icon-06.png" width="51" height="16"></li>
       </ul>
     </div>
   </div>
   <div style="width:950px; margin:0 auto; margin-top:25px;">
   <div style="float:left; width:160px; height:34px;"> <img src="images/logo.png" ></div>
   <div style="float:left; width:16px; height:16px;"> <img id="loading" src="images/spinner.gif" style="visibility: hidden;"/></div>
-  <div style="float:left; width:24px; height:29px; line-height:34px; padding-top:5px;"> <input type="image" src="images/folder_add.png" width="24" height="24" onClick="search_dir(cef.gigaso.select_dir());return false;" title="选择一个目录"  align="absmiddle" style="margin::0px 10px;"><span id="dir" style="display:none"></span></div>
+  <div style="float:left; width:24px; height:29px; line-height:34px; padding-top:5px;"> <input id="dir_bt" type="image" src="images/folder_add.png" width="24" height="24" title="选择一个目录"  align="absmiddle" style="margin::0px 10px;"><span id="dir" style="display:none"></span></div>
   <div style="float:left; widht:760px; height:34px; line-height:34px; padding-left:10px;"> <input type="text" id="dir2" style="display:none; height:32px; padding:0px; margin:0px; background:#e7f5fc;" readonly="readonly"><input id="search" name="s" type="text" size="50" value="" title="查询条件" style="">
   </div>
   </div>
@@ -80,7 +80,7 @@
 					<div class="edit-bar">
 					 <div class="pin"></div>
 					 <div class="spacer"></div>
-					 <div class="remove" title="不要显示" onclick="cef.plugin.his_del({$T.record.id});$(this).parents('.history_file').hide();refresh();return false;"></div>
+					 <div class="remove" title="不要显示" idx="{$T.record.id}"></div>
 					</div>
 					<span class="thumbnail-wrapper" style="background-image: url({$T.record.thumb})">
 					 <span class="thumbnail"></span>
@@ -95,7 +95,7 @@
 		{#/for}
 <div class="title-01">
 <div class="title-01-left">搜索历史</div>
-<div class="title-01-right"><a onClick="history_switch();return false;">更多</a></div>
+<div class="title-01-right"><a id="his_bt">更多</a></div>
 </div>
 </textarea>
 <div id="tabs" style="display:none">
@@ -260,7 +260,7 @@
 		<option value="6">F9</option>
 		<option value="7">ALT + F9</option>
 	</select>
-	<input type="button" value="确定" onClick="set_hotkey();">
+	<input type="button" value="确定" id="set_hk_bt">
 </div>
 
 <div id="dialog-export" title="导出当前查询结果" style="display:none;">
@@ -273,7 +273,7 @@
 导出文件名：
 	<input type="text" id="export-filename" size="40" readonly="readonly">
 <br>
-	<input type="button" value="确定" onClick="do_export();">
+	<input type="button" value="确定" id="do_exp_bt">
 </div>
 
 
@@ -285,408 +285,12 @@
 主要更新的功能：<br>
 <p id="upgrade_desc"></p>
 <br>
-	<input type="button" value="立即安装" onClick="do_upgrade();">
-	<input type="button" value="以后再说" onclick='$("#dialog-upgrade").dialog("close");'>
+	<input type="button" value="立即安装" id="do_up_bt">
+	<input type="button" value="以后再说" id="up_later_bt">
 
 </div>
 
 
-<script type="text/javascript">
-	function trim(str, chars) {
-		return ltrim(rtrim(str, chars), chars);
-	}
-	 
-	function ltrim(str, chars) {
-		chars = chars || "\\s";
-		return str.replace(new RegExp("^[" + chars + "]+", "g"), "");
-	}
-	 
-	function rtrim(str, chars) {
-		chars = chars || "\\s";
-		return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
-	}
-	  var icon_replace_index=0;
-	  function icon_replace(){
-			var finished = true;
-			$("#maintable tr:gt("+grid_start_id()+")").slice(icon_replace_index,icon_replace_index+20).each(function(i,o){
-				get_file_path(o);
-				var full_path = path+file;
-				if(full_path.indexOf('%')!=-1) return;
-				$(o).find("img")[0].src = "gigaso://icon/"+full_path;
-				finished = false;
-			});
-			if(finished) return;
-			icon_replace_index+=20;
-			highlight_timeout = setTimeout(icon_replace,1);
-	  }
-	  function highlight(){
-			$("#maintable .jqgrow:not(.ped) td:nth-child(1) span").each(function(i,o){
-				var html = o.innerHTML;
-				var fi = html.toLowerCase().indexOf($("#search").val().toLowerCase());
-				if(fi==-1) return;
-				o.innerHTML = html.substring(0, fi) + 
-					"<span class='highlight-match'>"+html.substring(fi, fi+$("#search").val().length)+"</span>" + 
-					html.substring(fi+$("#search").val().length, html.length);
-			});
-			$("#maintable .jqgrow:not(.ped)").each(function(i,o){
-				get_file_path(o);
-				var full_path = path+file;
-				if(full_path.indexOf('%')!=-1) return;
-				if(full_path.match(/exe$/i)!=null || full_path.match(/lnk$/i)!=null) 
-					$(o).find("img")[0].src = "gigaso://icon/"+full_path;
-			});
-			//icon_replace_index=0;
-			$("#maintable .jqgrow:not(.ped)").addClass("ped");
-			//if(!cef.plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
-			$("#loading").css("visibility","hidden");
-	  }
-</script>
-<script type="text/javascript">
-	var host = "http://60.191.119.190:3333";
-	var order_col;
-	var order_desc;
-	var cur_search;
-	var files = [];
-	var search_timeout;
-	var highlight_timeout;
-	var history_timeout;
-	var stat_timeout;
-
-	function file_name_trim2(files){
-		$(files).each( function sub(i,obj){
-			if(obj.name.length>53){
-				obj.name2 = obj.name.substring(0, 25)+"..."+obj.name.substring(obj.name.length-25, obj.name.length);
-			}else{
-				obj.name2 = obj.name;
-			}
-		});
-	}
-	function restart_when_error(){
-			show_error("搜索服务失去响应。请稍后重试！");
-			files = [];
-			view_grid();
-			cef.plugin.start_server();
-	}
-	function search_and_parse(query){
-		var s = cef.plugin.search(query);
-		try{
-			files = eval(s);
-		}catch(e){
-			restart_when_error();
-			$("#loading").css("visibility","hidden");
-			return;
-		}
-		if(cef.plugin.offline){
-			var d_infos = get_loaded_offline_dbs();
-			for(var f_index=0; f_index<files.length; f_index++)
-				gen_offline_dir_name(files[f_index],d_infos);
-		}
-		$.each(files, function (index, ele) { 
-			ele.icon_name = '<img width="16" height="16" style="margin-right:3px" src="icons/'+ele.type+'.ico" /><span>'+ele.name+'</span>';
-		});
-		if(files.length==1000) files.push({type:"unknown", name:"......", path:"超过1000条的记录不显示",size:"",time:""});
-	}
-	function searchf0(){
-		stat_timeout = setTimeout(stat_search,10);
-		$("#loading").css("visibility","visible");
-		clearTimeout(highlight_timeout);
-		search_and_parse(cur_search);
-		if(changed()) return; //查询已过期
-		view_grid();
-	}
-    function searchf(value){
-		value = trim(value);
-		if(value.length==0) return;
-		$("#historys").fadeOut(300);
-		$("#tabs").fadeIn(500);
-		$("#loading").css("visibility","visible");
-		cur_search = value;
-		clearTimeout(search_timeout);
-		clearTimeout(stat_timeout);
-		clearTimeout(highlight_timeout);
-		$("#tabs ul span").html("0");
-		$("#tab-1 span span").html("0");
-		if(value==""){
-			$("#loading").css("visibility","hidden");
-			return;
-		}
-		if(value.length<=4){
-			search_timeout = setTimeout(searchf0,300);
-		}else{
-			search_timeout = setTimeout(searchf0,150);
-		}        
-	}
-	function changed(){
-		value = $("#search").val();
-		value = trim(value);
-		return value != cur_search;
-	}
-	function search_if_change(e){
-		if(e.keyCode==13){
-			 $("#maintable").setSelection(1);
-			 $(".jqgrow", "#maintable")[0].focus();
-			 return;
-		}
-		if(e.keyCode==46 || e.keyCode==8){
-			if($("#dir2").val()!="" && $("#search").val()==""){
-				if(cur_search!='') cur_search='';
-				else remove_dir();
-			}
-		}
-		if(changed()) searchf(value);
-	}
-	function orderby(col,desc){
-		$("#loading").css("visibility","visible");
-		set_orderby_value(col,desc);
-		if(!first_grid) set_order_arrow(col*1+1,desc);
-		if(files.length>0){
-			clearTimeout(search_timeout);
-			search_timeout = setTimeout(searchf0,5);
-		}
-	}
-	function set_orderby_value(col,desc){
-		order_col = col;
-		order_desc = desc;
-		cef.plugin.order = col*2+desc+1;
-	}
-	function set_order_arrow(col_add,desc){
-		$(".ui-jqgrid-htable th div span").html("");
-		var target_th = $(".ui-jqgrid-htable th:nth-child("+col_add+") div");
-		if(desc){
-			target_th.html(target_th.html()+"<span><img src='images/s_desc.png' /></span>");
-		}else{
-			target_th.html(target_th.html()+"<span><img src='images/s_asc.png' /></span>");
-		}
-	}
-	function file_type_search(ft){
-		$("#loading").css("visibility","visible");
-		cef.plugin.file_type=ft;
-		if($("#search").val()=="") return;
-		clearTimeout(search_timeout);
-		search_timeout = setTimeout(searchf0,5);
-	}
-	function stat_num_set(stats){
-		$("#all_file").html(stats.all);
-		$("#dir_file").html(stats.dir);
-		$("#compress_file").html(stats.compress);
-		$("#program_file").html(stats.program);
-		$("#media_file").html(stats.media);
-		$("#archive_file").html(stats.archive);
-		$("#other_file").html(stats.other);
-		$("#exe_file").html(stats.exe);
-		$("#link_file").html(stats.link);
-		$("#script_file").html(stats.script);
-		$("#lib_file").html(stats.lib);
-		$("#music_file").html(stats.music);
-		$("#photo_file").html(stats.photo);
-		$("#video_file").html(stats.video);
-		$("#animation_file").html(stats.animation);
-		$("#office_file").html(stats.office);
-		$("#ebook_file").html(stats.ebook);
-		$("#htm_file").html(stats.htm);
-		$("#text_file").html(stats.text);
-	}
-	function stat_search(){
-		if(changed()) return; //查询已过期
-		if(cur_search=="") return;
-		var s = cef.plugin.stat(cur_search);
-		try{
-			var stats = eval("("+s+")");
-			stat_num_set(stats);
-		}catch(e){
-			restart_when_error();
-		}
-	}
-	function history_parse(start_index){
-		if(arguments.length==0) start_index=0;
-		var hs = cef.plugin.history().replace(/\\/g,"\\\\");
-		hs = eval(hs);
-		for( var i=0;i<hs.length;i++){
-			var fname = hs[i].name;
-			if(fname.charAt(fname.length-1)=='\\') fname = fname.substr(0,fname.length-1);
-			function calc_top(x){if(x>=15) x-=15;if(x>=10) return 460;if(x>=5) return 290;return 120}
-			function calc_left(x){if(x>=15) x-=15;return 10+200*(x%5)}
-			hs[i].id = i;
-			hs[i].left = calc_left(i);
-			hs[i].top = calc_top(i);
-			hs[i].path = fname.substring(0, fname.lastIndexOf("\\")+1);
-			hs[i].name = fname.substring(fname.lastIndexOf("\\")+1,fname.length);
-			if(hs[i].name==""){
-				hs[i].thumb = "";
-			}else{
-					hs[i].thumb = "gigaso://thumb/"+hs[i].path+hs[i].name;
-					hs[i].thumb = hs[i].thumb.replace(/\\/g,"\\\\");
-					hs[i].thumb = hs[i].thumb.replace(/ /g,"%20");
-			}
-		}
-		file_name_trim2(hs);
-		$("#historys").setTemplateElement("history_template");
-		hs0 = hs.slice(start_index,start_index+15);
-		$("#historys").processTemplate(hs0);
-		$(".thumbnail-wrapper").bind('click',function(e){
-			dblclick_file(e.currentTarget.parentNode);
-		});
-		$(".thumbnail-wrapper").contextMenu('myMenu1',context_menu_obj);
-		for( var i=0;i<hs0.length;i++){
-			var p = $(".edit-bar .pin")[i];
-			p.idx = i;
-			if(hs[i].pin==1){
-				$(p).addClass("pinned");
-				p.title = "取消固定";
-				$(p).bind('click',function(e){
-					cef.plugin.his_unpin(e.currentTarget.idx);
-					$(e.currentTarget).attr("title",'固定在此显示');
-					$(e.currentTarget).removeClass("pinned");
-				});
-			}else{
-				p.title = "固定在此显示";
-				$(p).bind('click',function(e){
-					cef.plugin.his_pin(e.currentTarget.idx);
-					$(e.currentTarget).attr("title",'取消固定');
-					$(e.currentTarget).addClass("pinned");
-				});
-			}
-		}
-		$("#loading").css("visibility","hidden");
-	}
-	function load_history(){
-		$("#loading").css("visibility","visible");
-		history_parse_timeout = setTimeout(history_parse,1);
-	}
-	function return_history(){
-		$("#loading").css("visibility","visible");
-		$("#tabs").fadeOut(300);
-		$("#historys").show();
-		load_history();
-		$("#search").val("");
-		$("#search").focus();
-	}
-	var his_start=true;
-	function history_switch(){
-		if(his_start){
-			history_parse(15);
-			his_start = false;
-		}else{
-			history_parse(0);
-			his_start = true;
-		}
-	}
-	function refresh(){
-		if($("#search").val()!="") searchf($("#search").val()); 
-		else load_history();
-	}
-	function parse_init_dir(ss){
-			if(ss.charAt(0)=='"'){
-			var findex = ss.indexOf('"',1);
-			if(findex==-1) return '';
-			ss = ss.substring(findex+1, ss.length);
-		}else{
-			var findex = ss.indexOf(' ',1);
-			if(findex==-1) return '';
-			ss = ss.substring(findex+1, ss.length);
-		}
-		ss = trim(ss);
-		if(ss.charAt(0)=='"'){
-			var findex = ss.indexOf('"',1);
-			if(findex==-1) return '';
-			ss = ss.substring(1, findex);
-		}else{
-			var findex = ss.indexOf(' ',1);
-			if(findex==-1) return '';
-			ss = ss.substring(1, findex);
-		}
-		return ss;
-	}
-	function init_dir(ss){ //Called from exe
-		var realss = parse_init_dir(ss);
-		if(realss.length>=1){
-			clearTimeout(history_timeout);
-			search_dir(realss);
-		}else{
-			history_timeout = setTimeout(load_history,50);
-		}
-		setTimeout(check_upgrade,1);
-	}
-	function search_dir(ss){
-		cef.plugin.dire = ss;
-		$("#dir").html(ss);
-		var dir_show = ss;
-		if(ss.length>38) dir_show=ss.substring(0, 18)+"..."+ss.substring(ss.length-18,ss.length);
-		dir_show = "在 \""+dir_show+"\" 下搜索:";
-		$("#dir2").val(dir_show);
-		$("#dir2").attr("title",ss);
-		$("#dir2").css("display","inline");
-		$("#dir2").attr("size",dir_show.length+chsum(dir_show)/2);
-		var s_width=720-$("#dir2").width();
-		$("#search").css("width",s_width+"px");
-		$("#search").css("border-left","0px")
-		$("#dir2").css("border-right","0px")
-		$("#search").addClass("dir_search");
-		if($("#search").val()==""){
-			$("#search")[0].value = "*";
-			$("#search")[0].select();
-			searchf("*");
-		}else{
-			searchf($("#search").val()); 
-		}
-	}
-	function remove_dir(){
-		cef.plugin.dire = '';
-		$("#dir").html('');
-		$("#dir2").css("display","none");
-		$("#search").css("width","720px");
-		$("#search").css("border-left","1px")
-		$("#search").removeClass("dir_search");
-	}
-	function chsum(chars){
-		var sum = 0; 
-		for (var i=0; i<chars.length; i++) { 
-		   var c = chars.charCodeAt(i); 
-		   if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) { 
-			 //sum++; 
-		   }else {     
-		     sum++; 
-		   } 
-		}
-		return sum;
-	}
-	function init_event(){
-		$("#case0").bind('click',function(event,t){
-			cef.plugin.caze = false;
-			searchf($("#search").val());
-		});
-		$("#case1").bind('click',function(event,t){
-			cef.plugin.caze = true;
-			searchf($("#search").val());
-		});
-		$(document).bind("contextmenu", function(e){
-			return false;
-		});
-		$("#tabs ul li a").bind('click',function(e){
-			$(".subnav").hide();
-			$("#"+e.target.id+"div").show();
-		});
-		$(window).bind('scroll',function(e){
-			if(reachBottom()) grid_add_files();
-		});
-		$('#tabs').tabs();
-		scan_img();
-		if(get_offline_dbs().length==0){
-			$(".online_offline").hide();
-		}
-	}
-	$(function() {
-		if(cef.plugin.caze){
-			$("#case1").click();
-		}else{
-			$("#case0").click();
-		}
-		$("#search").focus();
-		$("#search").bind('keyup',search_if_change);
-		set_orderby_value(0,0);
-		setTimeout(init_event,1);
-	});
-</script>
 </body>
 
 </html>
