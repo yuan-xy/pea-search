@@ -61,16 +61,23 @@
       </ul>
     </div>
   </div>
+
   <div style="width:950px; margin:0 auto; margin-top:25px;">
-  <div style="float:left; width:160px; height:34px;"> <img src="images/logo.png" ></div>
-  <div style="float:left; width:16px; height:16px;"> <img id="loading" src="images/spinner.gif" style="visibility: hidden;"/></div>
-  <div style="float:left; width:24px; height:29px; line-height:34px; padding-top:5px;"> <input id="dir_bt" type="image" src="images/folder_add.png" width="24" height="24" title="选择一个目录"  align="absmiddle" style="margin::0px 10px;"><span id="dir" style="display:none"></span></div>
-  <div style="float:left; widht:760px; height:34px; line-height:34px; padding-left:10px;"> <input type="text" id="dir2" style="display:none; height:32px; padding:0px; margin:0px; background:#e7f5fc;" readonly="readonly"><input id="search" name="s" type="text" size="50" value="" title="查询条件" style="">
-  </div>
+	  <div style="float:left; width:160px; height:34px;"> <img src="images/logo.png" ></div>
+	  <div style="float:left; width:16px; height:16px;"> <img id="loading" src="images/spinner.gif" style="visibility: hidden;"/></div>
+	  <div style="float:left; width:24px; height:29px; line-height:34px; padding-top:5px;"> <input id="dir_bt" type="image" src="images/folder_add.png" width="24" height="24" title="选择一个目录"  align="absmiddle" style="margin::0px 10px;"><span id="dir" style="display:none"></span></div>
+	  <div style="float:left; widht:760px; height:34px; line-height:34px; padding-left:10px;"> <input type="text" id="dir2" style="display:none; height:32px; padding:0px; margin:0px; background:#e7f5fc;" readonly="readonly"><input id="search" name="s" type="text" size="50" value="" title="查询条件" style=""></div>
   </div>
 </div>
+
+<div class="title-01">
+	<div class="title-01-left">搜索历史</div>
+	<div class="title-01-right"><a id="his_bt">更多</a></div>
 </div>
-<div id="historys" style="align:center; "></div>
+
+<div id="historys" style="align:center; ">
+</div>
+
 <textarea id="history_template" style="display:none"> 
 		{#foreach $T as record}
         <div style="width:980px; margin:0 auto; position:relative;">
@@ -93,11 +100,9 @@
 		</div>
         </div>
 		{#/for}
-<div class="title-01">
-<div class="title-01-left">搜索历史</div>
-<div class="title-01-right"><a id="his_bt">更多</a></div>
-</div>
 </textarea>
+
+
 <div id="tabs" style="display:none">
 	<ul id="main_nav_tab">
 		<li>

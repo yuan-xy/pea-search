@@ -1,5 +1,4 @@
 function get_file_path(tr){
-	//alert(tr.innerHTML);
 	if(tr.tagName=="DIV"){
 		path = $(tr).find("input")[1].value;
 		file = $(tr).find("input")[0].value;
@@ -42,7 +41,7 @@ function dblclick_file(target){
 function dblclick_path(target){
 	get_file_path(target);
 	if(path.substr(0,1)=="\\"){
-		var file = path.substr(0,path.length-1);
+		file = path.substr(0,path.length-1);
 		var ret = cef.plugin.shell2_default(file);
 		info_if_error(ret, file, "打开");
 	}else{

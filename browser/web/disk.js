@@ -376,10 +376,10 @@ function grid_event(){
 	if(!cef.plugin.offline){
 		$("#maintable .jqgrow:not(.ped)").contextMenu('myMenu1', context_menu_obj);
 		$("#maintable .jqgrow:not(.ped) td:nth-child(1)").bind('dblclick',function(e){
-			dblclick_file(e.currentTarget.parentNode);
+			dblclick_file($(e.currentTarget).parent("tr"));
 		});
 		$("#maintable .jqgrow:not(.ped) td:nth-child(2)").bind('dblclick',function(e){
-			dblclick_path(e.currentTarget.parentNode);
+			dblclick_path($(e.currentTarget).parent("tr"));
 		});
 	}else{
 		$("#maintable .jqgrow:not(.ped)").contextMenu('myMenu2', context_menu_obj);

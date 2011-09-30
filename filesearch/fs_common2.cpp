@@ -53,6 +53,7 @@ pFileEntry SubDirIterateB(pFileEntry dir, pFileVisitorB visitor, void *data){
 }
 
 void FilesIterate(pFileEntry file,pFileVisitor visitor, void *data){
+	if(file==NULL) return;
 	visitor(file,data);
 	if(!IsDir(file)) return;
 	pFileList children = (pFileList)file->children;

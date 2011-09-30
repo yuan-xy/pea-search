@@ -72,6 +72,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	MyRegisterClass(hInstance);
 	if (!InitInstance (hInstance, iCmdShow)) return 1;
 	WinExec("peadeskg.exe",SW_HIDE);
+	LoadLibrary(L"libcef.dll");
+	LoadLibrary(L"icudt.dll");
     while(GetMessage(&msg, NULL, 0, 0) != 0){
 		if (msg.message == WM_HOTKEY){
 			HWND wnd = FindWindow(SearchWindowClass,SearchWindowTitle);

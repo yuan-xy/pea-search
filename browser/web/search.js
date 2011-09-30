@@ -1,3 +1,17 @@
+var file;
+var path;
+var type;
+
+	var host = "http://60.191.119.190:3333";
+	var order_col;
+	var order_desc;
+	var cur_search;
+	var files = [];
+	var search_timeout;
+	var highlight_timeout;
+	var history_timeout;
+	var stat_timeout;
+
 	function trim(str, chars) {
 		return ltrim(rtrim(str, chars), chars);
 	}
@@ -47,15 +61,6 @@
 			$("#loading").css("visibility","hidden");
 	  }
 
-	var host = "http://60.191.119.190:3333";
-	var order_col;
-	var order_desc;
-	var cur_search;
-	var files = [];
-	var search_timeout;
-	var highlight_timeout;
-	var history_timeout;
-	var stat_timeout;
 
 	function file_name_trim2(files){
 		$(files).each( function sub(i,obj){
@@ -408,7 +413,6 @@
 		$("#online_bt").bind('click',function(){online_db()});
 		$("#dir_bt").bind('click',function(){search_dir(cef.gigaso.select_dir())});
 		$("#his_bt").bind('click',function(){history_switch()});
-		console.log($("#his_bt"));
 		$("#set_hk_bt").bind('click',function(){set_hotkey()});
 		$("#do_exp_bt").bind('click',function(){do_export()});
 		$("#do_up_bt").bind('click',function(){do_upgrade()});
