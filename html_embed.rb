@@ -28,8 +28,12 @@ def convert_file(s,file)
 end
 
 File.open("#{web}/search.htm").each_line do |x| 
+	next if x.include? 'link rel="'
 	next if x.include? 'script src="'
-	convert_line(s, '<script src="../jz.lib" type="text/javascript"></script>') if x.include? '</head>'
+	if x.include? '</head>'
+	  convert_line(s, '<link rel="stylesheet" href="./cz.lib" type="text/css" />') 
+	  convert_line(s, '<script src="../jz.lib" type="text/javascript"></script>') 
+	end
 	convert_line(s,x)
 end
 

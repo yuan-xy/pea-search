@@ -12,3 +12,7 @@ wget http://google-perftools.googlecode.com/files/google-perftools-1.8.zip
 
 
 http://chromiumembedded.googlecode.com/files/cef_binary_r231_VS2008.zip
+
+
+http://code.google.com/p/closure-compiler/
+http://yuilibrary.com/download/yuicompressor/

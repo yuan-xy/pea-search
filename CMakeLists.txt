@@ -49,6 +49,7 @@ configure_file (
 
 EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/html_embed.rb" "${PROJECT_BINARY_DIR}")
 EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_js.rb" "${PROJECT_BINARY_DIR}")
+EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_css.rb" "${PROJECT_BINARY_DIR}")
 
 # add the binary tree to the search path for include files
 # so that we will find GIGASOConfig.h
@@ -66,6 +67,7 @@ add_subdirectory (browser)
 
 install (FILES "${PROJECT_SOURCE_DIR}/cmake/gigaso.inf"   DESTINATION .)
 install (FILES "${PROJECT_BINARY_DIR}/jz.lib"   DESTINATION .)
+install (FILES "${PROJECT_BINARY_DIR}/cz.lib"   DESTINATION ./web)
 
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
