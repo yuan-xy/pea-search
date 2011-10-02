@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -11,11 +11,11 @@ extern "C" {
 
 #define PINYIN_CLASS_LEN 406
 
-extern char pinyins[PINYIN_CLASS_LEN][6]; //ËùÓĞµÄÆ´Òô
-extern int py_lens[PINYIN_CLASS_LEN] ; //¶ÔÓ¦Î»ÖÃµÄÆ´ÒôµÄ×Ö½Ú³¤¶È
-extern int hz_lens[PINYIN_CLASS_LEN] ; //¶ÔÓ¦Î»ÖÃÆ´ÒôµÄÍ¬Òôºº×ÖµÄ¸öÊı
-extern pUTF8 hzs[PINYIN_CLASS_LEN];    //ºº×ÖÁĞ±í
-extern int* hzs_pre_bndm[PINYIN_CLASS_LEN];    //Í¬Òôºº×ÖµÄbndmËã·¨Ô¤´¦Àí½á¹ûÊı×éµÄÖ¸Õë
+extern char pinyins[PINYIN_CLASS_LEN][6]; //æ‰€æœ‰çš„æ‹¼éŸ³
+extern int py_lens[PINYIN_CLASS_LEN] ; //å¯¹åº”ä½ç½®çš„æ‹¼éŸ³çš„å­—èŠ‚é•¿åº¦
+extern int hz_lens[PINYIN_CLASS_LEN] ; //å¯¹åº”ä½ç½®æ‹¼éŸ³çš„åŒéŸ³æ±‰å­—çš„ä¸ªæ•°
+extern pUTF8 hzs[PINYIN_CLASS_LEN];    //æ±‰å­—åˆ—è¡¨
+extern int* hzs_pre_bndm[PINYIN_CLASS_LEN];    //åŒéŸ³æ±‰å­—çš„bndmç®—æ³•é¢„å¤„ç†ç»“æœæ•°ç»„çš„æŒ‡é’ˆ
 
 extern char mohu_shenmu[6][2][3];
 extern char mohu_yunmu[5][2][4];

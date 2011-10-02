@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -7,36 +7,36 @@ extern "C" {
 
 #include "env.h"
 
-struct fileEntry{  //±íÊ¾Ò»¸öÎÄ¼ş
-	KEY FileReferenceNumber;  //NTFSµÄµ±Ç°ÎÄ¼şFileReferenceNumber
+struct fileEntry{  //è¡¨ç¤ºä¸€ä¸ªæ–‡ä»¶
+	KEY FileReferenceNumber;  //NTFSçš„å½“å‰æ–‡ä»¶FileReferenceNumber
 	union {
-		KEY ParentFileReferenceNumber;  //NTFSµÄ¸¸Ä¿Â¼ÎÄ¼şFileReferenceNumber
-		struct fileEntry *parent; //¸¸Ä¿Â¼
+		KEY ParentFileReferenceNumber;  //NTFSçš„çˆ¶ç›®å½•æ–‡ä»¶FileReferenceNumber
+		struct fileEntry *parent; //çˆ¶ç›®å½•
 	} up;
-	void *children; //×ÓÎÄ¼şÁĞ±í, pointer to std::vector<pFileEntry>
+	void *children; //å­æ–‡ä»¶åˆ—è¡¨, pointer to std::vector<pFileEntry>
 	union {
 		unsigned int value;
 		struct {
-			unsigned char readonly:1; //ÊÇ·ñÖ»¶Á
-			unsigned char hidden:1; //ÊÇ·ñÒş²Ø
-			unsigned char system:1; //ÊÇ·ñÏµÍ³ÎÄ¼ş
-			unsigned char dir:1;    //ÊÇ·ñÊÇÄ¿Â¼
-			unsigned char size1:4;  //sizeµÄ¸ß4Î»
-			unsigned char size2:8;  //sizeµÄµÍ8Î»
-			FILE_NAME_LEN FileNameLength:8; //ÎÄ¼şÃû×Ö½Ú³¤¶È
-			FILE_NAME_LEN StrLen:8; //ÎÄ¼şÃûµÄ×Ö·û³¤¶È
+			unsigned char readonly:1; //æ˜¯å¦åªè¯»
+			unsigned char hidden:1; //æ˜¯å¦éšè—
+			unsigned char system:1; //æ˜¯å¦ç³»ç»Ÿæ–‡ä»¶
+			unsigned char dir:1;    //æ˜¯å¦æ˜¯ç›®å½•
+			unsigned char size1:4;  //sizeçš„é«˜4ä½
+			unsigned char size2:8;  //sizeçš„ä½8ä½
+			FILE_NAME_LEN FileNameLength:8; //æ–‡ä»¶åå­—èŠ‚é•¿åº¦
+			FILE_NAME_LEN StrLen:8; //æ–‡ä»¶åçš„å­—ç¬¦é•¿åº¦
 		} v;
 	} us;
 	union {
 		unsigned int value;
 		struct {
-			unsigned char time1; //Ê±¼ä¸ß×Ö½Ú
-			unsigned char time2; //Ê±¼äÖĞ×Ö½Ú
-			unsigned char time3; //Ê±¼äµÍ×Ö½Ú
-			unsigned char suffixType; //ÎÄ¼şºó×ºÃûËùÊôÀàĞÍ
+			unsigned char time1; //æ—¶é—´é«˜å­—èŠ‚
+			unsigned char time2; //æ—¶é—´ä¸­å­—èŠ‚
+			unsigned char time3; //æ—¶é—´ä½å­—èŠ‚
+			unsigned char suffixType; //æ–‡ä»¶åç¼€åæ‰€å±ç±»å‹
 		} v;
 	} ut;
-    UTF8  FileName[2]; //ÎÄ¼şÃû£¬²»°üº¬\0£¬²»ÊÇCÓïÑÔ·ç¸ñµÄ×Ö·û´®£¬Unicode±àÂë
+    UTF8  FileName[2]; //æ–‡ä»¶åï¼Œä¸åŒ…å«\0ï¼Œä¸æ˜¯Cè¯­è¨€é£æ ¼çš„å­—ç¬¦ä¸²ï¼ŒUnicodeç¼–ç 
 };
 typedef struct fileEntry FileEntry, *pFileEntry;
 
@@ -59,24 +59,24 @@ typedef struct fileEntry FileEntry, *pFileEntry;
 #define FERROR(file)  fprintf(stderr,"error: %s , line %d in '%s'\n",((file==NULL || file->FileName ==NULL)? "null":file->FileName), __LINE__, __FILE__);
 
 /*
- * µÃµ½¸ÃÎÄ¼şËùÊôÇı¶¯ÅÌ±àºÅ
+ * å¾—åˆ°è¯¥æ–‡ä»¶æ‰€å±é©±åŠ¨ç›˜ç¼–å·
  */
 extern int getDrive(pFileEntry file);
 /*
- * ÒÔMultiByte±àÂë´òÓ¡¸ÃÎÄ¼şµÄÎÄ¼şÃû
+ * ä»¥MultiByteç¼–ç æ‰“å°è¯¥æ–‡ä»¶çš„æ–‡ä»¶å
  */
 extern void PrintFilenameMB(pFileEntry file);
 /*
- * ´òÓ¡¸ÃÎÄ¼şµÄÈ«Â·¾¶
+ * æ‰“å°è¯¥æ–‡ä»¶çš„å…¨è·¯å¾„
  */
 
 /*
- * ´òÓ¡¸ÃÎÄ¼şµÄÈÕÆÚ
+ * æ‰“å°è¯¥æ–‡ä»¶çš„æ—¥æœŸ
  */
 extern void print_time(pFileEntry file);
 /*
- * ´òÓ¡¸ÃÎÄ¼şµÄÈÕÆÚµ½bufferÖĞ
- * @return ´òÓ¡µÄÈÕÆÚ×Ö·û´®µÄ³¤¶È
+ * æ‰“å°è¯¥æ–‡ä»¶çš„æ—¥æœŸåˆ°bufferä¸­
+ * @return æ‰“å°çš„æ—¥æœŸå­—ç¬¦ä¸²çš„é•¿åº¦
  */
 extern int print_time_str(pFileEntry file, char *buffer);
 extern int print_path_str(pFileEntry file, char *buffer);
@@ -103,113 +103,113 @@ extern void SET_SIZE(pFileEntry file, FSIZE size);
 extern void print_full_path(pFileEntry file);
 
 /**
- * ½«´ÓÎÄ¼şÏµÍ³ÖĞ»ñµÃµÄÊ±¼ä×ª»»ÎªMINUTE¸³Öµ¸øÎÄ¼ş
+ * å°†ä»æ–‡ä»¶ç³»ç»Ÿä¸­è·å¾—çš„æ—¶é—´è½¬æ¢ä¸ºMINUTEèµ‹å€¼ç»™æ–‡ä»¶
  */
 extern void set_time(pFileEntry file, PFILETIME time);
 
 /**
- * Éú³ÉÇı¶¯Æ÷¸ùÎÄ¼şµÄpFileEntry½á¹¹
- * @param i Çı¶¯Æ÷±àºÅ
+ * ç”Ÿæˆé©±åŠ¨å™¨æ ¹æ–‡ä»¶çš„pFileEntryç»“æ„
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern pFileEntry genRootFileEntry(int i);
 /**
- * ½«ÎÄ¼ş¹Òµ½Æä¸¸Ä¿Â¼µÄ×ÓÎÄ¼şÁĞ±íÖĞ£¬ÓÃÓÚfile³õÊ¼»¯¡£
- * ×¢Òâ£ºÖ»ÓĞ³õÊ¼»¯µÄÊ±ºò£¬²ÅĞèÒªÌá¹©pFileEntry½á¹¹ºÍÇı¶¯Æ÷±àºÅ£»³õÊ¼»¯Íê³Éºó£¬pFileEntry°üº¬Çı¶¯Æ÷±àºÅĞÅÏ¢£¨·½·¨ÊÇÕÒµ½¸ùÄ¿Â¼£©¡£
- * @param i Çı¶¯Æ÷±àºÅ
+ * å°†æ–‡ä»¶æŒ‚åˆ°å…¶çˆ¶ç›®å½•çš„å­æ–‡ä»¶åˆ—è¡¨ä¸­ï¼Œç”¨äºfileåˆå§‹åŒ–ã€‚
+ * æ³¨æ„ï¼šåªæœ‰åˆå§‹åŒ–çš„æ—¶å€™ï¼Œæ‰éœ€è¦æä¾›pFileEntryç»“æ„å’Œé©±åŠ¨å™¨ç¼–å·ï¼›åˆå§‹åŒ–å®Œæˆåï¼ŒpFileEntryåŒ…å«é©±åŠ¨å™¨ç¼–å·ä¿¡æ¯ï¼ˆæ–¹æ³•æ˜¯æ‰¾åˆ°æ ¹ç›®å½•ï¼‰ã€‚
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern BOOL attachParent(pFileEntry file, int i);
 /**
- * ½¨Á¢¸¸×ÓÄ¿Â¼¼äµÄË«ÏòÖ¸ÕëÁ¬½Ó
+ * å»ºç«‹çˆ¶å­ç›®å½•é—´çš„åŒå‘æŒ‡é’ˆè¿æ¥
  */
 extern void addChildren(pFileEntry parent, pFileEntry file);
 
 extern pFileEntry findFile(KEY frn,KEY pfrn,int i);
 
 /**
- * ÎÄ¼şÉ¾³ıÊ±£¬Í¬Ê±É¾³ı¶ÔÓ¦µÄÄÚ´æ½á¹¹
+ * æ–‡ä»¶åˆ é™¤æ—¶ï¼ŒåŒæ—¶åˆ é™¤å¯¹åº”çš„å†…å­˜ç»“æ„
  */
 extern void deleteFile(pFileEntry file);
 
 /**
- * ÎÄ¼şÖØÃüÃû
+ * æ–‡ä»¶é‡å‘½å
  */
 extern void renameFile(pFileEntry file, wchar_t *new_name, int name_byte_len);
 
 /**
- * ÎÄ¼şÒÆ¶¯
- ¶ÔÓÚntfsÏµÍ³£¬cut/pasteµ¼ÖÂÖØÃüÃû²Ù×÷£¬É¾³ıµ½»ØÊÕÕ¾Ò²ÊÇÒ»¸öÖØÃüÃû²Ù×÷¡£µ«ÆäÊµÊÇÒ»¸öÒÆ¶¯²Ù×÷¡£
- ¶ÔÓÚfatÏµÍ³£¬cutµ¼ÖÂÒ»¸öÉ¾³ıºó½ÓÒ»¸öÌí¼Ó²Ù×÷¡£É¾³ıµ½»ØÊÕÕ¾Ò²ÊÇÒ»¸öÉ¾³ıºó½ÓÒ»¸öÌí¼Ó²Ù×÷¡£
- * @param file ±»ÒÆ¶¯µÄÎÄ¼ş
- * @param pnew ÒÆ¶¯µ½µÄĞÂÎÄ¼ş¼Ğ
+ * æ–‡ä»¶ç§»åŠ¨
+ å¯¹äºntfsç³»ç»Ÿï¼Œcut/pasteå¯¼è‡´é‡å‘½åæ“ä½œï¼Œåˆ é™¤åˆ°å›æ”¶ç«™ä¹Ÿæ˜¯ä¸€ä¸ªé‡å‘½åæ“ä½œã€‚ä½†å…¶å®æ˜¯ä¸€ä¸ªç§»åŠ¨æ“ä½œã€‚
+ å¯¹äºfatç³»ç»Ÿï¼Œcutå¯¼è‡´ä¸€ä¸ªåˆ é™¤åæ¥ä¸€ä¸ªæ·»åŠ æ“ä½œã€‚åˆ é™¤åˆ°å›æ”¶ç«™ä¹Ÿæ˜¯ä¸€ä¸ªåˆ é™¤åæ¥ä¸€ä¸ªæ·»åŠ æ“ä½œã€‚
+ * @param file è¢«ç§»åŠ¨çš„æ–‡ä»¶
+ * @param pnew ç§»åŠ¨åˆ°çš„æ–°æ–‡ä»¶å¤¹
  */
 void moveFile(pFileEntry file, pFileEntry pnew);
 
 /**
- * Æô¶¯ÎÄ¼şÏµÍ³±ä¶¯¼àÊÓÏß³Ì¡£¸ÃÏß³ÌÖ»ÄÜ±»Æô¶¯Ò»´Î¡£
- * @param i Çı¶¯Æ÷±àºÅ
+ * å¯åŠ¨æ–‡ä»¶ç³»ç»Ÿå˜åŠ¨ç›‘è§†çº¿ç¨‹ã€‚è¯¥çº¿ç¨‹åªèƒ½è¢«å¯åŠ¨ä¸€æ¬¡ã€‚
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern BOOL StartMonitorThread(int i);
 
 /**
- * Í£Ö¹ÎÄ¼şÏµÍ³±ä¶¯¼àÊÓÏß³Ì¡£
- * @param i Çı¶¯Æ÷±àºÅ
+ * åœæ­¢æ–‡ä»¶ç³»ç»Ÿå˜åŠ¨ç›‘è§†çº¿ç¨‹ã€‚
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern BOOL StopMonitorThread(int i);
 
 extern BOOL CloseVolumeHandle(int i);
 
 /**
- * ¸ù¾İÎÄ¼şµÄKeyÖµÔÚMapÖĞÕÒµ½¸ÃÎÄ¼ş
- * @param frn ¶ÔÓÚNTFSÊÇÎÄ¼şµÄFileReferenceNumber,¶ÔÓÚFATÊÇpFileEntryµÄÄÚ´æµØÖ·Öµ
- * @param i Çı¶¯Æ÷±àºÅ
+ * æ ¹æ®æ–‡ä»¶çš„Keyå€¼åœ¨Mapä¸­æ‰¾åˆ°è¯¥æ–‡ä»¶
+ * @param frn å¯¹äºNTFSæ˜¯æ–‡ä»¶çš„FileReferenceNumber,å¯¹äºFATæ˜¯pFileEntryçš„å†…å­˜åœ°å€å€¼
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern pFileEntry findDir(KEY frn,int i);
 
 /**
- * ³õÊ¼»¯Ê±½«ÎÄ¼ş¼ÓÈëMapÖĞ¡£
+ * åˆå§‹åŒ–æ—¶å°†æ–‡ä»¶åŠ å…¥Mapä¸­ã€‚
  */
 extern void add2Map(pFileEntry file,int i);
 /**
- * ½«MapÄÚÈİÇå¿Õ£¬ÓÃÓÚ³õÊ¼»¯Ê±³¢ÊÔ¶ÁÈëÁË´íÎóµÄÊı¾İ¿âÎÄ¼ş
+ * å°†Mapå†…å®¹æ¸…ç©ºï¼Œç”¨äºåˆå§‹åŒ–æ—¶å°è¯•è¯»å…¥äº†é”™è¯¯çš„æ•°æ®åº“æ–‡ä»¶
  */
 extern void resetMap(int i);
 
 /**
- * ¸ù¾İ¸¸Ä¿Â¼KEYÖµ½¨Á¢Ä¿Â¼Ê÷¡£
- * @param i Çı¶¯Æ÷±àºÅ
+ * æ ¹æ®çˆ¶ç›®å½•KEYå€¼å»ºç«‹ç›®å½•æ ‘ã€‚
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern void build_dir(int i);
 
 /**
- * ÔÚµü´úÖĞ·ÃÎÊÒ»¸öÎÄ¼ş
- * @param file ´ı·ÃÎÊµÄÎÄ¼ş
- * @param data »·¾³Êı¾İ
+ * åœ¨è¿­ä»£ä¸­è®¿é—®ä¸€ä¸ªæ–‡ä»¶
+ * @param file å¾…è®¿é—®çš„æ–‡ä»¶
+ * @param data ç¯å¢ƒæ•°æ®
  */
 typedef void (*pFileVisitor)(pFileEntry file, void *data);
 typedef void (*pFileVisitor_p3)(pFileEntry file, WCHAR *full_name, int name_len, int i);
 typedef BOOL (*pFileVisitorB)(pFileEntry file, void *data);
 
 /**
- * ·ÃÎÊÒ»¸öÄ¿Â¼ÏÂµÄËùÓĞµÄÎÄ¼ş£¬Ö´ĞĞ¸ø¶¨µÄ·ÃÎÊº¯Êı
- * @param file ´ı±éÀúµÄÄ¿Â¼
- * @param visitor ·ÃÎÊº¯Êı
- * @param data »·¾³Êı¾İ
+ * è®¿é—®ä¸€ä¸ªç›®å½•ä¸‹çš„æ‰€æœ‰çš„æ–‡ä»¶ï¼Œæ‰§è¡Œç»™å®šçš„è®¿é—®å‡½æ•°
+ * @param file å¾…éå†çš„ç›®å½•
+ * @param visitor è®¿é—®å‡½æ•°
+ * @param data ç¯å¢ƒæ•°æ®
  */
 extern void SubDirIterate(pFileEntry dir, pFileVisitor visitor, void *data);
 extern void SubDirIterate_p3(pFileEntry dir, pFileVisitor_p3 visitor, WCHAR *full_name, int name_len, int i);
 extern pFileEntry SubDirIterateB(pFileEntry dir, pFileVisitorB visitor, void *data);
 /**
- * µİ¹é±éÀú·ÃÎÊÒ»¸öÄ¿Â¼ÒÔ¼°¸ÃÄ¿Â¼ÏÂµÄËùÓĞµÄÎÄ¼ş£¬Ö´ĞĞ¸ø¶¨µÄ·ÃÎÊº¯Êı
- * @param file ´ı±éÀúµÄÄ¿Â¼
- * @param visitor ·ÃÎÊº¯Êı
- * @param data »·¾³Êı¾İ
+ * é€’å½’éå†è®¿é—®ä¸€ä¸ªç›®å½•ä»¥åŠè¯¥ç›®å½•ä¸‹çš„æ‰€æœ‰çš„æ–‡ä»¶ï¼Œæ‰§è¡Œç»™å®šçš„è®¿é—®å‡½æ•°
+ * @param file å¾…éå†çš„ç›®å½•
+ * @param visitor è®¿é—®å‡½æ•°
+ * @param data ç¯å¢ƒæ•°æ®
  */
 extern void FilesIterate(pFileEntry file,pFileVisitor visitor, void *data);
 extern void DirIterateWithoutSelf(pFileEntry file,pFileVisitor visitor, void *data);
 /**
- * µİ¹é±éÀú·ÃÎÊµ±Ç°ÎÄ¼şÏµÍ³µÄËùÓĞÎÄ¼ş£¬Ö´ĞĞ¸ø¶¨µÄ·ÃÎÊº¯Êı¡£
- * @param visitor ·ÃÎÊº¯Êı
- * @param data »·¾³Êı¾İ
+ * é€’å½’éå†è®¿é—®å½“å‰æ–‡ä»¶ç³»ç»Ÿçš„æ‰€æœ‰æ–‡ä»¶ï¼Œæ‰§è¡Œç»™å®šçš„è®¿é—®å‡½æ•°ã€‚
+ * @param visitor è®¿é—®å‡½æ•°
+ * @param data ç¯å¢ƒæ•°æ®
  */
 extern void AllFilesIterate(pFileVisitor visitor, void *data, BOOL offline);
 

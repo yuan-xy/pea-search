@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+﻿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -9,22 +9,22 @@ extern "C" {
 
 
 /**
-* �����ļ�szFileName�����͵õ����ļ���SHIL_EXTRALARGE���͵�ͼ�꣬�����浽�ļ�iconFileName�С�
+* 根据文件szFileName的类型得到该文件的SHIL_EXTRALARGE类型的图标，并保存到文件iconFileName中。
 */
 extern void gen_icon_xlarge(LPCTSTR szFileName, LPCTSTR iconFileName);
 
 /**
-* �����ļ�szFileName�����͵õ����ļ���16*16Сͼ�꣬�����浽�ļ�iconFileName�С�
+* 根据文件szFileName的类型得到该文件的16*16小图标，并保存到文件iconFileName中。
 */
 extern BOOL gen_icon_small(LPCTSTR szFileName, LPCTSTR iconFileName);
 
 /**
-* ��HICON���浽ICO��ʽ�ļ�iconFileName�С�
+* 将HICON保存到ICO格式文件iconFileName中。
 */
 extern void saveicon(HICON hico, LPCTSTR iconFileName, BOOL bAutoDelete);
 
 /**
-* ��HICON���浽ͼ���ļ�iconFileName�С�
+* 将HICON保存到图像文件iconFileName中。
 */
 extern void save_icon_to_photo(HICON hico, LPCTSTR iconFileName);
 

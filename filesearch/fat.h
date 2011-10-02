@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -9,20 +9,20 @@ extern "C" {
 #include "fs_common.h"
 
 /**
- * É¨ÃèÒ»¸ö¸ù·ÖÇø
- * @param root ¸ù·ÖÇø
+ * æ‰«æä¸€ä¸ªæ ¹åˆ†åŒº
+ * @param root æ ¹åˆ†åŒº
  */
 extern int scanRoot(pFileEntry root, int i);
 
 /**
- * ´ò¿ªÒ»¸öÇı¶¯Æ÷¾ä±úÒÔ±ã¼àÊÓÎÄ¼ş±ä¶¯
- * @param i Çı¶¯Æ÷±àºÅ
+ * æ‰“å¼€ä¸€ä¸ªé©±åŠ¨å™¨å¥æŸ„ä»¥ä¾¿ç›‘è§†æ–‡ä»¶å˜åŠ¨
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern void OpenFatHandle(int i);
 
 /**
- * Æô¶¯FATÎÄ¼şÏµÍ³±ä¶¯¼àÊÓÏß³Ì¡£¸ÃÏß³ÌÖ»ÄÜ±»Æô¶¯Ò»´Î¡£
- * @param i Çı¶¯Æ÷±àºÅ
+ * å¯åŠ¨FATæ–‡ä»¶ç³»ç»Ÿå˜åŠ¨ç›‘è§†çº¿ç¨‹ã€‚è¯¥çº¿ç¨‹åªèƒ½è¢«å¯åŠ¨ä¸€æ¬¡ã€‚
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern BOOL StartMonitorThreadFAT(int i);
 

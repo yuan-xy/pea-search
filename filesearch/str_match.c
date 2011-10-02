@@ -1,4 +1,4 @@
-#include "str_match.h"
+ï»¿#include "str_match.h"
 #include "math.h"
 #include "util.h"
 
@@ -242,7 +242,7 @@ void pre_bndm_hz_multi(pUTF8 x, int m, int *prestr){
 	int i, s = 1;
 	for (i = m - 1; i >= 0; i--) {
 		*(prestr+x[i]) |= s;
-		s <<= 1; //m>32Ê±s»áÒç³ö,Èç¹û¶¨Òåchar prestr£¬Ôòm>8Ê±prestr¾Í»áÒç³ö
+		s <<= 1; //m>32æ—¶sä¼šæº¢å‡º,å¦‚æœå®šä¹‰char prestrï¼Œåˆ™m>8æ—¶prestrå°±ä¼šæº¢å‡º
 	}
 }
 
@@ -312,14 +312,14 @@ void preBNDM(pUTF8 x, int m, int prestr[], BOOL case_sensitive){
 				prestr[ccc - DIFF] |= s;
 			}
 		}
-		s <<= 1; //m>32Ê±s»áÒç³ö,Èç¹û¶¨Òåchar prestr£¬Ôòm>8Ê±prestr¾Í»áÒç³ö
+		s <<= 1; //m>32æ—¶sä¼šæº¢å‡º,å¦‚æœå®šä¹‰char prestrï¼Œåˆ™m>8æ—¶prestrå°±ä¼šæº¢å‡º
 	}
 }
 
 BOOL BNDM(pUTF8 x, int m, pUTF8 y, int n, int preNext[], BOOL case_sensitive) {
 	//Backward Nondeterministic Dawg Matching algorithm
 	int i, j, d, last;
-	if (m > 8*sizeof(void *) ) m=8*sizeof(void *); //²éÑ¯×Ö·û´®³¤¶È²»ÄÜ´óÓÚCPUÎ»¿í
+	if (m > 8*sizeof(void *) ) m=8*sizeof(void *); //æŸ¥è¯¢å­—ç¬¦ä¸²é•¿åº¦ä¸èƒ½å¤§äºCPUä½å®½
 	j = 0;
 	while (j <= n - m) {
 		i = m - 1;

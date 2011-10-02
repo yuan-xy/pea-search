@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -10,7 +10,7 @@ extern "C" {
 
 
 /**
- * É¨ÃèShellÃüÃû¿Õ¼ä£¬´Ó¸ùÎ»ÖÃDesktop¿ªÊ¼£¬²¢±£´æµ½ÎÄ¼şÖĞ¡£
+ * æ‰«æShellå‘½åç©ºé—´ï¼Œä»æ ¹ä½ç½®Desktopå¼€å§‹ï¼Œå¹¶ä¿å­˜åˆ°æ–‡ä»¶ä¸­ã€‚
  */
 extern pFileEntry scan_desktop();
 

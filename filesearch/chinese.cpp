@@ -1,4 +1,4 @@
-#include "env.h"
+ï»¿#include "env.h"
 #include <stdio.h>
 #include <string.h>
 #include "chinese.h"
@@ -176,7 +176,7 @@ void *parse_pinyin_and_pre_bndm(char *str, int len){
 	if(words==NULL) return NULL;
 	for(WordList::const_iterator it = words->begin(); it!= words->end(); ++it) {
 		pIntList list = pIntList(*it);
-		for(unsigned int i=0;i<list->size();i+=2){//ºº×Ö°´Ë«×ÖÆ¥Åä£¬µÚÒ»¸ö×ÖÓÃbndmËã·¨Æ¥Åä£¬ÕÒµ½ÒÔºóÏÂÒ»¸ö×ÖÓÃ±©Á¦ËÑË÷¡£ËùÒÔÃ¿Á½¸ö×ÖÖ»ĞèÒªÔ¤´¦ÀíµÚÒ»¸ö×Ö
+		for(unsigned int i=0;i<list->size();i+=2){//æ±‰å­—æŒ‰åŒå­—åŒ¹é…ï¼Œç¬¬ä¸€ä¸ªå­—ç”¨bndmç®—æ³•åŒ¹é…ï¼Œæ‰¾åˆ°ä»¥åä¸‹ä¸€ä¸ªå­—ç”¨æš´åŠ›æœç´¢ã€‚æ‰€ä»¥æ¯ä¸¤ä¸ªå­—åªéœ€è¦é¢„å¤„ç†ç¬¬ä¸€ä¸ªå­—
 			int index = (*list)[i];
 			if(hzs_pre_bndm[index]==NULL) pre_bndm_cn(index);
 		}

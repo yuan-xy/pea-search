@@ -1,4 +1,4 @@
-#include "env.h"
+ï»¿#include "env.h"
 #include <stdio.h>
 #include "desktop.h"
 #include "desktop_exec.h"
@@ -19,7 +19,7 @@ int main(){
 	//save_desktop_self(scan_desktop());
 	if(_waccess(ALL_DESKTOP,0)==-1){
 		save_desktop(ALL_DESKTOP, scan_desktop());
-		//exec_desktop(L"\\ÎÒµÄµçÄÔ\\¿ØÖÆÃæ°å\\¼üÅÌ");
+		//exec_desktop(L"\\æˆ‘çš„ç”µè„‘\\æ§åˆ¶é¢æ¿\\é”®ç›˜");
 	}
 	return 0;
 }

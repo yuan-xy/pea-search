@@ -1,4 +1,4 @@
-#include <windows.h>
+﻿#include <windows.h>
 #include "drive.h"
 #include "ntfs.h"
 #include "global.h"

@@ -1,4 +1,4 @@
-extern "C" {
+ï»¿extern "C" {
 #include "env.h"
 #include <windows.h>
 #include <dbt.h>
@@ -15,13 +15,13 @@ __forceinline ULONG RunLength(PUCHAR run)
 }
 
 
-//·µ»ØLCN-d-gap  ×¢Òâd-gap¿ÉÎª¸º
+//è¿”å›LCN-d-gap  æ³¨æ„d-gapå¯ä¸ºè´Ÿ
 __forceinline LONGLONG RunLCN(PUCHAR run)
 {
     UCHAR n1 = *run & 0x0f;
     UCHAR n2 = (*run >> 4) & 0x0f;
     if(0==n2) return 0;
-    LONGLONG lcn=(CHAR)(run[n1 + n2]);//´ø·ûºÅ×ª»»
+    LONGLONG lcn=(CHAR)(run[n1 + n2]);//å¸¦ç¬¦å·è½¬æ¢
     LONG i = 0;
     for (i = n1 +n2 - 1; i > n1; --i)
         lcn = (lcn << 8) + run[i];
@@ -85,14 +85,14 @@ BOOL init_size_time(pFileEntry file, void *data){
 			return 1;
 		}
 
-		//ÒÔÏÂ»ñÈ¡ÎÄ¼ş´óĞ¡ĞÅÏ¢
+		//ä»¥ä¸‹è·å–æ–‡ä»¶å¤§å°ä¿¡æ¯
 		if(pFileNameAttr->DataSize!=0){
 			*pOutSize=pFileNameAttr->DataSize;
 			goto done;
 		}
 	
-		//30ÊôĞÔ´óĞ¡Îª0Ê±¿ÉÄÜ²»ÕıÈ·
-		//¶Á80ÊôĞÔ»ñµÃÎÄ¼ş´óĞ¡
+		//30å±æ€§å¤§å°ä¸º0æ—¶å¯èƒ½ä¸æ­£ç¡®
+		//è¯»80å±æ€§è·å¾—æ–‡ä»¶å¤§å°
 		for(pAttribute=(PATTRIBUTE)((PBYTE)pAttribute +pAttribute->Length)
 			;pAttribute->AttributeType!=AttributeEnd && pAttribute->AttributeType<AttributeData
 			;pAttribute=(PATTRIBUTE)((PBYTE)pAttribute +pAttribute->Length)
@@ -103,19 +103,19 @@ BOOL init_size_time(pFileEntry file, void *data){
 				;pAttribute=(PATTRIBUTE)((PBYTE)pAttribute +pAttribute->Length)
 				);
 			if(pAttribute->AttributeType>AttributeAttributeList){
-				return 0; //my_assert(0&&"Ã»ÓĞÕÒµ½80ÊôĞÔÒ²Ã»ÓĞ20ÊôĞÔ", 0);
+				return 0; //my_assert(0&&"æ²¡æœ‰æ‰¾åˆ°80å±æ€§ä¹Ÿæ²¡æœ‰20å±æ€§", 0);
 			}else{
 				PATTRIBUTE_LIST pAttriList;
 				if(pAttribute->Nonresident){
 					PNONRESIDENT_ATTRIBUTE pNonResident=PNONRESIDENT_ATTRIBUTE(pAttribute);
 					PBYTE pRun=(PBYTE)pAttribute+pNonResident->RunArrayOffset;
-					ULONGLONG Lcn = RunLCN( pRun );//Ö»»ñÈ¡µÚ1´Ø
+					ULONGLONG Lcn = RunLCN( pRun );//åªè·å–ç¬¬1ç°‡
 					ULONGLONG nCount = RunCount( pRun );
 					my_assert(nCount<=pNonResident->HighVcn-pNonResident->LowVcn+1, 0);
 					LARGE_INTEGER file_offset;
 					file_offset.QuadPart=Lcn*dwBytesPerCluster;
 					SetFilePointerEx(hVol,file_offset, NULL, FILE_BEGIN );
-					PBYTE   pBuffferRead = (PBYTE)malloc_safe(dwBytesPerCluster);///µÚÒ»´Ø
+					PBYTE   pBuffferRead = (PBYTE)malloc_safe(dwBytesPerCluster);///ç¬¬ä¸€ç°‡
 					DWORD   dwRead = 0;
 					ReadFile(hVol,pBuffferRead,dwBytesPerCluster, &dwRead, NULL );
 					PBYTE   pBufferEnd=pBuffferRead+dwRead;
@@ -123,14 +123,14 @@ BOOL init_size_time(pFileEntry file, void *data){
 						pAttriList->AttributeType!=AttributeData;
 						pAttriList=PATTRIBUTE_LIST(PBYTE(pAttriList)+pAttriList->Length)
 						);
-					my_assert(pAttriList->AttributeType==AttributeData && "ÄÑµÀ²»µÈ?", 0);
+					my_assert(pAttriList->AttributeType==AttributeData && "éš¾é“ä¸ç­‰?", 0);
 					if(pAttriList->AttributeType==AttributeData){
 						mftRecordInput.FileReferenceNumber.QuadPart=0xffffffffffff&pAttriList->FileReferenceNumber;
 						DeviceIoControl(hVol,FSCTL_GET_NTFS_FILE_RECORD
 							,&mftRecordInput,sizeof(mftRecordInput)
 							,pMftRecord,dwFileRecSize,&dwRet,NULL);
 						pAttribute = (PATTRIBUTE)((PBYTE)pfileRecordheader +pfileRecordheader->AttributeOffset);
-						my_assert(AttributeData==pAttribute->AttributeType && "Ò»¶¨ÊÇ80ÊôĞÔ", 0);
+						my_assert(AttributeData==pAttribute->AttributeType && "ä¸€å®šæ˜¯80å±æ€§", 0);
 						if(pAttribute->Nonresident){
 							*pOutSize=PNONRESIDENT_ATTRIBUTE(pAttribute)->DataSize;
 						}else{
@@ -149,14 +149,14 @@ BOOL init_size_time(pFileEntry file, void *data){
 							,&mftRecordInput,sizeof(mftRecordInput)
 							,pMftRecord,dwFileRecSize,&dwRet,NULL);
 						pAttribute = (PATTRIBUTE)((PBYTE)pfileRecordheader +pfileRecordheader->AttributeOffset);
-						my_assert(AttributeData==pAttribute->AttributeType && "Ò»¶¨ÊÇ80ÊôĞÔ", 0);
+						my_assert(AttributeData==pAttribute->AttributeType && "ä¸€å®šæ˜¯80å±æ€§", 0);
 						if(pAttribute->Nonresident){
 							*pOutSize=PNONRESIDENT_ATTRIBUTE(pAttribute)->DataSize;
 						}else{
 							*pOutSize=PRESIDENT_ATTRIBUTE(pAttribute)->ValueLength;
 						}
 					}else{
-						my_assert(0&&"ÊôĞÔÁĞ±íÖĞÃ»ÓĞ80ÊôĞÔ", 0);
+						my_assert(0&&"å±æ€§åˆ—è¡¨ä¸­æ²¡æœ‰80å±æ€§", 0);
 					}
 				}
 			}
@@ -190,24 +190,24 @@ DWORD WINAPI init_size_time_all(pFileEntry root){
 DWORD WINAPI MonitorProc(PVOID pParam)
 {
     const DWORD SEARCH_TITLE_REASON_FLAG=
-        //Ö§³ÖÎÄ¼şÃû¸ü¸Ä
+        //æ”¯æŒæ–‡ä»¶åæ›´æ”¹
         USN_REASON_FILE_CREATE
         |USN_REASON_FILE_DELETE
         |USN_REASON_RENAME_OLD_NAME
         |USN_REASON_RENAME_NEW_NAME
 
-        //Ö§³ÖÎÄ¼şÊôĞÔ¸ü¸Ä //ÎŞ×î½ü·ÃÎÊÊ±¼äÖ§³Ö
+        //æ”¯æŒæ–‡ä»¶å±æ€§æ›´æ”¹ //æ— æœ€è¿‘è®¿é—®æ—¶é—´æ”¯æŒ
 //         |USN_REASON_DATA_EXTEND
 //         |USN_REASON_DATA_OVERWRITE
 //         |USN_REASON_DATA_TRUNCATION
-//         |USN_REASON_BASIC_INFO_CHANGE   //ÎÄ¼şÊôĞÔ¸Ä±ä
+//         |USN_REASON_BASIC_INFO_CHANGE   //æ–‡ä»¶å±æ€§æ”¹å˜
 //         |USN_REASON_OBJECT_ID_CHANGE    //LAST ACCESS
         ;
 	pFileEntry root = (pFileEntry)pParam;
     DWORD dwDri=getDrive(root);
     HANDLE hVol=g_hVols[dwDri];
     READ_USN_JOURNAL_DATA rujd;
-    rujd.BytesToWaitFor=0;//´Ë´¦ÓÉ1¸Ä³É0 0Ê±µÈ´ı¼ÇÂ¼¾í·ÃÎÊ×èÈû
+    rujd.BytesToWaitFor=0;//æ­¤å¤„ç”±1æ”¹æˆ0 0æ—¶ç­‰å¾…è®°å½•å·è®¿é—®é˜»å¡
     rujd.ReasonMask=SEARCH_TITLE_REASON_FLAG;
     rujd.ReturnOnlyOnClose=0;
     rujd.StartUsn=g_curNextUSN[dwDri];
@@ -263,20 +263,20 @@ DWORD WINAPI MonitorProc(PVOID pParam)
             }
             //DebugBreak();
         }
-        if(dwBytes<=sizeof(USN)) {continue;}//½áÊø!
+        if(dwBytes<=sizeof(USN)) {continue;}//ç»“æŸ!
 
-        dwRetBytes = dwBytes - sizeof(USN);//Ìø¹ıÁË1¸öUSN£¬´ËUSNÊÇÏÂÒ»ÂÛ²éÑ¯Æğµã
-        //¼´±¾ÂÖÃ»ÓĞÊÕÂ¼
-        //¸Ä½ø £º½«ËùÓĞµÄ¼àÊÓ¼ÇÂ¼ÏÈÕûÀíÏÂ
+        dwRetBytes = dwBytes - sizeof(USN);//è·³è¿‡äº†1ä¸ªUSNï¼Œæ­¤USNæ˜¯ä¸‹ä¸€è®ºæŸ¥è¯¢èµ·ç‚¹
+        //å³æœ¬è½®æ²¡æœ‰æ”¶å½•
+        //æ”¹è¿› ï¼šå°†æ‰€æœ‰çš„ç›‘è§†è®°å½•å…ˆæ•´ç†ä¸‹
         pRecord = PUSN_RECORD((PBYTE)Buffer+sizeof(USN));
-        while(dwRetBytes > 0 )//ÈôÌø¹ı1¸öUSNºó£¬»¹ÓĞ¶àÓà×Ö½Ú£¬ÔòÖÁÉÙÓĞ1¸ö¼ÇÂ¼
+        while(dwRetBytes > 0 )//è‹¥è·³è¿‡1ä¸ªUSNåï¼Œè¿˜æœ‰å¤šä½™å­—èŠ‚ï¼Œåˆ™è‡³å°‘æœ‰1ä¸ªè®°å½•
         {
             updateFileEntry(pRecord, dwDri);
             dwRetBytes -= pRecord->RecordLength;
-            //ÕÒÏÂÒ»¸ö¼ÇÂ¼
+            //æ‰¾ä¸‹ä¸€ä¸ªè®°å½•
             pRecord = (PUSN_RECORD)(((PBYTE)pRecord) + pRecord->RecordLength);
         }
-        //¸üĞÂÆğÊ¼USN
+        //æ›´æ–°èµ·å§‹USN
         rujd.StartUsn = g_curNextUSN[dwDri]=*(USN*)Buffer;
     }
 }

@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -10,10 +10,10 @@ extern "C" {
 
 
 /**
-* ¸ù¾İ²éÑ¯ÒªÇóËÑË÷ËùÓĞ·ûºÏÒªÇóµÄÎÄ¼ş
-* @param str ²éÑ¯Ìõ¼ş×Ö·û´®
-* @param env ËÑË÷µÄ»·¾³ÅäÖÃ
-* @param result ·µ»ØµÄËùÓĞÎÄ¼şµÄÁĞ±íµÄµØÖ·
+* æ ¹æ®æŸ¥è¯¢è¦æ±‚æœç´¢æ‰€æœ‰ç¬¦åˆè¦æ±‚çš„æ–‡ä»¶
+* @param str æŸ¥è¯¢æ¡ä»¶å­—ç¬¦ä¸²
+* @param env æœç´¢çš„ç¯å¢ƒé…ç½®
+* @param result è¿”å›çš„æ‰€æœ‰æ–‡ä»¶çš„åˆ—è¡¨çš„åœ°å€
 */
 extern DWORD search(WCHAR *str, pSearchEnv env,OUT pFileEntry **result);
 extern void free_search(pFileEntry *p);
@@ -22,9 +22,9 @@ extern int * statistic(WCHAR *str, pSearchEnv env);
 extern int print_stat(int * stats, char *p);
 
 /**
-* ¸ù¾İÎÄ¼şÃû²éÕÒµ½¶ÔÓ¦µÄpFileEntry¡£·Ç¾«È·Â·¾¶Æ¥Åä£¬Ö§³Ö²¿·ÖÄ£ºı²éÑ¯¡£
-* @param name ´ı²éÕÒÎÄ¼şµÄÈ«Â·¾¶Ãû
-* @len Â·¾¶ÃûµÄ×Ö·û³¤¶È
+* æ ¹æ®æ–‡ä»¶åæŸ¥æ‰¾åˆ°å¯¹åº”çš„pFileEntryã€‚éç²¾ç¡®è·¯å¾„åŒ¹é…ï¼Œæ”¯æŒéƒ¨åˆ†æ¨¡ç³ŠæŸ¥è¯¢ã€‚
+* @param name å¾…æŸ¥æ‰¾æ–‡ä»¶çš„å…¨è·¯å¾„å
+* @len è·¯å¾„åçš„å­—ç¬¦é•¿åº¦
 */
 extern pFileEntry find_file(WCHAR *name, int len);
 

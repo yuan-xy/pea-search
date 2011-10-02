@@ -1,4 +1,4 @@
-#include "drive_change.h"
+ï»¿#include "drive_change.h"
 #include <windows.h>
 #include <dbt.h>
 #include <stdio.h>
@@ -43,7 +43,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 			}
 			if(DBT_DEVICEQUERYREMOVE==wParam){
-				//TODO: ½Ø»ñDBT_DEVICEQUERYREMOVEÊÂ¼þ
+				//TODO: æˆªèŽ·DBT_DEVICEQUERYREMOVEäº‹ä»¶
 				printf("before device remove.\n");
 			}
 		}

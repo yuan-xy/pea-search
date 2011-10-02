@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -6,12 +6,12 @@ extern "C" {
 #define FILE_SEARCH_EXCEPTION_DUMP_H_
 
 /**
-* ³õÊ¼»¯breakpad
+* åˆå§‹åŒ–breakpad
 */
 extern void breakpad_init();
 
 /**
-* ÎŞĞèÒì³££¬Éú³ÉÒ»¸ödump
+* æ— éœ€å¼‚å¸¸ï¼Œç”Ÿæˆä¸€ä¸ªdump
 */
 extern BOOL request_dump();
 

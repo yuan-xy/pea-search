@@ -1,4 +1,4 @@
-#include "GIGASOConfig.h"
+﻿#include "GIGASOConfig.h"
 
 #ifdef HAVE_64_BIT
 	#define TC_MALLOC malloc

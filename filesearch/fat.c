@@ -1,4 +1,4 @@
-#include "env.h"
+ï»¿#include "env.h"
 #include <windows.h>
 #include <stdio.h>
 #include <string.h>
@@ -14,9 +14,9 @@ static const WCHAR ALL[4]=L"*.*";
 __declspec (thread) int count = 1;
 
 /**
- * ¸ù¾İÎÄ¼ş²éÕÒ½á¹ûĞÂÔöÒ»¸öpFileEntry£¬²¢¹ÒÔØµ½¸¸Ä¿Â¼ÏÂ¡£ÀíÂÛÉÏÖ§³ÖËùÓĞÎÄ¼şÏµÍ³ÀàĞÍ¡£
- * @param pdf WIN32ÏµÍ³µ÷ÓÃ²éÕÒÎÄ¼şµÄ½á¹û
- * @param parent ÔÚÄÄ¸öÄ¿Â¼ÏÂÖ´ĞĞµÄ²éÑ¯
+ * æ ¹æ®æ–‡ä»¶æŸ¥æ‰¾ç»“æœæ–°å¢ä¸€ä¸ªpFileEntryï¼Œå¹¶æŒ‚è½½åˆ°çˆ¶ç›®å½•ä¸‹ã€‚ç†è®ºä¸Šæ”¯æŒæ‰€æœ‰æ–‡ä»¶ç³»ç»Ÿç±»å‹ã€‚
+ * @param pdf WIN32ç³»ç»Ÿè°ƒç”¨æŸ¥æ‰¾æ–‡ä»¶çš„ç»“æœ
+ * @param parent åœ¨å“ªä¸ªç›®å½•ä¸‹æ‰§è¡Œçš„æŸ¥è¯¢
  */
 static pFileEntry initFatFile(WIN32_FIND_DATA *pfd, pFileEntry parent, int i){
 	int str_len = (int)wcslen(pfd->cFileName);
@@ -66,9 +66,9 @@ void scanFile(pFileEntry file,WCHAR *full_name, int name_len, int i){
 
 /**
  *
- * @param dir ÔÚ¸ÃÄ¿Â¼ÏÂµİ¹éËÑË÷ËùÓĞÎÄ¼ş
- * @param full_name ¸ÃÄ¿Â¼µÄÈ«Â·¾¶Ãû£¬Â·¾¶ÃûµÄ×îºóÒ»¸ö×Ö·ûÊÇ'\'£¬²»°üº¬'\0'
- * @param name_len È«Â·¾¶ÃûµÄ×Ö½Ú³¤¶È£¬(ÊÇwcslenµÄÁ½±¶)
+ * @param dir åœ¨è¯¥ç›®å½•ä¸‹é€’å½’æœç´¢æ‰€æœ‰æ–‡ä»¶
+ * @param full_name è¯¥ç›®å½•çš„å…¨è·¯å¾„åï¼Œè·¯å¾„åçš„æœ€åä¸€ä¸ªå­—ç¬¦æ˜¯'\'ï¼Œä¸åŒ…å«'\0'
+ * @param name_len å…¨è·¯å¾„åçš„å­—èŠ‚é•¿åº¦ï¼Œ(æ˜¯wcslençš„ä¸¤å€)
  */
 static void scanFolder(pFileEntry dir, WCHAR *full_name, int name_len, int i) {
 	WCHAR *pattern = (WCHAR *) malloc_safe(name_len + ALL_LEN*sizeof(WCHAR));

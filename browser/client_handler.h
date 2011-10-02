@@ -1,4 +1,4 @@
-#ifndef _CLIENT_HANDLER_H
+﻿#ifndef _CLIENT_HANDLER_H
 #define _CLIENT_HANDLER_H
 
 #include "../3rd/cef_binary/include/cef.h"

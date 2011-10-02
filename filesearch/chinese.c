@@ -1,17 +1,17 @@
-#include "env.h"
+ï»¿#include "env.h"
 #include "util.h"
 #include <stdio.h>
 #include "chinese.h"
 #include "str_match.h"
 
-/* ºº×Ö×Ö¿â²Î¿¼freepy£¬È¡ÏûÏÂÁĞºº×Ö
-den     ’O’Y
-eng	íE
-m	ß¼…Ş‡`
-n	àÅ†Hßç
-ng	àÅ
-o	Å¶à¸àŞ¹p
-rua	’µ
+/* æ±‰å­—å­—åº“å‚è€ƒfreepyï¼Œå–æ¶ˆä¸‹åˆ—æ±‰å­—
+den     æ‰¥æ‰½
+eng	é¥
+m	å‘’å‘£å˜¸
+n	å—¯å’¹å“
+ng	å—¯
+o	å“¦å–”å™¢ç­½
+rua	æŒ¼
  */
 
 char pinyins[PINYIN_CLASS_LEN][6] = {"a","ai","an","ang","ao","ba","bai","ban","bang","bao","bei","ben","beng","bi","bian","biao","bie","bin","bing","bo",
@@ -144,7 +144,7 @@ int hz_match_one(int index, pUTF8 str, int strlen){
 	return 0;
 }
 
-void pre_bndm_all(){//»áÒ»´ÎĞÔÏûºÄ3MÄÚ´æ
+void pre_bndm_all(){//ä¼šä¸€æ¬¡æ€§æ¶ˆè€—3Må†…å­˜
 	int i=0;
 	for(;i<PINYIN_CLASS_LEN;i++){
 		pre_bndm_cn(i);

@@ -1,4 +1,4 @@
-#include <Shlobj.h>
+﻿#include <Shlobj.h>
 
 #ifdef __cplusplus
 extern "C" {

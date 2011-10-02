@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -10,8 +10,8 @@ extern "C" {
 struct searchRequest{
 	int len;	/* Total length of request, not including this field */
 	SearchEnv env;
-	int from; /*·ÖÒ³Ê±´ÓµÚ¼¸ÌõÊı¾İ¿ªÊ¼*/
-	int rows; /*×î¶à·µ»Ø¶àÉÙĞĞÊı¾İ*/
+	int from; /*åˆ†é¡µæ—¶ä»ç¬¬å‡ æ¡æ•°æ®å¼€å§‹*/
+	int rows; /*æœ€å¤šè¿”å›å¤šå°‘è¡Œæ•°æ®*/
 	WCHAR str[MAX_PATH];
 };
 typedef struct searchRequest SearchRequest, *pSearchRequest;

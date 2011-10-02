@@ -1,4 +1,4 @@
-#ifndef _CEFCLIENT_STRING_UTIL_H
+﻿#ifndef _CEFCLIENT_STRING_UTIL_H
 #define _CEFCLIENT_STRING_UTIL_H
 
 #include <string>

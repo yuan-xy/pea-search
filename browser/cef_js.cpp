@@ -1,4 +1,4 @@
-#include "env.h"
+﻿#include "env.h"
 #include "cef_js.h"
 #include "client_handler.h"
 #include "common.h"
@@ -68,7 +68,7 @@ public:
 		bi.hwndOwner = NULL;
 		bi.pidlRoot = NULL;
 		bi.pszDisplayName = Buffer;
-		bi.lpszTitle = L"ѡ��Ŀ¼";
+		bi.lpszTitle = L"选择目录";
 		bi.ulFlags = BIF_RETURNONLYFSDIRS;
 		bi.lpfn = NULL;
 		bi.iImage = 0;

@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -9,21 +9,21 @@ extern "C" {
 #include <windows.h>
 
 /**
- * ¿É²å°Î´ÅÅÌ±ä¶¯¼àÌıÆ÷
- * @param drive ´ÅÅÌĞòºÅ
- * @param isadd ÊÇ²åÈë´ÅÅÌ»¹ÊÇ°Î³ö´ÅÅÌ
+ * å¯æ’æ‹”ç£ç›˜å˜åŠ¨ç›‘å¬å™¨
+ * @param drive ç£ç›˜åºå·
+ * @param isadd æ˜¯æ’å…¥ç£ç›˜è¿˜æ˜¯æ‹”å‡ºç£ç›˜
  */
 typedef void (*pDriveChangeListener)(int drive, BOOL isadd);
 
 
 /**
- * Æô¶¯¿É²å°Î´ÅÅÌ±ä¶¯¼àÊÓÏß³Ì¡£¸ÃÏß³ÌÖ»ÄÜ±»Æô¶¯Ò»´Î¡£
- * @param pDriveChangeListener ±ä¶¯¼àÌıÆ÷
+ * å¯åŠ¨å¯æ’æ‹”ç£ç›˜å˜åŠ¨ç›‘è§†çº¿ç¨‹ã€‚è¯¥çº¿ç¨‹åªèƒ½è¢«å¯åŠ¨ä¸€æ¬¡ã€‚
+ * @param pDriveChangeListener å˜åŠ¨ç›‘å¬å™¨
  */
 extern BOOL StartDriveChangeMonitorThread( pDriveChangeListener );
 
 /**
- * Í£Ö¹¿É²å°Î´ÅÅÌ±ä¶¯¼àÊÓÏß³Ì
+ * åœæ­¢å¯æ’æ‹”ç£ç›˜å˜åŠ¨ç›‘è§†çº¿ç¨‹
  */
 extern BOOL StopDriveChangeMonitorThread(void);
 

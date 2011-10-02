@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -13,25 +13,25 @@ extern "C" {
 #define DIRVE_COUNT 26
 #define DIRVE_COUNT_OFFLINE DIRVE_COUNT*3
 
-extern UTF8 rootNames[26][3];//¸ùÇı¶¯Æ÷µÄÃû×Ö
+extern UTF8 rootNames[26][3];//æ ¹é©±åŠ¨å™¨çš„åå­—
 
-extern BOOL		g_bVols[];//¶ÔÓ¦Çı¶¯Æ÷ÊÇ·ñ´æÔÚ
-extern BOOL		g_loaded[];//¶ÔÓ¦Çı¶¯Æ÷µÄ´ÅÅÌÊı¾İ¿âÊÇ·ñÒÑ¼ÓÔØ
-extern BOOL		g_expires[];//¶ÔÓ¦Çı¶¯Æ÷µÄ´ÅÅÌÊı¾İ¿âÊÇ·ñÒÑ¹ıÆÚ
-extern DriveInfo	g_VolsInfo[]; //Çı¶¯Æ÷µÄĞÅÏ¢
-extern HANDLE      g_hVols[];//±£´æA~ZµÄ¶ÔÓ¦µÄ¾í¾ä±ú
+extern BOOL		g_bVols[];//å¯¹åº”é©±åŠ¨å™¨æ˜¯å¦å­˜åœ¨
+extern BOOL		g_loaded[];//å¯¹åº”é©±åŠ¨å™¨çš„ç£ç›˜æ•°æ®åº“æ˜¯å¦å·²åŠ è½½
+extern BOOL		g_expires[];//å¯¹åº”é©±åŠ¨å™¨çš„ç£ç›˜æ•°æ®åº“æ˜¯å¦å·²è¿‡æœŸ
+extern DriveInfo	g_VolsInfo[]; //é©±åŠ¨å™¨çš„ä¿¡æ¯
+extern HANDLE      g_hVols[];//ä¿å­˜A~Zçš„å¯¹åº”çš„å·å¥æŸ„
 
-extern pFileEntry g_rootVols[];//±£´æ¸ùÇı¶¯Æ÷µÄFileEntry½á¹¹
+extern pFileEntry g_rootVols[];//ä¿å­˜æ ¹é©±åŠ¨å™¨çš„FileEntryç»“æ„
 
 extern USN         g_curFirstUSN[];
 extern USN         g_curNextUSN[];
 extern DWORDLONG   g_curJournalID[];
-extern HANDLE      g_hThread[];//Ã¿¸öÅÌÒ»¸ö¼àÊÓÏß³Ì
-extern DWORD       g_BytesPerCluster[];//Ã¿´Ø×Ö½ÚÊı
-extern DWORD       g_FileRecSize[];//MFTÎÄ¼ş¼ÇÂ¼´óĞ¡£¬ËÆºõ»¹Ã»ÓĞÓÃµ½£¿
-extern PBYTE       g_pOutBuffer[];//Ã¿¸öÅÌµÄÎÄ¼ş¿é¼ÇÂ¼µØÖ· ³õÊ¼Ê±·ÖÅä ½áÊøÊ±Ïû
+extern HANDLE      g_hThread[];//æ¯ä¸ªç›˜ä¸€ä¸ªç›‘è§†çº¿ç¨‹
+extern DWORD       g_BytesPerCluster[];//æ¯ç°‡å­—èŠ‚æ•°
+extern DWORD       g_FileRecSize[];//MFTæ–‡ä»¶è®°å½•å¤§å°ï¼Œä¼¼ä¹è¿˜æ²¡æœ‰ç”¨åˆ°ï¼Ÿ
+extern PBYTE       g_pOutBuffer[];//æ¯ä¸ªç›˜çš„æ–‡ä»¶å—è®°å½•åœ°å€ åˆå§‹æ—¶åˆ†é… ç»“æŸæ—¶æ¶ˆ
 
-extern unsigned int ALL_FILE_COUNT; //µ±Ç°ËùÓĞÎÄ¼şµÄ×ÜÊı
+extern unsigned int ALL_FILE_COUNT; //å½“å‰æ‰€æœ‰æ–‡ä»¶çš„æ€»æ•°
 
 
 

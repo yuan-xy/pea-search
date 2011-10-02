@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -98,23 +98,23 @@ extern "C" {
 #define NON_VIRTUAL_TYPE_SIZE 26
 
 /**
- * ¸ù¾İºó×ºÃûµÃµ½ÎÄ¼şµÄÀàĞÍ
- * @param suffix ºó×ºÃû
- * @len ºó×ºÃûµÄbyte³¤¶È
+ * æ ¹æ®åç¼€åå¾—åˆ°æ–‡ä»¶çš„ç±»å‹
+ * @param suffix åç¼€å
+ * @len åç¼€åçš„byteé•¿åº¦
  */
 extern unsigned char suffix_type(pUTF8 suffix, int len);
 
 /**
- * ºóÒ»¸öÎÄ¼şÀàĞÍÊÇ·ñÊÇÇ°Ò»¸öÎÄ¼şÀàĞÍµÄ×ÓÀà
- * @param clazz ×éºÏµÄ»òÕßµ¥¸öµÄÎÄ¼şÀàĞÍ
- * @file_type µ¥¸öµÄÎÄ¼şÀàĞÍ
+ * åä¸€ä¸ªæ–‡ä»¶ç±»å‹æ˜¯å¦æ˜¯å‰ä¸€ä¸ªæ–‡ä»¶ç±»å‹çš„å­ç±»
+ * @param clazz ç»„åˆçš„æˆ–è€…å•ä¸ªçš„æ–‡ä»¶ç±»å‹
+ * @file_type å•ä¸ªçš„æ–‡ä»¶ç±»å‹
  */
 extern BOOL include_type(unsigned char clazz, unsigned char file_type);
 
 /**
- * ¶ÔÎÄ¼ş½øĞĞºó×ºÃû´¦Àí
- * @param file ÎÄ¼ş
- * @param data ÎŞĞ§²ÎÊı£¬½öÓÃÓÚÆ¥ÅäFileVisitorµÄ·½·¨Ç©Ãû
+ * å¯¹æ–‡ä»¶è¿›è¡Œåç¼€åå¤„ç†
+ * @param file æ–‡ä»¶
+ * @param data æ— æ•ˆå‚æ•°ï¼Œä»…ç”¨äºåŒ¹é…FileVisitorçš„æ–¹æ³•ç­¾å
  */
 extern void SuffixProcess(pFileEntry file, void *data);
 

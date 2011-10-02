@@ -1,4 +1,4 @@
-#include "env.h"
+﻿#include "env.h"
 #include <windows.h>
 #include <stdio.h>
 #include <string.h>
@@ -86,7 +86,7 @@ static void scan_desktop0(IShellFolder *f, LPITEMIDLIST pidlComplete, pFileEntry
 	LPENUMIDLIST ppenum = NULL;
 	LPITEMIDLIST pidlItems = NULL;
 	ULONG celtFetched;
-    hr = f->EnumObjects(NULL,SHCONTF_FOLDERS | SHCONTF_NONFOLDERS | SHCONTF_INCLUDEHIDDEN | SHCONTF_INCLUDESUPERHIDDEN, &ppenum);
+    hr = f->EnumObjects(NULL,SHCONTF_FOLDERS | SHCONTF_NONFOLDERS | SHCONTF_INCLUDEHIDDEN, &ppenum);
 	if(hr!=S_OK) return;
     while( hr = ppenum->Next(1,&pidlItems, &celtFetched) == S_OK && (celtFetched) == 1){
 		FileType ft = get_type(f,pidlItems);

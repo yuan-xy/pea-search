@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -9,8 +9,8 @@ extern "C" {
 
 
 /**
- * ¸ù¾İShellÎÄ¼şµÄDisplayName´ò¿ªËü
- * @param str ÎÄ¼şÈ«Â·¾¶ÃûÈç¡°\\ÎÒµÄµçÄÔ\\¿ØÖÆÃæ°å\\¼üÅÌ¡±
+ * æ ¹æ®Shellæ–‡ä»¶çš„DisplayNameæ‰“å¼€å®ƒ
+ * @param str æ–‡ä»¶å…¨è·¯å¾„åå¦‚â€œ\\æˆ‘çš„ç”µè„‘\\æ§åˆ¶é¢æ¿\\é”®ç›˜â€
  */
 extern BOOL exec_desktop(const wchar_t *str);
 

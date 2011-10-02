@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -8,16 +8,16 @@ extern "C" {
 #include "env.h"
 #include <windows.h>
 
-#define ASIZE 256  //ÎÄ¼şÃû×Ö·û¼¯´óĞ¡
-#define XSIZE 256  //²éÑ¯´®×Ö·û¼¯´óĞ¡
+#define ASIZE 256  //æ–‡ä»¶åå­—ç¬¦é›†å¤§å°
+#define XSIZE 256  //æŸ¥è¯¢ä¸²å­—ç¬¦é›†å¤§å°
 
 /**
- * Ê¹ÓÃquick-search or KMPËã·¨ÅĞ¶ÏxÊÇ·ñÊÇyµÄ×Ó´®
- * @param x Ä£Ê½´®
- * @param m xµÄ³¤¶È
- * @param y ±»Æ¥Åä´®
- * @param n yµÄ³¤¶È
- * @param case_sensitive ÊÇ·ñ´óĞ¡Ğ´Ãô¸Ğ
+ * ä½¿ç”¨quick-search or KMPç®—æ³•åˆ¤æ–­xæ˜¯å¦æ˜¯yçš„å­ä¸²
+ * @param x æ¨¡å¼ä¸²
+ * @param m xçš„é•¿åº¦
+ * @param y è¢«åŒ¹é…ä¸²
+ * @param n yçš„é•¿åº¦
+ * @param case_sensitive æ˜¯å¦å¤§å°å†™æ•æ„Ÿ
  */
 extern  BOOL SUBSTR(pUTF8 x, int m, pUTF8 y, int n, int preNext[], BOOL case_sensitive);
 extern  void preProcessPattern(pUTF8 x, int m, int preNext[], BOOL case_sensitive);
@@ -26,21 +26,21 @@ extern void pre_bndm_hz_multi(pUTF8 x, int m, int *prestr);
 extern int bndm_hz_multi(pUTF8 x, int m, pUTF8 y, int n, int *preNext);
 
 /**
- * Ê¹ÓÃ±©Á¦Ëã·¨ÅĞ¶ÏxÊÇ·ñÊÇyµÄ×Ó´®
+ * ä½¿ç”¨æš´åŠ›ç®—æ³•åˆ¤æ–­xæ˜¯å¦æ˜¯yçš„å­ä¸²
  */
 extern brute_force(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive);
 
 /**
- * ÅĞ¶Ïy´®ÖĞÊÇ·ñ°üº¬¶ÀÁ¢µÄµ¥´Êx
+ * åˆ¤æ–­yä¸²ä¸­æ˜¯å¦åŒ…å«ç‹¬ç«‹çš„å•è¯x
  */
 extern  BOOL word_match(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive);
 
 /**
- * ÅĞ¶Ïy´®ÖĞÊÇ·ñÒÔx¿ªÍ·
+ * åˆ¤æ–­yä¸²ä¸­æ˜¯å¦ä»¥xå¼€å¤´
  */
 extern BOOL begin_match(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive);
 /**
- * ÅĞ¶Ïy´®ÖĞÊÇ·ñÒÔx½áÎ²
+ * åˆ¤æ–­yä¸²ä¸­æ˜¯å¦ä»¥xç»“å°¾
  */
 extern BOOL end_match(pUTF8 x, int m, pUTF8 y, int n, BOOL case_sensitive);
 

@@ -1,4 +1,4 @@
-#include <string_util.h>
+﻿#include <string_util.h>
 #include <sstream>
 #include <windows.h>
 

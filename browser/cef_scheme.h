@@ -1,4 +1,4 @@
-#ifndef _CEFCLIENT_SCHEME_TEST
+﻿#ifndef _CEFCLIENT_SCHEME_TEST
 #define _CEFCLIENT_SCHEME_TEST
 
 #include "../3rd/cef_binary/include/cef.h"

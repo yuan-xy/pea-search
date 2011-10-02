@@ -1,4 +1,4 @@
-#include "env.h"
+ï»¿#include "env.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
@@ -14,40 +14,40 @@
 #include "chinese.h"
 #include "desktop.h"
 
-#define AND_LOGIC 1 //¿Õ¸ñ·Ö¸ôµÄËÑË÷Ïî
-#define OR_LOGIC 2  // | ËÑË÷Ïî
-#define NOT_LOGIC 3  // -ËÑË÷Ïî
+#define AND_LOGIC 1 //ç©ºæ ¼åˆ†éš”çš„æœç´¢é¡¹
+#define OR_LOGIC 2  // | æœç´¢é¡¹
+#define NOT_LOGIC 3  // -æœç´¢é¡¹
 
-#define NORMAL_MATCH 4 //ÆÕÍ¨Æ¥Åä
-#define WHOLE_MATCH 5  // "ad sf", ÒÔÒýºÅ°üÀ¨ÆðÀ´µÄ×Ö·û´®£¬Æä×Ö·û´®°üº¬ÌØÊâ×Ö·û£¬ÍêÈ«Æ¥Åäµ¥´Ê£¬²»×ªÒå
+#define NORMAL_MATCH 4 //æ™®é€šåŒ¹é…
+#define WHOLE_MATCH 5  // "ad sf", ä»¥å¼•å·åŒ…æ‹¬èµ·æ¥çš„å­—ç¬¦ä¸²ï¼Œå…¶å­—ç¬¦ä¸²åŒ…å«ç‰¹æ®Šå­—ç¬¦ï¼Œå®Œå…¨åŒ¹é…å•è¯ï¼Œä¸è½¬ä¹‰
 
-#define WORD_MATCH 6  // "adsf", ÒÔÒýºÅ°üÀ¨ÆðÀ´µÄ×Ö·û´®£¬Æä×Ö·û´®²»°üº¬ÌØÊâ×Ö·û£¬Æ¥Åäµ¥´Ê£¨µ¥´ÊÇ°ºóÓÐ·Ö¸ô·û£©
-#define BEGIN_MATCH 7 // "abc*",ÒÔabc¿ªÍ·
-#define END_MATCH 8   // "*abc",ÒÔabc½áÎ²
-#define ALL_MATCH 9   // ÌØÊâÊäÈë"*"£¬Æ¥ÅäËùÓÐÎÄ¼þ
-#define NO_SUFFIX_MATCH 10  //ÌØÊâÊäÈë"*."£¬Æ¥ÅäÃ»ÓÐºó×ºÃûµÄÎÄ¼þ£¬²»°üÀ¨ÎÄ¼þ¼Ð
+#define WORD_MATCH 6  // "adsf", ä»¥å¼•å·åŒ…æ‹¬èµ·æ¥çš„å­—ç¬¦ä¸²ï¼Œå…¶å­—ç¬¦ä¸²ä¸åŒ…å«ç‰¹æ®Šå­—ç¬¦ï¼ŒåŒ¹é…å•è¯ï¼ˆå•è¯å‰åŽæœ‰åˆ†éš”ç¬¦ï¼‰
+#define BEGIN_MATCH 7 // "abc*",ä»¥abcå¼€å¤´
+#define END_MATCH 8   // "*abc",ä»¥abcç»“å°¾
+#define ALL_MATCH 9   // ç‰¹æ®Šè¾“å…¥"*"ï¼ŒåŒ¹é…æ‰€æœ‰æ–‡ä»¶
+#define NO_SUFFIX_MATCH 10  //ç‰¹æ®Šè¾“å…¥"*."ï¼ŒåŒ¹é…æ²¡æœ‰åŽç¼€åçš„æ–‡ä»¶ï¼Œä¸åŒ…æ‹¬æ–‡ä»¶å¤¹
 
-struct searchOpt{ //²éÑ¯Ìõ¼þ
-	WCHAR *wname; //²éÑ¯×Ö·û´®
-	FILE_NAME_LEN wlen; //²éÑ¯×Ö·û´®³¤¶È
-	pUTF8 name; //²éÑ¯×Ö·û´®,utf8±àÂë
-	FILE_NAME_LEN len; //²éÑ¯×Ö·û´®³¤¶È
-	unsigned char logic;  //²éÑ¯½á¹û×éºÏÂß¼­
-	unsigned char match_t; //²éÑ¯×Ö·û´®Æ¥Åä·½Ê½
-	struct searchOpt *next; //ÏÂÒ»¸ö²éÑ¯Ìõ¼þ
-	struct searchOpt *subdir; //Èç¹û²éÑ¯×Ö·û´®°üº¬Â·¾¶£¬ÄÇÃ´ÕâÀï±£´æµÚÒ»¸öÂ·¾¶·Ö¸ô·ûºÅºóÃæµÄ²éÑ¯Ìõ¼þ
-	void *pinyin; //Æ´Òô·Ö½â½á¹û, pWordListÖ¸Õë
-	int preStr[ASIZE+XSIZE]; //KMP¡¢QSµÈËã·¨µÄÔ¤´¦Àí×Ö·û´®Æ«ÒÆ
+struct searchOpt{ //æŸ¥è¯¢æ¡ä»¶
+	WCHAR *wname; //æŸ¥è¯¢å­—ç¬¦ä¸²
+	FILE_NAME_LEN wlen; //æŸ¥è¯¢å­—ç¬¦ä¸²é•¿åº¦
+	pUTF8 name; //æŸ¥è¯¢å­—ç¬¦ä¸²,utf8ç¼–ç 
+	FILE_NAME_LEN len; //æŸ¥è¯¢å­—ç¬¦ä¸²é•¿åº¦
+	unsigned char logic;  //æŸ¥è¯¢ç»“æžœç»„åˆé€»è¾‘
+	unsigned char match_t; //æŸ¥è¯¢å­—ç¬¦ä¸²åŒ¹é…æ–¹å¼
+	struct searchOpt *next; //ä¸‹ä¸€ä¸ªæŸ¥è¯¢æ¡ä»¶
+	struct searchOpt *subdir; //å¦‚æžœæŸ¥è¯¢å­—ç¬¦ä¸²åŒ…å«è·¯å¾„ï¼Œé‚£ä¹ˆè¿™é‡Œä¿å­˜ç¬¬ä¸€ä¸ªè·¯å¾„åˆ†éš”ç¬¦å·åŽé¢çš„æŸ¥è¯¢æ¡ä»¶
+	void *pinyin; //æ‹¼éŸ³åˆ†è§£ç»“æžœ, pWordListæŒ‡é’ˆ
+	int preStr[ASIZE+XSIZE]; //KMPã€QSç­‰ç®—æ³•çš„é¢„å¤„ç†å­—ç¬¦ä¸²åç§»
 };
 typedef struct searchOpt SearchOpt, *pSearchOpt;
 
-static int count=0,matched=0; //ËùÓÐ²éÑ¯µÄÎÄ¼þ×ÜÊý¡¢×îÖÕ·ûºÏÌõ¼þµÄ×ÜÊý
-static pFileEntry *list; //±£´æËÑË÷½á¹ûÁÐ±í
-static SearchEnv defaultEnv={0}; //È±Ê¡²éÑ¯»·¾³
-static pSearchEnv sEnv; //µ±Ç°²éÑ¯»·¾³
-static int stats_local[NON_VIRTUAL_TYPE_SIZE] = {0}; //²éÑ¯Í³¼ÆÐÅÏ¢
+static int count=0,matched=0; //æ‰€æœ‰æŸ¥è¯¢çš„æ–‡ä»¶æ€»æ•°ã€æœ€ç»ˆç¬¦åˆæ¡ä»¶çš„æ€»æ•°
+static pFileEntry *list; //ä¿å­˜æœç´¢ç»“æžœåˆ—è¡¨
+static SearchEnv defaultEnv={0}; //ç¼ºçœæŸ¥è¯¢çŽ¯å¢ƒ
+static pSearchEnv sEnv; //å½“å‰æŸ¥è¯¢çŽ¯å¢ƒ
+static int stats_local[NON_VIRTUAL_TYPE_SIZE] = {0}; //æŸ¥è¯¢ç»Ÿè®¡ä¿¡æ¯
 
-static BOOL allowPinyin(pSearchOpt opt){ //´óÐ¡Ð´²»Ãô¸Ð¡¢Ò»°ãÆ¥ÅäÄ£Ê½£¬Ä£Ê½´®²»°üº¬ÖÐÎÄ
+static BOOL allowPinyin(pSearchOpt opt){ //å¤§å°å†™ä¸æ•æ„Ÿã€ä¸€èˆ¬åŒ¹é…æ¨¡å¼ï¼Œæ¨¡å¼ä¸²ä¸åŒ…å«ä¸­æ–‡
 	return !sEnv->case_sensitive && opt->match_t==NORMAL_MATCH && opt->len==opt->wlen;
 }
 
@@ -153,8 +153,8 @@ BOOL match_opt(pFileEntry file, pSearchOpt opt){
 	}
 	if(match) return match;
 	if(opt->pinyin!=NULL){
-		if(file->us.v.FileNameLength > file->us.v.StrLen){  //ÎÄ¼þÃû°üº¬ÖÐÎÄ
-			hz_iterate(opt->pinyin, hz_match, file, &match); //ÖÐÎÄÆ´Òô²éÑ¯
+		if(file->us.v.FileNameLength > file->us.v.StrLen){  //æ–‡ä»¶ååŒ…å«ä¸­æ–‡
+			hz_iterate(opt->pinyin, hz_match, file, &match); //ä¸­æ–‡æ‹¼éŸ³æŸ¥è¯¢
 		}
 	}
 	return match;
@@ -396,7 +396,7 @@ static void processOr(SearchOpt *sOpt){
 	WCHAR *p1=s0->wname;
 	if(sOpt->match_t != WHOLE_MATCH){
 		while( (p1-s0->wname) < s0->wlen ){
-			if( (*p1 == L'|') || (*p1 == L'£ü') ){
+			if( (*p1 == L'|') || (*p1 == L'ï½œ') ){
 				NEW0(SearchOpt,s1);
 				s1->wlen = (FILE_NAME_LEN)(s0->wlen-(p1-s0->wname)-1);
 				s1->wname = p1+1;
@@ -447,7 +447,7 @@ static void processAnd(SearchOpt *sOpt){
 
 static void processNot(SearchOpt *s0){
 	while(s0!=NULL){
-		if( (*s0->wname == L'-' || *s0->wname == L'£­') && s0->match_t != WHOLE_MATCH){
+		if( (*s0->wname == L'-' || *s0->wname == L'ï¼') && s0->match_t != WHOLE_MATCH){
 			s0->wname +=1;
 			s0->wlen -=1;
 			s0->logic = NOT_LOGIC;

@@ -1,4 +1,4 @@
-/* MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm
+﻿/* MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm
 http://userpages.umbc.edu/~mabzug1/cs/md5/md5-c-100.tar.gz
  */
 

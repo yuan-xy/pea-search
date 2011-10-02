@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -30,18 +30,18 @@ extern "C" {
 #include "GIGASOConfig.h"
 
 #ifdef HAVE_64_BIT
-	typedef unsigned long KEY; //NTFSÎÄ¼şµÄFileReferenceNumberÀàĞÍ£¬Î¨Ò»±êÊ¶Ò»¸öÎÄ¼ş¡£
+	typedef unsigned long KEY; //NTFSæ–‡ä»¶çš„FileReferenceNumberç±»å‹ï¼Œå”¯ä¸€æ ‡è¯†ä¸€ä¸ªæ–‡ä»¶ã€‚
 #else
-	typedef unsigned int KEY; //NTFSÎÄ¼şµÄFileReferenceNumberÀàĞÍ£¬Î¨Ò»±êÊ¶Ò»¸öÎÄ¼ş¡£
+	typedef unsigned int KEY; //NTFSæ–‡ä»¶çš„FileReferenceNumberç±»å‹ï¼Œå”¯ä¸€æ ‡è¯†ä¸€ä¸ªæ–‡ä»¶ã€‚
 #endif
 
-typedef unsigned char FILE_NAME_LEN; //ÎÄ¼şÃû³¤¶ÈÀàĞÍ
-typedef unsigned int MINUTE; //ÒÔ·ÖÖÓ±íÊ¾µÄÊ±¼äÀàĞÍ
-typedef unsigned short FSIZE; //ÎÄ¼ş´óĞ¡ÀàĞÍ
-typedef unsigned char UTF8, *pUTF8; //UTF8ÀàĞÍµÄ×Ö·û´®
+typedef unsigned char FILE_NAME_LEN; //æ–‡ä»¶åé•¿åº¦ç±»å‹
+typedef unsigned int MINUTE; //ä»¥åˆ†é’Ÿè¡¨ç¤ºçš„æ—¶é—´ç±»å‹
+typedef unsigned short FSIZE; //æ–‡ä»¶å¤§å°ç±»å‹
+typedef unsigned char UTF8, *pUTF8; //UTF8ç±»å‹çš„å­—ç¬¦ä¸²
 
 
-//ÅÅĞò·½Ê½³£Á¿¶¨Òå
+//æ’åºæ–¹å¼å¸¸é‡å®šä¹‰
 #define NO_ORDER 0
 #define NAME_ORDER_ASC 1
 #define NAME_ORDER_DESC 2
@@ -52,18 +52,18 @@ typedef unsigned char UTF8, *pUTF8; //UTF8ÀàĞÍµÄ×Ö·û´®
 #define DATE_ORDER_ASC 7
 #define DATE_ORDER_DESC 8
 
-struct searchEnv{ //ËÑË÷µÄ»·¾³ÅäÖÃ
-	unsigned char order; //ÅÅĞò·½Ê½£¬È±Ê¡°´Ãû³ÆÅÅĞò
-	BOOL case_sensitive; //ÊÇ·ñ´óĞ¡Ğ´Ãô¸Ğ£¬È±Ê¡²»Ãô¸Ğ
-	unsigned char file_type;//Ö¸¶¨ËÑË÷µÄÀàĞÍ
-	BOOL offline; //²éÑ¯offlineÎÄ¼ş»¹ÊÇonlineÎÄ¼ş
-	int path_len; //Èç¹ûÖ¸¶¨ÁËËÑË÷µÄÂ·¾¶£¬¸ÃÂ·¾¶ÃûµÄ×Ö·û³¤¶È
-	WCHAR path_name[MAX_PATH]; ////Ö¸¶¨ËÑË÷µÄÂ·¾¶
-	WCHAR user_name[MAX_PATH]; ////Ö´ĞĞËÑË÷µÄµ±Ç°ÓÃ»§Ãû
+struct searchEnv{ //æœç´¢çš„ç¯å¢ƒé…ç½®
+	unsigned char order; //æ’åºæ–¹å¼ï¼Œç¼ºçœæŒ‰åç§°æ’åº
+	BOOL case_sensitive; //æ˜¯å¦å¤§å°å†™æ•æ„Ÿï¼Œç¼ºçœä¸æ•æ„Ÿ
+	unsigned char file_type;//æŒ‡å®šæœç´¢çš„ç±»å‹
+	BOOL offline; //æŸ¥è¯¢offlineæ–‡ä»¶è¿˜æ˜¯onlineæ–‡ä»¶
+	int path_len; //å¦‚æœæŒ‡å®šäº†æœç´¢çš„è·¯å¾„ï¼Œè¯¥è·¯å¾„åçš„å­—ç¬¦é•¿åº¦
+	WCHAR path_name[MAX_PATH]; ////æŒ‡å®šæœç´¢çš„è·¯å¾„
+	WCHAR user_name[MAX_PATH]; ////æ‰§è¡Œæœç´¢çš„å½“å‰ç”¨æˆ·å
 };
 typedef struct searchEnv SearchEnv, *pSearchEnv;
 
-#define SearchWindowTitle L"Íã¶¹ËÑË÷ -- ×îºÃµÄÎÄ¼şËÑË÷Èí¼ş"
+#define SearchWindowTitle L"è±Œè±†æœç´¢ -- æœ€å¥½çš„æ–‡ä»¶æœç´¢è½¯ä»¶"
 #define SearchWindowClass L"PeaSearch"
 #define ListenerWindowClass L"PeaSearch_Listener"
 

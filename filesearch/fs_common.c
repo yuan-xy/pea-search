@@ -1,4 +1,4 @@
-#include "env.h"
+ï»¿#include "env.h"
 #include <windows.h>
 #include <stdio.h>
 #include "global.h"
@@ -100,7 +100,7 @@ int print_path_str(pFileEntry file, char *p){
 	return 0;
 }
 
-//Äê5b    ÔÂ4b    ÈÕ5b     Ê±5b   ·Ö5b
+//å¹´5b    æœˆ4b    æ—¥5b     æ—¶5b   åˆ†5b
 //00000   0000   00000  00000    00000
 #ifndef YEAR_START
 #define YEAR_START 1990
@@ -138,7 +138,7 @@ void set_time(pFileEntry file, PFILETIME time){
 void print_time(pFileEntry file){
 	SYSTEMTIME st;
 	ConvertMinuteToSystemTime(&st,GET_TIME(file));
-	printf("%dÄê%dÔÂ%dÈÕ %dÊ±%d·Ö"
+	printf("%då¹´%dæœˆ%dæ—¥ %dæ—¶%dåˆ†"
 		,st.wYear,st.wMonth,st.wDay
 		,st.wHour,st.wMinute
 		);

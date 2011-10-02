@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+﻿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -10,148 +10,148 @@ extern "C" {
 #include <winioctl.h>
 #include "fs_common.h"
 
-extern const int ROOT_NUMBER; //NTFS��������Ŀ¼��FileReferenceNumber�ĵ�32λֵ
+extern const int ROOT_NUMBER; //NTFS驱动器根目录的FileReferenceNumber的低32位值
 
 /*
- * �Ƿ���NTFS��������Ŀ¼
+ * 是否是NTFS驱动器根目录
  */
 #define IsRoot(FileReferenceNumber) ROOT_NUMBER==(FileReferenceNumber&0xFFFFFFFF)
 
 /**
- * �����ļ���FileReferenceNumber��ò�������ʱ��ʹ�С
- * @param file �ļ�
- * @param data ��Ч������������ƥ��FileVisitor�ķ���ǩ��
+ * 根据文件的FileReferenceNumber获得并设置其时间和大小
+ * @param file 文件
+ * @param data 无效参数，仅用于匹配FileVisitor的方法签名
  */
 extern BOOL init_size_time(pFileEntry file, void *data);
 
 /**
- * ������ʼ�������ļ���ʱ��ʹ�С�����������߳���ִ�С�
- * @param root �����ļ��ĸ�Ŀ¼���߳�����ʱ���ݹ����Ĳ���
+ * 批量初始化所有文件的时间和大小，用于在新线程中执行。
+ * @param root 所有文件的根目录，线程启动时传递过来的参数
  */
 extern DWORD WINAPI init_size_time_all(pFileEntry root);
 
 /**
- * �����������
- * @param i ���������
+ * 打开驱动器句柄
+ * @param i 驱动器编号
  */
 extern BOOL OpenNtfsHandle(int i);
 /**
- * �ر����������
- * @param i ���������
+ * 关闭驱动器句柄
+ * @param i 驱动器编号
  */
 extern BOOL CloseNtfsHandle(int i);
 /**
- * ��ʼ��USN_JOURNAL
- * @param i ���������
+ * 初始化USN_JOURNAL
+ * @param i 驱动器编号
  */
 extern void initUSN(int i);
 /**
- * ��ø�NTFS���Ļ�����Ϣ
- * @param i ���������
+ * 获得该NTFS卷的基本信息
+ * @param i 驱动器编号
  */
 extern void InitVolumeData(int i);
 /**
- * ɨ��MFT
- * @param i ���������
+ * 扫描MFT
+ * @param i 驱动器编号
  */
 extern DWORD ScanMFT(int i);
 
 /**
- * ִ��FSCTL_CREATE_USN_JOURNAL����
- * @param hVolume �����
+ * 执行FSCTL_CREATE_USN_JOURNAL调用
+ * @param hVolume 卷句柄
  */
 extern BOOL CreateUsnJournal(HANDLE hVolume);
 /**
- * ִ��FSCTL_QUERY_USN_JOURNAL����
- * @param hVolume �����
- * @param pUsnJournalData ���USN_JOURNAL_DATA���ݵĵ�ַ
+ * 执行FSCTL_QUERY_USN_JOURNAL调用
+ * @param hVolume 卷句柄
+ * @param pUsnJournalData 存放USN_JOURNAL_DATA数据的地址
  */
 extern BOOL QueryUsnJournal(HANDLE hVolume, OUT void* /*PUSN_JOURNAL_DATA*/ pUsnJournalData);
 
 /**
- * ���ݼ��ӵ���USN_RECORD�ñ�������ļ�
- * @param r ָ��USN_RECORD��ָ��
- * @param i ���������
+ * 根据监视到得USN_RECORD得变更更新文件
+ * @param r 指向USN_RECORD的指针
+ * @param i 驱动器编号
  */
 extern void updateFileEntry(/*PUSN_RECORD*/ void *r,int i);
 
 /**
- * ����NTFS�ļ�ϵͳ�䶯�����̡߳����߳�ֻ�ܱ�����һ�Ρ�
- * @param i ���������
+ * 启动NTFS文件系统变动监视线程。该线程只能被启动一次。
+ * @param i 驱动器编号
  */
 extern BOOL StartMonitorThreadNTFS(int i);
 
 
 typedef struct { 
     ULONG Type;  //4B  'ELIF','XDNI','DAAB','ELOH','DKHC'  
-    USHORT UsaOffset;  //2B �������к�����ƫ�ƣ�У��ֵ��ַ
-    USHORT UsaCount;  //1+n 1ΪУ��ֵ���� nΪ���滻ֵ����  fixup
-    USN Usn; //8B ÿ�μ�¼���޸� USN���仯
+    USHORT UsaOffset;  //2B 更新序列号数组偏移，校验值地址
+    USHORT UsaCount;  //1+n 1为校验值个数 n为待替换值个数  fixup
+    USN Usn; //8B 每次记录被修改 USN都变化
 } NTFS_RECORD_HEADER, *PNTFS_RECORD_HEADER; 
 
 typedef struct { //sizeof(FILE_RECORD_HEADER)==48
-    NTFS_RECORD_HEADER Ntfs;  //16B Ntfs.Type����'ELIF'
-    USHORT SequenceNumber; //File Reference Number�ĸ�16λ  i�ǵ�48λ 0~total_file_count-1
-    //���ڼ�¼���ļ�����¼���ظ�ʹ�õĴ���
-    USHORT LinkCount; //��¼Ӳ���ӵ���Ŀ��ֻ�����ڻ����ļ���¼��
-    USHORT AttributeOffset; //��һ�����Ե�ƫ��
+    NTFS_RECORD_HEADER Ntfs;  //16B Ntfs.Type总是'ELIF'
+    USHORT SequenceNumber; //File Reference Number的高16位  i是低48位 0~total_file_count-1
+    //用于记录主文件表记录被重复使用的次数
+    USHORT LinkCount; //记录硬连接的数目，只出现在基本文件记录中
+    USHORT AttributeOffset; //第一个属性的偏移
     USHORT Flags;       // 0x0001 = InUse, 0x0002 = Directory 
-    ULONG BytesInUse;  //��¼ͷ�����Ե��ܳ��ȣ����ļ���¼��ʵ�ʳ����ļ�,����¼�ڴ�����ʵ��ռ�õ��ֽڿռ䡣
-    ULONG BytesAllocated; //�ܹ��������¼�ĳ���
-    ULONGLONG BaseFileRecord; //�����ļ���¼�е��ļ������ţ�
-    //���ڻ����ļ���¼����ֵΪ0�������Ϊ0������һ�����ļ������ļ������ţ�
-    //ָ�������Ļ����ļ���¼�е��ļ���¼�ţ�
-    //�ڻ����ļ���¼�а�������չ�ļ���¼����Ϣ���洢�ڡ������б�ATTRIBUTE_LIST�������С�
-    USHORT NextAttributeNumber; //��һ����ID
+    ULONG BytesInUse;  //记录头和属性的总长度，即文件记录的实际长度文件,即记录在磁盘上实际占用的字节空间。
+    ULONG BytesAllocated; //总共分配给记录的长度
+    ULONGLONG BaseFileRecord; //基本文件记录中的文件索引号，
+    //对于基本文件记录，其值为0，如果不为0，则是一个主文件表的文件索引号，
+    //指向所属的基本文件记录中的文件记录号，
+    //在基本文件记录中包含有扩展文件记录的信息，存储在“属性列表ATTRIBUTE_LIST”属性中。
+    USHORT NextAttributeNumber; //下一属性ID
 } FILE_RECORD_HEADER, *PFILE_RECORD_HEADER; 
 
 
-//�ļ���¼�а����Էǽ�����Ϊ��ʱ���������ͬ�����ԣ����У�
-//���Ե�ֵ��Ϊ �ֽ���
+//文件记录中按属性非降序（因为有时连续多个相同的属性）排列，
+//属性的值即为 字节流
 typedef enum {
-    //����ֻ�����浵���ļ����ԣ�
-    //ʱ������ļ�����ʱ�����һ���޸�ʱ��
-    //����Ŀ¼ָ����ļ���Ӳ���Ӽ���hard link count��
-    AttributeStandardInformation = 0x10, //Resident_Attributes ��פ����
+    //诸如只读、存档等文件属性；
+    //时间戳：文件创建时、最后一次修改时；
+    //多少目录指向该文件（硬链接计数hard link count）
+    AttributeStandardInformation = 0x10, //Resident_Attributes 常驻属性
 
     //?????????????????????????????????
-    //��һ���ļ�Ҫ����MFT�ļ���¼ʱ ���и�����
-    //�����б����������ɸ��ļ�����Щ���ԣ��Լ�ÿ���������ڵ�MFT�ļ���¼���ļ�����
+    //当一个文件要求多个MFT文件记录时 会有该属性
+    //属性列表，包括构成该文件的这些属性，以及每个属性所在的MFT文件记录的文件引用
     //?????????????????????????????????
-    AttributeAttributeList = 0x20,//��������ֵ���ܻ������������Ƿ�פ������
+    AttributeAttributeList = 0x20,//由于属性值可能会增长，可能是非驻留属性
 
-    //�ļ������Կ����ж����
-    //1.���ļ����Զ�Ϊ����ļ���(�Ա�MS-DOS��16λ�������)
-    //2.�����ļ�����Ӳ����ʱ
-    AttributeFileName = 0x30, //��פ
+    //文件名属性可以有多个：
+    //1.长文件名自动为其短文件名(以便MS-DOS和16位程序访问)
+    //2.当该文件存在硬链接时
+    AttributeFileName = 0x30, //常驻
 
-    //һ���ļ���Ŀ¼��64�ֽڱ�ʶ�������е�16�ֽڶ��ڸþ���˵��Ψһ��
-    //����-���ٷ��񽫶���ID�������ǿ�ݷ�ʽ��OLE����Դ�ļ���
-    //NTFS�ṩ����Ӧ��API����Ϊ�ļ���Ŀ¼����ͨ�������ID��������ͨ�����ļ�����
-    AttributeObjectId = 0x40, //��פ
+    //一个文件或目录的64字节标识符，其中低16字节对于该卷来说是唯一的
+    //链接-跟踪服务将对象ID分配给外壳快捷方式和OLE链接源文件。
+    //NTFS提供了相应的API，因为文件和目录可以通过其对象ID，而不是通过其文件名打开
+    AttributeObjectId = 0x40, //常驻
 
-    //Ϊ��NTFS��ǰ�汾����������
-    //���о�����ͬ��ȫ���������ļ���Ŀ¼����ͬ���İ�ȫ����
-    //��ǰ�汾��NTFS��˽�еİ�ȫ��������Ϣ��ÿ���ļ���Ŀ¼�洢��һ��
-    AttributeSecurityDescriptor = 0x50,//������$SecureԪ�����ļ���
+    //为与NTFS以前版本保持向后兼容
+    //所有具有相同安全描述符的文件或目录共享同样的安全描述
+    //以前版本的NTFS将私有的安全描述符信息与每个文件和目录存储在一起
+    AttributeSecurityDescriptor = 0x50,//出现于$Secure元数据文件中
 
-    //�����˸þ��İ汾��label��Ϣ
-    AttributeVolumeName = 0x60, //��������$VolumeԪ�����ļ���
-    AttributeVolumeInformation = 0x70,//��������$VolumeԪ�����ļ���
+    //保存了该卷的版本和label信息
+    AttributeVolumeName = 0x60, //仅出现于$Volume元数据文件中
+    AttributeVolumeInformation = 0x70,//仅出现于$Volume元数据文件中
 
-    //�ļ����ݣ�һ���ļ�����һ��δ�������������ԣ������ж�����������������
-    //��һ���ļ������ж����������Ŀ¼û��Ĭ�ϵ��������ԣ������ж����ѡ����������������
-    AttributeData = 0x80,//��������ֵ���ܻ������������Ƿ�פ������
+    //文件内容，一个文件仅有一个未命名的数据属性，但可有额外多个命名数据属性
+    //即一个文件可以有多个数据流，目录没有默认的数据属性，但可有多个可选的命名的数据属性
+    AttributeData = 0x80,//由于属性值可能会增长，可能是非驻留属性
 
-    //������������ʵ�ִ�Ŀ¼���ļ��������λͼ����
-    AttributeIndexRoot = 0x90,//��פ
+    //以下三个用于实现大目录的文件名分配和位图索引
+    AttributeIndexRoot = 0x90,//常驻
     AttributeIndexAllocation = 0xA0,
     AttributeBitmap = 0xB0,
 
-    //�洢��һ���ļ����ؽ��������ݣ�NTFS�Ľ���(junction)�͹��ص����������
+    //存储了一个文件的重解析点数据，NTFS的交接(junction)和挂载点包含此属性
     AttributeReparsePoint = 0xC0,
 
-    //��������Ϊ��չ���ԣ����Ѳ��ٱ�����ʹ�ã�֮�����ṩ��Ϊ��OS/2���򱣳�������
+    //以下两个为扩展属性，现已不再被主动使用，之所以提供是为与OS/2程序保持向后兼容
     AttributeEAInformation = 0xD0,
     AttributeEA = 0xE0,
 
@@ -162,19 +162,19 @@ typedef enum {
 
 typedef struct { 
     ATTRIBUTE_TYPE AttributeType; 
-    ULONG Length; //�����Գ��ȣ���������ֵ��
-    BOOLEAN Nonresident; //�����Բ��� פ�� ����ô��
-    UCHAR NameLength; //�����������Ƴ���
-    USHORT NameOffset;//������ƫ��
-    USHORT Flags; // 0x0001 ѹ�� 0x4000 ���� 0x8000ϡ���ļ� 
+    ULONG Length; //本属性长度（包含属性值）
+    BOOLEAN Nonresident; //本属性不是 驻留 属性么？
+    UCHAR NameLength; //属性名的名称长度
+    USHORT NameOffset;//属性名偏移
+    USHORT Flags; // 0x0001 压缩 0x4000 加密 0x8000稀疏文件 
     USHORT AttributeNumber; 
 } ATTRIBUTE, *PATTRIBUTE; 
 
 typedef struct { 
     ATTRIBUTE Attribute; 
-    ULONG ValueLength; //����ֵ����
-    USHORT ValueOffset; //����ֵƫ��
-    USHORT Flags; // ������־ 0x0001 = Indexed 
+    ULONG ValueLength; //属性值长度
+    USHORT ValueOffset; //属性值偏移
+    USHORT Flags; // 索引标志 0x0001 = Indexed 
 } RESIDENT_ATTRIBUTE, *PRESIDENT_ATTRIBUTE; 
 
 typedef struct {
@@ -190,14 +190,14 @@ typedef struct {
     ULONGLONG CompressedSize;    // Only when compressed
 } NONRESIDENT_ATTRIBUTE, *PNONRESIDENT_ATTRIBUTE;
 
-typedef struct { //�ļ������Ե�ֵ����
-    ULONGLONG DirectoryFileReferenceNumber; //��Ŀ¼��FRN 
+typedef struct { //文件名属性的值区域
+    ULONGLONG DirectoryFileReferenceNumber; //父目录的FRN 
     ULONGLONG CreationTime; 
     ULONGLONG ChangeTime; 
-    ULONGLONG LastWriteTime; // ���һ��MFT����ʱ��
+    ULONGLONG LastWriteTime; // 最后一次MFT更新时间
     ULONGLONG LastAccessTime; 
-    ULONGLONG AllocatedSize; // δ��
-    ULONGLONG DataSize; // ż�����ļ���СGetFileSize��ͬ
+    ULONGLONG AllocatedSize; // 未明
+    ULONGLONG DataSize; // 偶尔与文件大小GetFileSize不同
     ULONG FileAttributes; 
     ULONG AlignmentOrReserved; 
     UCHAR NameLength; 
@@ -206,38 +206,38 @@ typedef struct { //�ļ������Ե�ֵ����
 } FILENAME_ATTRIBUTE, *PFILENAME_ATTRIBUTE; 
 
 typedef struct {
-    ATTRIBUTE_TYPE AttributeType;   //��������
-    USHORT Length;                  //����¼����
-    UCHAR NameLength;               //����������
-    UCHAR NameOffset;               //������ƫ��
-    ULONGLONG LowVcn;               //��ʼVCN
-    ULONGLONG FileReferenceNumber;  //���Ե��ļ��ο���
-    USHORT AttributeNumber;         //��ʶ
+    ATTRIBUTE_TYPE AttributeType;   //属性类型
+    USHORT Length;                  //本记录长度
+    UCHAR NameLength;               //属性名长度
+    UCHAR NameOffset;               //属性名偏移
+    ULONGLONG LowVcn;               //起始VCN
+    ULONGLONG FileReferenceNumber;  //属性的文件参考号
+    USHORT AttributeNumber;         //标识
     WCHAR Name[1];
 } ATTRIBUTE_LIST, *PATTRIBUTE_LIST; 
 
 #pragma pack(push,1)
 typedef struct { //512B
-    UCHAR Jump[3];//����3���ֽ�
-    UCHAR Format[8]; //��N��'T' 'F' 'S' 0x20 0x20 0x20 0x20
-    USHORT BytesPerSector;//ÿ�����ж����ֽ� һ��Ϊ512B 0x200
-    UCHAR SectorsPerCluster;//ÿ���ж��ٸ�����
+    UCHAR Jump[3];//跳过3个字节
+    UCHAR Format[8]; //‘N’'T' 'F' 'S' 0x20 0x20 0x20 0x20
+    USHORT BytesPerSector;//每扇区有多少字节 一般为512B 0x200
+    UCHAR SectorsPerCluster;//每簇有多少个扇区
     USHORT BootSectors;//
-    UCHAR Mbz1;//����0
-    USHORT Mbz2;//����0
-    USHORT Reserved1;//����0
-    UCHAR MediaType;//������������Ӳ��Ϊ0xf8
-    USHORT Mbz3;//��Ϊ0
-    USHORT SectorsPerTrack;//ÿ����������һ��Ϊ0x3f
-    USHORT NumberOfHeads;//��ͷ��
-    ULONG PartitionOffset;//�÷����ı��ˣ����÷���ǰ������������ һ��Ϊ�ŵ�������0x3f 63��
+    UCHAR Mbz1;//保留0
+    USHORT Mbz2;//保留0
+    USHORT Reserved1;//保留0
+    UCHAR MediaType;//介质描述符，硬盘为0xf8
+    USHORT Mbz3;//总为0
+    USHORT SectorsPerTrack;//每道扇区数，一般为0x3f
+    USHORT NumberOfHeads;//磁头数
+    ULONG PartitionOffset;//该分区的便宜（即该分区前的隐含扇区数 一般为磁道扇区数0x3f 63）
     ULONG Reserved2[2];
-    ULONGLONG TotalSectors;//�÷�����������
-    ULONGLONG MftStartLcn;//MFT������ʼ�غ�LCN
-    ULONGLONG Mft2StartLcn;//MFT���ݱ�����ʼ�غ�LCN
-    ULONG ClustersPerFileRecord;//ÿ��MFT��¼����������  ��¼���ֽڲ�һ��Ϊ��ClustersPerFileRecord*SectorsPerCluster*BytesPerSector
-    ULONG ClustersPerIndexBlock;//ÿ��������Ĵ���
-    ULONGLONG VolumeSerialNumber;//�����к�
+    ULONGLONG TotalSectors;//该分区总扇区数
+    ULONGLONG MftStartLcn;//MFT表的起始簇号LCN
+    ULONGLONG Mft2StartLcn;//MFT备份表的起始簇号LCN
+    ULONG ClustersPerFileRecord;//每个MFT记录包含几个簇  记录的字节不一定为：ClustersPerFileRecord*SectorsPerCluster*BytesPerSector
+    ULONG ClustersPerIndexBlock;//每个索引块的簇数
+    ULONGLONG VolumeSerialNumber;//卷序列号
     UCHAR Code[0x1AE];
     USHORT BootSignature;
 } BOOT_BLOCK, *PBOOT_BLOCK;

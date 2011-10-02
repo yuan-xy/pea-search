@@ -1,4 +1,4 @@
-#include "env.h"
+ï»¿#include "env.h"
 #include <windows.h>
 #include <time.h>
 #include <sys/stat.h>
@@ -33,7 +33,7 @@ void print_debug(WCHAR *fmt, ...){
 	WCHAR buffer[255];
 	va_list args;
 	va_start (args, fmt);
-	wsprintf(buffer,fmt,args);//TODO:´æÔÚÎÊÌâ£¬Ö»´òÓ¡ÁËµÚÒ»¸ö×Ö·û
+	wsprintf(buffer,fmt,args);//TODO:å­˜åœ¨é—®é¢˜ï¼Œåªæ‰“å°äº†ç¬¬ä¸€ä¸ªå­—ç¬¦
 	va_end(args);
 	OutputDebugString(buffer);
 }

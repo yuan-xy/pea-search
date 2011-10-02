@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -7,64 +7,64 @@ extern "C" {
 
 #include "env.h"
 
-#define VIEW_HISTORY 15  //Ê×Ò³ÏÔÊ¾µÄÀúÊ·ÎÄ¼ş¼ÇÂ¼
-#define MAX_HISTORY 30  //×î´ó±£´æµÄÀúÊ·ÎÄ¼ş¼ÇÂ¼
+#define VIEW_HISTORY 15  //é¦–é¡µæ˜¾ç¤ºçš„å†å²æ–‡ä»¶è®°å½•
+#define MAX_HISTORY 30  //æœ€å¤§ä¿å­˜çš„å†å²æ–‡ä»¶è®°å½•
 
 /**
-* ½«ÎÄ¼şfileÌí¼Óµ½ÀúÊ·ÎÄ¼ş¼ÇÂ¼ÖĞ¡£Èç¹ûfileÔÚÊ×Ò³ÖĞÒÑ´æÔÚ£¬Ôò²»ÖØ¸´Ìí¼Ó¡£
+* å°†æ–‡ä»¶fileæ·»åŠ åˆ°å†å²æ–‡ä»¶è®°å½•ä¸­ã€‚å¦‚æœfileåœ¨é¦–é¡µä¸­å·²å­˜åœ¨ï¼Œåˆ™ä¸é‡å¤æ·»åŠ ã€‚
 */
 extern BOOL history_add(const wchar_t *file);
 
 /**
-* É¾³ı¸ø¶¨indexÎ»ÖÃµÄÀúÊ·ÎÄ¼ş¼ÇÂ¼, ½«ÏÂÒ»¸öÎ»ÖÃµÄÀúÊ·ÎÄ¼ş¼ÇÂ¼²¹³äµ½±»É¾³ıµÄÎ»ÖÃ
+* åˆ é™¤ç»™å®šindexä½ç½®çš„å†å²æ–‡ä»¶è®°å½•, å°†ä¸‹ä¸€ä¸ªä½ç½®çš„å†å²æ–‡ä»¶è®°å½•è¡¥å……åˆ°è¢«åˆ é™¤çš„ä½ç½®
 */
 extern void history_delete(int index);
 
 /**
-* ¹Ì¶¨¸ø¶¨indexÎ»ÖÃµÄÀúÊ·ÎÄ¼ş¼ÇÂ¼
+* å›ºå®šç»™å®šindexä½ç½®çš„å†å²æ–‡ä»¶è®°å½•
 */
 extern void history_pin(int index);
 /**
-* È¡Ïû¹Ì¶¨¸ø¶¨indexÎ»ÖÃµÄÀúÊ·ÎÄ¼ş¼ÇÂ¼
+* å–æ¶ˆå›ºå®šç»™å®šindexä½ç½®çš„å†å²æ–‡ä»¶è®°å½•
 */
 extern void history_unpin(int index);
 
 /**
-* »ñµÃ¸ø¶¨indexÎ»ÖÃµÄÀúÊ·ÎÄ¼ş¼ÇÂ¼
+* è·å¾—ç»™å®šindexä½ç½®çš„å†å²æ–‡ä»¶è®°å½•
 */
 extern wchar_t *history_get(int index);
 
 /**
-* ½«ÀúÊ·ÎÄ¼ş¼ÇÂ¼±£´æµ½´ÅÅÌ
+* å°†å†å²æ–‡ä»¶è®°å½•ä¿å­˜åˆ°ç£ç›˜
 */
 extern BOOL history_save();
 
 /**
-* ´Ó´ÅÅÌÎÄ¼şÖĞ¼ÓÔØÀúÊ·ÎÄ¼ş¼ÇÂ¼
+* ä»ç£ç›˜æ–‡ä»¶ä¸­åŠ è½½å†å²æ–‡ä»¶è®°å½•
 */
 extern BOOL history_load();
 
 extern BOOL history_remove();
 
 /**
-* ³õ´Î°²×°Ê±£¬´ÓwindowsµÄRecentÎÄ¼ş¼Ğ»ñÈ¡³£ÓÃÎÄµµÀ´³õÊ¼»¯
+* åˆæ¬¡å®‰è£…æ—¶ï¼Œä»windowsçš„Recentæ–‡ä»¶å¤¹è·å–å¸¸ç”¨æ–‡æ¡£æ¥åˆå§‹åŒ–
 */
 extern void init_from_recent();
 
 typedef void (*pHistoryVisitor)(wchar_t *file, int pin, void *context);
 
 /**
-* ±éÀúÊ×Ò³µÄÀúÊ·ÎÄ¼ş¼ÇÂ¼
+* éå†é¦–é¡µçš„å†å²æ–‡ä»¶è®°å½•
 */
 extern void HistoryIterator(pHistoryVisitor, void *context);
 
 /**
-* ±éÀúËùÓĞµÄÀúÊ·ÎÄ¼ş¼ÇÂ¼
+* éå†æ‰€æœ‰çš„å†å²æ–‡ä»¶è®°å½•
 */
 extern void HistoryIteratorAll(pHistoryVisitor, void *context);
 
 /**
-* ½«µÄÀúÊ·ÎÄ¼ş¼ÇÂ¼ĞÅÏ¢µ¼³öÎªjson¸ñÊ½
+* å°†çš„å†å²æ–‡ä»¶è®°å½•ä¿¡æ¯å¯¼å‡ºä¸ºjsonæ ¼å¼
 */
 extern int history_to_json(wchar_t *buffer);
 

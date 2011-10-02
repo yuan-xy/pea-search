@@ -1,4 +1,4 @@
-#include "env.h"
+ï»¿#include "env.h"
 #include <windows.h>
 #include <winioctl.h>
 #include <assert.h>
@@ -170,13 +170,13 @@ int old_i;
 void updateFileEntry(PUSN_RECORD r,int i){
 	DWORD dwReason = r->Reason;
 	//printf("%x: %ls\n",r->Reason,r->FileName);
-    if((USN_REASON_FILE_CREATE&dwReason)&&(USN_REASON_CLOSE&dwReason)){//Ôö
+    if((USN_REASON_FILE_CREATE&dwReason)&&(USN_REASON_CLOSE&dwReason)){//å¢ž
 		genFileEntryOne(r,i);
 	}else if(USN_REASON_RENAME_OLD_NAME&dwReason){
 		old_frn = r->FileReferenceNumber;		
 		old_pfrn = r->ParentFileReferenceNumber;
 		old_i = i;
-	}else if((USN_REASON_RENAME_NEW_NAME&dwReason) && (dwReason&USN_REASON_CLOSE)){//ÖØÃüÃû
+	}else if((USN_REASON_RENAME_NEW_NAME&dwReason) && (dwReason&USN_REASON_CLOSE)){//é‡å‘½å
 		if(old_pfrn==r->ParentFileReferenceNumber && i==old_i){
 			pFileEntry pmodify = findFile(old_frn,old_pfrn,i);
 			renameFile(pmodify ,r->FileName,r->FileNameLength);
@@ -188,7 +188,7 @@ void updateFileEntry(PUSN_RECORD r,int i){
 			#endif
 			moveFile(file,pnew);
 		}
-    }else if((dwReason&USN_REASON_FILE_DELETE)&&(USN_REASON_CLOSE&dwReason)){//É¾
+    }else if((dwReason&USN_REASON_FILE_DELETE)&&(USN_REASON_CLOSE&dwReason)){//åˆ 
         	pFileEntry file = FIND_FILE_0(r,i);
 			if(file!=NULL){
 				deleteFile(file);

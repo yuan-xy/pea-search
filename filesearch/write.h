@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -8,34 +8,34 @@ extern "C" {
 #include "fs_common.h"
 
 /**
- * ½«¸ø¶¨Çı¶¯Æ÷µÄËùÓĞÎÄ¼şĞÅÏ¢Ğ´ÈëÓ²ÅÌ
- * @param i Çı¶¯Æ÷±àºÅ
+ * å°†ç»™å®šé©±åŠ¨å™¨çš„æ‰€æœ‰æ–‡ä»¶ä¿¡æ¯å†™å…¥ç¡¬ç›˜
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern BOOL save_db(int i);
 
 /**
- * ´ÓÓ²ÅÌÖĞ¶ÁÈ¡¸ø¶¨Çı¶¯Æ÷µÄÎÄ¼şÊı¾İ¿â
- * @param i Çı¶¯Æ÷±àºÅ
+ * ä»ç¡¬ç›˜ä¸­è¯»å–ç»™å®šé©±åŠ¨å™¨çš„æ–‡ä»¶æ•°æ®åº“
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern BOOL load_db(int i);
 
 
 /**
- * ¼ÓÔØËùÓĞµÄÀëÏßµÄdbÎÄ¼ş
+ * åŠ è½½æ‰€æœ‰çš„ç¦»çº¿çš„dbæ–‡ä»¶
  */
 extern int load_offline_dbs();
 
 extern void del_offline_db(int i);
 
 /**
- * ·ÃÎÊ¸ø¶¨µÄdbÎÄ¼ş
- * @param db_name  dbÎÄ¼şÃû
- * @return ÊÇ·ñ¼ÌĞøµü´ú
+ * è®¿é—®ç»™å®šçš„dbæ–‡ä»¶
+ * @param db_name  dbæ–‡ä»¶å
+ * @return æ˜¯å¦ç»§ç»­è¿­ä»£
  */
 typedef BOOL (*pDbVisitor)(char *db_name, void *data);
 
 /**
- * ±éÀúËùÓĞµÄdbÎÄ¼ş¡£
+ * éå†æ‰€æœ‰çš„dbæ–‡ä»¶ã€‚
  */
 extern void DbIterator(pDbVisitor, void *data);
 

@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -11,22 +11,22 @@ extern "C" {
 #include <stdio.h>
 
 /**
- * ±¨¸æwindowsÏµÍ³µ÷ÓÃ´íÎó
+ * æŠ¥å‘Šwindowsç³»ç»Ÿè°ƒç”¨é”™è¯¯
  */
 #define WIN_ERROR fprintf(stderr,"error code : %d , line %d in '%s'\n",GetLastError(), __LINE__, __FILE__);
 #define MEM_ERROR fprintf(stderr,"insufficient memory, line %d in '%s'\n", __LINE__, __FILE__);
 #define CPP_ERROR fprintf(stderr,"c++ exception, line %d in '%s'\n", __LINE__, __FILE__);
 
 /**
- * ½öÔÚdebugÄ£Ê½ÏÂµ÷ÓÃassert
- * @param exp ±ØÐëÎªÕæµÄ±í´ïÊ½
+ * ä»…åœ¨debugæ¨¡å¼ä¸‹è°ƒç”¨assert
+ * @param exp å¿…é¡»ä¸ºçœŸçš„è¡¨è¾¾å¼
  */
 extern void assert_debug(int exp);
 
 /**
- * ½ø³Ì²»ÍË³öµÄ×Ô¶¨Òåassert
- * @param exp ±ØÐëÎªÕæµÄ±í´ïÊ½
- * @param ret ³ö´í·µ»ØÖµ
+ * è¿›ç¨‹ä¸é€€å‡ºçš„è‡ªå®šä¹‰assert
+ * @param exp å¿…é¡»ä¸ºçœŸçš„è¡¨è¾¾å¼
+ * @param ret å‡ºé”™è¿”å›žå€¼
  */
 #define my_assert(exp,ret) \
 	if(!(exp)){\
@@ -37,19 +37,19 @@ extern void assert_debug(int exp);
 
 
 /**
-* ²âÁ¿º¯Êýf£¨ÎÞ²ÎÎÞ·µ»ØÖµ£©Ö´ÐÐËùÐèµÄºÁÃëÊý
+* æµ‹é‡å‡½æ•°fï¼ˆæ— å‚æ— è¿”å›žå€¼ï¼‰æ‰§è¡Œæ‰€éœ€çš„æ¯«ç§’æ•°
 **/
 extern int time_passed(void (*f)());
 /**
-* ²âÁ¿º¯Êýf£¨ÓÐÒ»¸ö²ÎÊý£©Ö´ÐÐËùÐèµÄºÁÃëÊý
+* æµ‹é‡å‡½æ•°fï¼ˆæœ‰ä¸€ä¸ªå‚æ•°ï¼‰æ‰§è¡Œæ‰€éœ€çš„æ¯«ç§’æ•°
 **/
 extern int time_passed_p1(void (*f)(void *),void *);
 /**
-* ²âÁ¿º¯Êýf£¨ÓÐÁ½¸ö¸ö²ÎÊý£©Ö´ÐÐËùÐèµÄºÁÃëÊý
+* æµ‹é‡å‡½æ•°fï¼ˆæœ‰ä¸¤ä¸ªä¸ªå‚æ•°ï¼‰æ‰§è¡Œæ‰€éœ€çš„æ¯«ç§’æ•°
 **/
 extern int time_passed_p2(void (*f)(void *,void *),void *,void *);
 /**
-* ²âÁ¿º¯Êýf£¨ÓÐ·µ»ØÖµ£©Ö´ÐÐËùÐèµÄºÁÃëÊý
+* æµ‹é‡å‡½æ•°fï¼ˆæœ‰è¿”å›žå€¼ï¼‰æ‰§è¡Œæ‰€éœ€çš„æ¯«ç§’æ•°
 **/
 extern int time_passed_ret(int (*f)(),int *ret_data);
 
@@ -59,9 +59,9 @@ extern int time_passed_ret(int (*f)(),int *ret_data);
 #define WCHAR_TO_UTF8(wstr, wstrlen, ustr, ustrlen) WideCharToMultiByte(CP_UTF8, 0, (wstr), (wstrlen), ((LPSTR)ustr), (ustrlen), NULL, NULL)
 
 /**
- * ½«unicode±àÂëµÄ×Ö·û´®in×ª»»Îªutf-8±àÂëµÄ×Ö·û´®
- * @param insize_c±íÊ¾The number of Unicode (16-bit) characters in the string
- * @param out_size_b±íÊ¾ÒÔbyteÍ³¼ÆµÄ×Ö·û´®³¤¶È
+ * å°†unicodeç¼–ç çš„å­—ç¬¦ä¸²inè½¬æ¢ä¸ºutf-8ç¼–ç çš„å­—ç¬¦ä¸²
+ * @param insize_cè¡¨ç¤ºThe number of Unicode (16-bit) characters in the string
+ * @param out_size_bè¡¨ç¤ºä»¥byteç»Ÿè®¡çš„å­—ç¬¦ä¸²é•¿åº¦
  * 
  */
 extern pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b);
@@ -70,7 +70,7 @@ extern WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c);
 
 extern wchar_t *wcsrchr_me(const wchar_t *S, int len, const wchar_t C);
 
-//¶¨Òå¶þ½øÖÆ³£Á¿
+//å®šä¹‰äºŒè¿›åˆ¶å¸¸é‡
 #define BYTE_BIN(n) ( \
 ((0n%0100000000/010000000>0)<<7)| \
 ((0n%010000000 /01000000 >0)<<6)| \
@@ -91,43 +91,43 @@ extern wchar_t *wcsrchr_me(const wchar_t *S, int len, const wchar_t C);
 
 
 /**
- * ¶¨ÒåÒ»¸ö±äÁ¿²¢ÔÚ¶ÑÉÏ·ÖÅä¿Õ¼ä
- * type ±äÁ¿ÀàÐÍ
- * var  ±äÁ¿Ö¸ÕëÃû
+ * å®šä¹‰ä¸€ä¸ªå˜é‡å¹¶åœ¨å †ä¸Šåˆ†é…ç©ºé—´
+ * type å˜é‡ç±»åž‹
+ * var  å˜é‡æŒ‡é’ˆå
  */
 #define NEW(type,var) type *var = (type *)malloc_safe(sizeof(type))
 /**
- * ¶¨ÒåÒ»¸ö±äÁ¿²¢ÔÚ¶ÑÉÏ·ÖÅä¿Õ¼ä£¬Í¬Ê±½«¸ÃÄÚ´æÇøÓòÇåÁã¡£
- * type ±äÁ¿ÀàÐÍ
- * var  ±äÁ¿Ö¸ÕëÃû
+ * å®šä¹‰ä¸€ä¸ªå˜é‡å¹¶åœ¨å †ä¸Šåˆ†é…ç©ºé—´ï¼ŒåŒæ—¶å°†è¯¥å†…å­˜åŒºåŸŸæ¸…é›¶ã€‚
+ * type å˜é‡ç±»åž‹
+ * var  å˜é‡æŒ‡é’ˆå
  */
 #define NEW0(type,var) NEW(type,var); memset(var,0,sizeof(type));
 
 /**
- * ÔÚ¶ÑÉÏ·ÖÅä´óÐ¡ÎªlenµÄ¿Õ¼ä
- * @param len ÒÔbyte¼ÆÊýµÄÄÚ´æ¿Õ¼ä´óÐ¡
+ * åœ¨å †ä¸Šåˆ†é…å¤§å°ä¸ºlençš„ç©ºé—´
+ * @param len ä»¥byteè®¡æ•°çš„å†…å­˜ç©ºé—´å¤§å°
  */
 extern void * malloc_safe(size_t len);
 extern void * realloc_safe(void *ptr, size_t len);
 /**
- * ÊÍ·ÅÓÉmalloc_safe·ÖÅäµÄ¿Õ¼ä
- * @param ptr Ö¸Ïò´ýÊÍ·ÅµÄÄÚ´æµÄÖ¸Õë
+ * é‡Šæ”¾ç”±malloc_safeåˆ†é…çš„ç©ºé—´
+ * @param ptr æŒ‡å‘å¾…é‡Šæ”¾çš„å†…å­˜çš„æŒ‡é’ˆ
  */
 extern void free_safe(void *ptr);
 
 
 /**
- * ½«´ÓÏµÍ³µ÷ÓÃÖÐ»ñµÃµÄÎÄ¼þ´óÐ¡×ª»»ÎªÄÚ²¿¶¨ÒåµÄ´óÐ¡
+ * å°†ä»Žç³»ç»Ÿè°ƒç”¨ä¸­èŽ·å¾—çš„æ–‡ä»¶å¤§å°è½¬æ¢ä¸ºå†…éƒ¨å®šä¹‰çš„å¤§å°
  */
 extern FSIZE file_size_shorten(ULONGLONG size);
 
 /**
- * ÎÄ¼þFSIZEµÄ¶ÈÁ¿µ¥Î»£¨byte\KB\MB\GB£©,ÓÃÁ½Î»¶þ½øÖÆÊý±íÊ¾
+ * æ–‡ä»¶FSIZEçš„åº¦é‡å•ä½ï¼ˆbyte\KB\MB\GBï¼‰,ç”¨ä¸¤ä½äºŒè¿›åˆ¶æ•°è¡¨ç¤º
  */
 extern int file_size_unit(FSIZE size);
 
 /**
- * ÎÄ¼þFSIZEµÄ´óÐ¡£¬0-1000Ö®¼ä
+ * æ–‡ä»¶FSIZEçš„å¤§å°ï¼Œ0-1000ä¹‹é—´
  */
 extern int file_size_amount(FSIZE size);
 

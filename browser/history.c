@@ -1,21 +1,21 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <Shlobj.h>
 #include "history.h"
 #include "win_misc.h"
 
 static wchar_t his_files[MAX_HISTORY][MAX_PATH] = {0};
 
-//²ÉÓÃĞÙÑÀÀûÃüÃû·¨Çø·ÖÍâ²¿Î»ÖÃºÍÄÚ²¿Î»ÖÃ
+//é‡‡ç”¨åŒˆç‰™åˆ©å‘½åæ³•åŒºåˆ†å¤–éƒ¨ä½ç½®å’Œå†…éƒ¨ä½ç½®
 static int nstart=0; 
 
 static struct{
-	int wi:16; //Íâ²¿Î»ÖÃ
-	int ni:16; //ÄÚ²¿Î»ÖÃ
-}PIN[VIEW_HISTORY] = {-1}; //Ö»³õÊ¼»¯ÁËµÚÒ»¸öwi£¬ÊÇ·ñ´æÔÚÒÆÖ²ĞÔÎÊÌâ£¿Ä¬ÈÏ³õÊ¼»¯ºó£¬ËùÓĞPIN[i].wi!=i
+	int wi:16; //å¤–éƒ¨ä½ç½®
+	int ni:16; //å†…éƒ¨ä½ç½®
+}PIN[VIEW_HISTORY] = {-1}; //åªåˆå§‹åŒ–äº†ç¬¬ä¸€ä¸ªwiï¼Œæ˜¯å¦å­˜åœ¨ç§»æ¤æ€§é—®é¢˜ï¼Ÿé»˜è®¤åˆå§‹åŒ–åï¼Œæ‰€æœ‰PIN[i].wi!=i
 
 #define VALID_PIN(i) (i<VIEW_HISTORY && PIN[i].wi==i)
 
-static int all_pined(){//ËùÓĞ±»¹Ì¶¨µÄ¼ÇÂ¼µÄ×ÜÊı
+static int all_pined(){//æ‰€æœ‰è¢«å›ºå®šçš„è®°å½•çš„æ€»æ•°
 	int i=0,ret=0;
 	for(;i<VIEW_HISTORY;i++){
 		if(VALID_PIN(i)) ret+=1;
@@ -23,7 +23,7 @@ static int all_pined(){//ËùÓĞ±»¹Ì¶¨µÄ¼ÇÂ¼µÄ×ÜÊı
 	return ret;
 }
 
-static int pined_before(int wi){//Ğ¡ÓÚÎ»ÖÃwiµÄ±»¹Ì¶¨µÄ¼ÇÂ¼µÄ×ÜÊı
+static int pined_before(int wi){//å°äºä½ç½®wiçš„è¢«å›ºå®šçš„è®°å½•çš„æ€»æ•°
 	int i=0,ret=0;
 	for(;i<wi;i++){
 		if(VALID_PIN(i)) ret+=1;
@@ -31,7 +31,7 @@ static int pined_before(int wi){//Ğ¡ÓÚÎ»ÖÃwiµÄ±»¹Ì¶¨µÄ¼ÇÂ¼µÄ×ÜÊı
 	return ret;
 }
 
-static BOOL occupy_by_pin(int ni){//¸ø¶¨Î»ÖÃÊÇ·ñ±»¹Ì¶¨
+static BOOL occupy_by_pin(int ni){//ç»™å®šä½ç½®æ˜¯å¦è¢«å›ºå®š
 	int i=0;
 	for(;i<VIEW_HISTORY;i++){
 		if(VALID_PIN(i)){
@@ -41,7 +41,7 @@ static BOOL occupy_by_pin(int ni){//¸ø¶¨Î»ÖÃÊÇ·ñ±»¹Ì¶¨
 	return 0;
 }
 
-static int w_pin_from_ni(int ni){//¸ø¶¨±»¹Ì¶¨µÄÄÚ²¿Î»ÖÃ£¬·µ»ØÍâ²¿Î»ÖÃ
+static int w_pin_from_ni(int ni){//ç»™å®šè¢«å›ºå®šçš„å†…éƒ¨ä½ç½®ï¼Œè¿”å›å¤–éƒ¨ä½ç½®
 	int i=0;
 	for(;i<VIEW_HISTORY;i++){
 		if(VALID_PIN(i)){
@@ -51,14 +51,14 @@ static int w_pin_from_ni(int ni){//¸ø¶¨±»¹Ì¶¨µÄÄÚ²¿Î»ÖÃ£¬·µ»ØÍâ²¿Î»ÖÃ
 	return -1;
 }
 
-static void inc_start(){//Ç°ÒÆÊ×µØÖ·
+static void inc_start(){//å‰ç§»é¦–åœ°å€
 	do{
 		nstart++;
 		if(MAX_HISTORY<=nstart) nstart=0;
 	}while(occupy_by_pin(nstart));
 }
 
-int n_index_form_w(int wi){//½«Íâ²¿µØÖ·×ª»»ÎªÄÚ²¿µØÖ·
+int n_index_form_w(int wi){//å°†å¤–éƒ¨åœ°å€è½¬æ¢ä¸ºå†…éƒ¨åœ°å€
 	if(VALID_PIN(wi)){
 		return PIN[wi].ni;
 	}else{
@@ -105,7 +105,7 @@ int w_index_from_n(int ni){
 			if(nj<0) nj = MAX_HISTORY-1;
 		}
 		if(max_pin>=wi){
-			wi--; //TODO: ÓĞ¿ÉÄÜÓĞ¶à¸öpin¶¼´óÓÚwi£¬ÕâÀïÖ»¼ÇÂ¼Ò»¸ö¡£
+			wi--; //TODO: æœ‰å¯èƒ½æœ‰å¤šä¸ªpinéƒ½å¤§äºwiï¼Œè¿™é‡Œåªè®°å½•ä¸€ä¸ªã€‚
 		}
 		return wi;
 	}
@@ -221,8 +221,8 @@ BOOL history_load(){
 	FILE *fp;
 	char fbuffer[MAX_PATH];
 	if(!get_history_filename(fbuffer)) return 0;
-	fp = fopen(fbuffer, "rb");//²ÉÓÃ¶ş½øÖÆÁ÷
-	//unicode±àÂëµÄÖĞÎÄ¡°Òµ¡±µÄhexÖµÎª¡°4e 1a¡±£¬ÆäÖĞ1aÊÇCtrl-Z£¬±»windowsÈÏÎªÊÇÎÄ¼ş½áÊø±êÖ¾¡£
+	fp = fopen(fbuffer, "rb");//é‡‡ç”¨äºŒè¿›åˆ¶æµ
+	//unicodeç¼–ç çš„ä¸­æ–‡â€œä¸šâ€çš„hexå€¼ä¸ºâ€œ4e 1aâ€ï¼Œå…¶ä¸­1aæ˜¯Ctrl-Zï¼Œè¢«windowsè®¤ä¸ºæ˜¯æ–‡ä»¶ç»“æŸæ ‡å¿—ã€‚
 	if(fp==NULL){
 		//init_from_recent();
 		return 0;

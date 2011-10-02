@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_DEPRECATE 
+ï»¿#define _CRT_SECURE_NO_DEPRECATE 
 
 #include "env.h"
 #include <stdio.h>
@@ -264,7 +264,7 @@ BOOL readfile(int i, char *filename){
 			}else{
 				char root_name[3];
 				_itoa(i,root_name,10);
-				SET_ROOT_NAME(file,root_name); //ÀëÏßÎÄ¼þµÄ¸ùÄ¿Â¼
+				SET_ROOT_NAME(file,root_name); //ç¦»çº¿æ–‡ä»¶çš„æ ¹ç›®å½•
 			}
 			if(file->up.ParentFileReferenceNumber!=0) goto error;
 			g_rootVols[i] = file;

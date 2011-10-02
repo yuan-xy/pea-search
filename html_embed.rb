@@ -37,10 +37,11 @@ File.open("#{web}/search.htm").each_line do |x|
 	convert_line(s,x)
 end
 
-s = Iconv.conv("gbk", "utf-8", s)
-$KCODE=''  
+#s = Iconv.conv("gbk", "utf-8", s)
+#$KCODE=''  
 
 File.open("html_source.h","w") do |f|
+  f << "\xEF\xBB\xBF"
   f << s
   f << ";"
 end

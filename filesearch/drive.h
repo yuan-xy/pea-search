@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -9,18 +9,18 @@ extern "C" {
 #include <windows.h>
 
 /**
- * ÊÇ·ñÊÇ¹Ì¶¨µÄÇı¶¯Æ÷
- * @param i Çı¶¯Æ÷±àºÅ
+ * æ˜¯å¦æ˜¯å›ºå®šçš„é©±åŠ¨å™¨
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern BOOL is_fix_drive(int i);
 /**
- * ÊÇ·ñÊÇ¹âÅÌµÄÇı¶¯Æ÷
- * @param i Çı¶¯Æ÷±àºÅ
+ * æ˜¯å¦æ˜¯å…‰ç›˜çš„é©±åŠ¨å™¨
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern BOOL is_cdrom_drive(int i);
 /**
- * ÊÇ·ñÊÇ¿ÉÒÆ¶¯µÄÇı¶¯Æ÷
- * @param i Çı¶¯Æ÷±àºÅ
+ * æ˜¯å¦æ˜¯å¯ç§»åŠ¨çš„é©±åŠ¨å™¨
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern BOOL is_removable_drive(int i);
 
@@ -29,61 +29,61 @@ struct driveInfo{
 	DWORD serialNumber;  //the volume serial number.
 	WCHAR volumeName[32];  //A pointer to a buffer that receives the name of a specified volume. The maximum buffer size is MAX_PATH+1.
 	WCHAR fsName[8];  //the name of the file system, for example, the FAT file system or the NTFS file system
-	int totalMB; //×î´ó4PB
+	int totalMB; //æœ€å¤§4PB
 	int totalFreeMB;
 };
 typedef struct driveInfo DriveInfo, *pDriveInfo;
 
 /**
- * ³õÊ¼»¯ËùÓĞÓĞĞ§µÄÇı¶¯Æ÷£¬°üÀ¨Çı¶¯Æ÷ÊÇ·ñÓĞĞ§¡¢Çı¶¯Æ÷ÀàĞÍºÍĞòÁĞºÅµÈĞÅÏ¢¡£
+ * åˆå§‹åŒ–æ‰€æœ‰æœ‰æ•ˆçš„é©±åŠ¨å™¨ï¼ŒåŒ…æ‹¬é©±åŠ¨å™¨æ˜¯å¦æœ‰æ•ˆã€é©±åŠ¨å™¨ç±»å‹å’Œåºåˆ—å·ç­‰ä¿¡æ¯ã€‚
  */
 extern void InitDrives();
 
 /**
- * ³õÊ¼»¯¸ø¶¨µÄÇı¶¯Æ÷
- * @param i Çı¶¯Æ÷±àºÅ
+ * åˆå§‹åŒ–ç»™å®šçš„é©±åŠ¨å™¨
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern void InitDrive(int i);
 
 /**
- * »ñµÃÇı¶¯Æ÷µÄ´ÅÅÌ¿Õ¼äÓë¿ÉÓÃ¿Õ¼ä
- * @param i Çı¶¯Æ÷±àºÅ
+ * è·å¾—é©±åŠ¨å™¨çš„ç£ç›˜ç©ºé—´ä¸å¯ç”¨ç©ºé—´
+ * @param i é©±åŠ¨å™¨ç¼–å·
  */
 extern void get_drive_space(int i);
 
 /**
- * ·ÃÎÊ¸ø¶¨µÄÇı¶¯Æ÷
- * @param i  Çı¶¯Æ÷±àºÅ
+ * è®¿é—®ç»™å®šçš„é©±åŠ¨å™¨
+ * @param i  é©±åŠ¨å™¨ç¼–å·
  */
 typedef void (*pDriveVisitor)(int i);
 
 /**
- * ±éÀúËùÓĞ´æÔÚµÄÇı¶¯Æ÷¡£Ã»ÓĞ²åÈë¹âÅÌµÄ¹âÇıÒ²ÊÇ´æÔÚµÄÇı¶¯Æ÷¡£
+ * éå†æ‰€æœ‰å­˜åœ¨çš„é©±åŠ¨å™¨ã€‚æ²¡æœ‰æ’å…¥å…‰ç›˜çš„å…‰é©±ä¹Ÿæ˜¯å­˜åœ¨çš„é©±åŠ¨å™¨ã€‚
  */
 extern void DrivesIterator(pDriveVisitor);
 
 /**
- * ±éÀúËùÓĞÓĞĞ§µÄÇı¶¯Æ÷¡£Ã»ÓĞ²åÈë¹âÅÌµÄ¹âÇı²»ÊÇÓĞĞ§µÄÇı¶¯Æ÷¡£
+ * éå†æ‰€æœ‰æœ‰æ•ˆçš„é©±åŠ¨å™¨ã€‚æ²¡æœ‰æ’å…¥å…‰ç›˜çš„å…‰é©±ä¸æ˜¯æœ‰æ•ˆçš„é©±åŠ¨å™¨ã€‚
  */
 extern void ValidDrivesIterator(pDriveVisitor);
 
 extern void ValidFixDrivesIterator(pDriveVisitor);
 
 /**
- * ¸ø¶¨µÄÇı¶¯Æ÷ÊÇ·ñÊÇNTFSÀàĞÍµÄ
- * @param i  Çı¶¯Æ÷±àºÅ
+ * ç»™å®šçš„é©±åŠ¨å™¨æ˜¯å¦æ˜¯NTFSç±»å‹çš„
+ * @param i  é©±åŠ¨å™¨ç¼–å·
  */
 extern BOOL IsNtfs(int i);
 
 /**
- * ±éÀúËùÓĞÓĞĞ§µÄNTFSÀàĞÍµÄÇı¶¯Æ÷¡£
+ * éå†æ‰€æœ‰æœ‰æ•ˆçš„NTFSç±»å‹çš„é©±åŠ¨å™¨ã€‚
  */
 extern void NtfsDrivesIterator(pDriveVisitor);
 extern void FatDrivesIterator(pDriveVisitor);
 
 /**
- * ´òÓ¡¸ø¶¨µÄÇı¶¯Æ÷µÄÏêÏ¸ĞÅÏ¢
- * @param i  Çı¶¯Æ÷±àºÅ
+ * æ‰“å°ç»™å®šçš„é©±åŠ¨å™¨çš„è¯¦ç»†ä¿¡æ¯
+ * @param i  é©±åŠ¨å™¨ç¼–å·
  */
 extern void PrintDriveDetails(int);
 

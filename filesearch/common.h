@@ -1,4 +1,4 @@
-#ifdef __cplusplus
+ï»¿#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -6,14 +6,14 @@ extern "C" {
 #define FILE_SEARCH_COMMON_H_
 
 /**
- * ÉèÖÃÓ¦ÓÃ³ÌĞòµ±Ç°Ä¿Â¼
+ * è®¾ç½®åº”ç”¨ç¨‹åºå½“å‰ç›®å½•
  */
 extern BOOL setPWD(char *lpModuleName);
 
 /**
- * ¸ù¾İÏà¶ÔÂ·¾¶ÎÄ¼şÃûµÃµ½¾ø¶ÔÂ·¾¶Ãû
- * @param name Ïà¶ÔÓÚ±¾Ä£¿éµÄÎÄ¼şÃû
- * @param full_path ¾ø¶ÔÂ·¾¶Ãû
+ * æ ¹æ®ç›¸å¯¹è·¯å¾„æ–‡ä»¶åå¾—åˆ°ç»å¯¹è·¯å¾„å
+ * @param name ç›¸å¯¹äºæœ¬æ¨¡å—çš„æ–‡ä»¶å
+ * @param full_path ç»å¯¹è·¯å¾„å
  */
 extern BOOL get_abs_path(const WCHAR *name, WCHAR full_path[]);
 

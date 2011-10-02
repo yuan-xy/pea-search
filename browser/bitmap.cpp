@@ -1,4 +1,4 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <shtypes.h>
 #include <shobjidl.h> 
 #include <shlobj.h> 
@@ -244,7 +244,7 @@ HRESULT save_as(LPCTSTR pszFile, HBITMAP bmp){
 }
 
 
-static wchar_t m_wsBuffer[255];	// ÁÙÊ±»º³åÇø
+static wchar_t m_wsBuffer[255];	// ä¸´æ—¶ç¼“å†²åŒº
 
 HRESULT CreateThumbnail(const wchar_t *wsDir, const wchar_t *wsFile,DWORD dwWidth, DWORD dwHeight, HBITMAP* pThumbnail) {  
 	LPITEMIDLIST pidlItems = NULL, pidlURL = NULL, pidlWorkDir = NULL;  
@@ -258,20 +258,20 @@ HRESULT CreateThumbnail(const wchar_t *wsDir, const wchar_t *wsFile,DWORD dwWidt
 	IShellFolder* psfWorkDir = NULL;  
 	IMalloc*	  pMalloc = NULL;
 
-	// ³õÊ¼»¯Com¿â
+	// åˆå§‹åŒ–Comåº“
 	if ( CoInitialize( NULL ) != 0 )
 	{
 		goto OnExit;
 	}
 
-	// »ñµÃIMalloc½Ó¿Ú
+	// è·å¾—IMallocæ¥å£
 	hr = SHGetMalloc( &pMalloc );
 	if ( FAILED( hr ) )
 	{
 		goto OnExit;
 	}
 
-	// »ñµÃ×ÀÃæÎÄ¼ş¼Ğ
+	// è·å¾—æ¡Œé¢æ–‡ä»¶å¤¹
 	hr = SHGetDesktopFolder(&psfDesktop);  
 	if(FAILED(hr)) goto OnExit;  
 
