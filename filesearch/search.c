@@ -719,7 +719,7 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 			DirIterateWithoutSelf(dir,FileSearchVisitor,sOpt);
 		}else{
 			pFileEntry desktop = get_desktop(ALL_DESKTOP);
-			if(desktop!=NULL) FilesIterate(desktop,FileSearchVisitor,sOpt);
+			if(desktop!=NULL && !sEnv->offline) FilesIterate(desktop,FileSearchVisitor,sOpt);
 			AllFilesIterate(FileSearchVisitor,sOpt, sEnv->offline);
 		}
 		freeSearchOpt(sOpt);
@@ -766,7 +766,7 @@ int * statistic(WCHAR *str, pSearchEnv env){
 			DirIterateWithoutSelf(dir,FileStatVisitor,sOpt);
 		}else{
 			pFileEntry desktop = get_desktop(ALL_DESKTOP);
-			if(desktop!=NULL) FilesIterate(desktop,FileStatVisitor,sOpt);
+			if(desktop!=NULL && !sEnv->offline) FilesIterate(desktop,FileStatVisitor,sOpt);
 			AllFilesIterate(FileStatVisitor,sOpt, sEnv->offline);
 		}
 		freeSearchOpt(sOpt);

@@ -137,7 +137,14 @@ var type;
 			 $(".jqgrow", "#maintable")[0].focus();
 			 return;
 		}
-		if(e.keyCode==46 || e.keyCode==8){
+		if(e.keyCode==8){
+			if(cur_search == $("#search").val() ){
+				remove_dir();
+				searchf(cur_search);
+				return;
+			}
+		}		
+		if(e.keyCode==46){
 			if($("#dir2").val()!="" && $("#search").val()==""){
 				if(cur_search!='') cur_search='';
 				else remove_dir();
@@ -398,6 +405,7 @@ var type;
 		}else{
 			$("#case0").click();
 		}
+		$("#online_bt").click();
 		$("#search").focus();
 		$("#search").bind('keyup',search_if_change);
 		$("#home_bt").bind('click',function(){return_history()});

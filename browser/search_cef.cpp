@@ -1,4 +1,4 @@
-﻿#include "../filesearch/env.h"
+#include "../filesearch/env.h"
 #include "../3rd/cef_binary/include/cef.h"
 #include "../filesearch/common.h"
 #include "cef_scheme.h"
@@ -132,7 +132,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam){
 				if(_waccess(full_path,0)==0){
 					CefBrowser::CreateBrowser(info,
 						static_cast<CefRefPtr<CefClient>>(g_handler), full_path,settings);
-				}else{
+				}else if(_waccess(L"E:\\Documents\\gigaso\\browser\\web\\search.htm",0)==0){
+						CefBrowser::CreateBrowser(info,
+							static_cast<CefRefPtr<CefClient>>(g_handler), L"E:\\Documents\\gigaso\\browser\\web\\search.htm",settings);
+				}else {
 					CefBrowser::CreateBrowser(info,
 						static_cast<CefRefPtr<CefClient>>(g_handler), L"about:blank",settings);
 				}
