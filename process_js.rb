@@ -2,7 +2,7 @@ $KCODE='u'
 puts "begin process js source ...\n"
 
 web = "#{File.dirname(__FILE__)}/browser/web"
-Closure = "java -jar #{File.dirname(__FILE__)}/compiler.jar "
+Closure = "java -jar #{File.dirname(__FILE__)}/3rd/compiler.jar "
 
 
 pack_js = %w{search.js context.js disk.js message.js scroll.js subnav.js}

@@ -1,4 +1,4 @@
-Thumbs.db
+Thumbs.db*
 .DS_Store
 *.log
 *.bak
@@ -6,8 +6,8 @@ Thumbs.db
 *.db
 *.dbz
 *.obj
-Debug
-Release
+Debug*
+Release*
 build
 GIGASOConfig.h
 gserver/public/dumps/
