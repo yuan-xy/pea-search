@@ -138,3 +138,13 @@ background-color: #FFDDDD;
 	width:2px; height:44px;
 	background-image: url(./images/rightline.png);
 }
+
+#main_nav_tab span {
+	font-size:60%;
+}
+#tab-1 .subnav-span{
+	cursor:hand;
+}
+#tab-1 .subnav-span span{
+	font-size:50%;
+}

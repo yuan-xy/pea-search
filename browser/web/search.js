@@ -2,6 +2,11 @@ var file;
 var path;
 var type;
 
+var num_per_row=4;
+var row_per_page=2;
+var num_per_page=num_per_row*row_per_page;
+var num_all_page=num_per_page*2;
+
 	var host = "http://60.191.119.190:3333";
 	var order_col;
 	var order_desc;
@@ -132,6 +137,7 @@ var type;
 		return value != cur_search;
 	}
 	function search_if_change(e){
+		$("#dialog-welcome").dialog("close");
 		if(e.keyCode==13){
 			 $("#maintable").setSelection(1);
 			 $(".jqgrow", "#maintable")[0].focus();
@@ -218,11 +224,12 @@ var type;
 		if(arguments.length==0) start_index=0;
 		var hs = cef.plugin.history().replace(/\\/g,"\\\\");
 		hs = eval(hs);
-		for( var i=0;i<hs.length;i++){
+		hs=hs.slice(0,num_all_page);
+		for( var i=0;i<num_all_page;i++){
 			var fname = hs[i].name;
 			if(fname.charAt(fname.length-1)=='\\') fname = fname.substr(0,fname.length-1);
-			function calc_top(x){if(x>=15) x-=15;if(x>=10) return 460;if(x>=5) return 290;return 120}
-			function calc_left(x){if(x>=15) x-=15;return 10+200*(x%5)}
+			function calc_top(x){if(x>=num_per_page) x-=num_per_page;if(x>=num_per_row) return 320;return 120}
+			function calc_left(x){if(x>=num_per_page) x-=num_per_page;return 100+200*(x%num_per_row)}
 			hs[i].id = i;
 			hs[i].left = calc_left(i);
 			hs[i].top = calc_top(i);
@@ -271,6 +278,10 @@ var type;
 			$(p).parents('.history_file').hide();
 			refresh();
 		});
+		if(hs[0].name=="" && hs[1].name=="" ){
+			$("#dialog-welcome").dialog({modal: false, width:600});
+			$("#search").focus();
+		}
 		$("#loading").css("visibility","hidden");
 	}
 	function load_history(){
@@ -288,7 +299,7 @@ var type;
 	var his_start=true;
 	function history_switch(){
 		if(his_start){
-			history_parse(15);
+			history_parse(num_per_page);
 			his_start = false;
 		}else{
 			history_parse(0);
@@ -389,6 +400,12 @@ var type;
 		$("#tabs ul li a").bind('click',function(e){
 			$(".subnav").hide();
 			$("#"+e.target.id+"div").show();
+		});
+		$("#tabs ul li a img").bind('click',function(e){
+			var id = e.target.parentNode.id;
+			$(".subnav").hide();
+			$("#"+id+"div").show();
+			console.log($("#"+id+"div"));
 		});
 		$(window).bind('scroll',function(e){
 			if(reachBottom()) grid_add_files();
