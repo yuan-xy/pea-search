@@ -245,7 +245,7 @@ var num_all_page=num_per_page*2;
 		}
 		file_name_trim2(hs);
 		$("#historys").setTemplateElement("history_template");
-		hs0 = hs.slice(start_index,start_index+15);
+		hs0 = hs.slice(start_index,start_index+num_per_page);
 		$("#historys").processTemplate(hs0);
 		$(".thumbnail-wrapper").bind('click',function(e){
 			dblclick_file(e.currentTarget.parentNode);
@@ -279,7 +279,7 @@ var num_all_page=num_per_page*2;
 			refresh();
 		});
 		if(hs[0].name=="" && hs[1].name=="" ){
-			$("#dialog-welcome").dialog({modal: false, width:600});
+			$("#dialog-welcome").dialog({modal: false, width:600, close: function(event, ui) { $("#search").focus(); }});
 			$("#search").focus();
 		}
 		$("#loading").css("visibility","hidden");
