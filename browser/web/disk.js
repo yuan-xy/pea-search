@@ -239,24 +239,28 @@ function online_db(){
 	setTimeout(refresh,10);
 }
 
-function upgrade_req(){
+var mannual;//更新请求是手动的还是自动的。
+function upgrade_req(up_url){
 	var data = "upgrade[os]="+cef.gigaso.os+"&upgrade[cpu]="+cef.gigaso.cpu+"&upgrade[disk]="
 		+cef.gigaso.disk+"&upgrade[ver]="+cef.gigaso.ver+"&upgrade[user]="+cef.gigaso.user;
 	var jqxhr = $.ajax({
 	  type: 'POST',
-	  url: host+"/upgrades.js",
+	  url: up_url+"/upgrades.js",
 	  data: data,
 	  dataType: "json"
 	})
     .success(function(data, textStatus, jqXHR) { 
-		if(data.status==1)
-			cef.plugin.search("[///upgrade"+host+data.url+"?"+data.hash+"&"+data.version);
-		else cef.plugin.search("[///upgrade_none");
+		console.log(data);
+		if(data.status==1){
+			cef.plugin.search("[///upgrade"+up_url+data.url+"?"+data.hash+"&"+data.version);
+		}else{
+			cef.plugin.search("[///upgrade_none");
+		}
+		setTimeout(show_upgrade_info,50);
 	 })
     .error(function(jqXHR, textStatus, errorThrown) {
-		console.log(textStatus);
-		console.log(jqXHR.responseText);
-		console.log(errorThrown);
+		console.log(up_url);
+		upgrade_req(host_backup);
 	});
 }
 
@@ -279,16 +283,29 @@ function do_upgrade(){
 	cef.gigaso.do_update();
 }
 
-function check_upgrade(mannual){
-		var update_status = cef.gigaso.check_update();
-		if(update_status==0){
-			upgrade_req();
-			if(mannual) show_info("正在下载更新...");
-		}else if(update_status==1){
-			show_upgrade();
-		}else{
-			if(mannual) show_info("没有更新。");
+function show_upgrade_info(){
+	if(mannual){
+		var update_status = cef.plugin.search("[///upgrade_status")*1;
+		switch(update_status){
+			case 0:  show_info("正在检查更新...");break;
+			case 1:  show_info("已经更新到最新。");break;
+			case 2:  show_info("安装更新...");break;
+			case 3:  show_info("正在下载更新...");break;
+			default:  show_info("暂时无法更新...");break;
 		}
+	}
+}
+
+function check_upgrade(by_hand){
+   if(arguments.length==0) mannual=false;
+   else mannual = by_hand;
+   var update_status = cef.plugin.search("[///upgrade_status")*1;
+   if(update_status==0){
+   	upgrade_req(host_main);
+   }else if(update_status==2){
+   	show_upgrade();
+   }
+   show_upgrade_info();
 }
 
 var first_grid=true;

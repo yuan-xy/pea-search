@@ -256,10 +256,9 @@ static void send_response_get_drives(HANDLE hNamedPipe){
 		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
 	}
 }
-
-static void send_response_ok(HANDLE hNamedPipe){
+static void send_response_char(HANDLE hNamedPipe,char c){
 	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
-	*p++ = '1';
+	*p++ = c;
 	{
 		DWORD nXfer;
 		pSearchResponse resp = (pSearchResponse)buffer;
@@ -268,12 +267,41 @@ static void send_response_ok(HANDLE hNamedPipe){
 	}
 }
 
+static void send_response_ok(HANDLE hNamedPipe){
+	send_response_char(hNamedPipe,'1');
+}
+
 static void load_offline_dbs_t(void *p){
 	load_offline_dbs();
 }
 
 static void rescan_t(void *p){
 	rescan((int)p);
+}
+static BOOL update_status(int status){
+	FILE *file;
+	if ((file = fopen (UPDATE_CHECH_FILE, "w")) != NULL){
+		fwrite(&status,sizeof(char),1,file);
+		fclose (file);
+		return 1;
+	}
+	return 0;
+}
+
+static int get_update_status(){
+	BOOL one_day_ago = file_passed_one_day(UPDATE_CHECH_FILE);
+	if(one_day_ago){
+		return UPDATE_CHECH_UNKNOWN;
+	}else{
+		FILE *file;
+		int status=UPDATE_CHECH_UNKNOWN;
+		if ((file = fopen(UPDATE_CHECH_FILE, "r+")) == NULL){
+			return UPDATE_CHECH_UNKNOWN;
+		}
+		fread(&status,sizeof(int),1,file);
+		fclose (file);
+		return status;
+	}
 }
 
 static void download_t(void *str){// "http://host/filename?hash&version"
@@ -300,7 +328,7 @@ static void download_t(void *str){// "http://host/filename?hash&version"
 			int status=UPDATE_CHECH_NEW;
 			FILE *file;
 			if ((file = fopen (UPDATE_CHECH_FILE, "w")) == NULL) return;
-			fwrite(&status,sizeof(int),1,file);
+			fwrite(&status,sizeof(char),1,file);
 			fwrite(fname,sizeof(char),MAX_PATH,file);
 			fclose (file);
 			set_prop(L"version",version);
@@ -335,16 +363,16 @@ static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 	}else if(wcsncmp(command,L"upgrade",wcslen(L"upgrade"))==0){
 		WCHAR *url = command+wcslen(L"upgrade");
 		if(wcsncmp(url,L"_none",wcslen(L"_none"))==0){
-			FILE *file;
-			if ((file = fopen (UPDATE_CHECH_FILE, "w")) != NULL){
-				int status = UPDATE_CHECH_DONE;
-				fwrite(&status,sizeof(int),1,file);
-				fclose (file);
-			}
+			update_status(UPDATE_CHECH_DONE);
+			send_response_ok(hNamedPipe);
+		}else if(wcsncmp(url,L"_status",wcslen(L"_status"))==0){
+			update_status(UPDATE_CHECH_DONE);
+			send_response_char(hNamedPipe,get_update_status());
 		}else{
+			update_status(UPDATE_CHECH_DOWNLOADING);
 			_beginthread(download_t,0,url);
+			send_response_ok(hNamedPipe);
 		}
-		send_response_ok(hNamedPipe);
 	}else{
 		send_response_ok(hNamedPipe);
 	}

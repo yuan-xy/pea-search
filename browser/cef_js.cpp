@@ -79,24 +79,6 @@ public:
 		}
       return true;
     }
-    else if(name == "CheckUpdate")
-    {
-		int status=UPDATE_CHECH_UNKNOWN;
-		FILE *file;
-		BOOL one_day_ago = file_passed_one_day(UPDATE_CHECH_FILE);
-		if(one_day_ago){
-			status = UPDATE_CHECH_UNKNOWN;
-		}else{
-			if ((file = fopen(UPDATE_CHECH_FILE, "r+")) == NULL){
-				retval = CefV8Value::CreateInt(UPDATE_CHECH_UNKNOWN);
-				return true;
-			}
-			fread(&status,sizeof(int),1,file);
-			fclose (file);
-		}
-		retval = CefV8Value::CreateInt(status);
-		return true;
-    }
     else if(name == "DoUpdate")
     {
 		int status=UPDATE_CHECH_UNKNOWN;
@@ -104,7 +86,7 @@ public:
 		if ((file = fopen(UPDATE_CHECH_FILE, "r+")) == NULL){
 			return true;
 		}
-		if(fread(&status,sizeof(int),1,file)==1){
+		if(fread(&status,sizeof(char),1,file)==1){
 			if(status==UPDATE_CHECH_NEW){
 				char fname[MAX_PATH] = {0};
 				size_t ret = fread(fname,sizeof(char),MAX_PATH,file);
@@ -113,7 +95,7 @@ public:
 					if(h>32){
 						status = UPDATE_CHECH_DONE;
 						fseek(file,0,SEEK_SET);
-						fwrite(&status,sizeof(int),1,file);
+						fwrite(&status,sizeof(char),1,file);
 					}
 				}
 			}
@@ -226,10 +208,6 @@ void InitExtensionTest()
     "  cef.gigaso.select_dir = function() {"
     "    native function SelectDir();"
     "    return SelectDir();"
-    "  };"
-    "  cef.gigaso.check_update = function() {"
-    "    native function CheckUpdate();"
-    "    return CheckUpdate();"
     "  };"
     "  cef.gigaso.do_update = function() {"
     "    native function DoUpdate();"

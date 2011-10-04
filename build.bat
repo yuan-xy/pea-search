@@ -1,7 +1,7 @@
 @echo off
 if "%1" == "clean" goto do_clean
 if "%1" == "gigaso" goto do_gigaso
-if "%1" == "gigaso_install" goto do_build
+if "%1" == "gigaso_install" goto do_gigaso
 if "%1" == "install" goto do_install
 if "%1" == "sign" goto do_sign
 

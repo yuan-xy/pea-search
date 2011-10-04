@@ -40,6 +40,5 @@ cef.gigaso.zoom_out = {};
 cef.gigaso.zoom_reset = {};
 cef.gigaso.dev_tool = {};
 cef.gigaso.select_dir = {};
-cef.gigaso.check_update = {};
 cef.gigaso.do_update = {};
 cef.gigaso.crash_test = {};
