@@ -113,7 +113,7 @@ var num_all_page=num_per_page*2;
     function searchf(value){
 		value = trim(value);
 		if(value.length==0) return;
-		$("#historys").fadeOut(300);
+		$("#history_area").fadeOut(300);
 		$("#tabs").fadeIn(500);
 		$("#loading").css("visibility","visible");
 		cur_search = value;
@@ -292,7 +292,7 @@ var num_all_page=num_per_page*2;
 	function return_history(){
 		$("#loading").css("visibility","visible");
 		$("#tabs").fadeOut(300);
-		$("#historys").show();
+		$("#history_area").show();
 		load_history();
 		$("#search").val("");
 		$("#search").focus();
