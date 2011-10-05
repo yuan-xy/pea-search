@@ -92,11 +92,14 @@ void print_hz_len(pUTF8 hz, int len){
 	char chars[BUF_LEN_0] = {0};
 	int d;
 	WCHAR *wstr = utf8_to_wchar(hz,len,&d);
+#ifdef WIN32
 	int flen = WideCharToMultiByte(CP_OEMCP,(DWORD) 0,wstr,d,chars,BUF_LEN_0,NULL,FALSE);
 	chars[flen]='\0';
 	free_safe(wstr);
-	//printf("%d,",d,chars);
 	printf("%d,%s \n",d,chars);
+#else
+	wprintf("%d,%s \n",d,wstr);
+#endif
 }
 
 void print_hz(pUTF8 hz){

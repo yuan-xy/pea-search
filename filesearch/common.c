@@ -1,5 +1,4 @@
 ﻿#include "env.h"
-#include <windows.h>
 #include <time.h>
 #include <sys/stat.h>
 #include "common.h"

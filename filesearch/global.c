@@ -1,7 +1,6 @@
-﻿#include <windows.h>
+﻿#include "global.h"
 #include "drive.h"
 #include "ntfs.h"
-#include "global.h"
 
 UTF8 rootNames[26][3] = {"A:", "B:", "C:", "D:", "E:", "F:", "G:", "H:", "I:", "J:", "K:", "L:", "M:", "N:", "O:", "P:", "Q:", "R:", "S:", "T:", "U:", "V:", "W:", "X:", "Y:", "Z:"};
 

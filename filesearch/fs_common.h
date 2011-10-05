@@ -40,6 +40,8 @@ struct fileEntry{  //表示一个文件
 };
 typedef struct fileEntry FileEntry, *pFileEntry;
 
+extern const int ROOT_NUMBER; //NTFS驱动器根目录的FileReferenceNumber的低32位值
+
 #define IsReadonly(pFileEntry) (pFileEntry->us.v.readonly==1)
 #define IsHidden(pFileEntry) (pFileEntry->us.v.hidden==1)
 #define IsSystem(pFileEntry) (pFileEntry->us.v.system==1)
@@ -91,9 +93,14 @@ extern int print_path_str(pFileEntry file, char *buffer);
 #define is_system_ffd(find_data)  find_data->dwFileAttributes&FILE_ATTRIBUTE_SYSTEM
 #define is_dir_ffd(find_data)     find_data->dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY
 
+#ifdef WIN32
 extern MINUTE ConvertSystemTimeToMinute(SYSTEMTIME sysTime);
-
 extern void ConvertMinuteToSystemTime(SYSTEMTIME *sysTime,IN MINUTE time32);
+/**
+ * 将从文件系统中获得的时间转换为MINUTE赋值给文件
+ */
+extern void set_time(pFileEntry file, PFILETIME time);
+#endif
 
 extern void SET_TIME(pFileEntry file, MINUTE time);
 extern MINUTE GET_TIME(pFileEntry file);
@@ -101,11 +108,6 @@ extern FSIZE GET_SIZE(pFileEntry file);
 extern void SET_SIZE(pFileEntry file, FSIZE size);
 
 extern void print_full_path(pFileEntry file);
-
-/**
- * 将从文件系统中获得的时间转换为MINUTE赋值给文件
- */
-extern void set_time(pFileEntry file, PFILETIME time);
 
 /**
  * 生成驱动器根文件的pFileEntry结构

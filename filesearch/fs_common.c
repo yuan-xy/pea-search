@@ -1,11 +1,12 @@
 ﻿#include "env.h"
-#include <windows.h>
 #include <stdio.h>
 #include "global.h"
 #include "fs_common.h"
 #include "suffix.h"
 #include "ntfs.h"
 #include "fat.h"
+
+const int ROOT_NUMBER=5;
 
 BOOL attachParent(pFileEntry file, int i){
 	pFileEntry parent;
@@ -106,6 +107,8 @@ int print_path_str(pFileEntry file, char *p){
 #define YEAR_START 1990
 #endif
 
+#ifdef WIN32
+
 INLINE MINUTE ConvertSystemTimeToMinute(SYSTEMTIME sysTime)
 {
     MINUTE time32=0;
@@ -134,6 +137,8 @@ void set_time(pFileEntry file, PFILETIME time){
 	FileTimeToSystemTime(&fileTime,&st);
 	SET_TIME(file,ConvertSystemTimeToMinute(st));
 }
+
+#endif //WIN32
 
 void print_time(pFileEntry file){
 	SYSTEMTIME st;

@@ -6,7 +6,6 @@ extern "C" {
 #define FILE_SEARCH_UTIL_H_
 
 #include "env.h"
-#include <windows.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -72,21 +71,21 @@ extern wchar_t *wcsrchr_me(const wchar_t *S, int len, const wchar_t C);
 
 //定义二进制常量
 #define BYTE_BIN(n) ( \
-((0n%0100000000/010000000>0)<<7)| \
-((0n%010000000 /01000000 >0)<<6)| \
-((0n%01000000 /0100000 >0)<<5)| \
-((0n%0100000   /010000   >0)<<4)| \
-((0n%010000    /01000    >0)<<3)| \
-((0n%01000     /0100     >0)<<2)| \
-((0n%0100      /010      >0)<<1)| \
-((0n%010       /01       >0)<<0))
+((0##n%0100000000/010000000>0)<<7)| \
+((0##n%010000000 /01000000 >0)<<6)| \
+((0##n%01000000 /0100000 >0)<<5)| \
+((0##n%0100000   /010000   >0)<<4)| \
+((0##n%010000    /01000    >0)<<3)| \
+((0##n%01000     /0100     >0)<<2)| \
+((0##n%0100      /010      >0)<<1)| \
+((0##n%010       /01       >0)<<0))
 
 #define WORD_BIN(n) ( \
-(BYTE_BIN(0n/0100000000)<<8)|BYTE_BIN(0n%0100000000) \
+(BYTE_BIN(0##n/0100000000)<<8)|BYTE_BIN(0##n%0100000000) \
 )
 
 #define DWORD_BIN(highword,lowword) ( \
-(WORD_BIN(0highword)<<16)|WORD_BIN(0lowword) \
+(WORD_BIN(0##highword)<<16)|WORD_BIN(0##lowword) \
 )
 
 
@@ -115,11 +114,11 @@ extern void * realloc_safe(void *ptr, size_t len);
  */
 extern void free_safe(void *ptr);
 
-
 /**
  * 将从系统调用中获得的文件大小转换为内部定义的大小
  */
 extern FSIZE file_size_shorten(ULONGLONG size);
+
 
 /**
  * 文件FSIZE的度量单位（byte\KB\MB\GB）,用两位二进制数表示

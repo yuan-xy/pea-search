@@ -6,7 +6,6 @@ extern "C" {
 #define FILE_SEARCH_MAIN_H_
 
 #include "env.h"
-#include <windows.h>
 
 extern BOOL gigaso_init();
 extern BOOL gigaso_destory();

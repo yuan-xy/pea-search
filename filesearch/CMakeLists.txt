@@ -7,17 +7,12 @@ include_directories ("${BREAKPAD_DIR}")
 file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	bzip2/[^.]*.c
 	bzip2/[^.]*.h
-	[^.]*.cpp
 	[^.]*.h
 	chinese.c
-	drive.c
-	drive_change.c
-	fat.c
 	fs_common.c
 	global.c
 	history.c
 	main.c
-	ntfs.c
 	search.c
 	server.c
 	serverNP.c
@@ -27,6 +22,23 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	write.c
 	common.c
 	md5c.c
+	chinese.cpp
+	exception_dump.cpp
+	fs_common2.cpp
+
+	IF( WIN32 )
+	drive.c
+	drive_change.c
+	fat.c	
+	ntfs.c
+	desktop.cpp
+	desktop_exec.cpp
+	ntfs.cpp
+	ELSE( WIN32 )
+	    message(STATUS "UNIX")
+	ENDIF()	
+
+	
 )
 
 # Generated files are stored in ${GENERATED} by the project configuration

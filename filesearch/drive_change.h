@@ -6,7 +6,6 @@ extern "C" {
 #define FILE_SEARCH_DRIVE_CHANGE_H_
 
 #include "env.h"
-#include <windows.h>
 
 /**
  * 可插拔磁盘变动监听器

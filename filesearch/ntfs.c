@@ -1,5 +1,4 @@
 ﻿#include "env.h"
-#include <windows.h>
 #include <winioctl.h>
 #include <assert.h>
 #include <stdio.h>
@@ -7,9 +6,6 @@
 #include "util.h"
 #include "global.h"
 #include "suffix.h"
-
-const int ROOT_NUMBER=5;
-
 
 BOOL OpenNtfsHandle(int i){
 	WCHAR szVolumePath[8];

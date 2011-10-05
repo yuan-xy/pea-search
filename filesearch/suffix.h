@@ -5,7 +5,7 @@ extern "C" {
 #ifndef FILE_SEARCH_SUFFIX_H_
 #define FILE_SEARCH_SUFFIX_H_
 
-#include <windows.h>
+#include <env.h>
 #include "util.h"
 #include "fs_common.h"
 
