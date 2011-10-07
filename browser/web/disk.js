@@ -256,11 +256,11 @@ function upgrade_req(up_url){
 		}else{
 			cef.plugin.search("[///upgrade_none");
 		}
-		setTimeout(show_upgrade_info,50);
+		setTimeout(show_upgrade_info,10);
 	 })
     .error(function(jqXHR, textStatus, errorThrown) {
 		console.log(up_url);
-		upgrade_req(host_backup);
+		if(up_url!=host_backup) upgrade_req(host_backup);
 	});
 }
 
@@ -285,8 +285,7 @@ function do_upgrade(){
 
 function show_upgrade_info(){
 	if(mannual){
-		var update_status = cef.plugin.search("[///upgrade_status")*1;
-		switch(update_status){
+		switch(cef.plugin.search("[///upgrade_status")*1){
 			case 0:  show_info("正在检查更新...");break;
 			case 1:  show_info("已经更新到最新。");break;
 			case 2:  show_info("安装更新...");break;
@@ -300,12 +299,12 @@ function check_upgrade(by_hand){
    if(arguments.length==0) mannual=false;
    else mannual = by_hand;
    var update_status = cef.plugin.search("[///upgrade_status")*1;
-   if(update_status==0){
+   if(mannual || update_status==0){
    	upgrade_req(host_main);
    }else if(update_status==2){
    	show_upgrade();
    }
-   show_upgrade_info();
+   //show_upgrade_info();
 }
 
 var first_grid=true;

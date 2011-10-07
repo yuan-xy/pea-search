@@ -280,7 +280,7 @@ var num_all_page=num_per_page*2;
 			refresh();
 		});
 		if(hs[0].name=="" && hs[1].name=="" ){
-			$("#dialog-welcome").dialog({modal: false, width:600, close: function(event, ui) { $("#search").focus(); }});
+			$("#dialog-welcome").dialog({modal: false, width:720, height:320, close: function(event, ui) { $("#search").focus(); }});
 			$("#search").focus();
 		}
 		$("#loading").css("visibility","hidden");

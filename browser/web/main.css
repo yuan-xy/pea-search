@@ -108,7 +108,7 @@ background-color: #FFDDDD;
 .topbar .rightbar{float:right; width:300px; height:44px;}
 .topbar .rightbar li{float:right; height:44px; line-height:44px; text-align:center;}
 .topbar .rightbar li ul{font-size:12px; text-align:left; width:100px; height:170px; border:1px #a0a0a0 solid; background-color:#f0f0f0; padding:0px; margin:0px; }
-.topbar .rightbar li ul li{text-align:left; padding-left:15px; line-height:32px; height:32px; border-bottom:1px #e4e4e4 solid;}
+.topbar .rightbar li ul li{float:left; width:100px; text-align:left; padding-left:15px; line-height:32px; height:32px; border-bottom:1px #e4e4e4 solid;}
 .topbar .rightbar li ul li a{color:#999; text-decoration:none;}
 .topbar .rightbar li ul li a:hover{color:#666;}
 
@@ -118,17 +118,17 @@ background-color: #FFDDDD;
 .title-01-right{float:right; width:100px; height:24px; text-align:right}
 
 .libutton {
-  display:block;width:21px; height:19px;
+  display:block;width:22px; height:19px; 
 }
 
 .libutton:hover {
-  border: 1px solid hsl(213, 63%, 93%);
+  border: 1px solid hsl(213, 66%, 57%);
   padding: 0px;
   border-radius: 2px;
 }
 
 .libutton:active {
-  border: 1px solid hsl(213, 66%, 57%);
+  border: 1px solid hsl(198, 96%, 84%);
   padding: 0px;
   border-radius: 2px;
 }

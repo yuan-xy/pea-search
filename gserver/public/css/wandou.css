@@ -1,0 +1,28 @@
+@charset "utf-8";
+/* body */
+body{background:#ededed;}
+
+
+/* header */
+.header{background:url(../images/header-bg-01.png) repeat-x; height:417px; border-top:5px solid #003278; border-bottom:1px solid #fff;}
+.header .topbox{width:950px; margin:0 auto;}
+.header .topbox .leftbar{float:left; width:561px; height:417px;}
+.header .topbox .rightbar{float:right; width:389px; }
+.header .topbox .rightbar .logo{width:389px; height:141px;}
+.header .topbox .rightbar .wordbox{background:url(../images/rightbar-bg.png); width:389px; height:276px;}
+.header .topbox .rightbar .version{color:#000; line-height:24px; padding-left:90px;}
+.header .topbox .rightbar .xzcs{color:#fff; padding-top:85px; padding-left:110px;}
+.header .topbox .rightbar .downlod{color:#fff; line-height:24px; padding-left:90px; padding-top:30px;}
+.header .topbox .rightbar .downlod a{color:#fff; padding-right:10px; text-decoration:underline;}
+
+/* content */
+.containter{width:950px; padding:20px 0px; margin:0 auto;}
+.containter .leftcon{float:left; width:365px; }
+.containter .leftcon p{padding-left:18px;}
+.containter .rightcon{float:right; width:585px; line-height:24px;}
+.containter .rightcon b{color:#0755b6; padding:10px 0px; display:block;}
+.containter .rightcon .more{color:#0755b6; text-align:right; padding:15px 20px 20px 0px;}
+.containter .rightcon .more a{color:#0755b6; text-decoration:underline;}
+
+/* footer */
+.footer{background:url(../images/footer-bg-01.png); color:#888; height:95px; text-align:center; padding-top:20px; line-height:24px; border-top:1px solid #fff;}

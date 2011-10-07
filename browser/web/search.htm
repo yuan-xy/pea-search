@@ -44,11 +44,11 @@
       <li style="width:34px;" onMouseOver="layer_menu('m_sub1','1')" onMouseOut="layer_menu('m_sub1','1')"><a href="#" title="设置"  _fcksavedurl="#"><img src="images/icon-08.png" width="34" height="16"></a>
           <div style="position:relative;">
             <div id="m_sub1" style="visibility:hidden; position:absolute; top:6px;left:-70px; z-index:99999;" >
-              <ul>
+              <ul style="text-align:left;">
                 <li id="index_st_bt">硬盘状态</li>
                 <li id="hotkey_bt">快捷键</li>
                 <li id="export_bt">导出查询结果</li>
-                <li ondblclick="cef.gigaso.dev_tool();return false;"><a href="help.htm" target="_blank">帮助</a></li>
+                <li onDblClick="cef.gigaso.dev_tool();return false;"><a href="help.htm" target="_blank" style="color:#333;">帮助</a></li>
                 <li id="upgrade_bt">检查更新</li>
               </ul>
             </div>
@@ -131,8 +131,8 @@
 			<br/><span id="other_file">0</span></a>
 		</li>
 	</ul>
-	<div id="tab-1">
-		<div class="subnav" style="display:none; left:220px" id="program-div">
+	<div id="tab-1" style="background:#b8daf3; line-height:28px; border:1px #6990b3 solid;">
+		<div class="subnav" style="display:none; left:220px; " id="program-div">
 			<span class="subnav-span"><a onClick="file_type_search(17);return false;"><img src="icons/exe.ico" class="icon"/>程序(<span id="exe_file">0</span>)</a></span>
 			<span class="subnav-span"><a onClick="file_type_search(18);return false;"><img src="icons/link.ico" class="icon"/>快捷方式(<span id="link_file">0</span>)</a></span>
 			<span class="subnav-span"><a onClick="file_type_search(19);return false;"><img src="icons/script.ico" class="icon"/>脚本(<span id="script_file">0</span>)</a></span>
@@ -295,12 +295,17 @@
 </div>
 
 <div id="dialog-welcome" title="欢迎首次使用豌豆搜索" style="display:none;">
-<p>
-	"豌豆搜索"是一个根据文件名快速搜索硬盘中文件的软件。<br/>
-	1、在上方搜索框中直接输入想要搜索的关键词.即使只输入部分字符，您想要找的文件也能够快速被找到。然后你可以按文件名/文件大小/文件时间来排序查询结果。<br/>
-	2、多个查询条件以空格分开.比如查询条件“a b”查找文件名中即包含a又包含b的文件。<br/>
-	3、豌豆搜索支持模糊拼音查询.你可以输入“fangan”查询所有文件名中带“方案”的文档。<br/>
-</p>
+<div style="font-size:12px;line-height:22px;">
+<div style="float:left; width:320px; "><p style="padding-top:70px;"><img src="images/welcome.png" width="301" height="72"></p></div>
+<div style="float:right; width:360px;"><p style="padding-top:40px; line-height:30px;">
+<b style="font-size:14px;">豌豆搜索是一款快速搜索文件名的软件。</b><br>
+1.在搜索框输入<b style="color:#ef3800">全部或部分</b>文件名，搜索结果就会立刻呈现。<br>
+2.支持多个条件查询，条件之间用<b style="color:#ef3800">空格隔开</b>，如“方案 销售”。<br>
+3.可以按文件名称、大小、时间进行<b style="color:#ef3800">排序</b>。<br></p></div>
+
+
+
+</div>
 </div>
 
 </body>

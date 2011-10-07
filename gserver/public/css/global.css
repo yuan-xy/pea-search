@@ -1,0 +1,20 @@
+@charset "utf-8";
+/*text type*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{font-family:Arial,Tahoma,Helvetica,sans-serif; font-size:12px; line-height:1.5; color:#333333}
+/* Standard Definitions
+----------------------------------------*/
+.left{float:left;}
+.right{float:right;}
+.hide{display:none;}
+/*cutpage*/
+.cutpage{margin-left:10px; font-size:14px;overflow:hidden;zoom:1;margin-top:25px;}
+.cutpage a{float:left;text-decoration:none;padding:3px 7px;border:1px solid #D0DEFF;background-color:#fff;margin-right:3px;}
+.cutpage a.on{font-weight:bold;color:#EF0000;}
+.cutpage a:hover{background-color:#D0DEFF;}
+/*clear clearfix*/
+.clearfix:after {content: "\0020"; display: block; height: 0;clear: both; visibility: hidden; }
+.clearfix {zoom: 1;} 
+.clear{clear:both;}
+/*link style*/
+a:link,a:visited{color:#333;text-decoration:none;}
+a:hover{color:#AD1F1D;text-decoration:underline;}

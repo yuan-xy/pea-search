@@ -366,7 +366,6 @@ static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 			update_status(UPDATE_CHECH_DONE);
 			send_response_ok(hNamedPipe);
 		}else if(wcsncmp(url,L"_status",wcslen(L"_status"))==0){
-			update_status(UPDATE_CHECH_DONE);
 			send_response_char(hNamedPipe,get_update_status());
 		}else{
 			update_status(UPDATE_CHECH_DOWNLOADING);
