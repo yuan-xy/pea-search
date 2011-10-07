@@ -24,5 +24,9 @@ body{background:#ededed;}
 .containter .rightcon .more{color:#0755b6; text-align:right; padding:15px 20px 20px 0px;}
 .containter .rightcon .more a{color:#0755b6; text-decoration:underline;}
 
+/* form */
+.table{width:290px; margin-top:10px; margin-left:18px; background:#fff; border:3px #e2e2e2 solid;}
+.table td{color:#666; height:30px; padding-left:10px;}
+
 /* footer */
 .footer{background:url(../images/footer-bg-01.png); color:#888; height:95px; text-align:center; padding-top:20px; line-height:24px; border-top:1px solid #fff;}

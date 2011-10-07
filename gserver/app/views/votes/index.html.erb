@@ -1,0 +1,24 @@
+<h1>Listing votes</h1>
+
+<table>
+  <tr>
+    <th>Result</th>
+    <th>Other</th>
+    <th>Email</th>
+  </tr>
+
+<% @votes.each do |vote| %>
+  <tr>
+    <td><%=h vote.result %></td>
+    <td><%=h vote.other %></td>
+    <td><%=h vote.email %></td>
+    <td><%= link_to 'Show', vote %></td>
+    <td><%= link_to 'Edit', edit_vote_path(vote) %></td>
+    <td><%= link_to 'Destroy', vote, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New vote', new_vote_path %>
