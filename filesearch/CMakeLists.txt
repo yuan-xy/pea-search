@@ -24,21 +24,7 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	md5c.c
 	chinese.cpp
 	exception_dump.cpp
-	fs_common2.cpp
-
-	IF( WIN32 )
-	drive.c
-	drive_change.c
-	fat.c	
-	ntfs.c
-	desktop.cpp
-	desktop_exec.cpp
-	ntfs.cpp
-	ELSE( WIN32 )
-	    message(STATUS "UNIX")
-	ENDIF()	
-
-	
+	fs_common2.cpp	
 )
 
 # Generated files are stored in ${GENERATED} by the project configuration
@@ -57,6 +43,29 @@ SET( SOURCES
     ${GENERATED}
     )
 
+if (WIN32) 
+	SET(SOURCES  ${SOURCES}
+		drive.c
+		drive_change.c
+		fat.c	
+		ntfs.c
+		desktop.cpp
+		desktop_exec.cpp
+		ntfs.cpp
+		main_win.c
+	   )
+endif (WIN32)
+	
+if (UNIX) 
+		#ADD_DEFINITIONS(-Wall)
+		set(SOURCES ${SOURCES}
+		pathalloc.c
+		ftw4.c
+		main_mac.c
+	)
+endif(UNIX)
+	
+	
 add_library (file_search STATIC ${SOURCES} )
 #set_target_properties(file_search PROPERTIES LINK_FLAGS "/include:__tcmalloc") 
 target_link_libraries (file_search "${3RD_LIB_PATH}/libtcmalloc_minimal.lib")

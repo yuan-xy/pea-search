@@ -152,6 +152,18 @@ pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b){
     }
 }
 
+int wchar_to_utf8_2(const WCHAR *in, int insize_c, pUTF8 out, int *out_buffer_size){
+    int buffer_len = WideCharToMultiByte(CP_UTF8, 0, in, insize_c, NULL, 0, NULL, NULL);
+    if (buffer_len <= 0){
+    	return 0;
+    }else if(out_buffer_size<buffer_len){
+		return -1;
+	}else{
+    	WideCharToMultiByte(CP_UTF8, 0, in, insize_c, out, buffer_len, NULL, NULL);
+		return buffer_len;
+    }
+}
+
 WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
     int buffer_len = MultiByteToWideChar(CP_UTF8, 0, in, insize_b, NULL, 0);
     if (buffer_len <= 0){
@@ -163,6 +175,19 @@ WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
     	return wstr;
     }
 }
+
+int utf8_to_wchar_2(const pUTF8 in, int insize_b, wchar_t *out, int *out_buffer_size){
+    int buffer_len = MultiByteToWideChar(CP_UTF8, 0, in, insize_b, NULL, 0);
+    if (buffer_len <= 0){
+    	return 0;
+    }else if(out_buffer_size<buffer_len){
+		return -1;
+	}else{
+    	MultiByteToWideChar(CP_UTF8, 0, in, insize_b, out, buffer_len);
+    	return buffer_len;
+    }
+}
+
 
 wchar_t *wcsrchr_me(const wchar_t *name, int len, const wchar_t C){
 	int index=len-1;

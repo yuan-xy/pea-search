@@ -60,12 +60,14 @@ extern int time_passed_ret(int (*f)(),int *ret_data);
 /**
  * 将unicode编码的字符串in转换为utf-8编码的字符串
  * @param insize_c表示The number of Unicode (16-bit) characters in the string
- * @param out_size_b表示以byte统计的字符串长度
+ * @return 动态分配的UTF8串，以及out_size_b表示以byte统计的字符串长度
  * 
  */
 extern pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b);
+extern int wchar_to_utf8_2(const WCHAR *in, int insize_c, pUTF8 out, int *out_buffer_size);
 
 extern WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c);
+extern int utf8_to_wchar_2(const pUTF8 in, int insize_b, wchar_t *out, int *out_buffer_size);
 
 extern wchar_t *wcsrchr_me(const wchar_t *S, int len, const wchar_t C);
 

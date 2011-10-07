@@ -47,6 +47,9 @@ extern "C" {
 	typedef char UINT;
 	typedef void * HANDLE;
 	#define MAX_PATH 256
+	#define IN
+	#define OUT
+	#define WINAPI
 	
 	/*
 	 * Default file access permissions for new files.

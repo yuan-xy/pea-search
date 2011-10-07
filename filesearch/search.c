@@ -268,8 +268,10 @@ int file_name_cmpUTF8(pFileEntry a, pFileEntry b){
 	{
 		WCHAR aw[256],bw[256];
 		int ai,bi;
-		ai = MultiByteToWideChar(CP_UTF8, 0,a->FileName,a->us.v.FileNameLength, aw, 256);
-		bi = MultiByteToWideChar(CP_UTF8, 0,b->FileName,b->us.v.FileNameLength, bw, 256);
+		//ai = MultiByteToWideChar(CP_UTF8, 0,a->FileName,a->us.v.FileNameLength, aw, 256);
+		//bi = MultiByteToWideChar(CP_UTF8, 0,b->FileName,b->us.v.FileNameLength, bw, 256);
+		ai = utf8_to_wchar_2(a->FileName,a->us.v.FileNameLength, aw, 256);
+		bi = utf8_to_wchar_2(b->FileName,b->us.v.FileNameLength, bw, 256);
 		if(sEnv->case_sensitive){
 			ret = _wcsncoll(aw,bw,min(ai,bi));
 		}else{

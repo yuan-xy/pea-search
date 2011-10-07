@@ -94,12 +94,13 @@ extern int print_path_str(pFileEntry file, char *buffer);
 #define is_dir_ffd(find_data)     find_data->dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY
 
 #ifdef WIN32
-extern MINUTE ConvertSystemTimeToMinute(SYSTEMTIME sysTime);
-extern void ConvertMinuteToSystemTime(SYSTEMTIME *sysTime,IN MINUTE time32);
-/**
- * 将从文件系统中获得的时间转换为MINUTE赋值给文件
- */
-extern void set_time(pFileEntry file, PFILETIME time);
+	extern MINUTE ConvertSystemTimeToMinute(SYSTEMTIME sysTime);
+	extern void ConvertMinuteToSystemTime(SYSTEMTIME *sysTime,IN MINUTE time32);
+	extern void set_time(pFileEntry file, PFILETIME time);
+#else
+	extern MINUTE ConvertSystemTimeToMinute(time_t sysTime);
+	extern void ConvertMinuteToSystemTime(struct tm *sysTime, MINUTE time32);
+	extern void set_time(pFileEntry file, time_t time);
 #endif
 
 extern void SET_TIME(pFileEntry file, MINUTE time);
@@ -146,6 +147,7 @@ extern void renameFile(pFileEntry file, wchar_t *new_name, int name_byte_len);
  */
 void moveFile(pFileEntry file, pFileEntry pnew);
 
+#ifdef WIN32
 /**
  * 启动文件系统变动监视线程。该线程只能被启动一次。
  * @param i 驱动器编号
@@ -159,6 +161,8 @@ extern BOOL StartMonitorThread(int i);
 extern BOOL StopMonitorThread(int i);
 
 extern BOOL CloseVolumeHandle(int i);
+
+#endif //WIN32
 
 /**
  * 根据文件的Key值在Map中找到该文件

@@ -10,6 +10,7 @@ extern "C" {
 extern BOOL gigaso_init();
 extern BOOL gigaso_destory();
 
+extern void scan(int i);
 extern void rescan(int i);
 
 extern BOOL read_build_check(int i);

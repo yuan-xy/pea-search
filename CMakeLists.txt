@@ -43,7 +43,7 @@ ENDIF()
 message(STATUS "size of pointer: ${CMAKE_SYSTEM_PROCESSOR}  ")
 
 SET(3RD_LIB_PATH "${PROJECT_SOURCE_DIR}/libs/${CMAKE_SYSTEM_PROCESSOR}/${CMAKE_BUILD_TYPE}")
-message(STATUS ${3RD_LIB_PATH})
+message(STATUS "3RD_LIB_PATH: ${3RD_LIB_PATH}  " )
 
 set(BREAKPAD_DIR ${PROJECT_SOURCE_DIR}/3rd/google-breakpad-read-only/src)
 
@@ -53,8 +53,8 @@ configure_file (
   )
 
 EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/html_embed.rb" "${PROJECT_BINARY_DIR}")
-#EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_js.rb" "${PROJECT_BINARY_DIR}")
-#EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_css.rb" "${PROJECT_BINARY_DIR}")
+EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_js.rb" "${PROJECT_BINARY_DIR}")
+EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_css.rb" "${PROJECT_BINARY_DIR}")
 
 # add the binary tree to the search path for include files
 # so that we will find GIGASOConfig.h
