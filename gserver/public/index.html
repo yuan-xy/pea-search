@@ -20,9 +20,11 @@
 <div class="version">软件版本：V 1.0.18<br />
 软件大小：9.60M<br />
 更新时间：2011-10-8</div>
-<div class="xzcs">已有 110 次</div>
-<div class="downlod"><a href="#" target="_blank">本地下载</a>  <a href="#" target="_blank">华军下载</a>  <a href="#" target="_blank">腾讯下载</a>  <a href="#" target="_blank">太平洋下载</a><br />
+<div class="xzcs" style="cursor:hand" id="download">已有 <span id="dcount"></span> 次</div>
+<!--
+<div class="downlod"><a href="/gigaso/path/17/PeaSearch-1.0.18-x86.exe" target="_blank">本地下载</a>  <a href="#" target="_blank">华军下载</a>  <a href="#" target="_blank">腾讯下载</a>  <a href="#" target="_blank">太平洋下载</a><br />
 <a href="#" target="_blank">天空下载</a>  <a href="#" target="_blank">搜狐下载</a>  <a href="#" target="_blank">新浪下载</a></div>
+-->
 </div>
 </div>
 </div>
@@ -130,12 +132,33 @@
 
 <script>
 	$(function() {
+		$.ajax({
+		  type: 'GET',
+		  url: '/dcounts.js'
+		}).success(function(data, textStatus, jqXHR) { 
+			$("#dcount").html(data);
+		 });		
+		$("#download").bind("click",function(){
+			var newd = $("#dcount").html()*1+1;
+			console.log(newd);
+			$("#dcount").html(newd);
+			window.open('/gigaso/path/17/PeaSearch-1.0.18-x86.exe');
+			$.ajax({
+			  type: 'POST',
+			  url: '/dcounts'
+			});
+			return false;
+		});
 		$("#vote_submit").bind("click",function(){
 			var f=document.forms[0];
 			var elments=f.elements;
-			var url2="";
+			var url2="vote[result]=";
+			$("input[type='checkbox']").each(function(id,e){
+				if(e.checked) url2+=e.value;
+			});
 			for(var i=0;i<elments.length;i++){
-				if(i>0) url2+="&";
+				if(elments[i].type=='checkbox') continue; 
+				url2+="&";
 				url2+=elments[i].name+"="+elments[i].value;
 			}
 			console.log(url2);

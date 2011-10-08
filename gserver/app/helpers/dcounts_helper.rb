@@ -1,0 +1,2 @@
+module DcountsHelper
+end

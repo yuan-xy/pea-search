@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :dcounts
+
   map.resources :votes
 
   map.resources :gigasos

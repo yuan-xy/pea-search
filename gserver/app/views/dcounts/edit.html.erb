@@ -1,0 +1,16 @@
+<h1>Editing dcount</h1>
+
+<% form_for(@dcount) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :ip %><br />
+    <%= f.text_field :ip %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @dcount %> |
+<%= link_to 'Back', dcounts_path %>
