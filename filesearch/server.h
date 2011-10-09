@@ -8,7 +8,19 @@ extern "C" {
 #include "env.h"
 #include "sharelib.h"
 
-extern void process(SearchRequest req, void *out);
+#ifdef WIN32
+	#define SockOut HANDLE
+#else
+	#define SockOut int	
+#endif
+
+extern void process(SearchRequest req, SockOut out);
+
+extern BOOL start_named_pipe();
+
+extern void wait_stop_named_pipe();
+
+extern BOOL WINAPI shutdown_handle(DWORD CtrlEvent);
 
 #endif  // FILE_SEARCH_SERVER_H_
 

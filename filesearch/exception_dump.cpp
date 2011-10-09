@@ -3,8 +3,13 @@
 #include <cstdio>  
 #include <map>
 
+#ifdef WIN32
 #include "client/windows/handler/exception_handler.h"
 #include "client/windows/sender/crash_report_sender.h"
+#else
+#include "client/mac/handler/exception_handler.h"
+#include "client/mac/sender/crash_report_sender.h"
+#endif
 
 static google_breakpad::ExceptionHandler *eh; 
 static google_breakpad::CrashReportSender *sender;

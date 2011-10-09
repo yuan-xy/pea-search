@@ -1,13 +1,15 @@
 ﻿#include "env.h"
-#include <Urlmon.h>
-#include <Wininet.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <aclapi.h>
 #include <time.h>
+
+#ifdef WIN32
+#include <aclapi.h>
 #include <io.h>
 #include <process.h>
+#endif
+
 #include "util.h"
 #include "common.h"
 #include "global.h"
@@ -16,11 +18,41 @@
 #include "search.h"
 #include "suffix.h"
 #include "write.h"
-#include "serverNP.h"
 #include "server.h"
 #include "main.h"
+#include "download.h"
 
 static BOOL loaded_offline=0;
+
+#ifndef WIN32
+
+#include <errno.h>
+ssize_t	writen(int fd, const void *vptr, size_t n){
+	size_t		nleft;
+	ssize_t		nwritten;
+	const char	*ptr;
+
+	ptr = vptr;
+	nleft = n;
+	while (nleft > 0) {
+		if ( (nwritten = write(fd, ptr, nleft)) <= 0) {
+			if (errno == EINTR)
+				nwritten = 0;		/* and call write() again */
+			else
+				return(-1);			/* error */
+		}
+		nleft -= nwritten;
+		ptr   += nwritten;
+	}
+	return(n);
+}
+#endif
+
+#ifdef WIN32
+	#define WriteSock(fd,resp,len,sizet) WriteFile(fd, resp, len, &sizet, NULL);
+#else
+	#define WriteSock(fd,resp,len,sizet) sizet=writen(fd, resp, len);
+#endif
 
 static char * write_file(char *buffer, pFileEntry file){
 	char *p = buffer;
@@ -75,7 +107,7 @@ static char * write_file(char *buffer, pFileEntry file){
 }
 
 
-static void send_response_search(HANDLE hNamedPipe, pSearchRequest req, pFileEntry *result, int count){
+static void send_response_search(SockOut hNamedPipe, pSearchRequest req, pFileEntry *result, int count){
 	char buffer[MAX_RESPONSE_LEN], *p1=buffer+sizeof(int), *p=p1;
 	pFileEntry *start = result+req->from;
 	int i;
@@ -92,11 +124,11 @@ static void send_response_search(HANDLE hNamedPipe, pSearchRequest req, pFileEnt
 		DWORD nXfer;
 		pSearchResponse resp = (pSearchResponse)buffer;
 		resp->len = (p-p1);
-		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+		WriteSock(hNamedPipe, resp, (p-buffer), nXfer);
 	}
 }
 
-static void send_response_stat(HANDLE hNamedPipe, pSearchRequest req){
+static void send_response_stat(SockOut hNamedPipe, pSearchRequest req){
 	char buffer[4096], *p1=buffer+sizeof(int), *p=p1;
 	int *stats = statistic(req->str, &(req->env) );
 	p += print_stat(stats,p);
@@ -104,7 +136,7 @@ static void send_response_stat(HANDLE hNamedPipe, pSearchRequest req){
 		DWORD nXfer;
 		pSearchResponse resp = (pSearchResponse)buffer;
 		resp->len = (p-p1);
-		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+		WriteSock(hNamedPipe, resp, (p-buffer), nXfer);
 	}
 }
 
@@ -173,7 +205,7 @@ static char * print_drive_info(char *buffer,int id){
 	return p;
 }
 
-static void send_response_index_status(HANDLE hNamedPipe){
+static void send_response_index_status(SockOut hNamedPipe){
 	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
 	int i;
 	*p++ = '[';
@@ -189,7 +221,7 @@ static void send_response_index_status(HANDLE hNamedPipe){
 		DWORD nXfer;
 		pSearchResponse resp = (pSearchResponse)buffer;
 		resp->len = (p-p1);
-		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+		WriteSock(hNamedPipe, resp, (p-buffer), nXfer);
 	}
 }
 
@@ -223,7 +255,7 @@ static BOOL print_db_visitor(char *db_name, void *data){
 }
 
 
-static void send_response_cache_dbs(HANDLE hNamedPipe){
+static void send_response_cache_dbs(SockOut hNamedPipe){
 	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
 	*p++ = '[';
 	DbIterator(print_db_visitor,&p);
@@ -233,11 +265,11 @@ static void send_response_cache_dbs(HANDLE hNamedPipe){
 		DWORD nXfer;
 		pSearchResponse resp = (pSearchResponse)buffer;
 		resp->len = (p-p1);
-		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+		WriteSock(hNamedPipe, resp, (p-buffer), nXfer);
 	}
 }
 
-static void send_response_get_drives(HANDLE hNamedPipe){
+static void send_response_get_drives(SockOut hNamedPipe){
 	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
 	int i;
 	*p++ = '[';
@@ -253,21 +285,21 @@ static void send_response_get_drives(HANDLE hNamedPipe){
 		DWORD nXfer;
 		pSearchResponse resp = (pSearchResponse)buffer;
 		resp->len = (p-p1);
-		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+		WriteSock(hNamedPipe, resp, (p-buffer), nXfer);
 	}
 }
-static void send_response_char(HANDLE hNamedPipe,char c){
+static void send_response_char(SockOut hNamedPipe,char c){
 	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
 	*p++ = c;
 	{
 		DWORD nXfer;
 		pSearchResponse resp = (pSearchResponse)buffer;
 		resp->len = (p-p1);
-		WriteFile (hNamedPipe, resp, (p-buffer), &nXfer, NULL);
+		WriteSock(hNamedPipe, resp, (p-buffer), nXfer);
 	}
 }
 
-static void send_response_ok(HANDLE hNamedPipe){
+static void send_response_ok(SockOut hNamedPipe){
 	send_response_char(hNamedPipe,'1');
 }
 
@@ -305,7 +337,6 @@ static int get_update_status(){
 }
 
 static void download_t(void *str){// "http://host/filename?hash&version"
-	HRESULT hr;
 	WCHAR *filename;
 	WCHAR *url =(WCHAR *)str;
 	WCHAR *p = wcsrchr(url,L'?');
@@ -315,14 +346,12 @@ static void download_t(void *str){// "http://host/filename?hash&version"
 	*p = L'\0';
 	*p2 = L'\0';
 	filename = wcsrchr(url,L'/')+1;
-	DeleteUrlCacheEntry(url);
-	hr = URLDownloadToFile(NULL,url,filename,0,NULL);
-	if(hr==S_OK){
+	if(download(url,filename)){
 		char md5_2[MD5_LEN*2+1];
 		char fname[MAX_PATH]={0};
-		char md5[MAX_PATH];
-		WideCharToMultiByte(CP_ACP, 0, filename, wcslen(filename), fname, wcslen(filename), NULL, NULL);
-		WideCharToMultiByte(CP_ACP, 0, hash, wcslen(hash), md5, MAX_PATH, NULL, NULL);		
+		char md5[MAX_PATH];	
+		wchar_to_char(filename,fname,MAX_PATH);
+		wchar_to_char(hash,md5,MAX_PATH);
 		MD5File(fname,md5_2);
 		if(strncmp(md5,md5_2,MD5_LEN*2)==0){
 			int status=UPDATE_CHECH_NEW;
@@ -338,7 +367,7 @@ static void download_t(void *str){// "http://host/filename?hash&version"
 	}
 }
 
-static void command_exec(WCHAR *command, HANDLE hNamedPipe){
+static void command_exec(WCHAR *command, SockOut hNamedPipe){
 	if(wcsncmp(command,L"index_status",wcslen(L"index_status"))==0){
 		send_response_index_status(hNamedPipe);
 	}else if(wcsncmp(command,L"cache_dbs",wcslen(L"cache_dbs"))==0){
@@ -378,8 +407,8 @@ static void command_exec(WCHAR *command, HANDLE hNamedPipe){
 	}
 }
 
-void process(SearchRequest req, void *out){
-	HANDLE hNamedPipe = (HANDLE) out; 
+void process(SearchRequest req, SockOut out){
+	SockOut hNamedPipe = out; 
 	if(req.rows==-1){
 		send_response_stat(hNamedPipe, &req);
 	}else if(wcsncmp(req.str,L"[///",4)==0){

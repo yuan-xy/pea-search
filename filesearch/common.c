@@ -4,6 +4,7 @@
 #include "common.h"
 #include "GIGASOConfig.h"
 
+#ifdef WIN32
 BOOL setPWD(char *lpModuleName){
 	char szFilePath[MAX_PATH]={0};
 	char *szFileName = NULL;
@@ -241,11 +242,6 @@ BOOL get_disk(wchar_t *diskbuf){
 	return 1;
 }
 
-BOOL get_ver(wchar_t *verbuf){
-	wsprintf(verbuf,L"%d.%d.%d",GIGASO_VERSION_MAJOR,GIGASO_VERSION_MINOR,GIGASO_VERSION_BUILD);
-	return 1;
-}
-
 BOOL get_user(wchar_t *userbuf){
 	wchar_t fbuffer[128];
 	DWORD size=128;
@@ -253,7 +249,12 @@ BOOL get_user(wchar_t *userbuf){
 	wsprintf(userbuf,L"%d.%s",is_admin(),fbuffer);
 	return 1;
 }
+#endif
 
+BOOL get_ver(wchar_t *verbuf){
+	wsprintf(verbuf,L"%d.%d.%d",GIGASO_VERSION_MAJOR,GIGASO_VERSION_MINOR,GIGASO_VERSION_BUILD);
+	return 1;
+}
 
 BOOL passed_one_day(time_t last){
 	time_t now = time(NULL);

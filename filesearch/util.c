@@ -113,11 +113,7 @@ void free_safe(void *ptr){
 #ifdef MY_DEBUG
 	assert(ptr);
 #endif
-	__try{
-		if (ptr) TC_FREE(ptr);
-	} __finally{
-		;
-	}
+	if (ptr) TC_FREE(ptr);
 	ptr = NULL;
 }
 
@@ -140,6 +136,7 @@ int file_size_amount(FSIZE size){
 	return 0x3FF & size;
 }
 
+#ifdef WIN32
 pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b){
     int buffer_len = WideCharToMultiByte(CP_UTF8, 0, in, insize_c, NULL, 0, NULL, NULL);
     if (buffer_len <= 0){
@@ -188,6 +185,30 @@ int utf8_to_wchar_2(const pUTF8 in, int insize_b, wchar_t *out, int *out_buffer_
     }
 }
 
+void wchar_to_char(const wchar_t *ws, char *buffer, int buffer_size){
+	WideCharToMultiByte(CP_ACP, 0, ws, wcslen(ws), buffer, buffer_size, NULL, NULL);
+}
+#else
+pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b){
+	//TODO iconv
+}
+
+int wchar_to_utf8_2(const WCHAR *in, int insize_c, pUTF8 out, int *out_buffer_size){
+	//TODO iconv
+}
+
+WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
+	//TODO iconv
+}
+
+int utf8_to_wchar_2(const pUTF8 in, int insize_b, wchar_t *out, int *out_buffer_size){
+	//TODO iconv
+}
+
+void wchar_to_char(const wchar_t *ws, char *buffer, int buffer_size){
+	//TODO iconv
+}
+#endif
 
 wchar_t *wcsrchr_me(const wchar_t *name, int len, const wchar_t C){
 	int index=len-1;

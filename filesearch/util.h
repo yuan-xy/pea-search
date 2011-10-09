@@ -69,6 +69,8 @@ extern int wchar_to_utf8_2(const WCHAR *in, int insize_c, pUTF8 out, int *out_bu
 extern WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c);
 extern int utf8_to_wchar_2(const pUTF8 in, int insize_b, wchar_t *out, int *out_buffer_size);
 
+extern void wchar_to_char(const wchar_t *ws, char *buffer, int buffer_size);
+
 extern wchar_t *wcsrchr_me(const wchar_t *S, int len, const wchar_t C);
 
 //定义二进制常量

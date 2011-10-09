@@ -14,7 +14,7 @@
 #include "fs_common.h"
 #include "drive_change.h"
 #include "chinese.h"
-#include "serverNP.h"
+#include "server.h"
 #include "exception_dump.h"
 #include "desktop.h"
 

@@ -1,6 +1,9 @@
 
 include_directories ("${CMAKE_CURRENT_SOURCE_DIR}/sparsehash")
+if (WIN32) 
 include_directories ("${CMAKE_CURRENT_SOURCE_DIR}/sparsehash/windows")
+endif (WIN32)
+
 include_directories ("${BREAKPAD_DIR}")
 
 
@@ -15,7 +18,6 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	main.c
 	search.c
 	server.c
-	serverNP.c
 	str_match.c
 	suffix.c
 	util.c
@@ -53,6 +55,8 @@ if (WIN32)
 		desktop_exec.cpp
 		ntfs.cpp
 		main_win.c
+		download_win.c
+		serverNP.c
 	   )
 endif (WIN32)
 	
@@ -62,6 +66,8 @@ if (UNIX)
 		pathalloc.c
 		ftw4.c
 		main_mac.c
+		download_mac.c
+		serverUD.c
 	)
 endif(UNIX)
 	

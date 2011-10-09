@@ -1,6 +1,6 @@
 ﻿#include "env.h"
 #include "util.h"
-#include "serverNP.h"
+#include "server.h"
 #include "main.h"
 #include "drive.h"
 #include "util.h"

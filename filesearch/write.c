@@ -23,7 +23,11 @@ static unsigned short MAGIC = 0x1234;
 static short MAGIC_LEN = sizeof(MAGIC);
 static int ZERO=0;
 
+#ifdef WIN32
 __declspec (thread) static BOOL is_ntfs_cur_drive=1;
+#else
+static BOOL is_ntfs_cur_drive=1;
+#endif
 
 #ifdef USE_ZIP
 	static char file_name_pattern[] = "%x.dbz";
@@ -149,9 +153,11 @@ BOOL save2file0(int i){
 	fwrite(&(g_VolsInfo[i]),sizeof(g_VolsInfo[i]),1,fp);
 	is_ntfs_cur_drive = IsNtfs(i);
 	if(is_ntfs_cur_drive){
+#ifdef WIN32
 		fwrite(&(g_curFirstUSN[i]),sizeof(g_curFirstUSN[i]),1,fp);
 		fwrite(&(g_curNextUSN[i]),sizeof(g_curNextUSN[i]),1,fp);
 		fwrite(&(g_curJournalID[i]),sizeof(g_curJournalID[i]),1,fp);
+#endif
 	}else{
 		time_t start = time(NULL);
 		fwrite(&start,sizeof(time_t),1,fp);
@@ -200,6 +206,7 @@ BOOL readfile(int i, char *filename){
 		if(i<DIRVE_COUNT){
 			if(info.serialNumber!=g_VolsInfo[i].serialNumber) goto error;
 			if(IsNtfs(i)){
+#ifdef WIN32
 				USN         first_usn;
 				USN         next_usn;
 				DWORDLONG   jid;
@@ -212,6 +219,7 @@ BOOL readfile(int i, char *filename){
                 if(jid!=g_curJournalID[i]) g_expires[i]=1;
                 my_assert(next_usn<=g_curNextUSN[i],0);
                 if(next_usn < g_curFirstUSN[i]) g_expires[i]=1;
+#endif
 			}else{
 				time_t last;
 				d=(int)fread(&last,sizeof(time_t),1,fp);
@@ -222,6 +230,7 @@ BOOL readfile(int i, char *filename){
 		}else{
 			g_VolsInfo[i] = info;
 			if(IsNtfs(i)){
+#ifdef WIN32
 				USN         first_usn;
 				USN         next_usn;
 				DWORDLONG   jid;
@@ -231,6 +240,7 @@ BOOL readfile(int i, char *filename){
 				if(d<1) goto error;
 				d=(int)fread(&jid,sizeof(DWORDLONG),1,fp);
 				if(d<1) goto error;
+#endif
 			}else{
 				time_t last;
 				d=(int)fread(&last,sizeof(time_t),1,fp);
@@ -324,6 +334,7 @@ static BOOL loaded(char *filename){
 	return 0;
 }
 
+#ifdef WIN32
 void DbIterator(pDbVisitor visitor, void *data){
 	WIN32_FIND_DATAA fd;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
@@ -338,6 +349,11 @@ void DbIterator(pDbVisitor visitor, void *data){
 	}while (FindNextFileA(hFind, &fd) != 0);
 	FindClose(hFind);
 }
+#else
+void DbIterator(pDbVisitor visitor, void *data){
+	//TODO
+}
+#endif
 
 BOOL offline_db_visitor(char *db_name, void *data){
 		int *pi = (int *)data;
