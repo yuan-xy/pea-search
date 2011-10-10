@@ -1,15 +1,14 @@
 
-include_directories ("${CMAKE_CURRENT_SOURCE_DIR}/sparsehash")
+include_directories ("${PROJECT_SOURCE_DIR}/3rd/sparsehash-1.11/src")
 if (WIN32) 
-include_directories ("${CMAKE_CURRENT_SOURCE_DIR}/sparsehash/windows")
+include_directories ("${PROJECT_SOURCE_DIR}/3rd/sparsehash-1.11/src/windows")
+include_directories ("${BREAKPAD_DIR}")
 endif (WIN32)
 
-include_directories ("${BREAKPAD_DIR}")
+
 
 
 file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-	bzip2/[^.]*.c
-	bzip2/[^.]*.h
 	[^.]*.h
 	chinese.c
 	fs_common.c
@@ -25,7 +24,6 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	common.c
 	md5c.c
 	chinese.cpp
-	exception_dump.cpp
 	fs_common2.cpp	
 )
 
@@ -57,6 +55,7 @@ if (WIN32)
 		main_win.c
 		download_win.c
 		serverNP.c
+		exception_dump.cpp
 	   )
 endif (WIN32)
 	
@@ -68,6 +67,7 @@ if (UNIX)
 		main_mac.c
 		download_mac.c
 		serverUD.c
+		exception_dump_mac.cpp
 	)
 endif(UNIX)
 	

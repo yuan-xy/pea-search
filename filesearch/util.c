@@ -149,7 +149,7 @@ pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b){
     }
 }
 
-int wchar_to_utf8_2(const WCHAR *in, int insize_c, pUTF8 out, int *out_buffer_size){
+int wchar_to_utf8_2(const WCHAR *in, int insize_c, pUTF8 out, int out_buffer_size){
     int buffer_len = WideCharToMultiByte(CP_UTF8, 0, in, insize_c, NULL, 0, NULL, NULL);
     if (buffer_len <= 0){
     	return 0;
@@ -159,6 +159,10 @@ int wchar_to_utf8_2(const WCHAR *in, int insize_c, pUTF8 out, int *out_buffer_si
     	WideCharToMultiByte(CP_UTF8, 0, in, insize_c, out, buffer_len, NULL, NULL);
 		return buffer_len;
     }
+}
+
+void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size){
+	WideCharToMultiByte(CP_UTF8, 0, in, insize_c, (LPSTR)out, out_size, NULL, NULL);
 }
 
 WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
@@ -173,7 +177,7 @@ WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
     }
 }
 
-int utf8_to_wchar_2(const pUTF8 in, int insize_b, wchar_t *out, int *out_buffer_size){
+int utf8_to_wchar_2(const pUTF8 in, int insize_b, wchar_t *out, int out_buffer_size){
     int buffer_len = MultiByteToWideChar(CP_UTF8, 0, in, insize_b, NULL, 0);
     if (buffer_len <= 0){
     	return 0;
@@ -193,7 +197,11 @@ pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b){
 	//TODO iconv
 }
 
-int wchar_to_utf8_2(const WCHAR *in, int insize_c, pUTF8 out, int *out_buffer_size){
+int wchar_to_utf8_2(const WCHAR *in, int insize_c, pUTF8 out, int out_buffer_size){
+	//TODO iconv
+}
+
+void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size){
 	//TODO iconv
 }
 
@@ -201,7 +209,7 @@ WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
 	//TODO iconv
 }
 
-int utf8_to_wchar_2(const pUTF8 in, int insize_b, wchar_t *out, int *out_buffer_size){
+int utf8_to_wchar_2(const pUTF8 in, int insize_b, wchar_t *out, int out_buffer_size){
 	//TODO iconv
 }
 

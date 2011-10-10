@@ -10,7 +10,11 @@
 #include "search.h"
 #include "fs_common.h"
 #include "common.h"
+
+#ifdef USE_ZIP
 #include "bzip2/bzlib.h"
+#endif
+
 #include "ntfs.h"
 #include "main.h"
 #include "desktop.h"

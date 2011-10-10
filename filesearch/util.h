@@ -54,7 +54,6 @@ extern int time_passed_ret(int (*f)(),int *ret_data);
 
 
 #define WCHAR_TO_UTF8_LEN(wstr, wstrlen) WideCharToMultiByte(CP_UTF8, 0, (wstr), (wstrlen), NULL, 0, NULL, NULL)
-
 #define WCHAR_TO_UTF8(wstr, wstrlen, ustr, ustrlen) WideCharToMultiByte(CP_UTF8, 0, (wstr), (wstrlen), ((LPSTR)ustr), (ustrlen), NULL, NULL)
 
 /**
@@ -64,10 +63,12 @@ extern int time_passed_ret(int (*f)(),int *ret_data);
  * 
  */
 extern pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b);
-extern int wchar_to_utf8_2(const WCHAR *in, int insize_c, pUTF8 out, int *out_buffer_size);
+extern int wchar_to_utf8_2(const WCHAR *in, int insize_c, pUTF8 out, int out_buffer_size);
+extern void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size);
 
 extern WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c);
-extern int utf8_to_wchar_2(const pUTF8 in, int insize_b, wchar_t *out, int *out_buffer_size);
+extern int utf8_to_wchar_2(const pUTF8 in, int insize_b, wchar_t *out, int out_buffer_size);
+extern void utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, wchar_t *out, int out_size);
 
 extern void wchar_to_char(const wchar_t *ws, char *buffer, int buffer_size);
 
