@@ -1,8 +1,11 @@
 
-include_directories ("${PROJECT_SOURCE_DIR}/3rd/sparsehash-1.11/src")
+
 if (WIN32) 
-include_directories ("${PROJECT_SOURCE_DIR}/3rd/sparsehash-1.11/src/windows")
-include_directories ("${BREAKPAD_DIR}")
+ include_directories ("${PROJECT_SOURCE_DIR}/3rd/sparsehash-1.11/src-win")
+ include_directories ("${PROJECT_SOURCE_DIR}/3rd/sparsehash-1.11/src-win/windows")
+ include_directories ("${BREAKPAD_DIR}")
+ELSE( WIN32 )
+ include_directories ("${PROJECT_SOURCE_DIR}/3rd/sparsehash-1.11/src-mac")
 endif (WIN32)
 
 

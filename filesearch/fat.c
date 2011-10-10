@@ -19,11 +19,11 @@ __declspec (thread) int count = 1;
  */
 static pFileEntry initFatFile(WIN32_FIND_DATA *pfd, pFileEntry parent, int i){
 	int str_len = (int)wcslen(pfd->cFileName);
-	int len = WCHAR_TO_UTF8_LEN(pfd->cFileName,str_len);
+	int len = wchar_to_utf8_len(pfd->cFileName,str_len);
 	NEW0_FILE(ret,len);
 	ret->us.v.FileNameLength = len;
 	ret->us.v.StrLen = str_len;
-	WCHAR_TO_UTF8(pfd->cFileName,str_len,ret->FileName,len);
+	wchar_to_utf8_nocheck(pfd->cFileName,str_len,ret->FileName,len);
 	if(is_dir_ffd(pfd)){
 		ret->ut.v.suffixType = SF_DIR;
 		ret->us.v.dir = 1;

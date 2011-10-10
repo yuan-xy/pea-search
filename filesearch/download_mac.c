@@ -3,5 +3,5 @@
 
 BOOL download(const wchar_t *url, const wchar_t *name){
 	//TODO: 用libcurl整合
-	return (hr==S_OK);
+	return 0;
 }

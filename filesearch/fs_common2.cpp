@@ -173,12 +173,12 @@ void renameFile(pFileEntry file, wchar_t *new_name, int name_byte_len){
 		return;
 	}else{
 		int str_len = name_byte_len/sizeof(wchar_t);
-		int len = WCHAR_TO_UTF8_LEN(new_name,str_len);
+		int len = wchar_to_utf8_len(new_name,str_len);
 		NEW0_FILE(ret,len);
 		memcpy(ret,file,sizeof(FileEntry));
 		ret->us.v.FileNameLength = len;
 		ret->us.v.StrLen = str_len;
-		WCHAR_TO_UTF8(new_name,str_len,ret->FileName,len);
+		wchar_to_utf8_nocheck(new_name,str_len,ret->FileName,len);
 		if(file->up.parent!=NULL){
 			addChildren(file->up.parent,ret);
 		}

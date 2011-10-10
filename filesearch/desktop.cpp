@@ -34,11 +34,11 @@ static pFileEntry genDesktopFileEntry(){
 }
 static pFileEntry initDesktopFile(wchar_t *name, pFileEntry parent,BOOL dir){
 	int str_len = (int)wcslen(name);
-	int len = WCHAR_TO_UTF8_LEN(name,str_len);
+	int len = wchar_to_utf8_len(name,str_len);
 	NEW0_FILE(ret,len);
 	ret->us.v.FileNameLength = len;
 	ret->us.v.StrLen = str_len;
-	WCHAR_TO_UTF8(name,str_len,(LPSTR)ret->FileName,len);
+	wchar_to_utf8_nocheck(name,str_len,ret->FileName,len);
 	if(dir){
 		ret->ut.v.suffixType = SF_DIR;
 		ret->us.v.dir = 1;
