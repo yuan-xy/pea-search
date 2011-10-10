@@ -74,6 +74,7 @@ if (UNIX)
 	)
 endif(UNIX)
 	
+if (WIN32) 
 	
 add_library (file_search STATIC ${SOURCES} )
 #set_target_properties(file_search PROPERTIES LINK_FLAGS "/include:__tcmalloc") 
@@ -121,3 +122,13 @@ add_executable (peadeskg "user_desk_gen.c" )
 target_link_libraries (peadeskg "file_search")
 set_target_properties(peadeskg PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\"") 
 install (TARGETS peadeskg  DESTINATION .)
+
+endif (WIN32)
+
+
+if (UNIX) 
+add_library (file_search STATIC ${SOURCES} )
+target_link_libraries (file_search "${3RD_LIB_PATH}/libtcmalloc_minimal.a")
+add_executable (test_main "test_main.c" )
+target_link_libraries (test_main "file_search")
+endif(UNIX)

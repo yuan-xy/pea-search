@@ -8,11 +8,7 @@ extern "C" {
 #ifdef _MSC_VER
   #define INLINE __forceinline /* use __forceinline (VC++ specific) */
 #else
-	#ifdef __GNUC__
-		#define INLINE __inline__
-	#else
-		#define INLINE inline        /* use standard inline */
-	#endif
+  #define INLINE
 #endif
 
 #if defined(WIN32) 
@@ -34,10 +30,25 @@ extern "C" {
 	#include <stdlib.h>		/* for convenience */
 	#include <stddef.h>		/* for offsetof */
 	#include <string.h>		/* for convenience */
+	#include <strings.h>
 	#include <unistd.h>		/* for convenience */
 	#include <signal.h>		/* for SIG_ERR */
 	#include <stdint.h>
-
+	#include <time.h>
+	#include <wchar.h>
+	
+	#define strnicmp strncasecmp
+	#define stricmp strcasecmp
+	#define _wcsncoll wcsncmp
+	#define _wcsnicoll wcsncasecmp
+	
+	#define	LISTENQ		1024	/* 2nd argument to listen() */
+	#define	UNIXSTR_PATH	"/tmp/unix.str"	/* Unix domain stream cli-serv */
+	#define	SA	struct sockaddr
+	#define	FILE_MODE	(S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+					/* default file access permissions for new files */
+	#define	DIR_MODE	(FILE_MODE | S_IXUSR | S_IXGRP | S_IXOTH)
+					/* default permissions for new directories */				
 	#define	MAXLINE	4096			/* max line length */
 	#define BOOL int
 	#define WCHAR wchar_t
@@ -50,16 +61,6 @@ extern "C" {
 	#define IN
 	#define OUT
 	#define WINAPI
-	
-	/*
-	 * Default file access permissions for new files.
-	 */
-	#define	FILE_MODE	(S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
-
-	/*
-	 * Default permissions for new directories.
-	 */
-	#define	DIR_MODE	(FILE_MODE | S_IXUSR | S_IXGRP | S_IXOTH)
 
 	typedef	void	Sigfunc(int);	/* for signal handlers */
 

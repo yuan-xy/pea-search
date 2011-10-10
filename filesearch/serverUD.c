@@ -1,17 +1,32 @@
 #include "server.h"
+#include	<sys/types.h>	/* basic system data types */
+#include	<sys/socket.h>	/* basic socket definitions */
+#include	<sys/time.h>	/* timeval{} for select() */
+#include	<time.h>		/* timespec{} for pselect() */
+#include	<netinet/in.h>	/* sockaddr_in{} and other Internet defns */
+#include	<arpa/inet.h>	/* inet(3) functions */
+#include	<errno.h>
+#include	<fcntl.h>		/* for nonblocking */
+#include	<netdb.h>
+#include	<signal.h>
+#include	<sys/stat.h>	/* for S_xxx file mode constants */
+#include	<sys/uio.h>		/* for iovec{} and readv/writev */
+#include	<unistd.h>
+#include	<sys/wait.h>
+#include	<sys/un.h>		/* for Unix domain sockets */
 
-volatile static BOOL ShutDown = FALSE;
+
+volatile static BOOL ShutDown = 0;
+
+static int					listenfd, connfd;
+static pid_t				childpid;
+static socklen_t			clilen;
+static struct sockaddr_un	cliaddr, servaddr;
+void				sig_chld(int);
 
 BOOL start_named_pipe(){
-	int					listenfd, connfd;
-	pid_t				childpid;
-	socklen_t			clilen;
-	struct sockaddr_un	cliaddr, servaddr;
-	void				sig_chld(int);
-	
 	listenfd = socket(AF_LOCAL, SOCK_STREAM, 0);
 	if(listenfd<0) err_quit("unix domain socket error");
-	
 	unlink(UNIXSTR_PATH);
 	bzero(&servaddr, sizeof(servaddr));
 	servaddr.sun_family = AF_LOCAL;

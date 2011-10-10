@@ -230,7 +230,7 @@ void wchar_to_char(const wchar_t *ws, char *buffer, int buffer_size){
 wchar_t *wcsrchr_me(const wchar_t *name, int len, const wchar_t C){
 	int index=len-1;
 		for(;index>0;index--){
-			if( *(name+index) == C) return name+index;
+			if( *(name+index) == C) return (wchar_t *) name+index;
 		}
 	return NULL;
 }

@@ -223,7 +223,7 @@ void PrintFilenameMB(pFileEntry file){
 	fileName[flen]='\0';
 	printf("%s",fileName);
 #else
-	wprintf("%s",p);
+	wprintf(L"%s",p);
 #endif //WIN32
 }
 

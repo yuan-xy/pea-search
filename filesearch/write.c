@@ -67,6 +67,8 @@ void FileWriteVisitor(pFileEntry file, void *data){
 	}
 }
 
+
+#ifdef WIN32
 BOOL save_desktop(wchar_t *user_name, pFileEntry desktop){
 	FILE *fp;
 	fp = _wfopen(user_name, L"wb");
@@ -144,7 +146,7 @@ error:
 	fclose(fp);
 	return 0;
 }
-
+#endif //WIN32
 
 BOOL save2file0(int i){
 	FILE *fp;

@@ -555,7 +555,7 @@ static void findSlash(SearchOpt *s0){
 					NEW0(SearchOpt,s1);
 					s1->wlen = s0->wlen-i-1;
 					s1->wname = s0->wname+i+1;
-					s1->name = wchar_to_utf8(s1->wname,s1->wlen,&s1->len);
+					s1->name = wchar_to_utf8(s1->wname,s1->wlen,(int *) &s1->len);
 					s1->next = NULL;
 					s0->wlen =i-1;
 					s0->subdir = s1;
@@ -720,8 +720,10 @@ DWORD search(WCHAR *str, pSearchEnv env, pFileEntry **result){
 		if(dir != NULL){
 			DirIterateWithoutSelf(dir,FileSearchVisitor,sOpt);
 		}else{
+#ifdef WIN32
 			pFileEntry desktop = get_desktop(ALL_DESKTOP);
 			if(desktop!=NULL && !sEnv->offline) FilesIterate(desktop,FileSearchVisitor,sOpt);
+#endif
 			AllFilesIterate(FileSearchVisitor,sOpt, sEnv->offline);
 		}
 		freeSearchOpt(sOpt);
@@ -767,8 +769,10 @@ int * statistic(WCHAR *str, pSearchEnv env){
 		if(dir != NULL){
 			DirIterateWithoutSelf(dir,FileStatVisitor,sOpt);
 		}else{
+#ifdef WIN32
 			pFileEntry desktop = get_desktop(ALL_DESKTOP);
 			if(desktop!=NULL && !sEnv->offline) FilesIterate(desktop,FileStatVisitor,sOpt);
+#endif
 			AllFilesIterate(FileStatVisitor,sOpt, sEnv->offline);
 		}
 		freeSearchOpt(sOpt);

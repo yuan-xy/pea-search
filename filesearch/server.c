@@ -244,7 +244,7 @@ static BOOL print_db_visitor(char *db_name, void *data){
 			struct stat statbuf;
 			stat(db_name, &statbuf);
 			//p += sprintf(p,"%s",ctime(&statbuf.st_mtime));
-			p += sprintf(p,"%d",statbuf.st_mtime);
+			p += sprintf(p,"%d",(int)statbuf.st_mtime);
 		}
 		*p++ ='"';
 	}
@@ -307,8 +307,9 @@ static void load_offline_dbs_t(void *p){
 	load_offline_dbs();
 }
 
-static void rescan_t(void *p){
-	rescan((int)p);
+static void rescan_t(int *p){
+	int i = *p;
+	rescan(i);
 }
 static BOOL update_status(int status){
 	FILE *file;
@@ -382,7 +383,7 @@ static void command_exec(WCHAR *command, SockOut hNamedPipe){
 		send_response_ok(hNamedPipe);
 	}else if(wcsncmp(command,L"rescan",wcslen(L"rescan"))==0){
 		int i = *(command+wcslen(L"rescan")) - L'0';
-		_beginthread(rescan_t,0,(void *)i);
+		_beginthread(rescan_t,0, &i);
 		send_response_ok(hNamedPipe);
 	}else if(wcsncmp(command,L"del_offline_db",wcslen(L"del_offline_db"))==0){
 		int i0 = *(command+wcslen(L"del_offline_db")) - L'0';

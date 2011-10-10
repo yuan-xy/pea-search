@@ -16,7 +16,7 @@ BOOL read_build_check(int i){
 	BOOL flag = load_db(i);
 	if(!flag) return 0;
 	build_dir(i);
-	FilesIterate(g_rootVols[i],check_file_entry,&flag);
+	FilesIterate(g_rootVols[i],(pFileVisitor)check_file_entry,&flag);
 	return 1;
 }
 
@@ -58,7 +58,7 @@ static int get_next_offline_slot(){
 }
 
 BOOL gigaso_init(){
-	printf("file entry size:%d\n",sizeof(FileEntry));
+	printf("file entry size:%d\n",(int) sizeof(FileEntry));
 	breakpad_init();
 	//request_dump();
 	init_chinese();
@@ -68,7 +68,7 @@ BOOL gigaso_init(){
 }
 
 BOOL gigaso_destory(){
-	ValidDrivesIterator(save_db);
+	ValidDrivesIterator((pDriveVisitor)save_db);
 	return 1;
 }
 

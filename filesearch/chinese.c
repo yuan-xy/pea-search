@@ -53,12 +53,14 @@ BOOL load_hz(){
 	int line_count=0;
 	fp = fopen("hz.lib", "r");
 	if(fp==NULL){
+#ifdef WIN32
 			char szPath[MAX_PATH], *p; 
 			if( !GetModuleFileNameA( NULL, szPath, MAX_PATH ) ) return 0;
 			p = strrchr(szPath,'\\');
 			*(p+1) = '\0';
 			strcat(p,"hz.lib");
 			fp = fopen(szPath, "r");
+#endif
 			if(fp==NULL) return 0;
 	}
 	while(fgets(buf,BUF_LEN_0,fp)!=NULL){
@@ -98,7 +100,7 @@ void print_hz_len(pUTF8 hz, int len){
 	free_safe(wstr);
 	printf("%d,%s \n",d,chars);
 #else
-	wprintf("%d,%s \n",d,wstr);
+	wprintf(L"%d,%s \n",d,wstr);
 #endif
 }
 

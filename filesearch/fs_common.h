@@ -56,9 +56,9 @@ extern const int ROOT_NUMBER; //NTFS驱动器根目录的FileReferenceNumber的�
 		pFileEntry file = (pFileEntry) malloc_safe(FILE_ENTRY_SIZE_(name_len_bytes)); \
 		memset(file,0,FILE_ENTRY_SIZE_(name_len_bytes));
 
-#define SET_ROOT_NAME(root,name) memcpy_s(root->FileName,2,name,2)
+#define SET_ROOT_NAME(root,name) memcpy(root->FileName,name,2)
 
-#define FERROR(file)  fprintf(stderr,"error: %s , line %d in '%s'\n",((file==NULL || file->FileName ==NULL)? "null":file->FileName), __LINE__, __FILE__);
+#define FERROR(file)  fprintf(stderr,"error: %s , line %d in '%s'\n",((file==NULL || file->FileName ==NULL)? (char *) "null" : (char *)file->FileName), __LINE__, __FILE__);
 
 /*
  * 得到该文件所属驱动盘编号
