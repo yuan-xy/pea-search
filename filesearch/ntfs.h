@@ -11,11 +11,6 @@ extern "C" {
 #include <winioctl.h>
 #include "fs_common.h"
 
-/*
- * 是否是NTFS驱动器根目录
- */
-#define IsRoot(FileReferenceNumber) ROOT_NUMBER==(FileReferenceNumber&0xFFFFFFFF)
-
 /**
  * 根据文件的FileReferenceNumber获得并设置其时间和大小
  * @param file 文件

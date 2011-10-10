@@ -41,6 +41,7 @@ struct fileEntry{  //表示一个文件
 typedef struct fileEntry FileEntry, *pFileEntry;
 
 extern const int ROOT_NUMBER; //NTFS驱动器根目录的FileReferenceNumber的低32位值
+#define IsRoot(FileReferenceNumber) ROOT_NUMBER==(FileReferenceNumber&0xFFFFFFFF)
 
 #define IsReadonly(pFileEntry) (pFileEntry->us.v.readonly==1)
 #define IsHidden(pFileEntry) (pFileEntry->us.v.hidden==1)

@@ -157,14 +157,17 @@ BOOL save2file0(int i){
 	fwrite(&FILE_SEARCH_MAJOR_VERSION,1,1,fp);
 	fwrite(&FILE_SEARCH_MINOR_VERSION,1,1,fp);
 	fwrite(&(g_VolsInfo[i]),sizeof(g_VolsInfo[i]),1,fp);
+#ifdef WIN32
 	is_ntfs_cur_drive = IsNtfs(i);
 	if(is_ntfs_cur_drive){
-#ifdef WIN32
+
 		fwrite(&(g_curFirstUSN[i]),sizeof(g_curFirstUSN[i]),1,fp);
 		fwrite(&(g_curNextUSN[i]),sizeof(g_curNextUSN[i]),1,fp);
 		fwrite(&(g_curJournalID[i]),sizeof(g_curJournalID[i]),1,fp);
+
+	}else
 #endif
-	}else{
+	{
 		time_t start = time(NULL);
 		fwrite(&start,sizeof(time_t),1,fp);
 	}
@@ -211,8 +214,8 @@ BOOL readfile(int i, char *filename){
 		fread(&info,sizeof(DriveInfo),1,fp);
 		if(i<DIRVE_COUNT){
 			if(info.serialNumber!=g_VolsInfo[i].serialNumber) goto error;
-			if(IsNtfs(i)){
 #ifdef WIN32
+			if(IsNtfs(i)){
 				USN         first_usn;
 				USN         next_usn;
 				DWORDLONG   jid;
@@ -225,8 +228,9 @@ BOOL readfile(int i, char *filename){
                 if(jid!=g_curJournalID[i]) g_expires[i]=1;
                 my_assert(next_usn<=g_curNextUSN[i],0);
                 if(next_usn < g_curFirstUSN[i]) g_expires[i]=1;
+			}else
 #endif
-			}else{
+			{
 				time_t last;
 				d=(int)fread(&last,sizeof(time_t),1,fp);
 				if(d<1) goto error;
@@ -235,8 +239,8 @@ BOOL readfile(int i, char *filename){
 			if(g_expires[i]==1) goto error;
 		}else{
 			g_VolsInfo[i] = info;
-			if(IsNtfs(i)){
 #ifdef WIN32
+			if(IsNtfs(i)){
 				USN         first_usn;
 				USN         next_usn;
 				DWORDLONG   jid;
@@ -246,8 +250,9 @@ BOOL readfile(int i, char *filename){
 				if(d<1) goto error;
 				d=(int)fread(&jid,sizeof(DWORDLONG),1,fp);
 				if(d<1) goto error;
+			}else
 #endif
-			}else{
+			{
 				time_t last;
 				d=(int)fread(&last,sizeof(time_t),1,fp);
 				if(d<1) goto error;
@@ -274,9 +279,11 @@ BOOL readfile(int i, char *filename){
 		if(!gen_root){
 			if(i<26){
 				if(strncmp(file->FileName,rootNames[i],2)!=0) SET_ROOT_NAME(file,rootNames[i]);
+				#ifdef WIN32
 				if(IsNtfs(i)){
 					if(!IsRoot(file->FileReferenceNumber)) goto error;
 				}
+				#endif
 			}else{
 				char root_name[3];
 				_itoa(i,root_name,10);

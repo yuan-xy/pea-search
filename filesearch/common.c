@@ -252,7 +252,7 @@ BOOL get_user(wchar_t *userbuf){
 #endif
 
 BOOL get_ver(wchar_t *verbuf){
-	wsprintf(verbuf,L"%d.%d.%d",GIGASO_VERSION_MAJOR,GIGASO_VERSION_MINOR,GIGASO_VERSION_BUILD);
+	swprintf(verbuf,16,L"%d.%d.%d",GIGASO_VERSION_MAJOR,GIGASO_VERSION_MINOR,GIGASO_VERSION_BUILD);
 	return 1;
 }
 

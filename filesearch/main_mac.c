@@ -68,7 +68,7 @@ BOOL gigaso_init(){
 }
 
 BOOL gigaso_destory(){
-	ValidDrivesIterator((pDriveVisitor)save_db);
+	save_db(0);
 	return 1;
 }
 

@@ -65,6 +65,7 @@ endif (WIN32)
 if (UNIX) 
 		#ADD_DEFINITIONS(-Wall)
 		set(SOURCES ${SOURCES}
+		mac_port.c
 		pathalloc.c
 		ftw4.c
 		main_mac.c

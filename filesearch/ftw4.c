@@ -1,6 +1,11 @@
 #include "env.h"
+#include "fs_common.h"
 #include <dirent.h>
 #include <limits.h>
+
+int scanRoot(pFileEntry root, int i){
+	//TODO;
+}
 
 extern char * path_alloc(int *sizep);
 
@@ -22,7 +27,7 @@ static int		dopath(Myfunc *);
 static long	nreg, ndir, nblk, nchr, nfifo, nslink, nsock, ntot;
 
 int
-main(int argc, char *argv[])
+main0(int argc, char *argv[])
 {
 	int		ret;
 
