@@ -6,7 +6,6 @@ extern "C" {
 #define FILE_SEARCH_STR_MATCH_H_
 
 #include "env.h"
-#include <windows.h>
 
 #define ASIZE 256  //文件名字符集大小
 #define XSIZE 256  //查询串字符集大小

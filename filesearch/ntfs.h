@@ -1,4 +1,6 @@
-﻿#ifdef __cplusplus
+﻿#ifdef WIN32
+
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -6,16 +8,8 @@ extern "C" {
 #define FILE_SEARCH_NTFS_H_
 
 #include "env.h"
-#include <windows.h>
 #include <winioctl.h>
 #include "fs_common.h"
-
-extern const int ROOT_NUMBER; //NTFS驱动器根目录的FileReferenceNumber的低32位值
-
-/*
- * 是否是NTFS驱动器根目录
- */
-#define IsRoot(FileReferenceNumber) ROOT_NUMBER==(FileReferenceNumber&0xFFFFFFFF)
 
 /**
  * 根据文件的FileReferenceNumber获得并设置其时间和大小
@@ -248,3 +242,5 @@ typedef struct { //512B
 #ifdef __cplusplus
 }
 #endif
+
+#endif //WIN32

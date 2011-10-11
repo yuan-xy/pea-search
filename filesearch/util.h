@@ -6,7 +6,6 @@ extern "C" {
 #define FILE_SEARCH_UTIL_H_
 
 #include "env.h"
-#include <windows.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -53,40 +52,39 @@ extern int time_passed_p2(void (*f)(void *,void *),void *,void *);
 **/
 extern int time_passed_ret(int (*f)(),int *ret_data);
 
-
-#define WCHAR_TO_UTF8_LEN(wstr, wstrlen) WideCharToMultiByte(CP_UTF8, 0, (wstr), (wstrlen), NULL, 0, NULL, NULL)
-
-#define WCHAR_TO_UTF8(wstr, wstrlen, ustr, ustrlen) WideCharToMultiByte(CP_UTF8, 0, (wstr), (wstrlen), ((LPSTR)ustr), (ustrlen), NULL, NULL)
-
 /**
  * 将unicode编码的字符串in转换为utf-8编码的字符串
  * @param insize_c表示The number of Unicode (16-bit) characters in the string
- * @param out_size_b表示以byte统计的字符串长度
+ * @return 动态分配的UTF8串，以及out_size_b表示以byte统计的字符串长度
  * 
  */
 extern pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b);
+extern int wchar_to_utf8_len(const WCHAR *in, int insize_c);
+extern void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size);
 
 extern WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c);
+extern int utf8_to_wchar_len(const pUTF8 in, int insize_b);
+extern int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, wchar_t *out, int out_buffer_size);
 
 extern wchar_t *wcsrchr_me(const wchar_t *S, int len, const wchar_t C);
 
 //定义二进制常量
 #define BYTE_BIN(n) ( \
-((0n%0100000000/010000000>0)<<7)| \
-((0n%010000000 /01000000 >0)<<6)| \
-((0n%01000000 /0100000 >0)<<5)| \
-((0n%0100000   /010000   >0)<<4)| \
-((0n%010000    /01000    >0)<<3)| \
-((0n%01000     /0100     >0)<<2)| \
-((0n%0100      /010      >0)<<1)| \
-((0n%010       /01       >0)<<0))
+((0##n%0100000000/010000000>0)<<7)| \
+((0##n%010000000 /01000000 >0)<<6)| \
+((0##n%01000000 /0100000 >0)<<5)| \
+((0##n%0100000   /010000   >0)<<4)| \
+((0##n%010000    /01000    >0)<<3)| \
+((0##n%01000     /0100     >0)<<2)| \
+((0##n%0100      /010      >0)<<1)| \
+((0##n%010       /01       >0)<<0))
 
 #define WORD_BIN(n) ( \
-(BYTE_BIN(0n/0100000000)<<8)|BYTE_BIN(0n%0100000000) \
+(BYTE_BIN(0##n/0100000000)<<8)|BYTE_BIN(0##n%0100000000) \
 )
 
 #define DWORD_BIN(highword,lowword) ( \
-(WORD_BIN(0highword)<<16)|WORD_BIN(0lowword) \
+(WORD_BIN(0##highword)<<16)|WORD_BIN(0##lowword) \
 )
 
 
@@ -115,11 +113,11 @@ extern void * realloc_safe(void *ptr, size_t len);
  */
 extern void free_safe(void *ptr);
 
-
 /**
  * 将从系统调用中获得的文件大小转换为内部定义的大小
  */
 extern FSIZE file_size_shorten(ULONGLONG size);
+
 
 /**
  * 文件FSIZE的度量单位（byte\KB\MB\GB）,用两位二进制数表示

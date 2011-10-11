@@ -5,11 +5,7 @@ extern "C" {
 #ifndef FILE_SEARCH_SERVERNP_H_
 #define FILE_SEARCH_SERVERNP_H_
 
-extern BOOL start_named_pipe();
 
-extern void wait_stop_named_pipe();
-
-extern BOOL WINAPI shutdown_handle(DWORD CtrlEvent);
 
 #endif  // FILE_SEARCH_SERVERNP_H_
 

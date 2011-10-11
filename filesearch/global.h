@@ -6,7 +6,7 @@ extern "C" {
 #define FILE_SEARCH_GLOBAL_H_
 
 #include "env.h"
-#include <windows.h>
+#include "fs_common.h"
 #include "drive.h"
 #include "ntfs.h"
 
@@ -23,6 +23,7 @@ extern HANDLE      g_hVols[];//保存A~Z的对应的卷句柄
 
 extern pFileEntry g_rootVols[];//保存根驱动器的FileEntry结构
 
+#ifdef WIN32
 extern USN         g_curFirstUSN[];
 extern USN         g_curNextUSN[];
 extern DWORDLONG   g_curJournalID[];
@@ -30,6 +31,7 @@ extern HANDLE      g_hThread[];//每个盘一个监视线程
 extern DWORD       g_BytesPerCluster[];//每簇字节数
 extern DWORD       g_FileRecSize[];//MFT文件记录大小，似乎还没有用到？
 extern PBYTE       g_pOutBuffer[];//每个盘的文件块记录地址 初始时分配 结束时消
+#endif
 
 extern unsigned int ALL_FILE_COUNT; //当前所有文件的总数
 

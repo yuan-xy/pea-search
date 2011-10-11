@@ -1,6 +1,5 @@
 ﻿#include "env.h"
 #include <locale.h>
-#include <windows.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -15,16 +14,9 @@
 #include "fs_common.h"
 #include "drive_change.h"
 #include "chinese.h"
-#include "serverNP.h"
+#include "server.h"
 #include "exception_dump.h"
 #include "desktop.h"
-
-//TODO: log库、自动升级、win64移植、linux移植、全文检索、邮件搜索
-//TODO: 虚拟文件夹如控制面板，数据库过期时异步更新、文件系统监视代码排错、
-//TODO: 支持压缩文件、光盘镜像中的文件查询
-//TODO: 所有windows系统调用查看返回值
-//TODO: 文件的资源管理器类树状浏览
-
 
 BOOL read_build_check(int i){
 	BOOL flag = load_db(i);

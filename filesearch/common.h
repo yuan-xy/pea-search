@@ -22,9 +22,9 @@ extern void print_debug(WCHAR *fmt, ...);
 extern BOOL WindowsVersionOK (DWORD MajorVerRequired, DWORD MinorVerRequired);
 
 
-extern void get_prop(LPCWSTR key, LPWSTR out, DWORD nSize);
-extern void get_prop2(LPCWSTR key, LPWSTR out, DWORD nSize,LPCWSTR deft);
-extern void set_prop(LPCWSTR key, LPWSTR str);
+extern void get_prop(const wchar_t  *key, wchar_t  *out, DWORD nSize);
+extern void get_prop2(const wchar_t  *key, wchar_t  *out, DWORD nSize,const wchar_t  * deft);
+extern void set_prop(const wchar_t  *key, wchar_t  *str);
 
 extern int get_hotkey();
 extern BOOL set_hotkey(int key);

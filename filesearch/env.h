@@ -8,24 +8,82 @@ extern "C" {
 #ifdef _MSC_VER
   #define INLINE __forceinline /* use __forceinline (VC++ specific) */
 #else
-	#ifdef __GNUC__
-		#define INLINE __inline__
-	#else
-		#define INLINE inline        /* use standard inline */
+  #define INLINE
+#endif
+
+	#include <stdio.h>	   
+	#include <stdlib.h>
+	#include <wchar.h>
+		
+#if defined(WIN32) 
+	#if !defined(_WIN32_WINNT) || _WIN32_WINNT< 0x0501
+	#define _WIN32_WINNT 0x0501
 	#endif
+	#pragma warning(disable:4996)
+	#include <windows.h>
+#else
+	#define _DARWIN_C_SOURCE
+
+	#include <sys/types.h>		/* some systems still require this */
+	#include <sys/stat.h>
+	#include <sys/termios.h>	/* for winsize */
+	#ifndef TIOCGWINSZ
+	#include <sys/ioctl.h>
+	#endif
+	#include <stddef.h>	   
+	#include <string.h>	   
+	#include <strings.h>   
+	#include <unistd.h>	   
+	#include <signal.h>		/* for SIG_ERR */
+	#include <stdint.h>
+	#include <time.h>
+
+	
+	#define strnicmp strncasecmp
+	#define stricmp strcasecmp
+	#define _wcsncoll wcsncmp
+	#define _wcsnicoll wcsncasecmp
+	
+	#define	LISTENQ		1024	/* 2nd argument to listen() */
+	#define	UNIXSTR_PATH	"/tmp/unix.str"	/* Unix domain stream cli-serv */
+	#define	SA	struct sockaddr
+	#define	FILE_MODE	(S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+					/* default file access permissions for new files */
+	#define	DIR_MODE	(FILE_MODE | S_IXUSR | S_IXGRP | S_IXOTH)
+					/* default permissions for new directories */				
+	#define	MAXLINE	4096			/* max line length */
+	#define BOOL int
+	#define WCHAR wchar_t
+	typedef int64_t LONGLONG;
+	typedef uint64_t ULONGLONG;
+	typedef int32_t DWORD;
+	typedef char UINT;
+	typedef void * HANDLE;
+	typedef const wchar_t * LPCWSTR;
+	typedef wchar_t * LPWSTR;	
+	#define MAX_PATH 256
+	#define IN
+	#define OUT
+	#define WINAPI
+
+	typedef	void	Sigfunc(int);	/* for signal handlers */
+
+	#if	defined(SIG_IGN) && !defined(SIG_ERR)
+	#define	SIG_ERR	((Sigfunc *)-1)
+	#endif
+
+	#define	min(a,b)	((a) < (b) ? (a) : (b))
+	#define	max(a,b)	((a) > (b) ? (a) : (b))
 #endif
 
-#if !defined(_WIN32_WINNT) || _WIN32_WINNT< 0x0501
-#define _WIN32_WINNT 0x0501
-#endif
 
-#pragma warning(disable:4996)
+
 
 //#define USE_ZIP
 
 #define MY_DEBUG
 
-#include <windows.h>
+
 
 #include "GIGASOConfig.h"
 

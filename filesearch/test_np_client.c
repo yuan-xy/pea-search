@@ -1,5 +1,4 @@
-﻿#define UNICODE
-#define _UNICODE
+﻿#include "env.h"
 #include "../filesearch/sharelib.h"
 #include <stdio.h>
 

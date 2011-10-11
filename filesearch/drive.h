@@ -6,7 +6,6 @@ extern "C" {
 #define FILE_SEARCH_DRIVE_H_
 
 #include "env.h"
-#include <windows.h>
 
 /**
  * 是否是固定的驱动器

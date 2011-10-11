@@ -12,11 +12,16 @@ ELSE(NOT CMAKE_BUILD_TYPE)
 	message(STATUS "define build type: ${CMAKE_BUILD_TYPE}")
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
-set(CMAKE_CXX_FLAGS_RELEASE "/O2 /Ob2 /D NDEBUG /MT /Zi /D UNICODE /D _UNICODE ")
-SET(CMAKE_C_FLAGS_RELEASE "/O2 /Ob2 /D NDEBUG /MT /Zi /D UNICODE /D _UNICODE ")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd /D UNICODE /D _UNICODE ")
-SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /MTd /D UNICODE /D _UNICODE ")
-message(STATUS ${CMAKE_CXX_FLAGS_RELEASE})
+IF( WIN32 )
+	set(CMAKE_CXX_FLAGS_RELEASE "/O2 /Ob2 /D NDEBUG /MT /Zi /D UNICODE /D _UNICODE ")
+	SET(CMAKE_C_FLAGS_RELEASE "/O2 /Ob2 /D NDEBUG /MT /Zi /D UNICODE /D _UNICODE ")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd /D UNICODE /D _UNICODE ")
+	SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /MTd /D UNICODE /D _UNICODE ")
+	message(STATUS ${CMAKE_CXX_FLAGS_RELEASE})
+ELSE( WIN32 )
+#	SET (CMAKE_C_FLAGS "-x objective-c")
+ENDIF()
+
 
 ENABLE_TESTING()
 
@@ -37,8 +42,15 @@ ELSE(${CMAKE_SIZEOF_VOID_P} EQUAL "4")
 ENDIF()
 message(STATUS "size of pointer: ${CMAKE_SYSTEM_PROCESSOR}  ")
 
-SET(3RD_LIB_PATH "${PROJECT_SOURCE_DIR}/libs/${CMAKE_SYSTEM_PROCESSOR}/${CMAKE_BUILD_TYPE}")
-message(STATUS ${3RD_LIB_PATH})
+
+IF( WIN32 )
+	SET(3RD_LIB_PATH "${PROJECT_SOURCE_DIR}/libs/${CMAKE_SYSTEM_PROCESSOR}/${CMAKE_BUILD_TYPE}")
+ELSE( WIN32 )
+	SET(3RD_LIB_PATH "${PROJECT_SOURCE_DIR}/libs/mac")
+ENDIF()
+
+
+message(STATUS "3RD_LIB_PATH: ${3RD_LIB_PATH}  " )
 
 set(BREAKPAD_DIR ${PROJECT_SOURCE_DIR}/3rd/google-breakpad-read-only/src)
 
@@ -59,11 +71,12 @@ include_directories ("${PROJECT_BINARY_DIR}")
 include_directories ("${PROJECT_SOURCE_DIR}/filesearch")
 add_subdirectory (filesearch)
 
-include_directories ("${PROJECT_SOURCE_DIR}/console-example")
-add_subdirectory (console-example)
-
-include_directories ("${PROJECT_SOURCE_DIR}/browser")
-add_subdirectory (browser)
+if (WIN32)
+	include_directories ("${PROJECT_SOURCE_DIR}/console-example")
+	add_subdirectory (console-example)
+	include_directories ("${PROJECT_SOURCE_DIR}/browser")
+	add_subdirectory (browser)
+endif (WIN32)
 
 install (FILES "${PROJECT_SOURCE_DIR}/cmake/gigaso.inf"   DESTINATION .)
 install (FILES "${PROJECT_BINARY_DIR}/jz.lib"   DESTINATION .)

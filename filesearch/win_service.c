@@ -1,6 +1,5 @@
 ﻿#include "env.h"
 #include <locale.h>
-#include <windows.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -8,7 +7,7 @@
 #include "fs_common.h"
 #include "main.h"
 #include "util.h"
-#include "serverNP.h"
+#include "server.h"
 #include "common.h"
 
 VOID WINAPI ServiceMain (DWORD argc, LPWSTR argv[]);

@@ -1,5 +1,4 @@
 ﻿#include "drive_change.h"
-#include <windows.h>
 #include <dbt.h>
 #include <stdio.h>
 

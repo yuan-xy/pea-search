@@ -73,8 +73,12 @@ void DirIterateWithoutSelf(pFileEntry file,pFileVisitor visitor, void *data){
 }
 
 BOOL is_recycle(pFileEntry pf,int i){
+#ifdef WIN32	
 	return (strnicmp((const char *)pf->FileName,"RECYCLER",8)==0 && IsNtfs(i)) ||
 	(strnicmp((const char *)pf->FileName,"Recycled",8)==0 && !IsNtfs(i));
+#else
+	return 0;
+#endif
 }
 
 void AllFilesIterate(pFileVisitor visitor, void *data, BOOL offline){
@@ -115,7 +119,7 @@ void addChildren(pFileEntry parent, pFileEntry file){
 	}
 }
 
-__forceinline void add2Map(pFileEntry file,int i){
+INLINE void add2Map(pFileEntry file,int i){
 	tmpList[i].push_back(file);
 	if(IsDir(file)) DirMaps[i][file->FileReferenceNumber] = file;
 }
@@ -128,7 +132,7 @@ void resetMap(int i){
 	tmp.swap(DirMaps[i]);
 }
 
-__forceinline pFileEntry findDir(KEY frn,int i){
+INLINE pFileEntry findDir(KEY frn,int i){
 	return DirMaps[i][frn];
 }
 
@@ -169,12 +173,12 @@ void renameFile(pFileEntry file, wchar_t *new_name, int name_byte_len){
 		return;
 	}else{
 		int str_len = name_byte_len/sizeof(wchar_t);
-		int len = WCHAR_TO_UTF8_LEN(new_name,str_len);
+		int len = wchar_to_utf8_len(new_name,str_len);
 		NEW0_FILE(ret,len);
 		memcpy(ret,file,sizeof(FileEntry));
 		ret->us.v.FileNameLength = len;
 		ret->us.v.StrLen = str_len;
-		WCHAR_TO_UTF8(new_name,str_len,ret->FileName,len);
+		wchar_to_utf8_nocheck(new_name,str_len,ret->FileName,len);
 		if(file->up.parent!=NULL){
 			addChildren(file->up.parent,ret);
 		}

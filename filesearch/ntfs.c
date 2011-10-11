@@ -1,5 +1,4 @@
 ﻿#include "env.h"
-#include <windows.h>
 #include <winioctl.h>
 #include <assert.h>
 #include <stdio.h>
@@ -7,9 +6,6 @@
 #include "util.h"
 #include "global.h"
 #include "suffix.h"
-
-const int ROOT_NUMBER=5;
-
 
 BOOL OpenNtfsHandle(int i){
 	WCHAR szVolumePath[8];
@@ -86,13 +82,13 @@ void initUSN(int i){
 
 INLINE pFileEntry initFileEntry(PUSN_RECORD r,int i){
 	int str_len = (int) r->FileNameLength/sizeof(WCHAR);
-	int len = WCHAR_TO_UTF8_LEN(r->FileName,str_len);
+	int len = wchar_to_utf8_len(r->FileName,str_len);
 	NEW0_FILE(ret,len);
 	ret->FileReferenceNumber = (KEY)r->FileReferenceNumber;
 	ret->up.ParentFileReferenceNumber = (KEY)r->ParentFileReferenceNumber;
 	ret->us.v.FileNameLength = len;
 	ret->us.v.StrLen = str_len;
-	WCHAR_TO_UTF8(r->FileName,r->FileNameLength/sizeof(WCHAR),ret->FileName,len);
+	wchar_to_utf8_nocheck(r->FileName,r->FileNameLength/sizeof(WCHAR),ret->FileName,len);
 	if(is_dir(r)){
 		ret->ut.v.suffixType = SF_DIR;
 		ret->us.v.dir = 1;

@@ -3,7 +3,9 @@
 #include "global.h"
 #include "util.h"
 #include "search.h"
+#ifdef WIN32
 #include "desktop.h"
+#endif
 
 void search0(void *name){
 	pFileEntry *result=NULL;
@@ -14,10 +16,12 @@ void search0(void *name){
 		sEnv->file_type=0;
 		wcscpy(sEnv->path_name, L"E:\\backup");
 		sEnv->path_len=0;
+		#ifdef WIN32
 		{
 			DWORD size=MAX_PATH;
 			GetUserName(sEnv->user_name, &size);
 		}
+		#endif
 	count = search((WCHAR *)name,sEnv,&result);
 	for(i=0;i<count;i++){
 		pFileEntry file = *(result+i);
@@ -36,7 +40,9 @@ void search0(void *name){
 int main(){
 	WCHAR ss[64];
 	gigaso_init();
+	#ifdef WIN32
 	scan_desktop();
+	#endif
 	do{
 		//wscanf_s(L"%[^\n]",ss,31);
 		fgetws(ss,63,stdin);

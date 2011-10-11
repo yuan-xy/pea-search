@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include "sharelib.h"
 #include "server.h"
-#include "serverNP.h"
 #include "util.h"
 
 volatile static BOOL ShutDown = FALSE;

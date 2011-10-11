@@ -1,11 +1,13 @@
 ﻿#include "env.h"
-#include <windows.h>
 #include <stdio.h>
+#include <time.h>
 #include "global.h"
 #include "fs_common.h"
 #include "suffix.h"
 #include "ntfs.h"
 #include "fat.h"
+
+const int ROOT_NUMBER=5;
 
 BOOL attachParent(pFileEntry file, int i){
 	pFileEntry parent;
@@ -45,6 +47,21 @@ pFileEntry genRootFileEntry(int drive){
 	return ret;
 }
 
+pFileEntry genMacRootFileEntry(int drive){
+	NEW0(FileEntry, ret);
+	ret->FileReferenceNumber = ROOT_NUMBER;
+	ret->up.ParentFileReferenceNumber = 0;
+	ret->us.v.FileNameLength = 0;
+	ret->us.v.StrLen = 0;
+	ret->us.v.dir = 1;
+	ret->ut.v.suffixType = SF_DIR;
+	ret->up.parent = NULL;
+	ret->children = NULL;
+	g_rootVols[drive] = ret;
+	ALL_FILE_COUNT +=1;
+	return ret;
+}
+
 
 int getDrive(pFileEntry file){
 	pFileEntry parent = file;
@@ -74,7 +91,11 @@ void SET_SIZE(pFileEntry file, FSIZE size){
 void print_full_path(pFileEntry pf){
 	if(pf->up.parent!=NULL){
 		print_full_path(pf->up.parent);
+#ifdef WIN32
 		printf("\\");
+#else
+        printf("/");
+#endif
 	}
 	PrintFilenameMB(pf);
 }
@@ -87,8 +108,12 @@ int print_fullpath_str(pFileEntry file, char *p){
 	}
 	memcpy(buffer,file->FileName,file->us.v.FileNameLength);
 	buffer += file->us.v.FileNameLength;
+#ifdef Win32
 	*buffer++ ='\\';
 	*buffer++ ='\\';
+#else
+    *buffer++ ='/';
+#endif
 	return buffer-p;
 }
 
@@ -106,6 +131,7 @@ int print_path_str(pFileEntry file, char *p){
 #define YEAR_START 1990
 #endif
 
+#ifdef WIN32
 INLINE MINUTE ConvertSystemTimeToMinute(SYSTEMTIME sysTime)
 {
     MINUTE time32=0;
@@ -134,25 +160,60 @@ void set_time(pFileEntry file, PFILETIME time){
 	FileTimeToSystemTime(&fileTime,&st);
 	SET_TIME(file,ConvertSystemTimeToMinute(st));
 }
+#else
+INLINE MINUTE ConvertSystemTimeToMinute(time_t sysTime)
+{
+    MINUTE time32=0;
+	struct tm *st = localtime(&sysTime);
+	if(st->tm_year < YEAR_START) return 0;
+    time32=st->tm_min/2;
+    time32|=(st->tm_hour << 5 );
+    time32|=(st->tm_mday << 10);
+    time32|=(((DWORD)st->tm_mon)<<15);
+    time32|=((DWORD)(st->tm_year-YEAR_START)<<19);
+    return time32;
+}
+
+INLINE void ConvertMinuteToSystemTime(struct tm *st, MINUTE time32)
+{
+    st->tm_min=(time32&0x1f)*2;time32>>=5;
+    st->tm_hour=time32&0x1f;time32>>=5;
+    st->tm_mday=time32&0x1f;time32>>=5;
+    st->tm_mon=time32&0xf;time32>>=4;
+    st->tm_year=time32+YEAR_START;
+}
+
+void set_time(pFileEntry file, time_t time){
+	SET_TIME(file,ConvertSystemTimeToMinute(time));
+}
+#endif //WIN32
 
 void print_time(pFileEntry file){
-	SYSTEMTIME st;
-	ConvertMinuteToSystemTime(&st,GET_TIME(file));
-	printf("%d年%d月%d日 %d时%d分"
-		,st.wYear,st.wMonth,st.wDay
-		,st.wHour,st.wMinute
-		);
+	char buf[256];
+	print_time_str(file,buf);
+	printf("%s",buf);
 }
 
 int print_time_str(pFileEntry file, char *buffer){
+#ifdef WIN32
 	SYSTEMTIME st;
 	ConvertMinuteToSystemTime(&st,GET_TIME(file));
-	return sprintf(buffer,"%d-%d-%d %d:%d"
+	return sprintf(buffer,"%d年%d月%d日 %d时%d分"
 		,st.wYear,st.wMonth,st.wDay
 		,st.wHour,st.wMinute
 		);
+#else
+	struct tm st;
+	ConvertMinuteToSystemTime(&st,GET_TIME(file));
+	return sprintf(buffer,"%d年%d月%d日 %d时%d分"
+		,st.tm_year,st.tm_mon,st.tm_mday
+		,st.tm_hour,st.tm_min
+		);	
+#endif
 }
 
+
+#ifdef WIN32
 BOOL StartMonitorThread(int i){
 	if(is_cdrom_drive(i)) return 0;
 	if(IsNtfs(i)){
@@ -170,19 +231,25 @@ BOOL StopMonitorThread(int i){
 	return 0;
 }
 
+BOOL CloseVolumeHandle(int i){
+	if(g_hVols[i]==NULL) return 0;
+	return CloseHandle(g_hVols[i]);
+}
+#endif //WIN32
+
 void PrintFilenameMB(pFileEntry file){
 	char fileName[MAX_PATH] = {0};
+#ifdef WIN32
 	int len;
 	WCHAR *p = utf8_to_wchar(file->FileName,file->us.v.FileNameLength,&len);
 	int flen = WideCharToMultiByte(CP_OEMCP,(DWORD) 0,p,len,fileName,255,NULL,FALSE);
 	fileName[flen]='\0';
 	printf("%s",fileName);
+#else
+	printf("%s",file->FileName);
+#endif //WIN32
 }
 
-BOOL CloseVolumeHandle(int i){
-	if(g_hVols[i]==NULL) return 0;
-	return CloseHandle(g_hVols[i]);
-}
 
 void FileRemoveFilter(pFileEntry file, void *data){
 	if(IsDir(file)){

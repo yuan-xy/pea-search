@@ -1,6 +1,5 @@
 ﻿extern "C" {
 #include "env.h"
-#include <windows.h>
 #include <dbt.h>
 #include <stdio.h>
 #include "global.h"

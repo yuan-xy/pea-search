@@ -1,32 +1,33 @@
 
-include_directories ("${CMAKE_CURRENT_SOURCE_DIR}/sparsehash")
-include_directories ("${CMAKE_CURRENT_SOURCE_DIR}/sparsehash/windows")
-include_directories ("${BREAKPAD_DIR}")
+
+if (WIN32) 
+ include_directories ("${PROJECT_SOURCE_DIR}/3rd/sparsehash-1.11/src-win")
+ include_directories ("${PROJECT_SOURCE_DIR}/3rd/sparsehash-1.11/src-win/windows")
+ include_directories ("${BREAKPAD_DIR}")
+ELSE( WIN32 )
+ include_directories ("${PROJECT_SOURCE_DIR}/3rd/sparsehash-1.11/src-mac")
+endif (WIN32)
+
+
 
 
 file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-	bzip2/[^.]*.c
-	bzip2/[^.]*.h
-	[^.]*.cpp
 	[^.]*.h
 	chinese.c
-	drive.c
-	drive_change.c
-	fat.c
 	fs_common.c
 	global.c
 	history.c
 	main.c
-	ntfs.c
 	search.c
 	server.c
-	serverNP.c
 	str_match.c
 	suffix.c
 	util.c
 	write.c
 	common.c
 	md5c.c
+	chinese.cpp
+	fs_common2.cpp	
 )
 
 # Generated files are stored in ${GENERATED} by the project configuration
@@ -45,6 +46,37 @@ SET( SOURCES
     ${GENERATED}
     )
 
+if (WIN32) 
+	SET(SOURCES  ${SOURCES}
+		drive.c
+		drive_change.c
+		fat.c	
+		ntfs.c
+		desktop.cpp
+		desktop_exec.cpp
+		ntfs.cpp
+		main_win.c
+		download_win.c
+		serverNP.c
+		exception_dump.cpp
+	   )
+endif (WIN32)
+	
+if (UNIX) 
+		#ADD_DEFINITIONS(-Wall)
+		set(SOURCES ${SOURCES}
+		mac_port.c
+		macfs.c
+		main_mac.c
+		download_mac.c
+		error_mac.c
+		serverUD.c
+		exception_dump_mac.cpp
+	)
+endif(UNIX)
+	
+if (WIN32) 
+	
 add_library (file_search STATIC ${SOURCES} )
 #set_target_properties(file_search PROPERTIES LINK_FLAGS "/include:__tcmalloc") 
 target_link_libraries (file_search "${3RD_LIB_PATH}/libtcmalloc_minimal.lib")
@@ -91,3 +123,18 @@ add_executable (peadeskg "user_desk_gen.c" )
 target_link_libraries (peadeskg "file_search")
 set_target_properties(peadeskg PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\"") 
 install (TARGETS peadeskg  DESTINATION .)
+
+endif (WIN32)
+
+
+if (UNIX) 
+add_library (file_search STATIC ${SOURCES} )
+target_link_libraries (file_search "${3RD_LIB_PATH}/libtcmalloc_minimal.a")
+add_executable (test_main "test_main.c" )
+target_link_libraries (test_main "file_search")
+
+add_executable (test_np_server "test_np_server.c" )
+target_link_libraries (test_np_server "file_search")
+
+add_executable(test_np_client test_np_client_mac.c)
+endif(UNIX)
