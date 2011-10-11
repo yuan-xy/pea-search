@@ -173,6 +173,10 @@ WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
     }
 }
 
+int utf8_to_wchar_len(const pUTF8 in, int insize_b){
+	return mbsnrtowcs(NULL, (const char **)&in, insize_b, 0, NULL);
+}
+
 int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, wchar_t *out, int out_buffer_size){
 	return MultiByteToWideChar(CP_UTF8, 0, in, insize_b, out, out_buffer_size);
 }

@@ -11,6 +11,7 @@
 #include "fs_common.h"
 #include "chinese.h"
 #include "exception_dump.h"
+#include "macfs.h"
 
 BOOL read_build_check(int i){
 	BOOL flag = load_db(i);
@@ -35,7 +36,7 @@ void load_online_db(int i){
 void scan(int i){
 	if(g_loaded[i]) return;
 	resetMap(i);
-	scanRoot(genRootFileEntry(i),i);
+	scanMac(genMacRootFileEntry(i),i);
 	after_build(i);
 	g_loaded[i]=1;
 	save_db(i);

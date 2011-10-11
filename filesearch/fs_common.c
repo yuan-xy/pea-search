@@ -47,6 +47,21 @@ pFileEntry genRootFileEntry(int drive){
 	return ret;
 }
 
+pFileEntry genMacRootFileEntry(int drive){
+	NEW0(FileEntry, ret);
+	ret->FileReferenceNumber = ROOT_NUMBER;
+	ret->up.ParentFileReferenceNumber = 0;
+	ret->us.v.FileNameLength = 0;
+	ret->us.v.StrLen = 0;
+	ret->us.v.dir = 1;
+	ret->ut.v.suffixType = SF_DIR;
+	ret->up.parent = NULL;
+	ret->children = NULL;
+	g_rootVols[drive] = ret;
+	ALL_FILE_COUNT +=1;
+	return ret;
+}
+
 
 int getDrive(pFileEntry file){
 	pFileEntry parent = file;
@@ -76,7 +91,11 @@ void SET_SIZE(pFileEntry file, FSIZE size){
 void print_full_path(pFileEntry pf){
 	if(pf->up.parent!=NULL){
 		print_full_path(pf->up.parent);
+#ifdef WIN32
 		printf("\\");
+#else
+        printf("/");
+#endif
 	}
 	PrintFilenameMB(pf);
 }
@@ -89,8 +108,12 @@ int print_fullpath_str(pFileEntry file, char *p){
 	}
 	memcpy(buffer,file->FileName,file->us.v.FileNameLength);
 	buffer += file->us.v.FileNameLength;
+#ifdef Win32
 	*buffer++ ='\\';
 	*buffer++ ='\\';
+#else
+    *buffer++ ='/';
+#endif
 	return buffer-p;
 }
 

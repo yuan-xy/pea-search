@@ -116,6 +116,8 @@ extern void print_full_path(pFileEntry file);
  * @param i 驱动器编号
  */
 extern pFileEntry genRootFileEntry(int i);
+extern pFileEntry genMacRootFileEntry(int i);
+    
 /**
  * 将文件挂到其父目录的子文件列表中，用于file初始化。
  * 注意：只有初始化的时候，才需要提供pFileEntry结构和驱动器编号；初始化完成后，pFileEntry包含驱动器编号信息（方法是找到根目录）。

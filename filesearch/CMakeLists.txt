@@ -66,8 +66,7 @@ if (UNIX)
 		#ADD_DEFINITIONS(-Wall)
 		set(SOURCES ${SOURCES}
 		mac_port.c
-		pathalloc.c
-		ftw4.c
+		macfs.c
 		main_mac.c
 		download_mac.c
 		serverUD.c
