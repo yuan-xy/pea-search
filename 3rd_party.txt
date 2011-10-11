@@ -1,14 +1,14 @@
-ËùÓĞÏîÄ¿Ò»ÂÉÓÃ/MT±àÒë
+æ‰€æœ‰é¡¹ç›®ä¸€å¾‹ç”¨/MTç¼–è¯‘
 
 svn checkout http://google-breakpad.googlecode.com/svn/trunk/ google-breakpad-read-only
 src\tools\gyp\gyp.bat src\client\windows\breakpad_client.gyp
 
 
 wget http://google-perftools.googlecode.com/files/google-perftools-1.8.zip
-¾²Ì¬Á´½Ótcmalloc:
-1¡¢½«libtcmalloc_minimalÏîÄ¿´Ódll¸ü¸ÄÎªÎª¾²Ì¬¿â
-2¡¢Ôö¼Ó±àÒëÑ¡Ïî¡°/D PERFTOOLS_DLL_DECL=¡±
-3¡¢ÊÖ¶¯¸ü¸Ä¡°libtcmalloc_minimal.vcproj¡±ÎÄ¼ş£¬½«ËùÓĞRuntimeLibrary="2"¸ü¸ÄÎªRuntimeLibrary="0"£¬½«3¸ü¸ÄÎª1
+é™æ€é“¾æ¥tcmalloc:
+1ã€å°†libtcmalloc_minimalé¡¹ç›®ä»dllæ›´æ”¹ä¸ºä¸ºé™æ€åº“
+2ã€å¢åŠ ç¼–è¯‘é€‰é¡¹â€œ/D PERFTOOLS_DLL_DECL=â€
+3ã€æ‰‹åŠ¨æ›´æ”¹â€œlibtcmalloc_minimal.vcprojâ€æ–‡ä»¶ï¼Œå°†æ‰€æœ‰RuntimeLibrary="2"æ›´æ”¹ä¸ºRuntimeLibrary="0"ï¼Œå°†3æ›´æ”¹ä¸º1
 
 
 http://chromiumembedded.googlecode.com/files/cef_binary_r231_VS2008.zip

@@ -11,6 +11,10 @@ extern "C" {
   #define INLINE
 #endif
 
+	#include <stdio.h>	   
+	#include <stdlib.h>
+	#include <wchar.h>
+		
 #if defined(WIN32) 
 	#if !defined(_WIN32_WINNT) || _WIN32_WINNT< 0x0501
 	#define _WIN32_WINNT 0x0501
@@ -26,16 +30,14 @@ extern "C" {
 	#ifndef TIOCGWINSZ
 	#include <sys/ioctl.h>
 	#endif
-	#include <stdio.h>		/* for convenience */
-	#include <stdlib.h>		/* for convenience */
-	#include <stddef.h>		/* for offsetof */
-	#include <string.h>		/* for convenience */
-	#include <strings.h>
-	#include <unistd.h>		/* for convenience */
+	#include <stddef.h>	   
+	#include <string.h>	   
+	#include <strings.h>   
+	#include <unistd.h>	   
 	#include <signal.h>		/* for SIG_ERR */
 	#include <stdint.h>
 	#include <time.h>
-	#include <wchar.h>
+
 	
 	#define strnicmp strncasecmp
 	#define stricmp strcasecmp

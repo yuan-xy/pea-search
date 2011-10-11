@@ -30,32 +30,32 @@ extern "C" {
 		std::wstring file(buffer),response;
 		std::map<std::wstring,std::wstring> map;
 		{
-			wchar_t osbuf[128];
+			wchar_t osbuf[MAX_PATH];
 			get_os(osbuf);
 			std::wstring os(osbuf);
 			map[L"dump[os]"]=os;
 			//map.insert(make_pair(L"os",L"os"));
 		}
 		{
-			wchar_t cpubuf[128];
+			wchar_t cpubuf[MAX_PATH];
 			get_cpu(cpubuf);
 			std::wstring cpu(cpubuf);
 			map[L"dump[cpu]"]=cpu;
 		}
 		{
-			wchar_t diskbuf[128];
+			wchar_t diskbuf[MAX_PATH];
 			get_disk(diskbuf);
 			std::wstring disk(diskbuf);
 			map[L"dump[disk]"]=disk;
 		}
 		{
-			wchar_t verbuf[128];
+			wchar_t verbuf[MAX_PATH];
 			get_ver(verbuf);
 			std::wstring ver(verbuf);
 			map[L"dump[ver]"]=ver;
 		}
 		{
-			wchar_t userbuf[128];
+			wchar_t userbuf[MAX_PATH];
 			get_user(userbuf);
 			std::wstring user(userbuf);
 			map[L"dump[user]"]=user;

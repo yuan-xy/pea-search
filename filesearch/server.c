@@ -351,8 +351,8 @@ static void download_t(void *str){// "http://host/filename?hash&version"
 		char md5_2[MD5_LEN*2+1];
 		char fname[MAX_PATH]={0};
 		char md5[MAX_PATH];	
-		wchar_to_char(filename,fname,MAX_PATH);
-		wchar_to_char(hash,md5,MAX_PATH);
+		wcstombs(fname,filename,MAX_PATH);
+		wcstombs(md5,hash,MAX_PATH);
 		MD5File(fname,md5_2);
 		if(strncmp(md5,md5_2,MD5_LEN*2)==0){
 			int status=UPDATE_CHECH_NEW;

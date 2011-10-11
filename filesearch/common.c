@@ -1,5 +1,6 @@
 ﻿#include "env.h"
 #include <time.h>
+#include <wchar.h>
 #include <sys/stat.h>
 #include "common.h"
 #include "GIGASOConfig.h"
@@ -33,7 +34,7 @@ void print_debug(WCHAR *fmt, ...){
 	WCHAR buffer[255];
 	va_list args;
 	va_start (args, fmt);
-	wsprintf(buffer,fmt,args);//TODO:存在问题，只打印了第一个字符
+	vswprintf(buffer,255,fmt,args);
 	va_end(args);
 	OutputDebugString(buffer);
 }
@@ -217,7 +218,7 @@ BOOL get_os(wchar_t *osbuf){
 	OSVERSIONINFOEX o;
 	o.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 	if (GetVersionEx ((LPOSVERSIONINFO) &o)){
-		wsprintf(osbuf,L"1.%d.%d_%d.%d_%d.%d.%x",o.wProductType,o.dwMajorVersion,o.dwMinorVersion,
+		swprintf(osbuf,MAX_PATH,L"1.%d.%d_%d.%d_%d.%d.%x",o.wProductType,o.dwMajorVersion,o.dwMinorVersion,
 			o.wServicePackMajor,o.wServicePackMinor,o.dwBuildNumber,o.wSuiteMask);
 		return 1;
 	}
@@ -230,7 +231,7 @@ BOOL get_cpu(wchar_t *cpubuf){
 	GetSystemInfo(&info); 
 	GetNativeSystemInfo(&info2); 
 	GlobalMemoryStatus(&mem);
-	wsprintf(cpubuf,L"%d_%d.%d.%x.%d %d.%d",info.wProcessorArchitecture,info2.wProcessorArchitecture,info.dwNumberOfProcessors,
+	swprintf(cpubuf,MAX_PATH,L"%d_%d.%d.%x.%d %d.%d",info.wProcessorArchitecture,info2.wProcessorArchitecture,info.dwNumberOfProcessors,
 		info.wProcessorRevision,info.dwPageSize,mem.dwTotalPhys>>20,mem.dwAvailPhys>>20);
 	return 1;
 }
@@ -238,7 +239,7 @@ BOOL get_cpu(wchar_t *cpubuf){
 BOOL get_disk(wchar_t *diskbuf){
 	DWORD volumeSerialNumber;
 	GetVolumeInformation(L"c:\\",NULL,0,&volumeSerialNumber,NULL,NULL,NULL,0);
-	wsprintf(diskbuf,L"%x",volumeSerialNumber);
+	swprintf(diskbuf,MAX_PATH,L"%x",volumeSerialNumber);
 	return 1;
 }
 
@@ -246,13 +247,13 @@ BOOL get_user(wchar_t *userbuf){
 	wchar_t fbuffer[128];
 	DWORD size=128;
 	GetUserName(fbuffer, &size);
-	wsprintf(userbuf,L"%d.%s",is_admin(),fbuffer);
+	swprintf(userbuf,MAX_PATH,L"%d.%s",is_admin(),fbuffer);
 	return 1;
 }
 #endif
 
 BOOL get_ver(wchar_t *verbuf){
-	swprintf(verbuf,16,L"%d.%d.%d",GIGASO_VERSION_MAJOR,GIGASO_VERSION_MINOR,GIGASO_VERSION_BUILD);
+	swprintf(verbuf,MAX_PATH,L"%d.%d.%d",GIGASO_VERSION_MAJOR,GIGASO_VERSION_MINOR,GIGASO_VERSION_BUILD);
 	return 1;
 }
 

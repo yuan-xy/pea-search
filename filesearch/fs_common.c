@@ -216,14 +216,14 @@ BOOL CloseVolumeHandle(int i){
 
 void PrintFilenameMB(pFileEntry file){
 	char fileName[MAX_PATH] = {0};
+#ifdef WIN32
 	int len;
 	WCHAR *p = utf8_to_wchar(file->FileName,file->us.v.FileNameLength,&len);
-#ifdef WIN32
 	int flen = WideCharToMultiByte(CP_OEMCP,(DWORD) 0,p,len,fileName,255,NULL,FALSE);
 	fileName[flen]='\0';
 	printf("%s",fileName);
 #else
-	wprintf(L"%s",p);
+	printf("%s",file->FileName);
 #endif //WIN32
 }
 
