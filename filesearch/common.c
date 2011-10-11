@@ -250,6 +250,24 @@ BOOL get_user(wchar_t *userbuf){
 	swprintf(userbuf,MAX_PATH,L"%d.%s",is_admin(),fbuffer);
 	return 1;
 }
+
+#else //WIN32
+
+void get_prop(LPCWSTR key, LPWSTR out, DWORD nSize){
+	//TODO
+}
+
+void get_prop2(LPCWSTR key, LPWSTR out, DWORD nSize,LPCWSTR deft){
+	//TODO
+}
+
+void set_prop(LPCWSTR key, LPWSTR str){
+	//TODO
+}
+BOOL get_user(wchar_t *userbuf){
+	//TODO
+	return 1;
+}
 #endif
 
 BOOL get_ver(wchar_t *verbuf){

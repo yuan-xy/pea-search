@@ -139,49 +139,6 @@ int file_size_amount(FSIZE size){
 	return 0x3FF & size;
 }
 
-#ifdef WIN32
-pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b){
-    int buffer_len = WideCharToMultiByte(CP_UTF8, 0, in, insize_c, NULL, 0, NULL, NULL);
-    if (buffer_len <= 0){
-    	return 0;
-    }else{
-    	pUTF8 utf8 = (pUTF8)malloc_safe(buffer_len);
-    	WideCharToMultiByte(CP_UTF8, 0, in, insize_c, utf8, buffer_len, NULL, NULL);
-    	if(out_size_b!=NULL) *out_size_b = buffer_len;
-    	return utf8;
-    }
-}
-
-int wchar_to_utf8_len(const WCHAR *in, int insize_c){
-	return WideCharToMultiByte(CP_UTF8, 0, (in), (insize_c), NULL, 0, NULL, NULL);
-}
-
-
-INLINE void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size){
-	WideCharToMultiByte(CP_UTF8, 0, in, insize_c, (LPSTR)out, out_size, NULL, NULL);
-}
-
-WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
-    int buffer_len = MultiByteToWideChar(CP_UTF8, 0, in, insize_b, NULL, 0);
-    if (buffer_len <= 0){
-    	return 0;
-    }else{
-    	WCHAR *wstr = (WCHAR *)malloc_safe(buffer_len*sizeof(WCHAR));
-    	MultiByteToWideChar(CP_UTF8, 0, in, insize_b, wstr, buffer_len);
-    	if(out_size_c!=NULL) *out_size_c = buffer_len;
-    	return wstr;
-    }
-}
-
-int utf8_to_wchar_len(const pUTF8 in, int insize_b){
-	return mbsnrtowcs(NULL, (const char **)&in, insize_b, 0, NULL);
-}
-
-int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, wchar_t *out, int out_buffer_size){
-	return MultiByteToWideChar(CP_UTF8, 0, in, insize_b, out, out_buffer_size);
-}
-
-#else
 pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b){
 	int buffer_len = wchar_to_utf8_len(in,insize_c);
     if (buffer_len <= 0){
@@ -194,14 +151,6 @@ pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b){
     }
 }
 
-int wchar_to_utf8_len(const WCHAR *in, int insize_c){
-	return wcsnrtombs(NULL, &in, insize_c,0,NULL);
-}
-
-void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size){
-	wcsnrtombs(out, &in,insize_c,out_size, NULL);
-}
-
 WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
     int buffer_len = utf8_to_wchar_len(in, insize_b);
     if (buffer_len <= 0){
@@ -212,6 +161,35 @@ WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
     	if(out_size_c!=NULL) *out_size_c = buffer_len;
     	return wstr;
     }
+}
+
+
+#ifdef WIN32
+int wchar_to_utf8_len(const WCHAR *in, int insize_c){
+	return WideCharToMultiByte(CP_UTF8, 0, (in), (insize_c), NULL, 0, NULL, NULL);
+}
+
+
+INLINE void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size){
+	WideCharToMultiByte(CP_UTF8, 0, in, insize_c, (LPSTR)out, out_size, NULL, NULL);
+}
+
+int utf8_to_wchar_len(const pUTF8 in, int insize_b){
+	return MultiByteToWideChar(CP_UTF8, 0, in, insize_b, NULL, 0);
+}
+
+int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, wchar_t *out, int out_buffer_size){
+	return MultiByteToWideChar(CP_UTF8, 0, in, insize_b, out, out_buffer_size);
+}
+
+#else
+
+int wchar_to_utf8_len(const WCHAR *in, int insize_c){
+	return wcsnrtombs(NULL, &in, insize_c,0,NULL);
+}
+
+void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size){
+	wcsnrtombs(out, &in,insize_c,out_size, NULL);
 }
 
 int utf8_to_wchar_len(const pUTF8 in, int insize_b){

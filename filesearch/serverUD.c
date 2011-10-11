@@ -1,4 +1,8 @@
 #include "server.h"
+#include "error.h"
+#include "sharelib.h"
+#include "server.h"
+#include "util.h"
 #include	<sys/types.h>	/* basic system data types */
 #include	<sys/socket.h>	/* basic socket definitions */
 #include	<sys/time.h>	/* timeval{} for select() */
@@ -22,7 +26,16 @@ static int					listenfd, connfd;
 static pid_t				childpid;
 static socklen_t			clilen;
 static struct sockaddr_un	cliaddr, servaddr;
-void				sig_chld(int);
+
+void sig_chld(int signo){
+	pid_t	pid;
+	int		stat;
+
+	while ( (pid = waitpid(-1, &stat, WNOHANG)) > 0) {
+		printf("child %d terminated\n", pid);
+	}
+	return;
+}
 
 BOOL start_named_pipe(){
 	listenfd = socket(AF_LOCAL, SOCK_STREAM, 0);
@@ -49,8 +62,11 @@ void wait_stop_named_pipe(){
 				err_sys("accept error");
 		}
 		if ( (childpid = fork()) == 0) {	/* child process */
+			SearchRequest req;
 			close(listenfd);	/* close listening socket */
-			str_echo(connfd);	/* process the request */
+			while (read (connfd, &req, sizeof(SearchRequest) )>0 ) { 
+				process(req,connfd);
+			}
 			exit(0);
 		}
 		close(connfd);			/* parent closes connected socket */

@@ -1,4 +1,19 @@
 ﻿#include "env.h"
+#include <pthread.h>
+#include <errno.h>
+
+void _beginthread( 
+   void( *start_address )( void * ),
+   unsigned stack_size,
+   void *arglist 
+){
+	pthread_t ntid;
+	pthread_create(&ntid,NULL,start_address,arglist);
+}
+
+int GetLastError(){
+	return errno;
+}
 
 long GetTickCount()
 {

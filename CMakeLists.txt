@@ -60,8 +60,8 @@ configure_file (
   )
 
 EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/html_embed.rb" "${PROJECT_BINARY_DIR}")
-#EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_js.rb" "${PROJECT_BINARY_DIR}")
-#EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_css.rb" "${PROJECT_BINARY_DIR}")
+EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_js.rb" "${PROJECT_BINARY_DIR}")
+EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_css.rb" "${PROJECT_BINARY_DIR}")
 
 # add the binary tree to the search path for include files
 # so that we will find GIGASOConfig.h
