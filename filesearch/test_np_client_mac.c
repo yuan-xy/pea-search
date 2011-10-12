@@ -1,6 +1,7 @@
 ﻿#include "env.h"
 #include "../filesearch/sharelib.h"
 #include <stdio.h>
+#include <locale.h>
 #include	<sys/types.h>	/* basic system data types */
 #include	<sys/socket.h>	/* basic socket definitions */
 #include	<sys/time.h>	/* timeval{} for select() */
@@ -43,6 +44,7 @@ int main(int argc, char * argv[]) {
 	int	sockfd;
 	SearchRequest req;
 	SearchResponse resp;
+    setlocale(LC_ALL, "");
 	if(!connect_unix_socket(&sockfd)) return 1;
 	memset(&req,0,sizeof(SearchRequest));
 	req.from = 0;
