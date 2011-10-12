@@ -196,12 +196,17 @@ void print_time(pFileEntry file){
 
 int print_time_str(pFileEntry file, char *buffer){
 #ifdef WIN32
+	wchar_t buf[128];
+	int ret,wret;
 	SYSTEMTIME st;
 	ConvertMinuteToSystemTime(&st,GET_TIME(file));
-	return sprintf(buffer,"%d年%d月%d日 %d时%d分"
+	wret = swprintf(buf,128,L"%d年%d月%d日 %d时%d分"
 		,st.wYear,st.wMonth,st.wDay
 		,st.wHour,st.wMinute
 		);
+	ret = wchar_to_utf8_len(buf, wret);
+	wchar_to_utf8_nocheck(buf,wret,buffer,ret);
+	return ret;
 #else
 	struct tm st;
 	ConvertMinuteToSystemTime(&st,GET_TIME(file));
