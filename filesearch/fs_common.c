@@ -108,7 +108,7 @@ int print_fullpath_str(pFileEntry file, char *p){
 	}
 	memcpy(buffer,file->FileName,file->us.v.FileNameLength);
 	buffer += file->us.v.FileNameLength;
-#ifdef Win32
+#ifdef WIN32
 	*buffer++ ='\\';
 	*buffer++ ='\\';
 #else
