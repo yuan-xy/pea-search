@@ -104,6 +104,10 @@ var num_all_page=num_per_page*2;
 	}
 	function searchf0(){
 		stat_timeout = setTimeout(stat_search,10);
+		if($("#search").val()==""){
+			$("#loading").css("visibility","hidden");
+			return;
+		}
 		$("#loading").css("visibility","visible");
 		clearTimeout(highlight_timeout);
 		search_and_parse(cur_search);
@@ -113,8 +117,15 @@ var num_all_page=num_per_page*2;
     function searchf(value){
 		value = trim(value);
 		if(value.length==0) return;
-		$("#history_area").fadeOut(300);
-		$("#tabs").fadeIn(500);
+		if(!is_scan_finished()){
+			if(is_scan_finish_one()){
+				show_info("磁盘扫描未全部完成，只能显示部分查询结果.");
+			}else{
+				show_info("磁盘扫描中，请等待5秒后重试.");
+			}
+		}
+		$("#history_area").hide();
+		$("#tabs").fadeIn(300);
 		$("#loading").css("visibility","visible");
 		cur_search = value;
 		clearTimeout(search_timeout);
@@ -122,10 +133,6 @@ var num_all_page=num_per_page*2;
 		clearTimeout(highlight_timeout);
 		$("#tabs ul span").html("0");
 		$("#tab-1 span span").html("0");
-		if(value==""){
-			$("#loading").css("visibility","hidden");
-			return;
-		}
 		if(value.length<=4){
 			search_timeout = setTimeout(searchf0,300);
 		}else{
@@ -139,6 +146,10 @@ var num_all_page=num_per_page*2;
 	}
 	function search_if_change(e){
 		$("#dialog-welcome").dialog("close");
+		if($("#search").val()==""){
+			$("#loading").css("visibility","hidden");
+			return;
+		}
 		if(e.keyCode==13){
 			 $("#maintable").setSelection(1);
 			 $(".jqgrow", "#maintable")[0].focus();
@@ -291,8 +302,8 @@ var num_all_page=num_per_page*2;
 	}
 	function return_history(){
 		$("#loading").css("visibility","visible");
-		$("#tabs").fadeOut(300);
-		$("#history_area").show();
+		$("#tabs").hide();
+		$("#history_area").fadeIn(200);
 		load_history();
 		$("#search").val("");
 		$("#search").focus();

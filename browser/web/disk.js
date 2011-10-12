@@ -119,6 +119,12 @@ function todo_dirves(){
 	return ret;
 }
 
+function is_scan_finish_one(){
+	var dd = eval(cef.plugin.search("[///index_status"));
+	console.log(dd);
+	return dd.length > 0;
+}
+
 function is_scan_finished(){
 	return todo_dirves().length == 0
 }
