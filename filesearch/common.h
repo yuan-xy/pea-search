@@ -19,7 +19,7 @@ extern BOOL get_abs_path(const WCHAR *name, WCHAR full_path[]);
 
 extern void print_debug(WCHAR *fmt, ...);
 
-extern BOOL WindowsVersionOK (DWORD MajorVerRequired, DWORD MinorVerRequired);
+extern BOOL WindowsVersionOK();
 
 
 extern void get_prop(const wchar_t  *key, wchar_t  *out, DWORD nSize);

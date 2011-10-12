@@ -52,13 +52,17 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 #else
   settings.multi_threaded_message_loop = true;
 #endif
-
+	if(!WindowsVersionOK()) {
+		MessageBox(NULL,L"Pea Search only support Window XP, Vista and Win7 .", L"Pea Search Warn",MB_OK);
+		return 0;
+	}
   CefInitialize(settings);
 	InitSchemeTest();
 	InitExtensionTest();
 	InitPlugin();
 	MyRegisterClass(hInstance);
 	if (!InitInstance (hInstance, nCmdShow)) return FALSE;
+
 	if(OleInitialize(NULL)!=S_OK) MessageBox(NULL,L"warn",L"ole init failed.",MB_OK);
 	connect_named_pipe();
 	SetForegroundWindow(hMainWin);

@@ -39,14 +39,14 @@ void print_debug(WCHAR *fmt, ...){
 	OutputDebugString(buffer);
 }
 
-BOOL WindowsVersionOK (DWORD MajorVerRequired, DWORD MinorVerRequired){
-    OSVERSIONINFO OurVersion;
-	OurVersion.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-	if (!GetVersionEx (&OurVersion)) return 0;
-    return ( (OurVersion.dwPlatformId == VER_PLATFORM_WIN32_NT) &&
-		       ((OurVersion.dwMajorVersion > MajorVerRequired) ||
-                (OurVersion.dwMajorVersion >= MajorVerRequired &&
-			     OurVersion.dwMinorVersion >= MinorVerRequired) ));
+BOOL WindowsVersionOK (){
+    OSVERSIONINFO v;
+	v.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+	if (!GetVersionEx (&v)) return 0;
+	if(v.dwPlatformId != VER_PLATFORM_WIN32_NT) return 0;
+    return (v.dwMajorVersion==5 && v.dwMinorVersion==1) ||
+		(v.dwMajorVersion==6 && v.dwMinorVersion==0) ||
+		(v.dwMajorVersion==6 && v.dwMinorVersion==1);
 }
 
 void get_prop(LPCWSTR key, LPWSTR out, DWORD nSize){

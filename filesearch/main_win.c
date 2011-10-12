@@ -17,6 +17,7 @@
 #include "server.h"
 #include "exception_dump.h"
 #include "desktop.h"
+#include "common.h"
 
 BOOL read_build_check(int i){
 	BOOL flag = load_db(i);
@@ -118,6 +119,7 @@ BOOL gigaso_init(){
 	}else{
 		printf("file entry size:%d\n",sizeof(FileEntry));
 	}
+	if(!WindowsVersionOK()) return 0;
 	breakpad_init();
 	//request_dump();
 	init_chinese();
