@@ -1,6 +1,6 @@
 ﻿#include "GIGASOConfig.h"
 
-#ifdef HAVE_64_BIT
+#if ( defined(HAVE_64_BIT) && defined(WIN32) )  || defined(LINUX)
 	#define TC_MALLOC malloc
 	#define TC_REALLOC realloc
 	#define TC_FREE free
