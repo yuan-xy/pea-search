@@ -49,24 +49,6 @@ BOOL WindowsVersionOK (){
 		(v.dwMajorVersion==6 && v.dwMinorVersion==1);
 }
 
-void get_prop(LPCWSTR key, LPWSTR out, DWORD nSize){
-	wchar_t buffer[MAX_PATH];
-	get_abs_path(L"gigaso.inf",buffer);
-	GetPrivateProfileString(L"customize",key,NULL,out,nSize,buffer);
-}
-
-void get_prop2(LPCWSTR key, LPWSTR out, DWORD nSize,LPCWSTR deft){
-	wchar_t buffer[MAX_PATH];
-	get_abs_path(L"gigaso.inf",buffer);
-	GetPrivateProfileString(L"customize",key,deft,out,nSize,buffer);
-}
-
-void set_prop(LPCWSTR key, LPWSTR str){
-	wchar_t buffer[MAX_PATH];
-	get_abs_path(L"gigaso.inf",buffer);
-	WritePrivateProfileString(L"customize",key,str,buffer);
-}
-
 #define DEFAULT_HOT_KEY 6
 int get_hotkey(){
 	wchar_t fbuffer[MAX_PATH];
@@ -253,17 +235,7 @@ BOOL get_user(wchar_t *userbuf){
 
 #else //WIN32
 
-void get_prop(LPCWSTR key, LPWSTR out, DWORD nSize){
-	//TODO
-}
 
-void get_prop2(LPCWSTR key, LPWSTR out, DWORD nSize,LPCWSTR deft){
-	//TODO
-}
-
-void set_prop(LPCWSTR key, LPWSTR str){
-	//TODO
-}
 BOOL get_user(wchar_t *userbuf){
 	//TODO
 	return 1;

@@ -62,10 +62,10 @@ static void dopath(char *fullpath, char *filename, pFileEntry parent, int i){
 int scanMac(pFileEntry root, int i){
 	long len = pathconf("/", _PC_PATH_MAX);
 	char *fullpath = (char *)malloc_safe(len);
-	strncpy(fullpath, "/", len);
+	strncpy(fullpath, "/User", len);
 	fullpath[len-1] = 0;
 	printf("%d ,%s\n",len,fullpath);
-	dopath(fullpath,"",root,i);
+	dopath(fullpath,"User",root,i);
 	free_safe(fullpath);
 	return ALL_FILE_COUNT;
 }

@@ -5,9 +5,11 @@
 #include <time.h>
 
 #ifdef WIN32
-#include <aclapi.h>
-#include <io.h>
-#include <process.h>
+    #include <aclapi.h>
+    #include <io.h>
+    #include <process.h>
+#else
+#include "mac_port.h"
 #endif
 
 #include "util.h"
@@ -311,29 +313,58 @@ static void rescan_t(int *p){
 	int i = *p;
 	rescan(i);
 }
-static BOOL update_status(int status){
-	FILE *file;
-	if ((file = fopen (UPDATE_CHECH_FILE, "w")) != NULL){
-		fwrite(&status,sizeof(char),1,file);
-		fclose (file);
-		return 1;
-	}
-	return 0;
+
+static BOOL write_update_status_file(char status, char *fname){
+    FILE *file;
+    if ((file = fopen (UPDATE_CHECH_FILE, "w")) == NULL) return 0;
+    fwrite(&status,sizeof(char),1,file);
+    if(fname!=NULL) fwrite(fname,sizeof(char),strlen(fname),file);
+    fclose (file);
+    return 1;
 }
 
-static int get_update_status(){
+static BOOL update_status(char status){
+    return write_update_status_file(status,NULL);
+}
+
+static char get_update_status(){
 	BOOL one_day_ago = file_passed_one_day(UPDATE_CHECH_FILE);
 	if(one_day_ago){
 		return UPDATE_CHECH_UNKNOWN;
 	}else{
 		FILE *file;
-		int status=UPDATE_CHECH_UNKNOWN;
-		if ((file = fopen(UPDATE_CHECH_FILE, "r+")) == NULL){
+		char status=UPDATE_CHECH_UNKNOWN;
+		if ((file = fopen(UPDATE_CHECH_FILE, "r")) == NULL){
 			return UPDATE_CHECH_UNKNOWN;
 		}
-		fread(&status,sizeof(int),1,file);
+		fread(&status,sizeof(char),1,file);
 		fclose (file);
 		return status;
+	}
+}
+
+static void send_response_update_file(SockOut hNamedPipe){
+	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
+	char status=UPDATE_CHECH_UNKNOWN;
+	FILE *file;
+	if ((file = fopen(UPDATE_CHECH_FILE, "r")) != NULL){
+		if(fread(&status,sizeof(char),1,file)==1){
+			if(status==UPDATE_CHECH_NEW){
+				char fname[MAX_PATH] = {0};
+				size_t ret = fread(fname,sizeof(char),MAX_PATH,file);
+				if(ret>0 || feof(file) ){
+					memcpy(p,fname,strlen(fname));
+                    p += strlen(fname);
+				}
+			}
+		}
+		fclose (file);
+	}
+	{
+		DWORD nXfer;
+		pSearchResponse resp = (pSearchResponse)buffer;
+		resp->len = (p-p1);
+		WriteSock(hNamedPipe, resp, (p-buffer), nXfer);
 	}
 }
 
@@ -355,13 +386,7 @@ static void download_t(void *str){// "http://host/filename?hash&version"
 		wcstombs(md5,hash,MAX_PATH);
 		MD5File(fname,md5_2);
 		if(strncmp(md5,md5_2,MD5_LEN*2)==0){
-			int status=UPDATE_CHECH_NEW;
-			FILE *file;
-			if ((file = fopen (UPDATE_CHECH_FILE, "w")) == NULL) return;
-			fwrite(&status,sizeof(char),1,file);
-			fwrite(fname,sizeof(char),MAX_PATH,file);
-			fclose (file);
-			set_prop(L"version",version);
+            write_update_status_file(UPDATE_CHECH_NEW, fname);
 		}else{
 			printf("hash %s != %s.\n",md5,md5_2);
 		}
@@ -397,6 +422,13 @@ static void command_exec(WCHAR *command, SockOut hNamedPipe){
 			send_response_ok(hNamedPipe);
 		}else if(wcsncmp(url,L"_status",wcslen(L"_status"))==0){
 			send_response_char(hNamedPipe,get_update_status());
+		}else if(wcsncmp(url,L"_file",wcslen(L"_file"))==0){
+			send_response_update_file(hNamedPipe);
+		}else if(wcsncmp(url,L"_test",wcslen(L"_test"))==0){
+            char fname[MAX_PATH]={0};
+            wcstombs(fname,url+6,MAX_PATH);
+            write_update_status_file(*(url+5), fname);
+			send_response_ok(hNamedPipe);
 		}else{
 			update_status(UPDATE_CHECH_DOWNLOADING);
 			_beginthread(download_t,0,url);

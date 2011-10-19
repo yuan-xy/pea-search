@@ -40,7 +40,8 @@ BOOL connect_unix_socket(int *psock) {
 }
 
 
-int main(int argc, char * argv[]) {
+int main(int argc, char * argv[]) 
+{
 	int	sockfd;
 	SearchRequest req;
 	SearchResponse resp;

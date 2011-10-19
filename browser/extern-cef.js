@@ -33,7 +33,6 @@ cef.gigaso.os = '';
 cef.gigaso.cpu = '';
 cef.gigaso.disk = '';
 cef.gigaso.ver = '';
-cef.gigaso.ver_new = '';
 cef.gigaso.user = '';
 cef.gigaso.zoom_in = {};
 cef.gigaso.zoom_out = {};

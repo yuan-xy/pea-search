@@ -270,23 +270,29 @@ function upgrade_req(up_url){
 	});
 }
 
+function ver_new(){
+	file = cef.plugin.search("[///upgrade_file");
+	file.match(/PeaSearch-([\d\.]+)-x86.exe/i)[1]
+}
+
 function show_upgrade(){
 	var jqxhr = $.ajax({
 	  type: 'GET',
-	  url: host+"/gigasos.js?version="+cef.gigaso.ver_new,
+	  url: host+"/gigasos.js?version="+ver_new(),
 	  dataType: "json"
 	})
     .success(function(data, textStatus, jqXHR) { 
 	    $('#upgrade_desc').html(data.desc);
 		$("#old_version").html(cef.gigaso.ver);
-		$("#new_version").html(cef.gigaso.ver_new);
+		$("#new_version").html(ver_new());
 		$("#dialog-upgrade").dialog({modal: true, width:600});
 	 });
 }
 
 function do_upgrade(){
 	$("#dialog-upgrade").dialog("close");
-	cef.gigaso.do_update();
+	file = cef.plugin.search("[///upgrade_file");
+	if(file) cef.gigaso.do_update(file);
 }
 
 function show_upgrade_info(){

@@ -132,10 +132,10 @@ typedef struct searchEnv SearchEnv, *pSearchEnv;
 
 
 #define UPDATE_CHECH_FILE "gigaso_update"
-#define UPDATE_CHECH_UNKNOWN 48
-#define UPDATE_CHECH_DONE 49
-#define UPDATE_CHECH_NEW 50
-#define UPDATE_CHECH_DOWNLOADING 51
+#define UPDATE_CHECH_UNKNOWN '0'
+#define UPDATE_CHECH_DONE '1'
+#define UPDATE_CHECH_NEW '2'
+#define UPDATE_CHECH_DOWNLOADING '3'
 
 #endif  // FILE_SEARCH_ENV_H_
 
