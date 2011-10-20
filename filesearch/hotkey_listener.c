@@ -1,5 +1,5 @@
 ﻿#include "env.h"
-#include "common.h"
+#include "hotkey.h"
 
 static BOOL ExistListener(){
         HANDLE hMutex = CreateMutex( NULL, FALSE, L"GigasoHotkeyListener" );
@@ -10,9 +10,8 @@ static BOOL ExistListener(){
         return 0;
 }
 
-static BOOL register_hotkey(){
+static BOOL register_hotkey(int key){
 	BOOL flag;
-	int key = get_hotkey();
 	switch(key){
 		case 1: 	flag = RegisterHotKey(NULL,1, MOD_ALT, VK_PAUSE);break;
 		case 2: 	flag = RegisterHotKey(NULL,1, 0, VK_F7);break;
@@ -26,16 +25,20 @@ static BOOL register_hotkey(){
 	return flag;
 }
 
-static BOOL re_reg_hotkey(){
+static BOOL re_reg_hotkey(int key){
 	UnregisterHotKey(NULL,1);
-	return register_hotkey();
+	return register_hotkey(key);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam){
-		if (message == WM_SET_HOTKEY){
-			re_reg_hotkey();
-		}
-		return DefWindowProc(hWnd, message, wParam, lParam);
+	if (message == WM_GET_HOTKEY){
+		return get_hotkey();
+	}	
+	if (message == WM_SET_HOTKEY){
+		set_hotkey((int)wParam);
+		re_reg_hotkey((int)wParam);
+	}
+	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
 ATOM MyRegisterClass(HINSTANCE hInstance){
@@ -68,7 +71,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
     MSG msg = {0};
 	if(ExistListener()) return 1;
 	setPWD(NULL);
-    if (!register_hotkey()) return 1;
+    if (!register_hotkey(get_hotkey())) return 1;
 	MyRegisterClass(hInstance);
 	if (!InitInstance (hInstance, iCmdShow)) return 1;
 	WinExec("peadeskg.exe",SW_HIDE);

@@ -115,7 +115,7 @@ add_executable (ctest_find_path "ctest_find_path.c" )
 target_link_libraries (ctest_find_path "file_search")
 ADD_TEST(find_path ${CMAKE_CURRENT_BINARY_DIR}/ctest_find_path)
 
-add_executable (pealn "hotkey_listener.c" "common.c")
+add_executable (pealn "hotkey_listener.c" "common.c" "hotkey.c")
 set_target_properties(pealn PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
 install (TARGETS pealn  DESTINATION .)
 

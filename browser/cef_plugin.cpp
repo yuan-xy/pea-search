@@ -397,15 +397,17 @@ public:
       return true;
     }
     else if(name == "get_hotkey"){
-      retval = CefV8Value::CreateInt(get_hotkey());
+	  HWND wnd = FindWindow(ListenerWindowClass,NULL);
+      if(wnd==NULL) return false;
+	  int hotkey = SendMessage(wnd,WM_GET_HOTKEY,NULL,NULL);
+      retval = CefV8Value::CreateInt(hotkey);
       return true;
     }
     else if(name == "set_hotkey"){
       if(arguments.size() != 1) return false;
-      if(!set_hotkey(arguments[0]->GetIntValue())) return false;
       HWND wnd = FindWindow(ListenerWindowClass,NULL);
       if(wnd==NULL) return false;
-	  SendMessage(wnd,WM_SET_HOTKEY,NULL,NULL);
+	  SendMessage(wnd,WM_SET_HOTKEY,arguments[0]->GetIntValue(),NULL);
       return true;
     }
     return false;

@@ -22,9 +22,6 @@ void wait_c_ready(){
 int main(int argc, char *argv[]){
 	int ret = 0;
 	pFileEntry dir;
-	get_hotkey();
-	set_hotkey(3);
-	EXPECT(get_hotkey()==3);
 	gigaso_init();
 	wait_c_ready();
 	dir = find_file(L"c:",2);

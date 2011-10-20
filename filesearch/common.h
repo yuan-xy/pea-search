@@ -21,10 +21,6 @@ extern void print_debug(WCHAR *fmt, ...);
 
 extern BOOL WindowsVersionOK();
 
-extern int get_hotkey();
-extern BOOL set_hotkey(int key);
-
-
 
 extern BOOL get_os(wchar_t *osbuf);
 
