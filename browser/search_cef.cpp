@@ -39,7 +39,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	breakpad_init();
-	setPWD(NULL);
+	setUserPWD();
 
   CefSettings settings;
 
@@ -132,7 +132,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam){
 				CefWindowInfo info;
 				info.SetAsChild(hWnd, rect);
 				wchar_t full_path[MAX_PATH];
-				get_abs_path(L"web\\search.htm",full_path);
+				get_abs_path_exe(L"web\\search.htm",full_path);
 				if(_waccess(full_path,0)==0){
 					CefBrowser::CreateBrowser(info,
 						static_cast<CefRefPtr<CefClient>>(g_handler), full_path,settings);

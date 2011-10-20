@@ -26,6 +26,16 @@ BOOL setUserPWD(){
 	return SetCurrentDirectory(szFilePath);
 }
 
+BOOL get_abs_path_exe(const WCHAR *name, WCHAR full_path[]){
+	wchar_t *szFileName = NULL;
+	GetModuleFileName(NULL,full_path,MAX_PATH);
+	szFileName = wcsrchr(full_path,L'\\');
+	if(!szFileName) return 0;
+	wcscpy(szFileName+1,name);
+	return 1;
+}
+
+
 BOOL get_abs_path(const WCHAR *name, WCHAR full_path[]){
 	WCHAR *p = full_path;
 	DWORD d = GetCurrentDirectoryW(MAX_PATH,full_path);

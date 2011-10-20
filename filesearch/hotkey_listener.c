@@ -87,10 +87,13 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	if(ExistListener()) return 1;
 	MyRegisterClass(hInstance);
 	if (!InitInstance (hInstance, iCmdShow)) return 1;
-	setPWD(NULL);
-	WinExec("peadeskg.exe",SW_HIDE);
 	setUserPWD();
-/*
+	if(is_admin()){
+		wchar_t buf[MAX_PATH];
+		get_abs_path_exe(L"peadeskg.exe",buf);
+		ShellExecute(NULL, L"open", buf,NULL,NULL,SW_HIDE); 
+	}
+/*	
 	{
 		wchar_t buffer[255];
 		wchar_t buf[128];
@@ -104,8 +107,9 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		if (msg.message == WM_HOTKEY){
 			HWND wnd = FindWindow(SearchWindowClass,SearchWindowTitle);
 			if(wnd==NULL){
-				HINSTANCE  hi = ShellExecute(NULL, L"open", L"peasrch.exe",NULL,NULL,SW_SHOW); 
-				DWORD ret = GetLastError();
+				wchar_t buf[MAX_PATH];
+				get_abs_path_exe(L"peasrch.exe",buf);
+				ShellExecute(NULL, L"open", buf,NULL,NULL,SW_SHOW); 
 			}else{
 				ShowWindow(wnd, SW_SHOW);  // Make the window visible if it was hidden
 				ShowWindow(wnd, SW_RESTORE);  // Next, restore it if it was minimized

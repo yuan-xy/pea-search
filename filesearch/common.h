@@ -17,11 +17,18 @@ extern BOOL setPWD(char *lpModuleName);
 extern BOOL setUserPWD();
 
 /**
- * 根据相对路径文件名得到绝对路径名
+ * 以进程当前工作目录为参照，根据相对路径文件名得到绝对路径名
  * @param name 相对于本模块的文件名
  * @param full_path 绝对路径名
  */
 extern BOOL get_abs_path(const WCHAR *name, WCHAR full_path[]);
+
+/**
+ * 以当前可执行文件所在目录为参照，根据相对路径文件名得到绝对路径名
+ * @param name 相对于本模块的文件名
+ * @param full_path 绝对路径名
+ */
+extern BOOL get_abs_path_exe(const WCHAR *name, WCHAR full_path[]);
 
 extern void print_debug(WCHAR *fmt, ...);
 

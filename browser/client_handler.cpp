@@ -68,7 +68,7 @@ void ClientHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
 {
 	if(wcscmp(frame->GetURL().ToWString().c_str(),L"about:blank")==0){
 		wchar_t full_path[MAX_PATH];
-		get_abs_path(L"web\\search2.htm",full_path);
+		get_abs_path_exe(L"web\\search2.htm",full_path);
 		load_str(full_path);
 	}else{
 		init_dir();
