@@ -60,7 +60,8 @@ extern "C" {
 			std::wstring user(userbuf);
 			map[L"dump[user]"]=user;
 		}
-		google_breakpad::ReportResult ret = sender->SendCrashReport(L"http://www.1dooo.com:3000/dumps/",map,file,&response);
+		google_breakpad::ReportResult ret = sender->SendCrashReport(L"http://www.wandouss.com/dumps/",map,file,&response);
+		if(ret==google_breakpad::RESULT_FAILED) sender->SendCrashReport(L"http://60.191.119.190:3333/dumps/",map,file,&response);
 		return true;
 	}
   

@@ -1,5 +1,5 @@
 class DumpsController < ApplicationController
-  before_filter :admin_authorize, :except => :create
+  before_filter :admin_authorize, :only => [:index, :destroy]
 
   # GET /dumps
   # GET /dumps.xml
@@ -42,21 +42,19 @@ class DumpsController < ApplicationController
   # POST /dumps
   # POST /dumps.xml
   def create
-    @dump = Dump.new(params[:dump])
-    name =  params[:upload_file_minidump].original_filename  
-    directory = "public/dumps"  
-    path = File.join(directory, name)  
-    File.open(path, "wb") { |f| f.write(params[:upload_file_minidump].read) }  
-    @dump.file=name;
+    @dump = Dump.new(params[:dump]) 
+    unless params[:upload_file_minidump].nil?
+      name =  params[:upload_file_minidump].original_filename 
+      directory = "public/dumps"  
+      path = File.join(directory, name)  
+      File.open(path, "wb") { |f| f.write(params[:upload_file_minidump].read) }  
+      @dump.file=name;
+    end
     @dump.ip=request.ip;
-    respond_to do |format|
-      if @dump.save
-        format.html { render :text => "ok" }
-        format.xml  { render :xml => @dump, :status => :created, :location => @dump }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @dump.errors, :status => :unprocessable_entity }
-      end
+    if @dump.save
+      render :text => "ok"
+    else
+      render :text => "error"
     end
   end
 

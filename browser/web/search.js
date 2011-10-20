@@ -7,8 +7,8 @@ var row_per_page=2;
 var num_per_page=num_per_row*row_per_page;
 var num_all_page=num_per_page*2;
 
-	var host_main = "http://www.wandouss.com";
-	var host_backup = "http://60.191.119.190:3333";
+var host_main = "http://www.wandouss.com";
+var host_backup = "http://60.191.119.190:3333";
 	var order_col;
 	var order_desc;
 	var cur_search;
