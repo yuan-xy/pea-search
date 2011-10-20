@@ -6,6 +6,8 @@
 #include "GIGASOConfig.h"
 
 #ifdef WIN32
+#include <Shlobj.h>
+
 BOOL setPWD(char *lpModuleName){
 	char szFilePath[MAX_PATH]={0};
 	char *szFileName = NULL;
@@ -16,6 +18,12 @@ BOOL setPWD(char *lpModuleName){
 	if(!szFileName) return 0;
 	szFilePath[szFileName-szFilePath]='\0';
 	return SetCurrentDirectoryA(szFilePath);
+}
+
+BOOL setUserPWD(){
+	wchar_t szFilePath[MAX_PATH]={0};	
+	SHGetFolderPath(NULL,CSIDL_LOCAL_APPDATA, NULL,SHGFP_TYPE_CURRENT,szFilePath);
+	return SetCurrentDirectory(szFilePath);
 }
 
 BOOL get_abs_path(const WCHAR *name, WCHAR full_path[]){

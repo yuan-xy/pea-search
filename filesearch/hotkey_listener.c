@@ -1,13 +1,24 @@
 ﻿#include "env.h"
+#include "common.h"
 #include "hotkey.h"
 
+static void get_mutex_name(wchar_t *buf, int size){
+	int len = wcslen(L"GigasoHotkeyListener");
+	wcsncpy(buf,L"GigasoHotkeyListener",len);
+	size-=len;
+	GetUserName(buf+len, &size);	
+}
+
 static BOOL ExistListener(){
-        HANDLE hMutex = CreateMutex( NULL, FALSE, L"GigasoHotkeyListener" );
-        if ( GetLastError() == ERROR_ALREADY_EXISTS ){
-                CloseHandle( hMutex );
-                return 1;
-        }
-        return 0;
+	HANDLE hMutex;
+	wchar_t buf[128];
+	get_mutex_name(buf,128);
+    hMutex = CreateMutex( NULL, FALSE, buf );
+    if ( GetLastError() == ERROR_ALREADY_EXISTS ){
+            CloseHandle( hMutex );
+            return 1;
+    }
+    return 0;
 }
 
 static BOOL register_hotkey(int key){
@@ -59,7 +70,11 @@ ATOM MyRegisterClass(HINSTANCE hInstance){
 }
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow){
-	HWND hMainWin = CreateWindow(ListenerWindowClass, L"",
+	HWND hMainWin;
+	wchar_t fbuffer[128];
+	DWORD size=128;
+	GetUserName(fbuffer, &size);
+	hMainWin = CreateWindow(ListenerWindowClass, fbuffer,
 		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, CW_USEDEFAULT, 0, 100,
 		100, NULL, NULL, hInstance, NULL);
 	return hMainWin!=NULL;
@@ -70,13 +85,21 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
 {
     MSG msg = {0};
 	if(ExistListener()) return 1;
-	setPWD(NULL);
-    if (!register_hotkey(get_hotkey())) return 1;
 	MyRegisterClass(hInstance);
 	if (!InitInstance (hInstance, iCmdShow)) return 1;
+	setPWD(NULL);
 	WinExec("peadeskg.exe",SW_HIDE);
-	LoadLibrary(L"libcef.dll");
-	LoadLibrary(L"icudt.dll");
+	setUserPWD();
+/*
+	{
+		wchar_t buffer[255];
+		wchar_t buf[128];
+		get_mutex_name(buf,128);
+		GetCurrentDirectory(255, buffer);
+		MessageBox(NULL,buffer,buf,MB_OK);
+	}
+*/
+    if (!register_hotkey(get_hotkey())) return 1;
     while(GetMessage(&msg, NULL, 0, 0) != 0){
 		if (msg.message == WM_HOTKEY){
 			HWND wnd = FindWindow(SearchWindowClass,SearchWindowTitle);

@@ -228,6 +228,13 @@ static CefString history(){
 	return ret2;
 }
 
+static HWND find_listener_window(){
+	wchar_t fbuffer[128];
+	DWORD size=128;
+	GetUserName(fbuffer, &size);
+	return FindWindow(ListenerWindowClass,fbuffer);
+}
+
 #define CEF_METHOD(method_name,type) if(name == #method_name ){ \
       if(arguments.size() != 1 || !arguments[0]->IsString()){ \
         return false; \
@@ -397,7 +404,7 @@ public:
       return true;
     }
     else if(name == "get_hotkey"){
-	  HWND wnd = FindWindow(ListenerWindowClass,NULL);
+	  HWND wnd = find_listener_window();
       if(wnd==NULL) return false;
 	  int hotkey = SendMessage(wnd,WM_GET_HOTKEY,NULL,NULL);
       retval = CefV8Value::CreateInt(hotkey);
@@ -405,7 +412,7 @@ public:
     }
     else if(name == "set_hotkey"){
       if(arguments.size() != 1) return false;
-      HWND wnd = FindWindow(ListenerWindowClass,NULL);
+      HWND wnd = find_listener_window();
       if(wnd==NULL) return false;
 	  SendMessage(wnd,WM_SET_HOTKEY,arguments[0]->GetIntValue(),NULL);
       return true;

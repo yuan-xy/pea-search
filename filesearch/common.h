@@ -7,8 +7,14 @@ extern "C" {
 
 /**
  * 设置应用程序当前目录
+ * @param lpModuleName 如果lpModuleName为空， 则设置应用程序路径为其exe文件所在目录。如果lpModuleName不为空，一般是浏览器中加载DLL，设置为DLL所在路径
  */
 extern BOOL setPWD(char *lpModuleName);
+
+/**
+ * 设置应用程序当前目录为用户主目录
+ */
+extern BOOL setUserPWD();
 
 /**
  * 根据相对路径文件名得到绝对路径名
