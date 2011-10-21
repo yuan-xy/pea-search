@@ -1,0 +1,10 @@
+*.db 数据库索引文件, 只有daemon进程可以访问,	存放于安装目录
+gigaso_update 更新记录文件, 只有daemon进程可以访问,	存放于安装目录
+
+desktop.all 用户agent创建，daemon进程访问, 存在权限问题？？？
+USER.ini  agent进程设置快捷键，	存放于用户主目录
+
+historyUSER  user的历史文件记录，	存放于用户主目录
+
+
+gigaso.inf  windows安装文件

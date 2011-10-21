@@ -11,3 +11,6 @@ Release*
 build
 GIGASOConfig.h
 gserver/public/dumps/
+3rd/
+*.zip
+*.gz
