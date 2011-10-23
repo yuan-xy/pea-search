@@ -30,6 +30,7 @@ void load_online_db(int i){
 	if(read_build_check(i)){
 		after_build(i);
 		g_loaded[i]=1;
+		printf("load drive %c finished.\n",i+'A');
 	}
 }
 
@@ -64,6 +65,7 @@ BOOL gigaso_init(){
 	//request_dump();
 	init_chinese();
 	setlocale(LC_ALL, "");
+	load_online_db(0);
 	scan(0);
 	return 1;
 }

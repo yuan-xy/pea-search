@@ -18,10 +18,10 @@
 <div class="rightbar">
 <h1><div class="logo"><img src="images/logo.png" width="389" height="141" alt="豌豆搜索" title="豌豆搜索"/></div></h1>
 <div class="wordbox">
-<div class="version">软件版本：V 1.0.18<br />
+<div class="version">软件版本：V 1.0.20<br />
 软件大小：9.60M<br />
-更新时间：2011-10-8</div>
-<div class="xzcs" style="cursor:hand" id="download"><a href="/PeaSrch.zip">已有 <span id="dcount"></span> 次</a></div>
+更新时间：2011-10-23</div>
+<div class="xzcs" style="cursor:hand" id="download" onclick="window.open('/PeaSearch-1.0.20-x86.exe')"><a href="/PeaSearch-1.0.20-x86.exe">已有 <span id="dcount"></span> 次</a></div>
 <!--
 <div class="downlod"><a href="/gigaso/path/17/PeaSearch-1.0.18-x86.exe" target="_blank">本地下载</a>  <a href="#" target="_blank">华军下载</a>  <a href="#" target="_blank">腾讯下载</a>  <a href="#" target="_blank">太平洋下载</a><br />
 <a href="#" target="_blank">天空下载</a>  <a href="#" target="_blank">搜狐下载</a>  <a href="#" target="_blank">新浪下载</a></div>
@@ -142,7 +142,7 @@
 		$("#download").bind("click",function(){
 			var newd = $("#dcount").html()*1+1;
 			$("#dcount").html(newd);
-			window.open('/PeaSrch.zip');
+			//window.open('/PeaSearch-1.0.20-x86.exe');
 			$.ajax({
 			  type: 'POST',
 			  url: '/dcounts'

@@ -46,6 +46,7 @@ class GigasosController < ApplicationController
 
     respond_to do |format|
       if @gigaso.save
+        `ln -s #{@gigaso.path} /home/dooo/gserver/public/#{@gigaso.filename}`
         format.html { redirect_to(@gigaso, :notice => 'Gigaso was successfully created.') }
         format.xml  { render :xml => @gigaso, :status => :created, :location => @gigaso }
       else

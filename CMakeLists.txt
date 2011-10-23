@@ -36,7 +36,7 @@ project (GIGASO)
 
 set (GIGASO_VERSION_MAJOR 1)
 set (GIGASO_VERSION_MINOR 0)
-set (GIGASO_VERSION_BUILD 19)
+set (GIGASO_VERSION_BUILD 20)
 
 
 message(STATUS "size of pointer: ${CMAKE_SIZEOF_VOID_P}  ")
