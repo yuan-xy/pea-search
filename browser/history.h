@@ -46,11 +46,6 @@ extern BOOL history_load();
 
 extern BOOL history_remove();
 
-/**
-* 初次安装时，从windows的Recent文件夹获取常用文档来初始化
-*/
-extern void init_from_recent();
-
 typedef void (*pHistoryVisitor)(wchar_t *file, int pin, void *context);
 
 /**

@@ -1,9 +1,8 @@
 ﻿#include <stdio.h>
-#include <Shlobj.h>
 #include "history.h"
-#include "win_misc.h"
 
-static wchar_t his_files[MAX_HISTORY][MAX_PATH] = {0};
+
+static wchar_t his_files[MAX_HISTORY][MAX_PATH] = {{0}};
 
 //采用匈牙利命名法区分外部位置和内部位置
 static int nstart=0; 
@@ -11,7 +10,7 @@ static int nstart=0;
 static struct{
 	int wi:16; //外部位置
 	int ni:16; //内部位置
-}PIN[VIEW_HISTORY] = {-1}; //只初始化了第一个wi，是否存在移植性问题？默认初始化后，所有PIN[i].wi!=i
+}PIN[VIEW_HISTORY] = {{-1}}; //只初始化了第一个wi，是否存在移植性问题？默认初始化后，所有PIN[i].wi!=i
 
 #define VALID_PIN(i) (i<VIEW_HISTORY && PIN[i].wi==i)
 
@@ -195,7 +194,8 @@ wchar_t *history_get(int wi){
 static BOOL get_history_filename(char *fbuffer){
 	DWORD size=MAX_PATH;
 	strcpy(fbuffer,"history");
-	return GetUserNameA(fbuffer+strlen("history"), &size);
+	GetUserNameA(fbuffer+strlen("history"), &size);
+	return 1;
 }
 
 BOOL history_remove(){
@@ -269,7 +269,7 @@ static void json_print(wchar_t *file, int pin, void *context){
 	{
 		memcpy(p,L"\"pin\":",6*sizeof(wchar_t));
 		p += 6;
-		p += wsprintf(p,L"%d",pin);
+        p += swprintf(p,2,L"%d",pin);
 	}
 	*p++ = L'}';
 	*p++ = L',';
@@ -288,68 +288,4 @@ int history_to_json(wchar_t *buffer){
 	return p-buffer;
 }
 
-#define MAX_FILE_STRUCT 1000
-static struct file_tag{
-	WCHAR path[MAX_PATH];
-	FILETIME ftLastWriteTime;
-};
-typedef struct file_tag file, *pfile;
 
-static int recent_compare(const void *pa, const void *pb){
-	pfile a, b;
-	a = (pfile)pa;
-	b = (pfile)pb;
-	if(b->ftLastWriteTime.dwHighDateTime == a->ftLastWriteTime.dwHighDateTime){
-		return b->ftLastWriteTime.dwLowDateTime - a->ftLastWriteTime.dwLowDateTime;
-	}else{
-		return b->ftLastWriteTime.dwHighDateTime - a->ftLastWriteTime.dwHighDateTime;
-	}
-}
-
-
-
-void init_from_recent(){
-	WCHAR szPath[MAX_PATH];
-	file list[MAX_FILE_STRUCT];
-	if(SUCCEEDED(SHGetFolderPath(NULL, 
-								 CSIDL_RECENT, 
-								 NULL, 
-								 0, 
-								 szPath))) 
-	{
-		int count=0;
-		WIN32_FIND_DATA fd;
-		HANDLE hFind = INVALID_HANDLE_VALUE;
-		int len = wcslen(szPath);
-		szPath[len] = L'\\';
-		szPath[len+1] = L'*';
-		szPath[len+2] = L'\0';
-		hFind = FindFirstFile(szPath, &fd);
-		if (INVALID_HANDLE_VALUE == hFind){
-			FindClose(hFind);
-			return;
-		}
-		do{
-			if (fd.cFileName[0] == '.' && (fd.cFileName[1] == '\0' || fd.cFileName[1] == '.')) {
-				continue;
-			}
-			memcpy(list[count].path,szPath, sizeof(szPath));
-			wcscpy(list[count].path+len+1,fd.cFileName);
-			list[count].ftLastWriteTime = fd.ftLastWriteTime;
-			printf("%d - %ls\n",count, list[count].path);
-			count++;
-			if(count >= MAX_FILE_STRUCT) break;
-		}while (FindNextFile(hFind, &fd) != 0);
-		qsort(list,count,sizeof(list[0]),recent_compare);
-		{
-			int i=0;
-			for(;i<MAX_HISTORY;i++){
-				shortcut(list[i].path, list[i].path);
-				history_add(list[i].path);
-			}
-			//nstart = MAX_HISTORY/2 +1;
-			history_save();
-		}
-		FindClose(hFind);
-	}
-}

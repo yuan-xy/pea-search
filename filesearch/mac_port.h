@@ -5,8 +5,6 @@ extern "C" {
 #ifndef  FILE_SEARCH_MAC_PORT_H_
 #define  FILE_SEARCH_MAC_PORT_H_
 
-#include "env.h"
-
 void _beginthread( 
    void( *start_address )( void * ),
    unsigned stack_size,
@@ -20,6 +18,8 @@ long GetTickCount();
 char* strrev(char* szT);
 
 char* _itoa(int value, char*  str, int radix);
+    
+void GetUserNameA(char *fbuffer, int *size);
 
 #endif  //  FILE_SEARCH_MAC_PORT_H_
 

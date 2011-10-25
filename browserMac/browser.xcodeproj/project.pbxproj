@@ -1,0 +1,475 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		351A5DE014506BA2006F1D7C /* logo.icns in Resources */ = {isa = PBXBuildFile; fileRef = 351A5DDF14506BA2006F1D7C /* logo.icns */; };
+		3553434F1456F82E005A48AE /* mac_port.c in Sources */ = {isa = PBXBuildFile; fileRef = 3553434C1456F82E005A48AE /* mac_port.c */; };
+		355343521456F84A005A48AE /* history.c in Sources */ = {isa = PBXBuildFile; fileRef = 355343501456F84A005A48AE /* history.c */; };
+		35EA25F114506021007233F5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35EA25F014506021007233F5 /* Cocoa.framework */; };
+		35EA25FB14506021007233F5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 35EA25F914506021007233F5 /* InfoPlist.strings */; };
+		35EA25FD14506021007233F5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35EA25FC14506021007233F5 /* main.m */; };
+		35EA260114506021007233F5 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 35EA25FF14506021007233F5 /* Credits.rtf */; };
+		35EA260414506021007233F5 /* browserAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35EA260314506021007233F5 /* browserAppDelegate.m */; };
+		35EA260714506021007233F5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 35EA260514506021007233F5 /* MainMenu.xib */; };
+		35EA260F14506021007233F5 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35EA260E14506021007233F5 /* SenTestingKit.framework */; };
+		35EA261014506021007233F5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35EA25F014506021007233F5 /* Cocoa.framework */; };
+		35EA261814506021007233F5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 35EA261614506021007233F5 /* InfoPlist.strings */; };
+		35EA261A14506021007233F5 /* browserTests.h in Resources */ = {isa = PBXBuildFile; fileRef = 35EA261914506021007233F5 /* browserTests.h */; };
+		35EA261C14506021007233F5 /* browserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 35EA261B14506021007233F5 /* browserTests.m */; };
+		35EA262614506079007233F5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35EA262514506079007233F5 /* WebKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		35EA261114506021007233F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 35EA25E314506020007233F5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 35EA25EB14506021007233F5;
+			remoteInfo = browser;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		351A5DDF14506BA2006F1D7C /* logo.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = logo.icns; sourceTree = "<group>"; };
+		3553434B1456F82E005A48AE /* env.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = env.h; path = ../filesearch/env.h; sourceTree = "<group>"; };
+		3553434C1456F82E005A48AE /* mac_port.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mac_port.c; path = ../filesearch/mac_port.c; sourceTree = "<group>"; };
+		3553434D1456F82E005A48AE /* mac_port.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mac_port.h; path = ../filesearch/mac_port.h; sourceTree = "<group>"; };
+		3553434E1456F82E005A48AE /* sharelib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sharelib.h; path = ../filesearch/sharelib.h; sourceTree = "<group>"; };
+		355343501456F84A005A48AE /* history.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = history.c; path = ../browser/history.c; sourceTree = "<group>"; };
+		355343511456F84A005A48AE /* history.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = history.h; path = ../browser/history.h; sourceTree = "<group>"; };
+		355343531456F8D0005A48AE /* GIGASOConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIGASOConfig.h; path = ../DebugMac/GIGASOConfig.h; sourceTree = "<group>"; };
+		35EA25EC14506021007233F5 /* browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = browser.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		35EA25F014506021007233F5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		35EA25F314506021007233F5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		35EA25F414506021007233F5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		35EA25F514506021007233F5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		35EA25F814506021007233F5 /* browser-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "browser-Info.plist"; sourceTree = "<group>"; };
+		35EA25FA14506021007233F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		35EA25FC14506021007233F5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		35EA25FE14506021007233F5 /* browser-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "browser-Prefix.pch"; sourceTree = "<group>"; };
+		35EA260014506021007233F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		35EA260214506021007233F5 /* browserAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = browserAppDelegate.h; sourceTree = "<group>"; };
+		35EA260314506021007233F5 /* browserAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = browserAppDelegate.m; sourceTree = "<group>"; };
+		35EA260614506021007233F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		35EA260D14506021007233F5 /* browserTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = browserTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		35EA260E14506021007233F5 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		35EA261514506021007233F5 /* browserTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "browserTests-Info.plist"; sourceTree = "<group>"; };
+		35EA261714506021007233F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		35EA261914506021007233F5 /* browserTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = browserTests.h; sourceTree = "<group>"; };
+		35EA261B14506021007233F5 /* browserTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = browserTests.m; sourceTree = "<group>"; };
+		35EA262514506079007233F5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		35EA25E914506021007233F5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35EA262614506079007233F5 /* WebKit.framework in Frameworks */,
+				35EA25F114506021007233F5 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		35EA260914506021007233F5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35EA260F14506021007233F5 /* SenTestingKit.framework in Frameworks */,
+				35EA261014506021007233F5 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		35EA25E114506020007233F5 = {
+			isa = PBXGroup;
+			children = (
+				355343531456F8D0005A48AE /* GIGASOConfig.h */,
+				355343501456F84A005A48AE /* history.c */,
+				355343511456F84A005A48AE /* history.h */,
+				3553434B1456F82E005A48AE /* env.h */,
+				3553434C1456F82E005A48AE /* mac_port.c */,
+				3553434D1456F82E005A48AE /* mac_port.h */,
+				3553434E1456F82E005A48AE /* sharelib.h */,
+				35EA262514506079007233F5 /* WebKit.framework */,
+				35EA25F614506021007233F5 /* browser */,
+				35EA261314506021007233F5 /* browserTests */,
+				35EA25EF14506021007233F5 /* Frameworks */,
+				35EA25ED14506021007233F5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		35EA25ED14506021007233F5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				35EA25EC14506021007233F5 /* browser.app */,
+				35EA260D14506021007233F5 /* browserTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		35EA25EF14506021007233F5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				35EA25F014506021007233F5 /* Cocoa.framework */,
+				35EA260E14506021007233F5 /* SenTestingKit.framework */,
+				35EA25F214506021007233F5 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		35EA25F214506021007233F5 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				35EA25F314506021007233F5 /* AppKit.framework */,
+				35EA25F414506021007233F5 /* CoreData.framework */,
+				35EA25F514506021007233F5 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		35EA25F614506021007233F5 /* browser */ = {
+			isa = PBXGroup;
+			children = (
+				35EA260214506021007233F5 /* browserAppDelegate.h */,
+				35EA260314506021007233F5 /* browserAppDelegate.m */,
+				35EA260514506021007233F5 /* MainMenu.xib */,
+				35EA25F714506021007233F5 /* Supporting Files */,
+			);
+			path = browser;
+			sourceTree = "<group>";
+		};
+		35EA25F714506021007233F5 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				35EA25F814506021007233F5 /* browser-Info.plist */,
+				35EA25F914506021007233F5 /* InfoPlist.strings */,
+				351A5DDF14506BA2006F1D7C /* logo.icns */,
+				35EA25FC14506021007233F5 /* main.m */,
+				35EA25FE14506021007233F5 /* browser-Prefix.pch */,
+				35EA25FF14506021007233F5 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		35EA261314506021007233F5 /* browserTests */ = {
+			isa = PBXGroup;
+			children = (
+				35EA261914506021007233F5 /* browserTests.h */,
+				35EA261B14506021007233F5 /* browserTests.m */,
+				35EA261414506021007233F5 /* Supporting Files */,
+			);
+			path = browserTests;
+			sourceTree = "<group>";
+		};
+		35EA261414506021007233F5 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				35EA261514506021007233F5 /* browserTests-Info.plist */,
+				35EA261614506021007233F5 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		35EA25EB14506021007233F5 /* browser */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 35EA261F14506021007233F5 /* Build configuration list for PBXNativeTarget "browser" */;
+			buildPhases = (
+				35EA25E814506021007233F5 /* Sources */,
+				35EA25E914506021007233F5 /* Frameworks */,
+				35EA25EA14506021007233F5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = browser;
+			productName = browser;
+			productReference = 35EA25EC14506021007233F5 /* browser.app */;
+			productType = "com.apple.product-type.application";
+		};
+		35EA260C14506021007233F5 /* browserTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 35EA262214506021007233F5 /* Build configuration list for PBXNativeTarget "browserTests" */;
+			buildPhases = (
+				35EA260814506021007233F5 /* Sources */,
+				35EA260914506021007233F5 /* Frameworks */,
+				35EA260A14506021007233F5 /* Resources */,
+				35EA260B14506021007233F5 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				35EA261214506021007233F5 /* PBXTargetDependency */,
+			);
+			name = browserTests;
+			productName = browserTests;
+			productReference = 35EA260D14506021007233F5 /* browserTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		35EA25E314506020007233F5 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 35EA25E614506020007233F5 /* Build configuration list for PBXProject "browser" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 35EA25E114506020007233F5;
+			productRefGroup = 35EA25ED14506021007233F5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				35EA25EB14506021007233F5 /* browser */,
+				35EA260C14506021007233F5 /* browserTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		35EA25EA14506021007233F5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35EA25FB14506021007233F5 /* InfoPlist.strings in Resources */,
+				35EA260114506021007233F5 /* Credits.rtf in Resources */,
+				35EA260714506021007233F5 /* MainMenu.xib in Resources */,
+				351A5DE014506BA2006F1D7C /* logo.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		35EA260A14506021007233F5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35EA261814506021007233F5 /* InfoPlist.strings in Resources */,
+				35EA261A14506021007233F5 /* browserTests.h in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		35EA260B14506021007233F5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		35EA25E814506021007233F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35EA25FD14506021007233F5 /* main.m in Sources */,
+				35EA260414506021007233F5 /* browserAppDelegate.m in Sources */,
+				3553434F1456F82E005A48AE /* mac_port.c in Sources */,
+				355343521456F84A005A48AE /* history.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		35EA260814506021007233F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35EA261C14506021007233F5 /* browserTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		35EA261214506021007233F5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 35EA25EB14506021007233F5 /* browser */;
+			targetProxy = 35EA261114506021007233F5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		35EA25F914506021007233F5 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				35EA25FA14506021007233F5 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		35EA25FF14506021007233F5 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				35EA260014506021007233F5 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		35EA260514506021007233F5 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				35EA260614506021007233F5 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		35EA261614506021007233F5 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				35EA261714506021007233F5 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		35EA261D14506021007233F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		35EA261E14506021007233F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		35EA262014506021007233F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "browser/browser-Prefix.pch";
+				INFOPLIST_FILE = "browser/browser-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		35EA262114506021007233F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "browser/browser-Prefix.pch";
+				INFOPLIST_FILE = "browser/browser-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		35EA262314506021007233F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/browser.app/Contents/MacOS/browser";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "browser/browser-Prefix.pch";
+				INFOPLIST_FILE = "browserTests/browserTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		35EA262414506021007233F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/browser.app/Contents/MacOS/browser";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "browser/browser-Prefix.pch";
+				INFOPLIST_FILE = "browserTests/browserTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		35EA25E614506020007233F5 /* Build configuration list for PBXProject "browser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35EA261D14506021007233F5 /* Debug */,
+				35EA261E14506021007233F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		35EA261F14506021007233F5 /* Build configuration list for PBXNativeTarget "browser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35EA262014506021007233F5 /* Debug */,
+				35EA262114506021007233F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		35EA262214506021007233F5 /* Build configuration list for PBXNativeTarget "browserTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35EA262314506021007233F5 /* Debug */,
+				35EA262414506021007233F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 35EA25E314506020007233F5 /* Project object */;
+}

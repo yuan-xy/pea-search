@@ -38,7 +38,7 @@ SET( SOURCES
     "../filesearch/exception_dump.cpp"
     )
 
-add_executable (peasrch  ${SOURCES})
+add_executable (peasrch WIN32 ${SOURCES})
 target_link_libraries (peasrch "libcef.lib libcef_dll_wrapper.lib")
 target_link_libraries (peasrch "${3RD_LIB_PATH}/exception_handler.lib")
 target_link_libraries (peasrch "${3RD_LIB_PATH}/crash_generation_client.lib")
@@ -67,6 +67,7 @@ SET( SOURCES1
 
 add_executable(test_history ${SOURCES1} )
 set_target_properties(test_history PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
+ADD_TEST(test_history ${CMAKE_CURRENT_BINARY_DIR}/test_history)
 
 SET( SOURCES2
     bitmap.h

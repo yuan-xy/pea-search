@@ -37,7 +37,7 @@ extern "C" {
 	#include <signal.h>		/* for SIG_ERR */
 	#include <stdint.h>
 	#include <time.h>
-
+	#include "mac_port.h"
 	
 	#define strnicmp strncasecmp
 	#define stricmp strcasecmp
