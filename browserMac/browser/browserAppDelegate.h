@@ -28,9 +28,9 @@
 - (NSString*) search: (NSString*) query;
 - (NSString*) stat: (NSString*) query;
 - (NSString*) history;
-- (BOOL) his_del: (int) index;
-- (BOOL) his_pin: (int) index;
-- (BOOL) his_unpin: (int) index;
+- (BOOL) hisDel: (int) index;
+- (BOOL) hisPin: (int) index;
+- (BOOL) hisUnpin: (int) index;
 
 
 @end

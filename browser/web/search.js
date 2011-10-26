@@ -270,14 +270,14 @@ var host_backup = "http://60.191.119.190:3333";
 				$(p).addClass("pinned");
 				p.title = "取消固定";
 				$(p).bind('click',function(e){
-					cef.plugin.his_unpin(e.currentTarget.idx);
+					cef.plugin.hisUnpin(e.currentTarget.idx);
 					$(e.currentTarget).attr("title",'固定在此显示');
 					$(e.currentTarget).removeClass("pinned");
 				});
 			}else{
 				p.title = "固定在此显示";
 				$(p).bind('click',function(e){
-					cef.plugin.his_pin(e.currentTarget.idx);
+					cef.plugin.hisPin(e.currentTarget.idx);
 					$(e.currentTarget).attr("title",'取消固定');
 					$(e.currentTarget).addClass("pinned");
 				});
@@ -286,7 +286,7 @@ var host_backup = "http://60.191.119.190:3333";
 		$(".edit-bar .remove").bind('click',function(e){
 			p = e.currentTarget;
 			i = p.getAttribute("idx") * 1;
-			cef.plugin.his_del(i);
+			cef.plugin.hisDel(i);
 			$(p).parents('.history_file').hide();
 			refresh();
 		});
@@ -407,7 +407,7 @@ var host_backup = "http://60.191.119.190:3333";
 			searchf($("#search").val());
 		});
 		$(document).bind("contextmenu", function(e){
-			return true;
+			return false;
 		});
 		$("#tabs ul li a").bind('click',function(e){
 			$(".subnav").hide();

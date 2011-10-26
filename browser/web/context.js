@@ -33,7 +33,7 @@ function cut_file(t){
 
 function dblclick_file(target){
 	get_file_path(target);
-	var ret = cef.plugin.shell2_default(path+file);
+	var ret = cef.plugin.shellDefault(path+file);
 	info_if_error(ret, file, "打开");
 }
 
@@ -42,10 +42,10 @@ function dblclick_path(target){
 	get_file_path(target);
 	if(path.substr(0,1)=="\\"){
 		file = path.substr(0,path.length-1);
-		var ret = cef.plugin.shell2_default(file);
+		var ret = cef.plugin.shellDefault(file);
 		info_if_error(ret, file, "打开");
 	}else{
-		var ret = cef.plugin.shell_explore(path+file);
+		var ret = cef.plugin.shellExplore(path+file);
 		info_if_error(ret, path, "资源管理器");
 	}
 }
@@ -77,17 +77,17 @@ var context_menu_obj = {
 				  bindings: {
 					  'default': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = cef.plugin.shell2_default(path+file);
+						var ret = cef.plugin.shellDefault(path+file);
 						info_if_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'openas': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = cef.plugin.shell2_openas(path+file);
+						var ret = cef.plugin.shell2(path+file,"openas");
 						info_if_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'explore': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = cef.plugin.shell_explore(path+file);
+						var ret = cef.plugin.shellExplore(path+file);
 						info_if_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'copypath': function(t,menuitem) {
@@ -115,7 +115,7 @@ var context_menu_obj = {
 					  },
 					  'prop': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = cef.plugin.shell2_prop(path+file);
+						var ret = cef.plugin.shell2(path+file,"properties");
 						info_if_error(ret, file, menuitem.lastChild.data);
 					  }
 					}

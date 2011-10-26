@@ -96,16 +96,6 @@ static CefString stat(CefString msg){
 	return query(msg,-1);
 }
 
-static bool shell_exec(std::wstring s, const wchar_t *verb){
-	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-    HINSTANCE h = ShellExecuteW(NULL,verb,s.c_str(),NULL,NULL,SW_SHOWNORMAL);
-	bool ret = (int)h > 32;
-	if(ret){
-		if( history_add(s.c_str()) ) history_save();
-	}
-	return ret;
-}
-
 static bool shell2_exec0(const wchar_t *file,const wchar_t *verb){
 	SHELLEXECUTEINFO ShExecInfo ={0};
 	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
@@ -129,44 +119,14 @@ static bool shell2_exec(std::wstring s, const wchar_t *verb){
 	return shell2_exec0(s.c_str(),verb);
 }
 
-static bool shell_default(CefString msg){
-	return shell_exec(msg.ToWString(),NULL);
-}
-
-static bool shell_open(CefString msg){
-	return shell_exec(msg.ToWString(),L"open");
-}
-
-static bool shell_edit(CefString msg){
-	return shell_exec(msg.ToWString(),L"edit");
-}
-
-
-static bool shell_explore(CefString msg){
+static bool shellExplore(CefString msg){
 	char buffer[MAX_PATH*2];
 	std::string as = WStringToString(msg.ToWString());
 	_snprintf(buffer,MAX_PATH*2,"explorer /n, /Select, \"%s\"\0",as.c_str());
 	return WinExec(buffer, SW_NORMAL) > 31;
 }
 
-
-static bool shell_find(CefString msg){
-	return shell_exec(msg.ToWString(),L"find");
-}
-
-static bool shell_print(CefString msg){
-	return shell_exec(msg.ToWString(),L"print");
-}
-
-static bool shell2_prop(CefString msg){
-	return shell2_exec(msg.ToWString(), L"properties");
-}
-
-static bool shell2_openas(CefString msg){
-	return shell2_exec(msg.ToWString(), L"openas");
-}
-
-static bool shell2_default(CefString msg){
+static bool shellDefault(CefString msg){
 	std::wstring str = msg.ToWString();
 	const wchar_t *c = str.c_str();
 	if(*c==L'\\'){
@@ -258,15 +218,8 @@ public:
   {
 	CEF_METHOD(search,String)
 	CEF_METHOD(stat,String)
-	CEF_METHOD(shell_open,Bool)   
-	CEF_METHOD(shell_edit,Bool)   
-	CEF_METHOD(shell_explore,Bool)
-	CEF_METHOD(shell_find,Bool)   
-	CEF_METHOD(shell_print,Bool)  
-	CEF_METHOD(shell_default,Bool)
-	CEF_METHOD(shell2_prop,Bool)  
-	CEF_METHOD(shell2_openas,Bool)
-	CEF_METHOD(shell2_default,Bool)
+	CEF_METHOD(shellExplore,Bool)
+	CEF_METHOD(shellDefault,Bool)
 	CEF_METHOD(copy_str,Bool)     
 
     if(name == "shell2"){
@@ -291,21 +244,21 @@ public:
 	  retval = CefV8Value::CreateString(history());
       return true;
     }
-    if(name == "his_del"){
+    if(name == "hisDel"){
       if(arguments.size() != 1 || !arguments[0]->IsInt()) return false;
       history_delete(arguments[0]->GetIntValue());
 	  history_save();
       retval = CefV8Value::CreateBool(true);
       return true;
     }
-    if(name == "his_pin"){
+    if(name == "hisPin"){
       if(arguments.size() != 1 || !arguments[0]->IsInt()) return false;
       history_pin(arguments[0]->GetIntValue());
 	  history_save();
       retval = CefV8Value::CreateBool(true);
       return true;
     }
-    if(name == "his_unpin"){
+    if(name == "hisUnpin"){
       if(arguments.size() != 1 || !arguments[0]->IsInt()) return false;
       history_unpin(arguments[0]->GetIntValue());
 	  history_save();
@@ -505,41 +458,13 @@ void InitPlugin(){
     "    native function stat();"
     "    return stat(b);"
     "  };"
-	"  cef.plugin.shell_open = function(b) {"
-    "    native function shell_open();"
-    "    return shell_open(b);"
+	"  cef.plugin.shellExplore = function(b) {"
+    "    native function shellExplore();"
+    "    return shellExplore(b);"
     "  };"
-	"  cef.plugin.shell_edit = function(b) {"
-    "    native function shell_edit();"
-    "    return shell_edit(b);"
-    "  };"
-	"  cef.plugin.shell_explore = function(b) {"
-    "    native function shell_explore();"
-    "    return shell_explore(b);"
-    "  };"
-	"  cef.plugin.shell_find = function(b) {"
-    "    native function shell_find();"
-    "    return shell_find(b);"
-    "  };"
-	"  cef.plugin.shell_print = function(b) {"
-    "    native function shell_print();"
-    "    return shell_print(b);"
-    "  };"
-	"  cef.plugin.shell_default = function(b) {"
-    "    native function shell_default();"
-    "    return shell_default(b);"
-    "  };"
-	"  cef.plugin.shell2_prop = function(b) {"
-    "    native function shell2_prop();"
-    "    return shell2_prop(b);"
-    "  };"
-	"  cef.plugin.shell2_openas = function(b) {"
-    "    native function shell2_openas();"
-    "    return shell2_openas(b);"
-    "  };"
-	"  cef.plugin.shell2_default = function(b) {"
-    "    native function shell2_default();"
-    "    return shell2_default(b);"
+	"  cef.plugin.shellDefault = function(b) {"
+    "    native function shellDefault();"
+    "    return shellDefault(b);"
     "  };"
 	"  cef.plugin.shell2 = function(b,b2) {"
     "    native function shell2();"
@@ -561,17 +486,17 @@ void InitPlugin(){
     "    native function history();"
     "    return history();"
     "  };"
-	"  cef.plugin.his_del = function(b) {"
-    "    native function his_del();"
-    "    return his_del(b);"
+	"  cef.plugin.hisDel = function(b) {"
+    "    native function hisDel();"
+    "    return hisDel(b);"
     "  };"
-	"  cef.plugin.his_pin = function(b) {"
-    "    native function his_pin();"
-    "    return his_pin(b);"
+	"  cef.plugin.hisPin = function(b) {"
+    "    native function hisPin();"
+    "    return hisPin(b);"
     "  };"
-	"  cef.plugin.his_unpin = function(b) {"
-    "    native function his_unpin();"
-    "    return his_unpin(b);"
+	"  cef.plugin.hisUnpin = function(b) {"
+    "    native function hisUnpin();"
+    "    return hisUnpin(b);"
     "  };"
 	"  cef.plugin.batch_open = function(b) {"
     "    native function batch_open();"

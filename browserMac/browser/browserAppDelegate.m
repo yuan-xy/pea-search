@@ -184,12 +184,12 @@ static BOOL connect_unix_socket(int *psock) {
 		return @"search";
     } else if (sel == @selector(stat:)) {
 		return @"stat";
-    } else if (sel == @selector(his_del:)) {
-		return @"his_del";
-    } else if (sel == @selector(his_pin:)) {
-		return @"hispin";
-    } else if (sel == @selector(his_unpin:)) {
-		return @"his_unpin";
+    } else if (sel == @selector(hisDel:)) {
+		return @"hisDel";
+    } else if (sel == @selector(hisPin:)) {
+		return @"hisPin";
+    } else if (sel == @selector(hisUnpin:)) {
+		return @"hisUnpin";
 	} else {
 		return nil;
 	}
@@ -259,15 +259,15 @@ static int MAX_ROW = 30;
     return [[NSString alloc] initWithBytes:buffer length:(len * sizeof(wchar_t)) encoding:WCHAR_ENCODING];
 }
 
-- (BOOL) his_del: (int) index{
+- (BOOL) hisDel: (int) index{
     history_delete(index);
     return history_save();
 }
-- (BOOL) his_pin: (int) index{
+- (BOOL) hisPin: (int) index{
     history_pin(index);
     return history_save(); 
 }
-- (BOOL) his_unpin: (int) index{
+- (BOOL) hisUnpin: (int) index{
     history_unpin(index);
     return history_save();
 }
