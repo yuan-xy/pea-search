@@ -123,7 +123,11 @@ static bool shellExplore(CefString msg){
 	char buffer[MAX_PATH*2];
 	std::string as = WStringToString(msg.ToWString());
 	_snprintf(buffer,MAX_PATH*2,"explorer /n, /Select, \"%s\"\0",as.c_str());
-	return WinExec(buffer, SW_NORMAL) > 31;
+	bool ret = WinExec(buffer, SW_NORMAL) > 31;
+	if(ret){
+		if( history_add(c) ) history_save();
+	}
+	return ret;
 }
 
 static bool shellDefault(CefString msg){
@@ -145,7 +149,7 @@ static bool shell2(CefString msg, CefString verb){
 	return shell2_exec(msg.ToWString(), s.c_str());
 }
 
-static bool copy_str(CefString msg){
+static bool copyPath(CefString msg){
 	std::wstring s = msg.ToWString();
 	HGLOBAL hGlobal  = GlobalAlloc (GHND | GMEM_SHARE, (wcslen(s.c_str())+1)*sizeof(wchar_t));
 	LPVOID pGlobal = GlobalLock (hGlobal) ;
@@ -220,7 +224,7 @@ public:
 	CEF_METHOD(stat,String)
 	CEF_METHOD(shellExplore,Bool)
 	CEF_METHOD(shellDefault,Bool)
-	CEF_METHOD(copy_str,Bool)     
+	CEF_METHOD(copyPath,Bool)     
 
     if(name == "shell2"){
       if(arguments.size() != 2 || !arguments[0]->IsString() || !arguments[1]->IsString())
@@ -474,9 +478,9 @@ void InitPlugin(){
     "    native function save();"
     "    return save(b,b2);"
     "  };"
-	"  cef.plugin.copy_str = function(b) {"
-    "    native function copy_str();"
-    "    return copy_str(b);"
+	"  cef.plugin.copyPath = function(b) {"
+    "    native function copyPath();"
+    "    return copyPath(b);"
     "  };"
 	"  cef.plugin.start_server = function() {"
     "    native function start_server();"

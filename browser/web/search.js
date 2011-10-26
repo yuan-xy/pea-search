@@ -407,7 +407,7 @@ var host_backup = "http://60.191.119.190:3333";
 			searchf($("#search").val());
 		});
 		$(document).bind("contextmenu", function(e){
-			return false;
+			return true;
 		});
 		$("#tabs ul li a").bind('click',function(e){
 			$(".subnav").hide();

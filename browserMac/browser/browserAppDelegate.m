@@ -190,6 +190,14 @@ static BOOL connect_unix_socket(int *psock) {
 		return @"hisPin";
     } else if (sel == @selector(hisUnpin:)) {
 		return @"hisUnpin";
+    } else if (sel == @selector(shellDefault:)) {
+		return @"shellDefault";
+    } else if (sel == @selector(shellExplore:)) {
+		return @"shellExplore";
+    } else if (sel == @selector(shell2:action:)) {
+		return @"shell2";
+    } else if (sel == @selector(copyPath:)) {
+            return @"copyPath";
 	} else {
 		return nil;
 	}
@@ -270,6 +278,56 @@ static int MAX_ROW = 30;
 - (BOOL) hisUnpin: (int) index{
     history_unpin(index);
     return history_save();
+}
+
+- (BOOL) shellDefault: (NSString*) file{
+	char buffer[MAX_PATH*2], *p;
+    p=stpcpy(buffer,"open ");
+    const char *filename = [file cStringUsingEncoding:NSUTF8StringEncoding];
+    strcpy(p,filename);
+	bool ret = system(buffer)==0;
+	if(ret){
+        wchar_t out[MAX_PATH];
+        mbsnrtowcs(out, (const char **)&filename,  strlen(filename), MAX_PATH, NULL);
+		if( history_add(out) ) history_save();
+	}
+    return ret;
+}
+- (BOOL) shellExplore: (NSString*) file{
+	char buffer[MAX_PATH*2], *p;
+    p=stpcpy(buffer,"open -R ");
+    const char *filename = [file cStringUsingEncoding:NSUTF8StringEncoding];
+    strcpy(p,filename);
+	bool ret = system(buffer)==0;
+	if(ret){
+        wchar_t out[MAX_PATH];
+        mbsnrtowcs(out, (const char **)&filename,  strlen(filename), MAX_PATH, NULL);
+		if( history_add(out) ) history_save();
+	}
+    return ret; 
+}
+- (BOOL) shell2: (NSString*) file action: (NSString*)action{
+    if([action compare:@"copy"]==NSOrderedSame){
+        NSPasteboard *pb = [NSPasteboard generalPasteboard];
+        [pb declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType]
+                   owner:self];
+        return [pb setString:file forType:NSFilenamesPboardType];
+    }else if([action compare:@"cut"]==NSOrderedSame){
+        
+    }else if([action compare:@"delete"]==NSOrderedSame){
+        
+    }else if([action compare:@"properties"]==NSOrderedSame){
+        
+    }else if([action compare:@"openas"]==NSOrderedSame){
+        
+    }
+}
+
+- (BOOL) copyPath: (NSString*) file{
+    NSPasteboard *pb = [NSPasteboard generalPasteboard];
+    [pb declareTypes:[NSArray arrayWithObject:NSStringPboardType]
+               owner:self];
+    return [pb setString:file forType:NSStringPboardType];    
 }
 
 @end

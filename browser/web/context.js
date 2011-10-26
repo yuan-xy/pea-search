@@ -92,7 +92,7 @@ var context_menu_obj = {
 					  },
 					  'copypath': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = cef.plugin.copy_str(path+file);
+						var ret = cef.plugin.copyPath(path+file);
 						info_or_error(ret, path+file, menuitem.lastChild.data);
 					  },
 					  'copy': function(t,menuitem) {
@@ -100,15 +100,6 @@ var context_menu_obj = {
 					  },
 					  'cut': function(t,menuitem) {
 						cut_file(t);
-					  },
-					  'paste': function(t,menuitem) {
-					    get_file_path(t);
-						if(type=="dir"){
-							ret = cef.plugin.shell2(path+file, "paste");
-							info_or_error(ret, file, menuitem.lastChild.data);
-						}else{
-							show_error("粘贴的目标必须是文件夹，不能是文件.");
-						}
 					  },
 					  'delete': function(t,menuitem) {
 						delete_file(t);

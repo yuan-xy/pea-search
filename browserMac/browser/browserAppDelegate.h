@@ -31,7 +31,10 @@
 - (BOOL) hisDel: (int) index;
 - (BOOL) hisPin: (int) index;
 - (BOOL) hisUnpin: (int) index;
-
+- (BOOL) shellDefault: (NSString*) file;
+- (BOOL) shellExplore: (NSString*) file;
+- (BOOL) shell2: (NSString*) file action: (NSString*)action;
+- (BOOL) copyPath: (NSString*) file;
 
 @end
 
