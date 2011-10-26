@@ -37,7 +37,12 @@ static pFileEntry initMacFile(const char *pathname, const struct stat *statptr, 
 static void dopath(char *fullpath, char *filename, pFileEntry parent, int i){
 	struct stat		statbuf;
 	if (lstat(fullpath, &statbuf) >= 0){
-		pFileEntry self = initMacFile(fullpath, &statbuf, filename,parent,i);
+		pFileEntry self;
+        if(*filename!='\0'){
+            self = initMacFile(fullpath, &statbuf, filename,parent,i);
+        }else{
+            self = parent;
+        }
 		if(S_ISDIR(statbuf.st_mode)) {
 			char *ptr;
 			DIR *dp;
