@@ -78,10 +78,13 @@ static BOOL connect_unix_socket(int *psock) {
 	NSString *htmlPath = @"/Users/ylt/Documents/gigaso/browser/web/search.htm";
 	[[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
     [window setDelegate:self];
+    [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
     [webView setUIDelegate: self];
     [webView setGroupName:@"Gigaso"];
     [webView setFrameLoadDelegate: self];
 	[webView setResourceLoadDelegate: self];
+    webView.autoresizesSubviews = YES; 
+    //webView.autoresizingMask = (UIViewAutoresizingFlexibleHeight );
     order=0;
     file_type=0;
     caze=false;
@@ -92,16 +95,41 @@ static BOOL connect_unix_socket(int *psock) {
     return TRUE;
 }
 
+- (void)windowDidResize:(NSNotification *)notification{
+    NSLog(@"windowDidResize");
+}
+
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize{
     NSLog(@"will resize ");
     return frameSize;
 }
+
 - (BOOL)windowShouldZoom:(NSWindow *)window toFrame:(NSRect)newFrame{
     NSLog(@"should zoom ");
     [webView setFrame:newFrame];
     return true;
 }
 
+- (void)windowWillEnterFullScreen:(NSNotification *)notification{
+     NSLog(@"windowWillEnterFullScreen");
+}
+
+- (NSSize)window:(NSWindow *)window willUseFullScreenContentSize:(NSSize)proposedSize{
+    NSLog(@"willUseFullScreenContentSize");
+    NSSize idealWindowSize = NSMakeSize(1440,1440);
+    NSSize rSize;
+    rSize.width  = MIN(idealWindowSize.width,  proposedSize.width);
+    rSize.height = MIN(idealWindowSize.height, proposedSize.height-20);
+    NSRect full = NSMakeRect(0, 0, rSize.width, rSize.height);
+    //nfull = [webView frame];
+    [webView setFrame:full];
+    return rSize;
+}
+
++ (NSArray *)restorableStateKeyPaths
+{
+    return [[super restorableStateKeyPaths] arrayByAddingObject:@"frameForNonFullScreenMode"];
+}
 
 - (void)webView:(WebView *)webView windowScriptObjectAvailable:(WebScriptObject *)windowScriptObject{
     [windowScriptObject setValue:self forKey:@"plugin"];
