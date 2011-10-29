@@ -19,6 +19,8 @@
 #include	<sys/wait.h>
 #include	<sys/un.h>		/* for Unix domain sockets */
 
+#import <Foundation/Foundation.h>
+
 static BOOL connect_unix_socket(int *psock) {
 	int	sockfd;
 	sockfd = socket(AF_LOCAL, SOCK_STREAM, 0);
@@ -159,7 +161,24 @@ static BOOL connect_unix_socket(int *psock) {
 
 - (void)webView:(WebView *)sender runJavaScriptAlertPanelWithMessage:(NSString *)message {
 	NSLog(@"%@", message);
+    NSAlert* alert = [[NSAlert alloc] init];
+    [alert setMessageText:message];
+    [alert addButtonWithTitle:@"OK"];
+    [alert runModal];
+    [alert release];
 }
+
+- (BOOL)webView:(WebView *)sender runJavaScriptConfirmPanelWithMessage:(NSString *)message{
+    NSLog(@"%@", message);
+    NSAlert* alert = [[NSAlert alloc] init];
+    [alert setMessageText:message];
+    [alert addButtonWithTitle:@"OK"];
+    [alert addButtonWithTitle:@"Cancel"];
+    NSInteger button = [alert runModal];
+    [alert release];
+    return button == NSAlertFirstButtonReturn;
+}
+
 - (WebView *)webView:(WebView *)sender createWebViewWithRequest:(NSURLRequest *)request{
     NSLog(@"%@", request);//为什么request is null?
     //[[webView mainFrame] loadRequest: request];
@@ -315,13 +334,21 @@ static int MAX_ROW = 30;
 - (BOOL) shell2: (NSString*) file action: (NSString*)action{
     if([action compare:@"copy"]==NSOrderedSame){
         NSPasteboard *pb = [NSPasteboard generalPasteboard];
-        [pb declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType]
-                   owner:self];
-        return [pb setString:file forType:NSFilenamesPboardType];
-    }else if([action compare:@"cut"]==NSOrderedSame){
-        //TODO:
+        [pb declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:self];
+        [pb clearContents];
+        NSArray *copiedObjects = [NSArray arrayWithObject:[NSURL fileURLWithPath:file]];
+        return [pb writeObjects:copiedObjects];
     }else if([action compare:@"delete"]==NSOrderedSame){
-        
+        FSRef fsRef;
+        FSPathMakeRefWithOptions(
+                                 (const UInt8 *)[file fileSystemRepresentation],
+                                 kFSPathMakeRefDoNotFollowLeafSymlink,
+                                 &fsRef,
+                                 NULL // Boolean *isDirectory
+                                 );
+        OSStatus ret = FSMoveObjectToTrashSync(&fsRef, NULL, kFSFileOperationDefaultOptions);
+        return ret==0;
+        //return [[NSFileManager defaultManager] removeItemAtPath:file error:NULL];
     }else if([action compare:@"properties"]==NSOrderedSame){
         
     }else if([action compare:@"openas"]==NSOrderedSame){

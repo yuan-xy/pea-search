@@ -363,8 +363,20 @@ void DbIterator(pDbVisitor visitor, void *data){
 	FindClose(hFind);
 }
 #else
+#include <dirent.h>
 void DbIterator(pDbVisitor visitor, void *data){
-	//TODO
+    struct dirent *dirp;
+	DIR *dp=opendir(".");
+    while ((dirp=readdir(dp))!=NULL) {
+        char *name = dirp->d_name, *suffixname;
+        if(strlen(name)<=3) continue;
+        suffixname = name + strlen(name) -3 ;
+        if(strcmp(suffixname, ".db") == 0){
+            BOOL ret = (*visitor)(dirp->d_name,data);
+            if(!ret) break; 
+        }
+    }
+    closedir(dp);
 }
 #endif
 

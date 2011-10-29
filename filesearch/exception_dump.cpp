@@ -22,7 +22,11 @@ extern "C" {
 		{
 			wcscpy_s(p,MAX_PATH,dump_path);
 			p += wcslen(dump_path);
-			*p++ = L'\\';
+			#ifdef WIN32
+				*p++ = L'\\';
+			#else
+			    *p++ = L'/';
+			#endif
 			wcscpy_s(p,MAX_PATH-(p-buffer),minidump_id);
 			p += wcslen(minidump_id);
 			wcscpy_s(p,MAX_PATH-(p-buffer),L".dmp");
