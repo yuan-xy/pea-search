@@ -76,10 +76,11 @@ static pFileEntry find_file_in(pFileEntry parent, pUTF8 name, int whole_len){
 	strlen.cur_len = cur_len;
 	tmp = SubDirIterateB(parent,match,&strlen);
 	if(tmp == NULL) return NULL;
-	if(cur_len == whole_len || (cur_len == whole_len-1  && *(name+cur_len)=='\\') ) return tmp;
+	if(cur_len == whole_len || (cur_len == whole_len-1  && (*(name+cur_len)=='\\' || *(name+cur_len)=='/')) ) return tmp;
 	return find_file_in(tmp, name+cur_len+1, whole_len-cur_len-1);
 }
 
+#ifdef WIN32
 pFileEntry find_file(WCHAR *name, int len){
 	int d;
 	if(len==0) return NULL;
@@ -90,9 +91,18 @@ pFileEntry find_file(WCHAR *name, int len){
 		int ustrlen;
 		pUTF8 ustr = wchar_to_utf8(name+3,len-3,&ustrlen);
 		return find_file_in(g_rootVols[d],ustr,ustrlen);
+        //TODO: free ustr
 	}
 	return NULL;
 }
+#else
+pFileEntry find_file(WCHAR *name, int len){
+	if(len==0 || *name != L'/') return NULL;
+    int ustrlen;
+    pUTF8 ustr = wchar_to_utf8(name+1,len-1,&ustrlen);
+    return find_file_in(g_rootVols[0],ustr,ustrlen);
+}
+#endif //WIN32
 
 BOOL hz_match_two(int index1,int index2,pFileEntry file){
 	int offset=0;

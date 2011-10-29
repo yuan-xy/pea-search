@@ -448,7 +448,7 @@ var host_backup = "http://60.191.119.190:3333";
 		$("#largefile_bt").bind('click',function(){$('#search')[0].value='*'; searchf('*');orderby(2,true);});
 		$("#offline_bt").bind('click',function(){offline_db()});
 		$("#online_bt").bind('click',function(){online_db()});
-		$("#dir_bt").bind('click',function(){search_dir(cef.gigaso.select_dir())});
+		$("#dir_bt").bind('click',function(){search_dir(cef.gigaso.selectDir())});
 		$("#his_bt").bind('click',function(){history_switch()});
 		$("#set_hk_bt").bind('click',function(){set_hotkey()});
 		$("#do_exp_bt").bind('click',function(){do_export()});

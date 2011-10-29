@@ -89,7 +89,13 @@ static BOOL connect_unix_socket(int *psock) {
     file_type=0;
     caze=false;
     offline=false;
+    //NSFontManager *fontManager = [NSFontManager sharedFontManager];
+    //[fontManager orderFrontFontPanel:nil];
+    NSImage *image = [[NSWorkspace sharedWorkspace] iconForFile:@"/Users/ylt/Downloads/006_macruby.mov"];
+    [image setSize:NSMakeSize(128, 128)];
+    //[imageView setImage:image];
 }
+
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender{
     return TRUE;
@@ -133,7 +139,7 @@ static BOOL connect_unix_socket(int *psock) {
 
 - (void)webView:(WebView *)webView windowScriptObjectAvailable:(WebScriptObject *)windowScriptObject{
     [windowScriptObject setValue:self forKey:@"plugin"];
-    [windowScriptObject evaluateWebScript: @"cef = {};cef.plugin=plugin;"];
+    [windowScriptObject evaluateWebScript: @"cef = {};cef.plugin=plugin;cef.gigaso=plugin;"];
     connect_unix_socket(&sockfd);
 }
 
@@ -313,7 +319,7 @@ static int MAX_ROW = 30;
                    owner:self];
         return [pb setString:file forType:NSFilenamesPboardType];
     }else if([action compare:@"cut"]==NSOrderedSame){
-        
+        //TODO:
     }else if([action compare:@"delete"]==NSOrderedSame){
         
     }else if([action compare:@"properties"]==NSOrderedSame){
@@ -328,6 +334,21 @@ static int MAX_ROW = 30;
     [pb declareTypes:[NSArray arrayWithObject:NSStringPboardType]
                owner:self];
     return [pb setString:file forType:NSStringPboardType];    
+}
+
+
+- (NSString*) selectDir{
+    NSOpenPanel *panel;
+    panel = [NSOpenPanel openPanel];
+    [panel setFloatingPanel:YES];
+    [panel setCanChooseDirectories:YES];
+    [panel setCanChooseFiles:NO];
+    [panel setAllowsMultipleSelection:NO];
+    NSInteger i = [panel runModal];
+    if(i == NSOKButton){
+        return [panel filename];
+    } 
+    return @"";
 }
 
 @end

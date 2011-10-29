@@ -183,7 +183,7 @@ void InitExtensionTest()
     "    native function ShowDevTools();"
     "    return ShowDevTools();"
     "  };"
-    "  cef.gigaso.select_dir = function() {"
+    "  cef.gigaso.selectDir = function() {"
     "    native function SelectDir();"
     "    return SelectDir();"
     "  };"

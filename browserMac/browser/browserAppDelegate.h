@@ -36,5 +36,7 @@
 - (BOOL) shell2: (NSString*) file action: (NSString*)action;
 - (BOOL) copyPath: (NSString*) file;
 
+- (NSString*) selectDir;
+
 @end
 
