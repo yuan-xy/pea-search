@@ -196,7 +196,7 @@ void print_time(pFileEntry file){
 
 int print_time_str(pFileEntry file, char *buffer){
 #ifdef WIN32
-	wchar_t buf[128];
+	WCHAR buf[128];
 	int ret,wret;
 	SYSTEMTIME st;
 	ConvertMinuteToSystemTime(&st,GET_TIME(file));

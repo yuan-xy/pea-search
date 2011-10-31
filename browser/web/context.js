@@ -123,23 +123,23 @@ var context_menu_obj3 = {
 				  bindings: {
 					  'default': function(t,menuitem) {
 						var fs = grid_selectd_files();
-						var ret = cef.plugin.batch_open(fs);
+						var ret = cef.plugin.batchOpen(fs);
 						info_or_error(ret, fs, menuitem.lastChild.data);
 					  },
 					  'copy': function(t,menuitem) {
 						var fs = grid_selectd_files();
-						var ret = cef.plugin.batch_copy(fs);
+						var ret = cef.plugin.batchCopy(fs);
 						info_or_error(ret, fs, menuitem.lastChild.data);
 					  },
 					  'cut': function(t,menuitem) {
 						var fs = grid_selectd_files();
-						var ret = cef.plugin.batch_cut(fs);
+						var ret = cef.plugin.batchCut(fs);
 						info_or_error(ret, fs, menuitem.lastChild.data);
 					  },
 					  'delete': function(t,menuitem) {
 						var fs = grid_selectd_files();
 						if(true || window.confirm("您确定要删除 \n"+grid_selectd_filenames()+"这些文件吗?")){
-							var ret = cef.plugin.batch_delete(fs);
+							var ret = cef.plugin.batchDelete(fs);
 							refresh();
 							info_or_error(ret, fs, menuitem.lastChild.data);
 						}

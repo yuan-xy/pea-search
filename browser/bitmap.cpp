@@ -244,9 +244,9 @@ HRESULT save_as(LPCTSTR pszFile, HBITMAP bmp){
 }
 
 
-static wchar_t m_wsBuffer[255];	// 临时缓冲区
+static WCHAR m_wsBuffer[255];	// 临时缓冲区
 
-HRESULT CreateThumbnail(const wchar_t *wsDir, const wchar_t *wsFile,DWORD dwWidth, DWORD dwHeight, HBITMAP* pThumbnail) {  
+HRESULT CreateThumbnail(const WCHAR *wsDir, const WCHAR *wsFile,DWORD dwWidth, DWORD dwHeight, HBITMAP* pThumbnail) {  
 	LPITEMIDLIST pidlItems = NULL, pidlURL = NULL, pidlWorkDir = NULL;  
 	ULONG   ulParseLen = 0;
 	HRESULT hr;  

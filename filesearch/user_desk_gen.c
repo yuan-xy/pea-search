@@ -5,7 +5,7 @@
 #include "write.h"
 
 static BOOL save_desktop_self(pFileEntry desktop){
-	wchar_t fbuffer[MAX_PATH];
+	WCHAR fbuffer[MAX_PATH];
 	DWORD size=MAX_PATH;
 	if(GetUserName(fbuffer, &size)){
 		save_desktop(fbuffer,desktop);

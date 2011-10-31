@@ -6,7 +6,7 @@
 extern int n_index_form_w(int wi);
 extern int w_index_from_n(int ni);
 
-void print(wchar_t *file, void *context){
+void print(WCHAR *file, void *context){
 	printf("%ls\n",file);
 }
 
@@ -65,7 +65,7 @@ int main(){
 	history_delete(5);
 	check_ni_wi();
 	{
-		wchar_t buffer[VIEW_HISTORY*MAX_PATH];
+		WCHAR buffer[VIEW_HISTORY*MAX_PATH];
 		int len = history_to_json(buffer);
 		buffer[len+1] = L'\0';
 		wprintf(L"\n%d,%s\n",len,buffer);

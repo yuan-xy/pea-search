@@ -3,7 +3,7 @@
 #include <Wininet.h>
 #include "download.h"
 
-BOOL download(const wchar_t *url, const wchar_t *filename){
+BOOL download(const WCHAR *url, const WCHAR *filename){
 	HRESULT hr;
 	DeleteUrlCacheEntry(url);
 	hr = URLDownloadToFile(NULL,url,filename,0,NULL);

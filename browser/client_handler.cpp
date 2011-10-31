@@ -10,7 +10,7 @@
 extern CefRefPtr<ClientHandler> g_handler;
 
 
-void exec_js_str(wchar_t *str){
+void exec_js_str(WCHAR *str){
 	if(g_handler.get()){
 		CefRefPtr<CefBrowser> browser = g_handler->GetBrowser();
 		if(browser.get()){
@@ -20,15 +20,15 @@ void exec_js_str(wchar_t *str){
 	}
 }
 
-void exec_js(const wchar_t *function_name){
-	wchar_t buffer[100];
+void exec_js(const WCHAR *function_name){
+	WCHAR buffer[100];
 	wsprintf(buffer, L"try{if(%s) %s()}catch(e){}",function_name,function_name);
 	exec_js_str(buffer);
 }
 
 static void init_dir(){
-	wchar_t buffer[MAX_PATH*2];
-	wchar_t *cmdLine = GetCommandLineW();
+	WCHAR buffer[MAX_PATH*2];
+	WCHAR *cmdLine = GetCommandLineW();
 	std::wstring str(cmdLine), olds(L"\\"), news(L"\\\\");
 	str = StringReplace(str,olds,news);
 	wsprintf(buffer,L"try{if(init_dir) init_dir('%s');}catch(e){}",str.c_str());
@@ -67,7 +67,7 @@ void ClientHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
                               int httpStatusCode)
 {
 	if(wcscmp(frame->GetURL().ToWString().c_str(),L"about:blank")==0){
-		wchar_t full_path[MAX_PATH];
+		WCHAR full_path[MAX_PATH];
 		get_abs_path_exe(L"web\\search2.htm",full_path);
 		load_str(full_path);
 	}else{

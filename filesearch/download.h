@@ -7,7 +7,7 @@ extern "C" {
 
 #include "env.h"
 
-extern BOOL download(const wchar_t *url, const wchar_t *name);
+extern BOOL download(const WCHAR *url, const WCHAR *name);
 
 #endif  // FILE_SEARCH_DOWNLOAD_H_
 

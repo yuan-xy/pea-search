@@ -11,14 +11,14 @@ static google_breakpad::CrashReportSender *sender;
 
 extern "C" {
 
-	static bool SendReport(const wchar_t* dump_path,
-                                   const wchar_t* minidump_id,
+	static bool SendReport(const WCHAR* dump_path,
+                                   const WCHAR* minidump_id,
                                    void* context,
                                    EXCEPTION_POINTERS* exinfo,
                                    MDRawAssertionInfo* assertion,
                                    bool succeeded){
 		if(!succeeded) return true;
-		wchar_t buffer[MAX_PATH], *p=buffer;
+		WCHAR buffer[MAX_PATH], *p=buffer;
 		{
 			wcscpy_s(p,MAX_PATH,dump_path);
 			p += wcslen(dump_path);
@@ -34,32 +34,32 @@ extern "C" {
 		std::wstring file(buffer),response;
 		std::map<std::wstring,std::wstring> map;
 		{
-			wchar_t osbuf[MAX_PATH];
+			WCHAR osbuf[MAX_PATH];
 			get_os(osbuf);
 			std::wstring os(osbuf);
 			map[L"dump[os]"]=os;
 			//map.insert(make_pair(L"os",L"os"));
 		}
 		{
-			wchar_t cpubuf[MAX_PATH];
+			WCHAR cpubuf[MAX_PATH];
 			get_cpu(cpubuf);
 			std::wstring cpu(cpubuf);
 			map[L"dump[cpu]"]=cpu;
 		}
 		{
-			wchar_t diskbuf[MAX_PATH];
+			WCHAR diskbuf[MAX_PATH];
 			get_disk(diskbuf);
 			std::wstring disk(diskbuf);
 			map[L"dump[disk]"]=disk;
 		}
 		{
-			wchar_t verbuf[MAX_PATH];
+			WCHAR verbuf[MAX_PATH];
 			get_ver(verbuf);
 			std::wstring ver(verbuf);
 			map[L"dump[ver]"]=ver;
 		}
 		{
-			wchar_t userbuf[MAX_PATH];
+			WCHAR userbuf[MAX_PATH];
 			get_user(userbuf);
 			std::wstring user(userbuf);
 			map[L"dump[user]"]=user;

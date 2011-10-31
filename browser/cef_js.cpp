@@ -64,7 +64,7 @@ public:
     else if(name == "SelectDir")
     {
 		BROWSEINFO bi;
-		wchar_t Buffer[MAX_PATH];
+		WCHAR Buffer[MAX_PATH];
 		bi.hwndOwner = NULL;
 		bi.pidlRoot = NULL;
 		bi.pszDisplayName = Buffer;
@@ -98,31 +98,31 @@ public:
 	    return true;
     }
     else if(name == "GetOs"){
-	  wchar_t buffer[128];
+	  WCHAR buffer[128];
 	  get_os(buffer);
       retval = CefV8Value::CreateString(buffer);
       return true;
     }
     else if(name == "GetCpu"){
-	  wchar_t buffer[128];
+	  WCHAR buffer[128];
 	  get_cpu(buffer);
       retval = CefV8Value::CreateString(buffer);
       return true;
     }
     else if(name == "GetDisk"){
-	  wchar_t buffer[128];
+	  WCHAR buffer[128];
 	  get_disk(buffer);
       retval = CefV8Value::CreateString(buffer);
       return true;
     }
     else if(name == "GetVer"){
-	  wchar_t buffer[128];
+	  WCHAR buffer[128];
 	  get_ver(buffer);
       retval = CefV8Value::CreateString(buffer);
       return true;
     }
     else if(name == "GetUser"){
-	  wchar_t buffer[128];
+	  WCHAR buffer[128];
 	  get_user(buffer);
       retval = CefV8Value::CreateString(buffer);
       return true;

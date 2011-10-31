@@ -131,7 +131,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam){
 				settings.universal_access_from_file_urls_allowed = true;
 				CefWindowInfo info;
 				info.SetAsChild(hWnd, rect);
-				wchar_t full_path[MAX_PATH];
+				WCHAR full_path[MAX_PATH];
 				get_abs_path_exe(L"web\\search.htm",full_path);
 				if(_waccess(full_path,0)==0){
 					CefBrowser::CreateBrowser(info,

@@ -135,7 +135,7 @@ static void add_file(WCHAR *name, int len, int i){
 	initFatFile(&fd,dir,i);
 }
 
-static wchar_t RENAMED_OLD_NAME[MAX_PATH];
+static WCHAR RENAMED_OLD_NAME[MAX_PATH];
 
 static DWORD WINAPI MonitorFat(PVOID pParam) {
 	pFileEntry root = (pFileEntry)pParam;
@@ -168,7 +168,7 @@ static DWORD WINAPI MonitorFat(PVOID pParam) {
 						case FILE_ACTION_ADDED: add_file(name,size,i);break;
 						case FILE_ACTION_REMOVED: deleteFile(find_file(name,size)); break;
 						case FILE_ACTION_RENAMED_OLD_NAME: {
-							memset(RENAMED_OLD_NAME,0,sizeof(wchar_t)*MAX_PATH);
+							memset(RENAMED_OLD_NAME,0,sizeof(WCHAR)*MAX_PATH);
 							memcpy(RENAMED_OLD_NAME,name,len); 
 							break;
 						}

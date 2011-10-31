@@ -4,9 +4,9 @@
 #include "../3rd/cef_binary/include/cef.h"
 #include "cef_util.h"
 
-extern void exec_js_str(wchar_t *str);
+extern void exec_js_str(WCHAR *str);
 
-extern void exec_js(const wchar_t *function_name);
+extern void exec_js(const WCHAR *function_name);
 
 class ClientHandler : public CefClient,
                       public CefLifeSpanHandler,

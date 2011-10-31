@@ -139,7 +139,7 @@ extern void deleteFile(pFileEntry file);
 /**
  * 文件重命名
  */
-extern void renameFile(pFileEntry file, wchar_t *new_name, int name_byte_len);
+extern void renameFile(pFileEntry file, WCHAR *new_name, int name_byte_len);
 
 /**
  * 文件移动

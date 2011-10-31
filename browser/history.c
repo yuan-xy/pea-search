@@ -2,7 +2,7 @@
 #include "history.h"
 
 
-static wchar_t his_files[MAX_HISTORY][MAX_PATH] = {{0}};
+static WCHAR his_files[MAX_HISTORY][MAX_PATH] = {{0}};
 
 //采用匈牙利命名法区分外部位置和内部位置
 static int nstart=0; 
@@ -111,16 +111,16 @@ int w_index_from_n(int ni){
 }
 
 typedef struct{
-	const wchar_t *filename;
+	const WCHAR *filename;
 	int flag;
 } tmp_contain_context, *p_tmp_contain_context;
 
-static void containVisitor(wchar_t *file, int pin, void *context){
+static void containVisitor(WCHAR *file, int pin, void *context){
 	p_tmp_contain_context ctx = (p_tmp_contain_context)context;
 	if(wcscmp(file,ctx->filename)==0) ctx->flag=1;
 }
 
-BOOL history_add(const wchar_t *file){
+BOOL history_add(const WCHAR *file){
 	tmp_contain_context ctx;
 	ctx.filename = file;
 	ctx.flag = 0;
@@ -162,7 +162,7 @@ void history_unpin(int wi){
 void history_unpin_(int wi){
 	if(VALID_PIN(wi)){
 		int ni = PIN[wi].ni, ni_to;
-		wchar_t tmp[MAX_PATH];
+		WCHAR tmp[MAX_PATH];
 		PIN[wi].wi = -1;
 		ni_to = n_index_form_w(wi);
 		memcpy(tmp,his_files[ni],sizeof(his_files[0]));
@@ -187,7 +187,7 @@ void history_unpin_(int wi){
 	}
 }
 
-wchar_t *history_get(int wi){
+WCHAR *history_get(int wi){
 	return his_files[n_index_form_w(wi)];
 }
 
@@ -251,15 +251,15 @@ void HistoryIteratorAll(pHistoryVisitor visitor, void *context){
 }
 
 typedef struct{
-	wchar_t *p;
+	WCHAR *p;
 } tmp_json_context, *p_tmp_json_context;
 
-static void json_print(wchar_t *file, int pin, void *context){
+static void json_print(WCHAR *file, int pin, void *context){
 	p_tmp_json_context pctx = (p_tmp_json_context)context;
-	wchar_t *p = pctx->p;
+	WCHAR *p = pctx->p;
 	*p++ = L'{';
 	{
-		memcpy(p,L"\"name\":\"",8*sizeof(wchar_t));
+		memcpy(p,L"\"name\":\"",8*sizeof(WCHAR));
 		p += 8;
 		wcscpy(p,file);
 		p+=wcslen(file);
@@ -267,7 +267,7 @@ static void json_print(wchar_t *file, int pin, void *context){
 		*p++ =L',';
 	}
 	{
-		memcpy(p,L"\"pin\":",6*sizeof(wchar_t));
+		memcpy(p,L"\"pin\":",6*sizeof(WCHAR));
 		p += 6;
         p += swprintf(p,2,L"%d",pin);
 	}
@@ -276,8 +276,8 @@ static void json_print(wchar_t *file, int pin, void *context){
 	pctx->p = p;
 }
 
-int history_to_json(wchar_t *buffer){
-	wchar_t *p = buffer;
+int history_to_json(WCHAR *buffer){
+	WCHAR *p = buffer;
 	tmp_json_context ctx;
 	*p++ = L'[';
 	ctx.p = p;

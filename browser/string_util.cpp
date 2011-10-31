@@ -5,9 +5,9 @@
 
 std::wstring StringToWString(const std::string& s)
 {
-	wchar_t* wch;
+	WCHAR* wch;
 	UINT bytes = MultiByteToWideChar(CP_ACP, 0, s.c_str(), s.size()+1, NULL, 0);
-	wch  = new wchar_t[bytes];
+	wch  = new WCHAR[bytes];
 	if(wch)
 		bytes = MultiByteToWideChar(CP_ACP, 0, s.c_str(), s.size()+1, wch, bytes);
   std::wstring str = wch;
@@ -84,7 +84,7 @@ static std::string UrlDecode_Chinese(const std::string& str){
     if(pos != std::string::npos) {
 	  std::string ch;
 	  byte utf8[3];
-	  wchar_t wc;
+	  WCHAR wc;
 	  char c[GBK_HZ_LEN];
 	  ch = result.substr(pos+1,2);
 	  utf8[0] = decode(ch.c_str());

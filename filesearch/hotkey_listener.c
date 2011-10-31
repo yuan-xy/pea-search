@@ -2,7 +2,7 @@
 #include "common.h"
 #include "hotkey.h"
 
-static void get_mutex_name(wchar_t *buf, int size){
+static void get_mutex_name(WCHAR *buf, int size){
 	int len = wcslen(L"GigasoHotkeyListener");
 	wcsncpy(buf,L"GigasoHotkeyListener",len);
 	size-=len;
@@ -11,7 +11,7 @@ static void get_mutex_name(wchar_t *buf, int size){
 
 static BOOL ExistListener(){
 	HANDLE hMutex;
-	wchar_t buf[128];
+	WCHAR buf[128];
 	get_mutex_name(buf,128);
     hMutex = CreateMutex( NULL, FALSE, buf );
     if ( GetLastError() == ERROR_ALREADY_EXISTS ){
@@ -71,7 +71,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance){
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow){
 	HWND hMainWin;
-	wchar_t fbuffer[128];
+	WCHAR fbuffer[128];
 	DWORD size=128;
 	GetUserName(fbuffer, &size);
 	hMainWin = CreateWindow(ListenerWindowClass, fbuffer,
@@ -89,14 +89,14 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	if (!InitInstance (hInstance, iCmdShow)) return 1;
 	setUserPWD();
 	if(is_admin()){
-		wchar_t buf[MAX_PATH];
+		WCHAR buf[MAX_PATH];
 		get_abs_path_exe(L"peadeskg.exe",buf);
 		ShellExecute(NULL, L"open", buf,NULL,NULL,SW_HIDE); 
 	}
 /*	
 	{
-		wchar_t buffer[255];
-		wchar_t buf[128];
+		WCHAR buffer[255];
+		WCHAR buf[128];
 		get_mutex_name(buf,128);
 		GetCurrentDirectory(255, buffer);
 		MessageBox(NULL,buffer,buf,MB_OK);
@@ -107,7 +107,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		if (msg.message == WM_HOTKEY){
 			HWND wnd = FindWindow(SearchWindowClass,SearchWindowTitle);
 			if(wnd==NULL){
-				wchar_t buf[MAX_PATH];
+				WCHAR buf[MAX_PATH];
 				get_abs_path_exe(L"peasrch.exe",buf);
 				ShellExecute(NULL, L"open", buf,NULL,NULL,SW_SHOW); 
 			}else{

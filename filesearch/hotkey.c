@@ -8,8 +8,8 @@
 #ifdef WIN32
 #define DEFAULT_HOT_KEY 6
 int get_hotkey(){
-	wchar_t fbuffer[MAX_PATH];
-	wchar_t buffer[MAX_PATH];
+	WCHAR fbuffer[MAX_PATH];
+	WCHAR buffer[MAX_PATH];
 	DWORD size=MAX_PATH;
 	if(GetUserName(fbuffer, &size)){
 		wcscat_s(fbuffer,MAX_PATH,L".ini");
@@ -23,9 +23,9 @@ int get_hotkey(){
 
 
 BOOL set_hotkey(int key){
-	wchar_t hotkey[2];
-	wchar_t fbuffer[MAX_PATH];
-	wchar_t buffer[MAX_PATH];
+	WCHAR hotkey[2];
+	WCHAR fbuffer[MAX_PATH];
+	WCHAR buffer[MAX_PATH];
 	DWORD size=MAX_PATH;
 	if(GetUserName(fbuffer, &size)){
 		hotkey[0]=key+L'0';

@@ -40,8 +40,8 @@ typedef BOOL (*pDbVisitor)(char *db_name, void *data);
 extern void DbIterator(pDbVisitor, void *data);
 
 #ifdef WIN32
-extern BOOL save_desktop(wchar_t *user_name, pFileEntry desktop);
-extern BOOL load_desktop(wchar_t *user_name);
+extern BOOL save_desktop(WCHAR *user_name, pFileEntry desktop);
+extern BOOL load_desktop(WCHAR *user_name);
 #endif //WIN32
 
 #endif  // FILE_SEARCH_WRITE_H_

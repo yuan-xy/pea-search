@@ -2,7 +2,7 @@
 #include "win_icon.h"
 #include "bitmap.h"
 
-void gen_thumbnail(const wchar_t *wsDir, const wchar_t *wsFile, const wchar_t *thumb_name){
+void gen_thumbnail(const WCHAR *wsDir, const WCHAR *wsFile, const WCHAR *thumb_name){
 	HBITMAP pThumbnail;
 	HRESULT hr = CreateThumbnail(wsDir,wsFile,100,100,&pThumbnail);
 	if( SUCCEEDED( hr ) ){

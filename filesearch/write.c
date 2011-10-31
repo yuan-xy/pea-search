@@ -69,14 +69,14 @@ void FileWriteVisitor(pFileEntry file, void *data){
 
 
 #ifdef WIN32
-BOOL save_desktop(wchar_t *user_name, pFileEntry desktop){
+BOOL save_desktop(WCHAR *user_name, pFileEntry desktop){
 	FILE *fp;
 	fp = _wfopen(user_name, L"wb");
 	if(fp==NULL) return 0;
 	fwrite(&MAGIC,MAGIC_LEN,1,fp);
 	fwrite(&FILE_SEARCH_MAJOR_VERSION,1,1,fp);
 	fwrite(&FILE_SEARCH_MINOR_VERSION,1,1,fp);
-	fwrite(user_name,sizeof(wchar_t),MAX_PATH,fp);
+	fwrite(user_name,sizeof(WCHAR),MAX_PATH,fp);
 	is_ntfs_cur_drive = 0;
 	{
 		time_t start = time(NULL);
@@ -87,7 +87,7 @@ BOOL save_desktop(wchar_t *user_name, pFileEntry desktop){
 	return 1;
 }
 
-BOOL load_desktop(wchar_t *user_name){
+BOOL load_desktop(WCHAR *user_name){
 	BOOL gen_root=0;
 	int count=0,d=0;
 	int i=0;
@@ -98,14 +98,14 @@ BOOL load_desktop(wchar_t *user_name){
 		unsigned short magic;
 		unsigned short major_ver;
 		unsigned short minor_ver;
-		wchar_t username[MAX_PATH];
+		WCHAR username[MAX_PATH];
 		fread(&magic,MAGIC_LEN,1,fp);
 		if(magic!=MAGIC) goto error;
 		d=(int)fread(&major_ver,1,1,fp);
 		if(d<1) goto error;
 		d=(int)fread(&minor_ver,1,1,fp);
 		if(d<1) goto error;
-		fread(username,sizeof(wchar_t),MAX_PATH,fp);
+		fread(username,sizeof(WCHAR),MAX_PATH,fp);
 		{
 			time_t last;
 			d=(int)fread(&last,sizeof(time_t),1,fp);

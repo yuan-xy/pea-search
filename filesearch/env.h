@@ -59,8 +59,8 @@ extern "C" {
 	typedef int32_t DWORD;
 	typedef char UINT;
 	typedef void * HANDLE;
-	typedef const wchar_t * LPCWSTR;
-	typedef wchar_t * LPWSTR;	
+	typedef const wchar_t* LPCWSTR;
+	typedef wchar_t* LPWSTR;	
 	#define MAX_PATH 256
 	#define IN
 	#define OUT

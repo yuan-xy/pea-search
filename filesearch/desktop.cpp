@@ -32,7 +32,7 @@ static pFileEntry genDesktopFileEntry(){
 	ret->children = NULL;
 	return ret;
 }
-static pFileEntry initDesktopFile(wchar_t *name, pFileEntry parent,BOOL dir){
+static pFileEntry initDesktopFile(WCHAR *name, pFileEntry parent,BOOL dir){
 	int str_len = (int)wcslen(name);
 	int len = wchar_to_utf8_len(name,str_len);
 	NEW0_FILE(ret,len);
@@ -54,7 +54,7 @@ static pFileEntry initDesktopFile(wchar_t *name, pFileEntry parent,BOOL dir){
 }
 
 
-static void get_name(IShellFolder *f, LPITEMIDLIST pidlItems, SHGDNF flag, wchar_t *name){
+static void get_name(IShellFolder *f, LPITEMIDLIST pidlItems, SHGDNF flag, WCHAR *name){
 	STRRET strDispName;
 	f->GetDisplayNameOf(pidlItems, flag, &strDispName);
 	StrRetToBuf(&strDispName, pidlItems, name, MAX_PATH);
@@ -91,7 +91,7 @@ static void scan_desktop0(IShellFolder *f, LPITEMIDLIST pidlComplete, pFileEntry
 		FileType ft = get_type(f,pidlItems);
 		if(ft!=LOCAL){
 			BOOL isDir = isFolder(f,pidlItems);
-			wchar_t name[MAX_PATH];
+			WCHAR name[MAX_PATH];
 			get_name(f,pidlItems,SHGDN_NORMAL,name);
 			pFileEntry file = initDesktopFile(name,dir,isDir);
             if(isDir && ft==VIRTUAL){
@@ -122,17 +122,17 @@ pFileEntry scan_desktop(){
 	return desktop;
 }
 
-typedef google::sparse_hash_map<wchar_t *, pFileEntry> user_desktop;
+typedef google::sparse_hash_map<WCHAR *, pFileEntry> user_desktop;
 user_desktop ud;
 
-pFileEntry get_desktop(wchar_t *user_name){
+pFileEntry get_desktop(WCHAR *user_name){
 	pFileEntry desktop = ud[user_name];
 	if(desktop!=NULL) return desktop;
 	load_desktop(user_name);
 	return ud[user_name];
 }
 
-void put_desktop(wchar_t *user_name, pFileEntry desktop){
+void put_desktop(WCHAR *user_name, pFileEntry desktop){
 	ud[user_name] = desktop;
 }
 

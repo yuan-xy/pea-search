@@ -75,7 +75,7 @@ static void open_pidl(LPITEMIDLIST	pidl, LPITEMIDLIST	ridl){
 }
 
 
-static void get_name(IShellFolder *f, LPITEMIDLIST pidlItems, SHGDNF flag, wchar_t *name){
+static void get_name(IShellFolder *f, LPITEMIDLIST pidlItems, SHGDNF flag, WCHAR *name){
 	STRRET strDispName;
 	f->GetDisplayNameOf(pidlItems, flag, &strDispName);
 	StrRetToBuf(&strDispName, pidlItems, name, MAX_PATH);
@@ -83,7 +83,7 @@ static void get_name(IShellFolder *f, LPITEMIDLIST pidlItems, SHGDNF flag, wchar
 
 
 
-static BOOL exec_desktop0(IShellFolder *f, LPITEMIDLIST pidlComplete,wchar_t *str){
+static BOOL exec_desktop0(IShellFolder *f, LPITEMIDLIST pidlComplete,WCHAR *str){
 	BOOL ret=0;
 	HRESULT hr;
 	LPENUMIDLIST ppenum = NULL;
@@ -92,14 +92,14 @@ static BOOL exec_desktop0(IShellFolder *f, LPITEMIDLIST pidlComplete,wchar_t *st
     hr = f->EnumObjects(NULL,SHCONTF_FOLDERS | SHCONTF_NONFOLDERS | SHCONTF_INCLUDEHIDDEN, &ppenum);
 	if(hr!=S_OK) return ret;
     while( hr = ppenum->Next(1,&pidlItems, &celtFetched) == S_OK && (celtFetched) == 1){
-		wchar_t name[MAX_PATH];
+		WCHAR name[MAX_PATH];
 		get_name(f,pidlItems,SHGDN_NORMAL,name);
 		if(wcsncmp(name,str,wcslen(name))==0){
 			if(wcslen(name)==wcslen(str)){
 				open_pidl(pidlComplete,pidlItems);
 				ret = 1;
 			}else{
-				wchar_t *nstr = str+wcslen(name);
+				WCHAR *nstr = str+wcslen(name);
 				if(*nstr==L'\\'){
 					IShellFolder *psfFirstFolder = NULL;
 					hr = f->BindToObject(pidlItems, NULL, IID_IShellFolder, (LPVOID *) &psfFirstFolder);
@@ -117,11 +117,11 @@ static BOOL exec_desktop0(IShellFolder *f, LPITEMIDLIST pidlComplete,wchar_t *st
 	return ret;
 }
 
-BOOL exec_desktop(const wchar_t *str){
+BOOL exec_desktop(const WCHAR *str){
 	if(str==NULL || *str!=L'\\') return 0;
     IShellFolder *root = NULL;
 	if(SHGetDesktopFolder(&root) != S_OK) return 0;
-	BOOL ret = exec_desktop0(root, NULL, (wchar_t *) str+1);
+	BOOL ret = exec_desktop0(root, NULL, (WCHAR *) str+1);
     root->Release();
     CoUninitialize();
 	return ret;

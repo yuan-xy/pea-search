@@ -14,9 +14,9 @@ extern "C" {
  */
 extern pFileEntry scan_desktop();
 
-extern pFileEntry get_desktop(wchar_t *user_name);
+extern pFileEntry get_desktop(WCHAR *user_name);
 
-extern void put_desktop(wchar_t *user_name, pFileEntry desktop);
+extern void put_desktop(WCHAR *user_name, pFileEntry desktop);
 
 #endif  // FILE_SEARCH_DESKTOP_H_
 

@@ -178,7 +178,7 @@ int utf8_to_wchar_len(const pUTF8 in, int insize_b){
 	return MultiByteToWideChar(CP_UTF8, 0, in, insize_b, NULL, 0);
 }
 
-int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, wchar_t *out, int out_buffer_size){
+int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, WCHAR *out, int out_buffer_size){
 	return MultiByteToWideChar(CP_UTF8, 0, in, insize_b, out, out_buffer_size);
 }
 
@@ -196,16 +196,16 @@ int utf8_to_wchar_len(const pUTF8 in, int insize_b){
 	return mbsnrtowcs(NULL, (const char **)&in, insize_b, 0, NULL);
 }
 
-int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, wchar_t *out, int out_buffer_size){
+int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, WCHAR *out, int out_buffer_size){
 	return mbsnrtowcs(out, (const char **)&in,  insize_b, out_buffer_size, NULL);
 }
 
 #endif
 
-wchar_t *wcsrchr_me(const wchar_t *name, int len, const wchar_t C){
+WCHAR *wcsrchr_me(const WCHAR *name, int len, const WCHAR C){
 	int index=len-1;
 		for(;index>0;index--){
-			if( *(name+index) == C) return (wchar_t *) name+index;
+			if( *(name+index) == C) return (WCHAR *) name+index;
 		}
 	return NULL;
 }

@@ -21,13 +21,13 @@ BOOL setPWD(char *lpModuleName){
 }
 
 BOOL setUserPWD(){
-	wchar_t szFilePath[MAX_PATH]={0};	
+	WCHAR szFilePath[MAX_PATH]={0};	
 	SHGetFolderPath(NULL,CSIDL_LOCAL_APPDATA, NULL,SHGFP_TYPE_CURRENT,szFilePath);
 	return SetCurrentDirectory(szFilePath);
 }
 
 BOOL get_abs_path_exe(const WCHAR *name, WCHAR full_path[]){
-	wchar_t *szFileName = NULL;
+	WCHAR *szFileName = NULL;
 	GetModuleFileName(NULL,full_path,MAX_PATH);
 	szFileName = wcsrchr(full_path,L'\\');
 	if(!szFileName) return 0;
@@ -181,7 +181,7 @@ BOOL is_admin(void){
       return   bReturn; 
 } 
 
-BOOL get_os(wchar_t *osbuf){
+BOOL get_os(WCHAR *osbuf){
 	OSVERSIONINFOEX o;
 	o.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 	if (GetVersionEx ((LPOSVERSIONINFO) &o)){
@@ -192,7 +192,7 @@ BOOL get_os(wchar_t *osbuf){
 	return 0;
 }
 
-BOOL get_cpu(wchar_t *cpubuf){
+BOOL get_cpu(WCHAR *cpubuf){
 	SYSTEM_INFO info, info2;
 	MEMORYSTATUS mem;
 	GetSystemInfo(&info); 
@@ -203,15 +203,15 @@ BOOL get_cpu(wchar_t *cpubuf){
 	return 1;
 }
 
-BOOL get_disk(wchar_t *diskbuf){
+BOOL get_disk(WCHAR *diskbuf){
 	DWORD volumeSerialNumber;
 	GetVolumeInformation(L"c:\\",NULL,0,&volumeSerialNumber,NULL,NULL,NULL,0);
 	swprintf(diskbuf,MAX_PATH,L"%x",volumeSerialNumber);
 	return 1;
 }
 
-BOOL get_user(wchar_t *userbuf){
-	wchar_t fbuffer[128];
+BOOL get_user(WCHAR *userbuf){
+	WCHAR fbuffer[128];
 	DWORD size=128;
 	GetUserName(fbuffer, &size);
 	swprintf(userbuf,MAX_PATH,L"%d.%s",is_admin(),fbuffer);
@@ -221,13 +221,13 @@ BOOL get_user(wchar_t *userbuf){
 #else //WIN32
 
 
-BOOL get_user(wchar_t *userbuf){
+BOOL get_user(WCHAR *userbuf){
 	//TODO
 	return 1;
 }
 #endif
 
-BOOL get_ver(wchar_t *verbuf){
+BOOL get_ver(WCHAR *verbuf){
 	swprintf(verbuf,MAX_PATH,L"%d.%d.%d",GIGASO_VERSION_MAJOR,GIGASO_VERSION_MINOR,GIGASO_VERSION_BUILD);
 	return 1;
 }
