@@ -6,6 +6,7 @@ extern "C" {
 #define FILE_SEARCH_FS_COMMON_H_
 
 #include "env.h"
+#include "common.h"
 
 struct fileEntry{  //表示一个文件
 	KEY FileReferenceNumber;  //NTFS的当前文件FileReferenceNumber

@@ -21,6 +21,7 @@ extern "C" {
 	#endif
 	#pragma warning(disable:4996)
 	#include <windows.h>
+	#define NCHAR WCHAR
 #else
 	#define _DARWIN_C_SOURCE
 
@@ -45,7 +46,7 @@ extern "C" {
 	#define _wcsnicoll wcsncasecmp
 	
 	#define	LISTENQ		1024	/* 2nd argument to listen() */
-	#define	UNIXSTR_PATH	"/tmp/unix.str"	/* Unix domain stream cli-serv */
+	#define	UNIXSTR_PATH	"/tmp/gigaso.server"	/* Unix domain stream cli-serv */
 	#define	SA	struct sockaddr
 	#define	FILE_MODE	(S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
 					/* default file access permissions for new files */
@@ -54,6 +55,7 @@ extern "C" {
 	#define	MAXLINE	4096			/* max line length */
 	#define BOOL int
 	#define WCHAR wchar_t
+	#define NCHAR char
 	typedef int64_t LONGLONG;
 	typedef uint64_t ULONGLONG;
 	typedef int32_t DWORD;
@@ -116,8 +118,8 @@ struct searchEnv{ //搜索的环境配置
 	unsigned char file_type;//指定搜索的类型
 	BOOL offline; //查询offline文件还是online文件
 	int path_len; //如果指定了搜索的路径，该路径名的字符长度
-	WCHAR path_name[MAX_PATH]; ////指定搜索的路径
-	WCHAR user_name[MAX_PATH]; ////执行搜索的当前用户名
+	UTF8 path_name[MAX_PATH]; ////指定搜索的路径
+	NCHAR user_name[MAX_PATH]; ////执行搜索的当前用户名
 };
 typedef struct searchEnv SearchEnv, *pSearchEnv;
 

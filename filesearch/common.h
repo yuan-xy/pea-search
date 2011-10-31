@@ -5,6 +5,8 @@ extern "C" {
 #ifndef FILE_SEARCH_COMMON_H_
 #define FILE_SEARCH_COMMON_H_
 
+#include "env.h"
+
 /**
  * 设置应用程序当前目录
  * @param lpModuleName 如果lpModuleName为空， 则设置应用程序路径为其exe文件所在目录。如果lpModuleName不为空，一般是浏览器中加载DLL，设置为DLL所在路径
@@ -50,6 +52,13 @@ extern BOOL is_admin(void);
 extern BOOL passed_one_day(time_t last);
 
 extern BOOL file_passed_one_day(char *filename);
+
+extern int wchar_to_utf8_len(const WCHAR *in, int insize_c);
+extern void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size);
+
+extern int utf8_to_wchar_len(const pUTF8 in, int insize_b);
+extern int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, WCHAR *out, int out_buffer_size);
+
 
 #endif  // FILE_SEARCH_COMMON_H_
 

@@ -26,7 +26,7 @@ extern int print_stat(int * stats, char *p);
 * @param name 待查找文件的全路径名
 * @len 路径名的字符长度
 */
-extern pFileEntry find_file(WCHAR *name, int len);
+extern pFileEntry find_file(pUTF8 name, int len);
 
 #endif  // FILE_SEARCH_SEARCH_H_
 

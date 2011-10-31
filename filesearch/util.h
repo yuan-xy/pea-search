@@ -59,12 +59,8 @@ extern int time_passed_ret(int (*f)(),int *ret_data);
  * 
  */
 extern pUTF8 wchar_to_utf8(const WCHAR *in, int insize_c, int *out_size_b);
-extern int wchar_to_utf8_len(const WCHAR *in, int insize_c);
-extern void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size);
 
 extern WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c);
-extern int utf8_to_wchar_len(const pUTF8 in, int insize_b);
-extern int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, WCHAR *out, int out_buffer_size);
 
 extern WCHAR *wcsrchr_me(const WCHAR *S, int len, const WCHAR C);
 

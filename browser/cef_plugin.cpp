@@ -61,7 +61,10 @@ static CefString query(CefString msg, int rows){
 	req.env.offline = m_offline? 1:0;
 	req.env.file_type = m_file_type;
 	req.env.path_len = m_dir.length();
-	if(req.env.path_len>0) wcsncpy(req.env.path_name, m_dir.c_str(), MAX_PATH);
+	if(req.env.path_len>0){
+		const WCHAR *wpath = m_dir.c_str();
+		wchar_to_utf8_nocheck(wpath, req.env.path_len,req.env.path_name, MAX_PATH);
+	}
 	{
 		DWORD size=MAX_PATH;
 		GetUserName(req.env.user_name, &size);

@@ -1,4 +1,5 @@
-﻿#include "GIGASOConfig.h"
+﻿#include "util.h"
+#include "GIGASOConfig.h"
 
 #if ( defined(HAVE_64_BIT) && defined(WIN32) )  || defined(LINUX)
 	#define TC_MALLOC malloc
@@ -16,7 +17,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <assert.h>
-#include "util.h"
+#include "common.h"
 #include "md5.h"
 
 #ifndef WIN32
@@ -162,45 +163,6 @@ WCHAR* utf8_to_wchar(const pUTF8 in, int insize_b, int *out_size_c){
     	return wstr;
     }
 }
-
-
-#ifdef WIN32
-int wchar_to_utf8_len(const WCHAR *in, int insize_c){
-	return WideCharToMultiByte(CP_UTF8, 0, (in), (insize_c), NULL, 0, NULL, NULL);
-}
-
-
-INLINE void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size){
-	WideCharToMultiByte(CP_UTF8, 0, in, insize_c, (LPSTR)out, out_size, NULL, NULL);
-}
-
-int utf8_to_wchar_len(const pUTF8 in, int insize_b){
-	return MultiByteToWideChar(CP_UTF8, 0, in, insize_b, NULL, 0);
-}
-
-int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, WCHAR *out, int out_buffer_size){
-	return MultiByteToWideChar(CP_UTF8, 0, in, insize_b, out, out_buffer_size);
-}
-
-#else
-
-int wchar_to_utf8_len(const WCHAR *in, int insize_c){
-	return wcsnrtombs(NULL, &in, insize_c,0,NULL);
-}
-
-void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size){
-	wcsnrtombs(out, &in,insize_c,out_size, NULL);
-}
-
-int utf8_to_wchar_len(const pUTF8 in, int insize_b){
-	return mbsnrtowcs(NULL, (const char **)&in, insize_b, 0, NULL);
-}
-
-int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, WCHAR *out, int out_buffer_size){
-	return mbsnrtowcs(out, (const char **)&in,  insize_b, out_buffer_size, NULL);
-}
-
-#endif
 
 WCHAR *wcsrchr_me(const WCHAR *name, int len, const WCHAR C){
 	int index=len-1;

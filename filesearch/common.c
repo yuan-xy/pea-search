@@ -243,3 +243,43 @@ BOOL file_passed_one_day(char *filename){
 	if(ret==-1) return 1;
 	return passed_one_day(statbuf.st_mtime);
 }
+
+
+
+#ifdef WIN32
+int wchar_to_utf8_len(const WCHAR *in, int insize_c){
+	return WideCharToMultiByte(CP_UTF8, 0, (in), (insize_c), NULL, 0, NULL, NULL);
+}
+
+
+INLINE void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size){
+	WideCharToMultiByte(CP_UTF8, 0, in, insize_c, (LPSTR)out, out_size, NULL, NULL);
+}
+
+int utf8_to_wchar_len(const pUTF8 in, int insize_b){
+	return MultiByteToWideChar(CP_UTF8, 0, in, insize_b, NULL, 0);
+}
+
+int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, WCHAR *out, int out_buffer_size){
+	return MultiByteToWideChar(CP_UTF8, 0, in, insize_b, out, out_buffer_size);
+}
+
+#else
+
+int wchar_to_utf8_len(const WCHAR *in, int insize_c){
+	return wcsnrtombs(NULL, &in, insize_c,0,NULL);
+}
+
+void wchar_to_utf8_nocheck(const WCHAR *in, int insize_c, pUTF8 out, int out_size){
+	wcsnrtombs(out, &in,insize_c,out_size, NULL);
+}
+
+int utf8_to_wchar_len(const pUTF8 in, int insize_b){
+	return mbsnrtowcs(NULL, (const char **)&in, insize_b, 0, NULL);
+}
+
+int utf8_to_wchar_nocheck(const pUTF8 in, int insize_b, WCHAR *out, int out_buffer_size){
+	return mbsnrtowcs(out, (const char **)&in,  insize_b, out_buffer_size, NULL);
+}
+
+#endif

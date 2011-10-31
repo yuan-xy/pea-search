@@ -244,7 +244,7 @@ static int MAX_ROW = 30;
 	req.env.path_len = [dir length];
 	if(req.env.path_len>0){
         const char * dutf8 = [dir UTF8String];
-        mbsnrtowcs(req.env.path_name, (const char **)&dutf8,  strlen(dutf8), MAX_PATH, NULL);
+		strncpy(req.env.path_name, dutf8, MAX_PATH);
     }
 	if([query length]==0) return @"";
     const char * qutf8 = [query UTF8String];
@@ -306,10 +306,9 @@ static int MAX_ROW = 30;
 }
 
 - (BOOL) shellDefault: (NSString*) file{
-	char buffer[MAX_PATH*2], *p;
-    p=stpcpy(buffer,"open ");
+	char buffer[MAX_PATH*2];
     const char *filename = [file cStringUsingEncoding:NSUTF8StringEncoding];
-    strcpy(p,filename);
+    snprintf(buffer,MAX_PATH*2,"open \"%s\"",filename);
 	bool ret = system(buffer)==0;
 	if(ret){
         wchar_t out[MAX_PATH];
@@ -319,17 +318,16 @@ static int MAX_ROW = 30;
     return ret;
 }
 - (BOOL) shellExplore: (NSString*) file{
-	char buffer[MAX_PATH*2], *p;
-    p=stpcpy(buffer,"open -R ");
+	char buffer[MAX_PATH*2];
     const char *filename = [file cStringUsingEncoding:NSUTF8StringEncoding];
-    strcpy(p,filename);
+    snprintf(buffer,MAX_PATH*2,"open -R \"%s\"",filename);
 	bool ret = system(buffer)==0;
 	if(ret){
         wchar_t out[MAX_PATH];
         mbsnrtowcs(out, (const char **)&filename,  strlen(filename), MAX_PATH, NULL);
 		if( history_add(out) ) history_save();
 	}
-    return ret; 
+    return ret;
 }
 - (BOOL) shell2: (NSString*) file action: (NSString*)action{
     if([action compare:@"copy"]==NSOrderedSame){

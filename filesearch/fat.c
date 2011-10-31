@@ -12,6 +12,15 @@ static const int ALL_LEN = 4;
 static const WCHAR ALL[4]=L"*.*";
 __declspec (thread) int count = 1;
 
+static pFileEntry find_file(WCHAR *name, int len){
+	pFileEntry ret;
+	int ustrlen;
+	pUTF8 ustr = wchar_to_utf8(name,len,&ustrlen);
+	ret = find_file(ustr,ustrlen);
+	free_safe(ustr);
+	return ret;
+}
+
 /**
  * 根据文件查找结果新增一个pFileEntry，并挂载到父目录下。理论上支持所有文件系统类型。
  * @param pdf WIN32系统调用查找文件的结果

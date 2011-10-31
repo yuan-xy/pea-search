@@ -81,26 +81,21 @@ static pFileEntry find_file_in(pFileEntry parent, pUTF8 name, int whole_len){
 }
 
 #ifdef WIN32
-pFileEntry find_file(WCHAR *name, int len){
+pFileEntry find_file(pUTF8 name, int len){
 	int d;
 	if(len==0) return NULL;
 	d = toupper((char)*name)-'A';
 	if(d<0 || d>25) return NULL;
 	if(len<=3) return g_rootVols[d];
-	if(*(name+1)==L':' && ( *(name+2)==L'\\' || *(name+2)==L'/' ) ){
-		int ustrlen;
-		pUTF8 ustr = wchar_to_utf8(name+3,len-3,&ustrlen);
-		return find_file_in(g_rootVols[d],ustr,ustrlen);
-        //TODO: free ustr
+	if(*(name+1)==':' && ( *(name+2)=='\\' || *(name+2)=='/' ) ){
+		return find_file_in(g_rootVols[d],name+3,len-3);
 	}
 	return NULL;
 }
 #else
-pFileEntry find_file(WCHAR *name, int len){
-	if(len==0 || *name != L'/') return NULL;
-    int ustrlen;
-    pUTF8 ustr = wchar_to_utf8(name+1,len-1,&ustrlen);
-    return find_file_in(g_rootVols[0],ustr,ustrlen);
+pFileEntry find_file(pUTF8 name, int len){
+	if(len==0 || *name != '/') return NULL;
+    return find_file_in(g_rootVols[0],name+1,len-1);
 }
 #endif //WIN32
 
