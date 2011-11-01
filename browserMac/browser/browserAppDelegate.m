@@ -348,7 +348,13 @@ static int MAX_ROW = 30;
         return ret==0;
         //return [[NSFileManager defaultManager] removeItemAtPath:file error:NULL];
     }else if([action compare:@"properties"]==NSOrderedSame){
-        
+        NSString *scpt = [NSString stringWithFormat:@"tell application \"Finder\"\n"
+                          "	activate\n"
+                          "	open information window of alias (POSIX file \"%@\")\n"
+                          "end tell", file];
+        NSAppleScript* appleScript = [[NSAppleScript alloc] initWithSource:scpt];
+        [appleScript executeAndReturnError:nil];
+        [appleScript release];
     }else if([action compare:@"openas"]==NSOrderedSame){
         
     }
