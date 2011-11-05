@@ -13,7 +13,7 @@ extern "C" {
 /**
 * 将文件file添加到历史文件记录中。如果file在首页中已存在，则不重复添加。
 */
-extern BOOL history_add(const WCHAR *file);
+extern BOOL history_add(const TCHAR *file);
 
 /**
 * 删除给定index位置的历史文件记录, 将下一个位置的历史文件记录补充到被删除的位置
@@ -32,7 +32,7 @@ extern void history_unpin(int index);
 /**
 * 获得给定index位置的历史文件记录
 */
-extern WCHAR *history_get(int index);
+extern TCHAR *history_get(int index);
 
 /**
 * 将历史文件记录保存到磁盘
@@ -46,7 +46,7 @@ extern BOOL history_load();
 
 extern BOOL history_remove();
 
-typedef void (*pHistoryVisitor)(WCHAR *file, int pin, void *context);
+typedef void (*pHistoryVisitor)(TCHAR *file, int pin, void *context);
 
 /**
 * 遍历首页的历史文件记录
@@ -61,7 +61,7 @@ extern void HistoryIteratorAll(pHistoryVisitor, void *context);
 /**
 * 将的历史文件记录信息导出为json格式
 */
-extern int history_to_json(WCHAR *buffer);
+extern int history_to_json(TCHAR *buffer);
 
 #endif  // FILE_SEARCH_HISTORY_H_
 

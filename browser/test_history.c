@@ -1,12 +1,13 @@
-﻿#include <stdio.h>
+﻿#include "history.h"
+#include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
-#include "history.h"
+
 
 extern int n_index_form_w(int wi);
 extern int w_index_from_n(int ni);
 
-void print(WCHAR *file, void *context){
+void print(TCHAR *file, void *context){
 	printf("%ls\n",file);
 }
 
@@ -22,35 +23,35 @@ void check_ni_wi(){
 int main(){
 	history_remove();
 	history_load();
-	history_add(L"abcd");
-	assert( wcscmp(history_get(0),L"abcd")==0 );
-	history_add(L"qwerrr");
-	assert( wcscmp(history_get(0),L"qwerrr")==0 );
-	history_add(L"zxcv");
-	assert( wcscmp(history_get(0),L"zxcv")==0 );
+	history_add(__T("abcd"));
+	assert( _tcscmp(history_get(0),__T("abcd"))==0 );
+	history_add(__T("qwerrr"));
+	assert( _tcscmp(history_get(0),__T("qwerrr"))==0 );
+	history_add(__T("zxcv"));
+	assert( _tcscmp(history_get(0),__T("zxcv"))==0 );
 	history_save();
 	history_load();
-	history_add(L"zxcv1");
-	assert( wcscmp(history_get(0),L"zxcv1")==0 );
-	assert( wcscmp(history_get(1),L"zxcv")==0 );
-	assert( wcscmp(history_get(2),L"qwerrr")==0 );
-	assert( wcscmp(history_get(3),L"abcd")==0 );
+	history_add(__T("zxcv1"));
+	assert( _tcscmp(history_get(0),__T("zxcv1"))==0 );
+	assert( _tcscmp(history_get(1),__T("zxcv"))==0 );
+	assert( _tcscmp(history_get(2),__T("qwerrr"))==0 );
+	assert( _tcscmp(history_get(3),__T("abcd"))==0 );
 	history_delete(1);
 	history_save();
 	history_load();
-	assert( wcscmp(history_get(0),L"zxcv1")==0 );
-	assert( wcscmp(history_get(1),L"zxcv")!=0 );
-	assert( wcscmp(history_get(2),L"qwerrr")==0 );
-	assert( wcscmp(history_get(3),L"abcd")==0 );
+	assert( _tcscmp(history_get(0),__T("zxcv1"))==0 );
+	assert( _tcscmp(history_get(1),__T("zxcv"))!=0 );
+	assert( _tcscmp(history_get(2),__T("qwerrr"))==0 );
+	assert( _tcscmp(history_get(3),__T("abcd"))==0 );
 	history_pin(2);
 	check_ni_wi();
-	history_add(L"asdff");
-	history_add(L"asdfff");
-	history_add(L"asdffff");
-	assert( wcscmp(history_get(0),L"asdffff")==0 );
-	assert( wcscmp(history_get(1),L"asdfff")==0 );
-	assert( wcscmp(history_get(2),L"qwerrr")==0 );
-	assert( wcscmp(history_get(3),L"asdff")==0 );
+	history_add(__T("asdff"));
+	history_add(__T("asdfff"));
+	history_add(__T("asdffff"));
+	assert( _tcscmp(history_get(0),__T("asdffff"))==0 );
+	assert( _tcscmp(history_get(1),__T("asdfff"))==0 );
+	assert( _tcscmp(history_get(2),__T("qwerrr"))==0 );
+	assert( _tcscmp(history_get(3),__T("asdff"))==0 );
 	history_pin(3);
 	check_ni_wi();
 	history_unpin(2);
@@ -65,10 +66,10 @@ int main(){
 	history_delete(5);
 	check_ni_wi();
 	{
-		WCHAR buffer[VIEW_HISTORY*MAX_PATH];
+		TCHAR buffer[VIEW_HISTORY*MAX_PATH];
 		int len = history_to_json(buffer);
-		buffer[len+1] = L'\0';
-		wprintf(L"\n%d,%s\n",len,buffer);
+		buffer[len+1] = __T('\0');
+		_tprintf(__T("\n%d,%s\n"),len,buffer);
 	}
 	return 0;
 }

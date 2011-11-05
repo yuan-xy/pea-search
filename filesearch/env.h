@@ -21,7 +21,9 @@ extern "C" {
 	#endif
 	#pragma warning(disable:4996)
 	#include <windows.h>
-	#define NCHAR WCHAR
+	#include <tchar.h>
+	#define TCHAR WCHAR
+	#define stprintf swprintf
 #else
 	#define _DARWIN_C_SOURCE
 
@@ -55,7 +57,13 @@ extern "C" {
 	#define	MAXLINE	4096			/* max line length */
 	#define BOOL int
 	#define WCHAR wchar_t
-	#define NCHAR char
+	#define TCHAR char
+	#define __T(x) x
+	#define _tcslen strlen
+	#define _tcscmp strcmp
+	#define _tcscpy strcpy	
+	#define _tprintf printf
+	#define stprintf snprintf
 	typedef int64_t LONGLONG;
 	typedef uint64_t ULONGLONG;
 	typedef int32_t DWORD;
@@ -119,7 +127,7 @@ struct searchEnv{ //搜索的环境配置
 	BOOL offline; //查询offline文件还是online文件
 	int path_len; //如果指定了搜索的路径，该路径名的字符长度
 	UTF8 path_name[MAX_PATH]; ////指定搜索的路径
-	NCHAR user_name[MAX_PATH]; ////执行搜索的当前用户名
+	TCHAR user_name[MAX_PATH]; ////执行搜索的当前用户名
 };
 typedef struct searchEnv SearchEnv, *pSearchEnv;
 

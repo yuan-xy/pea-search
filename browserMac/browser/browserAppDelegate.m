@@ -286,14 +286,11 @@ static int MAX_ROW = 30;
 
 
 - (NSString*) history{
-	wchar_t buffer[VIEW_HISTORY*MAX_PATH];
+	TCHAR buffer[VIEW_HISTORY*MAX_PATH];
 	int len;
 	history_load();
 	len = history_to_json(buffer);
-    NSLog(@"-----%d,%ls,---\n",len,buffer);
-    //return [NSString stringWithCharacters:buffer length:len];
-    NSString* ret = [[NSString alloc] initWithBytes:buffer length:(len * sizeof(wchar_t)) encoding:WCHAR_ENCODING];
-    NSLog(@"''''%@",ret);
+    NSString* ret = [[NSString alloc] initWithUTF8String:buffer];
     return ret;
 }
 
@@ -316,9 +313,7 @@ static int MAX_ROW = 30;
     snprintf(buffer,MAX_PATH*2,"open \"%s\"",filename);
 	bool ret = system(buffer)==0;
 	if(ret){
-        wchar_t out[MAX_PATH];
-        mbsnrtowcs(out, (const char **)&filename,  strlen(filename), MAX_PATH, NULL);
-		if( history_add(out) ) history_save();
+		if( history_add(filename) ) history_save();
 	}
     return ret;
 }
@@ -328,9 +323,7 @@ static int MAX_ROW = 30;
     snprintf(buffer,MAX_PATH*2,"open -R \"%s\"",filename);
 	bool ret = system(buffer)==0;
 	if(ret){
-        wchar_t out[MAX_PATH];
-        mbsnrtowcs(out, (const char **)&filename,  strlen(filename), MAX_PATH, NULL);
-		if( history_add(out) ) history_save();
+        if( history_add(filename) ) history_save();
 	}
     return ret;
 }

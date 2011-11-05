@@ -1,8 +1,7 @@
-﻿#include <stdio.h>
-#include "history.h"
+﻿#include "history.h"
+#include <stdio.h>
 
-
-static WCHAR his_files[MAX_HISTORY][MAX_PATH] = {{0}};
+static TCHAR his_files[MAX_HISTORY][MAX_PATH] = {{0}};
 
 //采用匈牙利命名法区分外部位置和内部位置
 static int nstart=0; 
@@ -111,22 +110,22 @@ int w_index_from_n(int ni){
 }
 
 typedef struct{
-	const WCHAR *filename;
+	const TCHAR *filename;
 	int flag;
 } tmp_contain_context, *p_tmp_contain_context;
 
-static void containVisitor(WCHAR *file, int pin, void *context){
+static void containVisitor(TCHAR *file, int pin, void *context){
 	p_tmp_contain_context ctx = (p_tmp_contain_context)context;
-	if(wcscmp(file,ctx->filename)==0) ctx->flag=1;
+	if(_tcscmp(file,ctx->filename)==0) ctx->flag=1;
 }
 
-BOOL history_add(const WCHAR *file){
+BOOL history_add(const TCHAR *file){
 	tmp_contain_context ctx;
 	ctx.filename = file;
 	ctx.flag = 0;
 	HistoryIterator(containVisitor,&ctx);
 	if(ctx.flag) return 0;
-	wcscpy(his_files[nstart],file);
+	_tcscpy(his_files[nstart],file);
 	inc_start();
 	return 1;
 }
@@ -138,7 +137,7 @@ void history_delete(int wi){
 		if(nj>=MAX_HISTORY) nj=0;
 	}while(occupy_by_pin(nj));
 	memcpy(his_files[n_index_form_w(wi)],his_files[nj], sizeof(his_files[0]));
-	wcscpy(his_files[nj],L"");
+	_tcscpy(his_files[nj],__T(""));
 }
 
 void history_pin(int wi){
@@ -162,7 +161,7 @@ void history_unpin(int wi){
 void history_unpin_(int wi){
 	if(VALID_PIN(wi)){
 		int ni = PIN[wi].ni, ni_to;
-		WCHAR tmp[MAX_PATH];
+		TCHAR tmp[MAX_PATH];
 		PIN[wi].wi = -1;
 		ni_to = n_index_form_w(wi);
 		memcpy(tmp,his_files[ni],sizeof(his_files[0]));
@@ -187,7 +186,7 @@ void history_unpin_(int wi){
 	}
 }
 
-WCHAR *history_get(int wi){
+TCHAR *history_get(int wi){
 	return his_files[n_index_form_w(wi)];
 }
 
@@ -251,40 +250,40 @@ void HistoryIteratorAll(pHistoryVisitor visitor, void *context){
 }
 
 typedef struct{
-	WCHAR *p;
+	TCHAR *p;
 } tmp_json_context, *p_tmp_json_context;
 
-static void json_print(WCHAR *file, int pin, void *context){
+static void json_print(TCHAR *file, int pin, void *context){
 	p_tmp_json_context pctx = (p_tmp_json_context)context;
-	WCHAR *p = pctx->p;
-	*p++ = L'{';
+	TCHAR *p = pctx->p;
+	*p++ = __T('{');
 	{
-		memcpy(p,L"\"name\":\"",8*sizeof(WCHAR));
+		memcpy(p,__T("\"name\":\""),8*sizeof(TCHAR));
 		p += 8;
-		wcscpy(p,file);
-		p+=wcslen(file);
-		*p++ =L'"';
-		*p++ =L',';
+		_tcscpy(p,file);
+		p+=_tcslen(file);
+		*p++ =__T('"');
+		*p++ =__T(',');
 	}
 	{
-		memcpy(p,L"\"pin\":",6*sizeof(WCHAR));
+		memcpy(p,__T("\"pin\":"),6*sizeof(TCHAR));
 		p += 6;
-        p += swprintf(p,2,L"%d",pin);
+        p += stprintf(p,2,__T("%d"),pin);
 	}
-	*p++ = L'}';
-	*p++ = L',';
+	*p++ = __T('}');
+	*p++ = __T(',');
 	pctx->p = p;
 }
 
-int history_to_json(WCHAR *buffer){
-	WCHAR *p = buffer;
+int history_to_json(TCHAR *buffer){
+	TCHAR *p = buffer;
 	tmp_json_context ctx;
-	*p++ = L'[';
+	*p++ = __T('[');
 	ctx.p = p;
 	HistoryIteratorAll(json_print,&ctx);
 	p = ctx.p;
-	*(p-1) = L']';
-	*p = L'\0';
+	*(p-1) = __T(']');
+	*p = __T('\0');
 	return p-buffer;
 }
 
