@@ -20,6 +20,7 @@
 #include	<sys/un.h>		/* for Unix domain sockets */
 
 #import <Foundation/Foundation.h>
+#import "SpecialProtocol.h"
 
 static BOOL connect_unix_socket(int *psock) {
 	int	sockfd;
@@ -77,6 +78,7 @@ static BOOL connect_unix_socket(int *psock) {
 
 - (void)awakeFromNib {
     setlocale(LC_ALL, "");
+    [SpecialProtocol registerSpecialProtocol];
 	NSString *htmlPath = @"/Users/ylt/Documents/gigaso/browser/web/search.htm";
 	[[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
     [window setDelegate:self];
@@ -150,7 +152,7 @@ static BOOL connect_unix_socket(int *psock) {
     id win = [webView windowScriptObject];
     {
         NSArray *args = [NSArray arrayWithObjects:
-                         @"search.exe \"/User/ylt\"",nil];
+                         @"search.exe \"/Users/ylt\"",nil];
         [win callWebScriptMethod:@"init_dir" withArguments:args];
     }
     return;
@@ -288,8 +290,11 @@ static int MAX_ROW = 30;
 	int len;
 	history_load();
 	len = history_to_json(buffer);
+    NSLog(@"-----%d,%ls,---\n",len,buffer);
     //return [NSString stringWithCharacters:buffer length:len];
-    return [[NSString alloc] initWithBytes:buffer length:(len * sizeof(wchar_t)) encoding:WCHAR_ENCODING];
+    NSString* ret = [[NSString alloc] initWithBytes:buffer length:(len * sizeof(wchar_t)) encoding:WCHAR_ENCODING];
+    NSLog(@"''''%@",ret);
+    return ret;
 }
 
 - (BOOL) hisDel: (int) index{

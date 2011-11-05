@@ -10,6 +10,9 @@
 		351A5DE014506BA2006F1D7C /* logo.icns in Resources */ = {isa = PBXBuildFile; fileRef = 351A5DDF14506BA2006F1D7C /* logo.icns */; };
 		3553434F1456F82E005A48AE /* mac_port.c in Sources */ = {isa = PBXBuildFile; fileRef = 3553434C1456F82E005A48AE /* mac_port.c */; };
 		355343521456F84A005A48AE /* history.c in Sources */ = {isa = PBXBuildFile; fileRef = 355343501456F84A005A48AE /* history.c */; };
+		359D3E4A1464D3FA00F16678 /* NSImage+QuickLook.m in Sources */ = {isa = PBXBuildFile; fileRef = 359D3E471464D3FA00F16678 /* NSImage+QuickLook.m */; };
+		359D3E4B1464D3FA00F16678 /* SpecialProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 359D3E491464D3FA00F16678 /* SpecialProtocol.m */; };
+		359D3E4E1464D41900F16678 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 359D3E4D1464D41900F16678 /* QuickLook.framework */; };
 		35EA25F114506021007233F5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35EA25F014506021007233F5 /* Cocoa.framework */; };
 		35EA25FB14506021007233F5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 35EA25F914506021007233F5 /* InfoPlist.strings */; };
 		35EA25FD14506021007233F5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35EA25FC14506021007233F5 /* main.m */; };
@@ -43,6 +46,11 @@
 		355343501456F84A005A48AE /* history.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = history.c; path = ../browser/history.c; sourceTree = "<group>"; };
 		355343511456F84A005A48AE /* history.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = history.h; path = ../browser/history.h; sourceTree = "<group>"; };
 		355343531456F8D0005A48AE /* GIGASOConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIGASOConfig.h; path = ../DebugMac/GIGASOConfig.h; sourceTree = "<group>"; };
+		359D3E461464D3FA00F16678 /* NSImage+QuickLook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSImage+QuickLook.h"; path = "browser/NSImage+QuickLook.h"; sourceTree = "<group>"; };
+		359D3E471464D3FA00F16678 /* NSImage+QuickLook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSImage+QuickLook.m"; path = "browser/NSImage+QuickLook.m"; sourceTree = "<group>"; };
+		359D3E481464D3FA00F16678 /* SpecialProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SpecialProtocol.h; path = browser/SpecialProtocol.h; sourceTree = "<group>"; };
+		359D3E491464D3FA00F16678 /* SpecialProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SpecialProtocol.m; path = browser/SpecialProtocol.m; sourceTree = "<group>"; };
+		359D3E4D1464D41900F16678 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		35EA25EC14506021007233F5 /* browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = browser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35EA25F014506021007233F5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		35EA25F314506021007233F5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -70,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				359D3E4E1464D41900F16678 /* QuickLook.framework in Frameworks */,
 				35EA262614506079007233F5 /* WebKit.framework in Frameworks */,
 				35EA25F114506021007233F5 /* Cocoa.framework in Frameworks */,
 			);
@@ -90,8 +99,13 @@
 		35EA25E114506020007233F5 = {
 			isa = PBXGroup;
 			children = (
+				359D3E4D1464D41900F16678 /* QuickLook.framework */,
 				355343531456F8D0005A48AE /* GIGASOConfig.h */,
 				355343501456F84A005A48AE /* history.c */,
+				359D3E461464D3FA00F16678 /* NSImage+QuickLook.h */,
+				359D3E471464D3FA00F16678 /* NSImage+QuickLook.m */,
+				359D3E481464D3FA00F16678 /* SpecialProtocol.h */,
+				359D3E491464D3FA00F16678 /* SpecialProtocol.m */,
 				355343511456F84A005A48AE /* history.h */,
 				3553434B1456F82E005A48AE /* env.h */,
 				3553434C1456F82E005A48AE /* mac_port.c */,
@@ -287,6 +301,8 @@
 				35EA260414506021007233F5 /* browserAppDelegate.m in Sources */,
 				3553434F1456F82E005A48AE /* mac_port.c in Sources */,
 				355343521456F84A005A48AE /* history.c in Sources */,
+				359D3E4A1464D3FA00F16678 /* NSImage+QuickLook.m in Sources */,
+				359D3E4B1464D3FA00F16678 /* SpecialProtocol.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
