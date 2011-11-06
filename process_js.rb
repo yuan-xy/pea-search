@@ -6,7 +6,7 @@ Closure = "java -jar #{File.dirname(__FILE__)}/3rd/compiler.jar "
 
 
 pack_js = %w{search.js context.js disk.js message.js scroll.js subnav.js}
-extern_js = %w{jquery-1.6.min.js jquery-ui-1.8.12.custom.min.js jquery-jtemplates.js  jquery.contextmenu.r2.js grid.locale-cn.js  jquery.jqGrid.min.js}
+extern_js = %w{jquery-1.6.min.js jquery-ui-1.8.12.custom.min.js jquery-jtemplates.js  jquery.contextmenu.r2.js grid.locale-cn.js  jquery.jqGrid.min.js jquery.cookie.js}
 
 js_pack_cmd = "#{Closure} --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file pack.js  "
 
