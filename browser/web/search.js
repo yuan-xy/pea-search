@@ -61,9 +61,9 @@ var host_backup = "http://60.191.119.190:3333";
 				if(full_path.match(/exe$/i)!=null || full_path.match(/lnk$/i)!=null) 
 					$(o).find("img")[0].src = "gigaso://icon/"+full_path;
 			});
-			//icon_replace_index=0;
 			$("#maintable .jqgrow:not(.ped)").addClass("ped");
-			//if(!cef.plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
+			icon_replace_index=0;
+			if(!cef.plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
 			$("#loading").css("visibility","hidden");
 	  }
 

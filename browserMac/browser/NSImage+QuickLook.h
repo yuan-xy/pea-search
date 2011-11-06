@@ -13,5 +13,7 @@
 
 + (NSImage *)imageWithPreviewOfFileAtPath:(NSString *)path ofSize:(NSSize)size asIcon:(BOOL)icon;
 
++ (NSImage *)iconOfFileAtPath:(NSString *)path ofSize:(NSSize)size;
+
 
 @end

@@ -55,13 +55,8 @@
     return request;
 }
 
-- (void)startLoading {
-    NSURLRequest *request = [self request];
-	NSString* path = [[[request URL] path] substringFromIndex:0];
-    NSLog(@"----%@",path);
-	NSSize size = {100,100};
-	NSImage *myImage = [NSImage imageWithPreviewOfFileAtPath:path ofSize:size asIcon:NO];
-	NSData *data = [myImage JFIFData: 0.75];
+- (void)render_image:(NSImage *)myImage request:(NSURLRequest *)request  {
+  NSData *data = [myImage JFIFData: 0.75];
 	NSURLResponse *response = 
 		[[NSURLResponse alloc] initWithURL:[request URL] 
 			MIMEType:@"image/jpeg" 
@@ -84,6 +79,20 @@
         [client URLProtocol:self didFailWithError:[NSError errorWithDomain:NSURLErrorDomain
 			code:resultCode userInfo:nil]];
 	}
+
+}
+- (void)startLoading {
+    NSURLRequest *request = [self request];
+	NSString* path = [[[request URL] path] substringFromIndex:0];
+    if([@"thumb" compare:[[request URL] host]] == NSOrderedSame ){
+        NSSize size = {100,100};
+        NSImage *myImage = [NSImage imageWithPreviewOfFileAtPath:path ofSize:size asIcon:YES];
+        [self render_image: myImage request: request];
+    }else if([@"icon" compare:[[request URL] host]] == NSOrderedSame ){
+        NSSize size = {16,16};
+        NSImage *myImage = [NSImage iconOfFileAtPath:path ofSize:size];
+        [self render_image: myImage request: request];
+    }
 }
 
 - (void)stopLoading {}

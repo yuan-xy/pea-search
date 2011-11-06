@@ -53,5 +53,12 @@
     return nil;
 }
 
++ (NSImage *)iconOfFileAtPath:(NSString *)path ofSize:(NSSize)size{
+    NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+    if (icon) {
+        [icon setSize:size];
+    }
+    return icon;
+}
 
 @end
