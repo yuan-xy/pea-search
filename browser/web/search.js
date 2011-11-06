@@ -428,7 +428,27 @@ var host_backup = "http://60.191.119.190:3333";
 			$(".online_offline").hide();
 		}
 	}
+	function getFontSize(){
+		return $(document.body).css('font-size').replace('px', '') * 1;
+	}
+
+	function incFontSize(){
+		if(getFontSize()>=18) return;
+		var fontsize = getFontSize()+1;
+		$(document.body).css('font-size', fontsize+'px');
+		$.cookie('font-size', fontsize, { expires: 356 });
+	}
+
+	function decFontSize(){
+		if(getFontSize()<=8) return;
+		var fontsize = getFontSize()-1;
+		$(document.body).css('font-size', fontsize+'px');
+		$.cookie('font-size', fontsize, { expires: 356 });
+	}
 	$(function() {
+		if($.cookie('font-size') ){
+			$(document.body).css('font-size', $.cookie('font-size'));	
+		}
 		if(cef.plugin.caze){
 			$("#case1").click();
 		}else{
@@ -439,8 +459,8 @@ var host_backup = "http://60.191.119.190:3333";
 		$("#search").bind('keyup',search_if_change);
 		$("#home_bt").bind('click',function(){return_history()});
 		$("#refresh_bt").bind('click',function(){refresh()});
-		$("#zoomin_bt").bind('click',function(){cef.gigaso.zoom_in()});
-		$("#zoomout_bt").bind('click',function(){cef.gigaso.zoom_out()});
+		$("#zoomin_bt").bind('click',function(){incFontSize()});
+		$("#zoomout_bt").bind('click',function(){decFontSize()});
 		$("#index_st_bt").bind('click',function(){show_index_status()});
 		$("#hotkey_bt").bind('click',function(){show_hotkey()});
 		$("#export_bt").bind('click',function(){show_export()});

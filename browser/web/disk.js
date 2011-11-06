@@ -328,7 +328,7 @@ function file_grid(){
 						width : "1000",
 						height: "auto",
 						pager: false,
-						colNames:['文件名','文件夹','大小','修改日期',''], 
+						colNames:['文件名','位置','大小','修改日期',''], 
 						colModel:[ 
 									{name:'icon_name', width:"40%",sortable:false },
 									{name:'path', width:"38%",sortable:false},
@@ -469,3 +469,4 @@ function has_row_selected(rowid){
 	});
 	return ret;
 }
+

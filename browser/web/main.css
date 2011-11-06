@@ -1,18 +1,18 @@
-body {font-size: 90%; margin:0px ; padding:0px; }
+body {font-size: 12px; margin:0px ; padding:0px; }
 
 ol,ul{list-style:none}
 
 #search {
 	width:720px; height:32px; 
 	background:url(images/icon-search.png) no-repeat #FFF; background-position:right; 
-	padding:0px; margin:0px; font-size: 120%;
+	padding:0px; margin:0px; font-size: 130%;
 }
 
 .dir_search:focus {
   outline: none;
 }
 
-#maintable {font-size: 80%; line-height:1.5em; text-align:left; border-bottom:1px solid #6990b3; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
+#maintable {font-size: 100%; line-height:1.5em; text-align:left; border-bottom:1px solid #6990b3; border-collapse:collapse; margin-top:.1em; margin-bottom:.1em; }
 #maintable th, #maintable td { padding:0 .3em; white-space:nowrap;}
 #maintable th { line-height:1.8em; background-color:#ECE9D8; border:1px solid #6990b3;
 	background-image: url(./images/header-hover.png);
@@ -28,7 +28,7 @@ ol,ul{list-style:none}
 
 
 #message-area {
-	font-size: 12px;
+	font-size: 100%;
 	font-family: Arial,sans-serif;
 	font-weight: bold;
 	padding: 3px;
@@ -88,14 +88,14 @@ background-color: #FFDDDD;
 
 .subnav-span{
 	margin: 5px;
-	font-size: 75%
+	font-size: 90%
 }
 .subnav a{
 	text-decoration: none;
 }
 
 #main_nav_tab {
-	font-size: 75%
+	font-size: 90%
 }
 
 
@@ -103,11 +103,11 @@ background-color: #FFDDDD;
 .topbar .iconbox{background:url(images/icon-bg.png) repeat-x; height:44px;}
 .topbar .leftbar{float:left; width:500px; height:44px; }
 .topbar .leftbar ul{padding-left:10px;}
-.topbar .leftbar li{float:left; line-height:44px; text-align:left; font-size:12px; color:#246795;}
+.topbar .leftbar li{float:left; line-height:44px; text-align:left; font-size:100%; color:#246795;}
 
 .topbar .rightbar{float:right; width:300px; height:44px;}
 .topbar .rightbar li{float:right; height:44px; line-height:44px; text-align:center;}
-.topbar .rightbar li ul{font-size:12px; text-align:left; width:100px; height:170px; border:1px #a0a0a0 solid; background-color:#f0f0f0; padding:0px; margin:0px; }
+.topbar .rightbar li ul{font-size:100%; text-align:left; width:100px; height:170px; border:1px #a0a0a0 solid; background-color:#f0f0f0; padding:0px; margin:0px; }
 .topbar .rightbar li ul li{float:left; width:100px; text-align:left; padding-left:15px; line-height:32px; height:32px; border-bottom:1px #e4e4e4 solid;}
 .topbar .rightbar li ul li a{color:#999; text-decoration:none;}
 .topbar .rightbar li ul li a:hover{color:#666;}
@@ -140,11 +140,11 @@ background-color: #FFDDDD;
 }
 
 #main_nav_tab span {
-	font-size:60%;
+	font-size:80%;
 }
 #tab-1 .subnav-span{
 	cursor:hand;
 }
 #tab-1 .subnav-span span{
-	font-size:50%;
+	font-size:80%;
 }
