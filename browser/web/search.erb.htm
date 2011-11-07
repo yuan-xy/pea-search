@@ -158,14 +158,24 @@
 
 <div id="myMenu1" style="display:none;">
   <ul>
+<%if os=='mac' %>	
+    <li id="default"><img width="24" height="24" src="./images/app.icns"> 打开</li>
+    <li id="explore"><img  width="24" height="24" src="./images/Finder.icns"> 在Finder中打开</li>
+    <li id="term"><img  width="24" height="24" src="./images/Terminal.png"> 在终端中打开</li>
+    <li id="copy"><img  width="24" height="24" src="./images/copy.ico"> 拷贝</li>
+    <li id="delete"><img  width="24" height="24" src="./images/gc.icns"> 删除</li>
+    <li id="prop"><img  width="24" height="24" src="./images/info.icns"> 显示简介</li>
+<%else%>
     <li id="default"><img width="16" height="16" src="./images/win.png"> 打开</li>
     <li id="openas"><img width="16" height="16" src="./images/openas.ico"> 打开方式</li>
-    <li id="explore"><img  width="16" height="16" src="./images/explore.ico"> 资源管理器</li>
-    <li id="copypath"><img  width="16" height="16" src="./images/copypath.ico"> 复制全路径到剪贴板</li>
+    <li id="explore"><img  width="16" height="16" src="./images/explore.ico"> 在资源管理器中打开</li>
+	<li id="term"><img  width="16" height="16" src="./images/Terminal.png"> 在Cmd中打开</li>
+    <li id="copypath"><img  width="16" height="16" src="./images/copypath.ico"> 复制文件路径到剪贴板</li>
     <li id="copy"><img  width="16" height="16" src="./images/copy.ico"> 复制</li>
     <li id="cut"><img  width="16" height="16" src="./images/cut.ico"> 剪切</li>
     <li id="delete"><img  width="16" height="16" src="./images/delete.ico"> 删除</li>
     <li id="prop"><img  width="16" height="16" src="./images/prop.ico"> 属性</li>
+<%end%>
   </ul>
 </div>
 <div id="myMenu2" style="display:none;">

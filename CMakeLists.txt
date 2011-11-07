@@ -37,7 +37,7 @@ project (GIGASO)
 
 set (GIGASO_VERSION_MAJOR 1)
 set (GIGASO_VERSION_MINOR 0)
-set (GIGASO_VERSION_BUILD 20)
+set (GIGASO_VERSION_BUILD 21)
 
 
 message(STATUS "size of pointer: ${CMAKE_SIZEOF_VOID_P}  ")
@@ -66,7 +66,7 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/GIGASOConfig.h.in"
   "${PROJECT_BINARY_DIR}/GIGASOConfig.h"
   )
-
+EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_html.rb" "${PROJECT_BINARY_DIR}")
 EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/html_embed.rb" "${PROJECT_BINARY_DIR}")
 EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_js.rb" "${PROJECT_BINARY_DIR}")
 EXEC_PROGRAM("ruby ${PROJECT_SOURCE_DIR}/process_css.rb" "${PROJECT_BINARY_DIR}")

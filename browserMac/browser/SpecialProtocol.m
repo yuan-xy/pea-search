@@ -67,20 +67,9 @@
 			cacheStoragePolicy:NSURLCacheStorageNotAllowed];
 	[client URLProtocol:self didLoadData:data];
 	[client URLProtocolDidFinishLoading:self];
-		/* we can release our copy */
 	[response release];
-		
-		/* if an error occured during our load, here is the code we would
-		execute to send that information back to webKit.  We're not using it here,
-		but you will probably want to use this code for proper error handling.  */
-	if (0) { /* in case of error */
-        int resultCode;
-        resultCode = NSURLErrorResourceUnavailable;
-        [client URLProtocol:self didFailWithError:[NSError errorWithDomain:NSURLErrorDomain
-			code:resultCode userInfo:nil]];
-	}
-
 }
+
 - (void)startLoading {
     NSURLRequest *request = [self request];
 	NSString* path = [[[request URL] path] substringFromIndex:0];

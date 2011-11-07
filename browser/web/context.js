@@ -90,6 +90,11 @@ var context_menu_obj = {
 						var ret = cef.plugin.shellExplore(path+file);
 						info_if_error(ret, file, menuitem.lastChild.data);
 					  },
+					  'term': function(t,menuitem) {
+					    get_file_path(t);
+						var ret = cef.plugin.term(path,file);
+						info_if_error(ret, file, menuitem.lastChild.data);
+					  },
 					  'copypath': function(t,menuitem) {
 					    get_file_path(t);
 						var ret = cef.plugin.copyPath(path+file);

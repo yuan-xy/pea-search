@@ -1,6 +1,6 @@
 include_directories ("${BREAKPAD_DIR}")
 
-install (DIRECTORY "${PROJECT_SOURCE_DIR}/browser/web"   DESTINATION . PATTERN "Thumbs.db" EXCLUDE PATTERN "search.htm" EXCLUDE PATTERN "*.js" EXCLUDE PATTERN "*.css" EXCLUDE)
+install (DIRECTORY "${PROJECT_SOURCE_DIR}/browser/web"   DESTINATION . PATTERN "Thumbs.db" EXCLUDE PATTERN "search*.htm" EXCLUDE PATTERN "*.js" EXCLUDE PATTERN "*.css" EXCLUDE PATTERN "*.icns" EXCLUDE)
 
 set(CEF_DIR ${PROJECT_SOURCE_DIR}/3rd/cef_binary)
 set(CEF_DLL_DIR ${CEF_DIR}/build/${CMAKE_BUILD_TYPE})

@@ -79,7 +79,7 @@ static BOOL connect_unix_socket(int *psock) {
 - (void)awakeFromNib {
     setlocale(LC_ALL, "");
     [SpecialProtocol registerSpecialProtocol];
-	NSString *htmlPath = @"/Users/ylt/Documents/gigaso/browser/web/search.htm";
+	NSString *htmlPath = @"/Users/ylt/Documents/gigaso/browser/web/search2.htm";
 	[[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
     [window setDelegate:self];
     [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
@@ -225,7 +225,9 @@ static BOOL connect_unix_socket(int *psock) {
 		return @"shell2";
     } else if (sel == @selector(copyPath:)) {
             return @"copyPath";
-	} else {
+	} else if (sel == @selector(term:File:)) {
+        return @"term";
+	}else {
 		return nil;
 	}
 }
@@ -307,25 +309,22 @@ static int MAX_ROW = 30;
     return history_save();
 }
 
-- (BOOL) shellDefault: (NSString*) file{
-	char buffer[MAX_PATH*2];
+static BOOL shell_exec(NSString* file, char* param){
+ 	char buffer[MAX_PATH*2];
     const char *filename = [file cStringUsingEncoding:NSUTF8StringEncoding];
-    snprintf(buffer,MAX_PATH*2,"open \"%s\"",filename);
+    snprintf(buffer,MAX_PATH*2,"open %s \"%s\"",param,filename);
 	bool ret = system(buffer)==0;
 	if(ret){
 		if( history_add(filename) ) history_save();
 	}
-    return ret;
+    return ret;   
+}
+
+- (BOOL) shellDefault: (NSString*) file{
+    return shell_exec(file,"");
 }
 - (BOOL) shellExplore: (NSString*) file{
-	char buffer[MAX_PATH*2];
-    const char *filename = [file cStringUsingEncoding:NSUTF8StringEncoding];
-    snprintf(buffer,MAX_PATH*2,"open -R \"%s\"",filename);
-	bool ret = system(buffer)==0;
-	if(ret){
-        if( history_add(filename) ) history_save();
-	}
-    return ret;
+    return shell_exec(file,"-R");
 }
 - (BOOL) shell2: (NSString*) file action: (NSString*)action{
     if([action compare:@"copy"]==NSOrderedSame){
@@ -354,8 +353,12 @@ static int MAX_ROW = 30;
         [appleScript executeAndReturnError:nil];
         [appleScript release];
     }else if([action compare:@"openas"]==NSOrderedSame){
-        
+        //TODO: 
     }
+}
+
+- (BOOL) term: (NSString*) path File: (NSString*)file{
+    return shell_exec(path,"-a Terminal");
 }
 
 - (BOOL) copyPath: (NSString*) file{

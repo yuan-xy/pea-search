@@ -27,7 +27,7 @@ def convert_file(s,file)
 	end
 end
 
-File.open("#{web}/search.htm").each_line do |x| 
+File.open("#{web}/search2.htm").each_line do |x| 
 	next if x.include? 'link rel="'
 	next if x.include? 'script src="'
 	if x.include? '</head>'

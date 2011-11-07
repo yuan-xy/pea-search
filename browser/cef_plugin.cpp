@@ -152,6 +152,20 @@ static bool shell2(CefString msg, CefString verb){
 	return shell2_exec(msg.ToWString(), s.c_str());
 }
 
+static bool term(CefString path, CefString file){
+	SHELLEXECUTEINFO ShExecInfo ={0};
+	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+	ShExecInfo.fMask = SEE_MASK_INVOKEIDLIST ;
+	ShExecInfo.hwnd = NULL;
+	ShExecInfo.lpVerb = NULL;
+	ShExecInfo.lpFile = L"cmd.exe";
+	ShExecInfo.lpParameters = NULL; 
+	ShExecInfo.lpDirectory = path.ToWString().c_str();
+	ShExecInfo.nShow = SW_SHOW;
+	ShExecInfo.hInstApp = NULL; 
+	return ShellExecuteEx(&ShExecInfo);
+}
+
 static bool copyPath(CefString msg){
 	std::wstring s = msg.ToWString();
 	HGLOBAL hGlobal  = GlobalAlloc (GHND | GMEM_SHARE, (wcslen(s.c_str())+1)*sizeof(WCHAR));
@@ -233,6 +247,13 @@ public:
       if(arguments.size() != 2 || !arguments[0]->IsString() || !arguments[1]->IsString())
         return false;
 	  bool b = shell2(arguments[0]->GetStringValue(),arguments[1]->GetStringValue());
+	  retval = CefV8Value::CreateBool(b);
+      return true;
+    }
+    if(name == "term"){
+      if(arguments.size() != 2 || !arguments[0]->IsString() || !arguments[1]->IsString())
+        return false;
+	  bool b = term(arguments[0]->GetStringValue(),arguments[1]->GetStringValue());
 	  retval = CefV8Value::CreateBool(b);
       return true;
     }
@@ -476,6 +497,10 @@ void InitPlugin(){
 	"  cef.plugin.shell2 = function(b,b2) {"
     "    native function shell2();"
     "    return shell2(b,b2);"
+    "  };"
+	"  cef.plugin.term = function(b,b2) {"
+    "    native function term();"
+    "    return term(b,b2);"
     "  };"
 	"  cef.plugin.save = function(b,b2) {"
     "    native function save();"

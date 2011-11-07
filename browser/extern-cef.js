@@ -12,6 +12,7 @@ cef.plugin.stat = {};
 cef.plugin.shellExplore = {};
 cef.plugin.shellDefault = {};
 cef.plugin.shell2 = {};
+cef.plugin.term = {};
 cef.plugin.save = {};
 cef.plugin.copyPath = {};
 cef.plugin.start_server = {};
