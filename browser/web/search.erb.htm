@@ -116,13 +116,13 @@
 			<a id="compress-" href="#tab-1" onClick="file_type_search(129);return true;"><img src="icons/zip.ico" class="icon"/>压缩包
 			<br/><span id="compress_file">0</span></a></li>
 		<li>
-			<a id="program-" href="#tab-1" onClick="file_type_search(130);return true;"><img src="icons/exe.ico" class="icon"/>程序▼
+			<a id="program-" href="#tab-1" onClick="file_type_search(130);return true;"><img src="<%=app_ico%>" class="icon"/>程序▼
 			<br/><span id="program_file">0</span></a></li>
 		<li>
 			<a id="photo-" href="#tab-1" onClick="file_type_search(50);return true;"><img src="icons/photo.ico" class="icon"/>图片
 			<br/><span id="photo_file">0</span></a></li>
 		<li>
-			<a id="media-" href="#tab-1" onClick="file_type_search(131);return true;"><img src="icons/media.ico" class="icon"/>音视频▼
+			<a id="media-" href="#tab-1" onClick="file_type_search(131);return true;"><img src="<%=media_ico%>" class="icon"/>音视频▼
 			<br/><span id="media_file">0</span></a></li>
 		<li>
 			<a id="archive-" href="#tab-1" onClick="file_type_search(132);return true;"><img src="icons/txt.ico" class="icon"/>文档▼
@@ -134,14 +134,14 @@
 	</ul>
 	<div id="tab-1" style="background:#b8daf3; line-height:28px; border:1px #6990b3 solid;">
 		<div class="subnav" style="display:none; left:220px; " id="program-div">
-			<span class="subnav-span"><a onClick="file_type_search(17);return false;"><img src="icons/exe.ico" class="icon"/>程序(<span id="exe_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(17);return false;"><img src="<%=app_ico%>" class="icon"/>程序(<span id="exe_file">0</span>)</a></span>
 			<span class="subnav-span"><a onClick="file_type_search(18);return false;"><img src="icons/link.ico" class="icon"/>快捷方式(<span id="link_file">0</span>)</a></span>
 			<span class="subnav-span"><a onClick="file_type_search(19);return false;"><img src="icons/script.ico" class="icon"/>脚本(<span id="script_file">0</span>)</a></span>
 			<span class="subnav-span"><a onClick="file_type_search(20);return false;"><img src="icons/lib.ico" class="icon"/>库(<span id="lib_file">0</span>)</a></li>
 		</div>
 		<div class="subnav" style="display:none; left:310px" id="media-div">
 			<span class="subnav-span"><a onClick="file_type_search(49);return false;"><img src="icons/music.ico" class="icon"/>音乐(<span id="music_file">0</span>)</a></span>
-			<span class="subnav-span"><a onClick="file_type_search(51);return false;"><img src="icons/video.ico" class="icon"/>视频(<span id="video_file">0</span>)</a></span>
+			<span class="subnav-span"><a onClick="file_type_search(51);return false;"><img src="<%=video_ico%>" class="icon"/>视频(<span id="video_file">0</span>)</a></span>
 			<span class="subnav-span"><a onClick="file_type_search(52);return false;"><img src="icons/animation.ico" class="icon"/>动画(<span id="animation_file">0</span>)</a></span>
 		</div>
 		<div class="subnav" style="display:none; left:410px" id="archive-div">
@@ -187,7 +187,9 @@
   <ul>
     <li id="default"><img width="16" height="16" src="./images/win.png"> 全部打开</li>
     <li id="copy"><img  width="16" height="16" src="./images/copy.ico"> 全部复制</li>
+<%if os=='win' %>	
     <li id="cut"><img  width="16" height="16" src="./images/cut.ico"> 全部剪切</li>
+<%end%>
     <li id="delete"><img  width="16" height="16" src="./images/delete.ico"> 全部删除</li>
   </ul>
 </div>
