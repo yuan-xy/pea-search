@@ -86,9 +86,7 @@ var context_menu_obj = {
 						info_if_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'explore': function(t,menuitem) {
-					    get_file_path(t);
-						var ret = cef.plugin.shellExplore(path+file);
-						info_if_error(ret, file, menuitem.lastChild.data);
+							dblclick_path(t);
 					  },
 					  'term': function(t,menuitem) {
 					    get_file_path(t);
