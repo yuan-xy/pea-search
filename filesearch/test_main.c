@@ -10,18 +10,19 @@
 void search0(void *name){
 	pFileEntry *result=NULL;
 	int count=0,i;
-		NEW0(SearchEnv, sEnv);
-		sEnv->case_sensitive=0;
-		sEnv->order=0;
-		sEnv->file_type=0;
-		wcscpy(sEnv->path_name, L"E:\\backup");
-		sEnv->path_len=0;
-		#ifdef WIN32
-		{
-			DWORD size=MAX_PATH;
-			GetUserName(sEnv->user_name, &size);
-		}
-		#endif
+	NEW0(SearchEnv, sEnv);
+	sEnv->case_sensitive=0;
+	sEnv->order=0;
+	sEnv->file_type=0;
+    sEnv->personal=1;
+	wcscpy(sEnv->path_name, L"E:\\backup");
+	sEnv->path_len=0;
+	#ifdef WIN32
+	{
+		DWORD size=MAX_PATH;
+		GetUserName(sEnv->user_name, &size);
+	}
+	#endif
 	count = search((WCHAR *)name,sEnv,&result);
 	for(i=0;i<count;i++){
 		pFileEntry file = *(result+i);
@@ -31,7 +32,7 @@ void search0(void *name){
 		print_full_path(file);
 		//PrintFilenameMB(file);
 		printf("\n");
-		if(i>30) break;
+		if(i>3) break;
 	}
 	free_safe(sEnv);
 	free_search(result);

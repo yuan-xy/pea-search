@@ -29,7 +29,6 @@ BOOL read_build_check(int i){
 
 void after_build(int i){
 	FilesIterate(g_rootVols[i],FileRemoveFilter,NULL);
-	FilesIterate(g_rootVols[i],SuffixProcess,NULL);
 }
 
 void load_online_db(int i){

@@ -165,20 +165,22 @@ BOOL match_opt(pFileEntry file, pSearchOpt opt){
 	return match;
 }
 
-void FileSearchVisitor(pFileEntry file, void *data){
-	pSearchOpt opt = (pSearchOpt)data;
+static pFileEntry match_file(pFileEntry file, pSearchOpt opt, BOOL type_match){
 	BOOL flag=1;
-	if(sEnv->file_type!=0 && !include_type(sEnv->file_type,file->ut.v.suffixType)) goto no_match;
+    if(sEnv->personal){
+        if(file->us.v.hidden || file->us.v.system) return NULL; 
+        if(file->ut.v.suffixType==SF_UNKNOWN || file->ut.v.suffixType==SF_NONE) return NULL; 
+    }
+	if(type_match && sEnv->file_type!=0 && !include_type(sEnv->file_type,file->ut.v.suffixType)) return NULL;
 	do{
 		BOOL match = match_opt(file, opt);
 		if(match && opt->subdir!=NULL){
 			if(IsDir(file)){
 				pFileEntry tmp = find_file_in(file,opt->subdir->name, opt->subdir->len);
 				if(tmp!=NULL){
-					*(list++) = tmp;
-					matched++;
+					return tmp;
 				}
-				goto no_match;
+				return NULL;
 			}else{
 				match = 0;
 			}
@@ -190,11 +192,17 @@ void FileSearchVisitor(pFileEntry file, void *data){
 			default:		flag &=match;break;
 		}
 	}while((opt = opt->next)!=NULL);
-	if(flag){
-		*(list++) = file;
-		matched++;
-	}
-no_match:
+	if(flag) return file;
+    return NULL;
+}
+
+void FileSearchVisitor(pFileEntry file, void *data){
+	pSearchOpt opt = (pSearchOpt)data;
+    pFileEntry ret = match_file(file,opt,1);
+    if(ret!=NULL){
+        *(list++) = ret;
+        matched++;
+    }
 	count++;
 }
 
@@ -232,30 +240,10 @@ static void stat_count(int stats[], pFileEntry file){
 
 static void FileStatVisitor(pFileEntry file, void *data){
 	pSearchOpt opt = (pSearchOpt)data;
-	BOOL flag=1;
-	do{
-		BOOL match = match_opt(file, opt);
-		if(match && opt->subdir!=NULL){
-			if(IsDir(file)){
-				pFileEntry tmp = find_file_in(file,opt->subdir->name, opt->subdir->len);
-				if(tmp!=NULL){
-					stat_count(stats_local,tmp);
-				}
-				return;
-			}else{
-				match = 0;
-			}
-		}
-		switch(opt->logic){
-			case AND_LOGIC: flag = flag && match;break;
-			case OR_LOGIC: flag = flag || match;break;
-			case NOT_LOGIC: flag = flag && (!match);break;
-			default:		flag &=match;break;
-		}
-	}while((opt = opt->next)!=NULL);
-	if(flag){
-		stat_count(stats_local,file);
-	}
+    pFileEntry ret = match_file(file,opt,0);
+    if(ret!=NULL){
+        stat_count(stats_local,ret);
+    }
 }
 
 INLINE int file_len_cmp(pFileEntry a, pFileEntry b){

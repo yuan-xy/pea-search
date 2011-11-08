@@ -406,6 +406,14 @@ var host_backup = "http://60.191.119.190:3333";
 			cef.plugin.caze = true;
 			searchf($("#search").val());
 		});
+		$("#personal0").bind('click',function(event,t){
+			cef.plugin.personal = false;
+			searchf($("#search").val());
+		});
+		$("#personal1").bind('click',function(event,t){
+			cef.plugin.personal = true;
+			searchf($("#search").val());
+		});
 		$(document).bind("contextmenu", function(e){
 			return true;
 		});
@@ -453,6 +461,11 @@ var host_backup = "http://60.191.119.190:3333";
 			$("#case1").click();
 		}else{
 			$("#case0").click();
+		}
+		if(cef.plugin.personal){
+			$("#personal1").click();
+		}else{
+			$("#personal0").click();
 		}
 		$("#online_bt").click();
 		$("#search").focus();

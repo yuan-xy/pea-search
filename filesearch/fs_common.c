@@ -257,6 +257,7 @@ void PrintFilenameMB(pFileEntry file){
 
 
 void FileRemoveFilter(pFileEntry file, void *data){
+    //TODO: ‘$文件’更改为系统文件类型，而不是删除
 	if(IsDir(file)){
 		if(file->FileName[0]=='$'
 				|| (file->us.v.FileNameLength==4 && file->FileName[0]=='.' && file->FileName[1]=='s' && file->FileName[2]=='v'  && file->FileName[3]=='n')

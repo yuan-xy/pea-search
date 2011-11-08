@@ -18,6 +18,7 @@ static int m_order=0;
 static int m_file_type=0;
 static bool m_case=false;
 static bool m_offline=false;
+static bool m_personal=false;
 static CefString m_dir;
 
 #define WIN_ERROR(host)  {\
@@ -59,6 +60,7 @@ static CefString query(CefString msg, int rows){
 	req.env.order = m_order;
 	req.env.case_sensitive = m_case;
 	req.env.offline = m_offline? 1:0;
+    req.env.personal = m_personal? 1:0;
 	req.env.file_type = m_file_type;
 	req.env.path_len = m_dir.length();
 	if(req.env.path_len>0){
@@ -348,6 +350,16 @@ public:
       retval = CefV8Value::CreateBool(m_offline);
       return true;
     }
+	else if(name == "set_personal"){
+      if(arguments.size() != 1 || !arguments[0]->IsBool())
+        return false;
+      m_personal = arguments[0]->GetBoolValue();
+      return true;
+    }
+	else if(name == "get_personal"){
+      retval = CefV8Value::CreateBool(m_personal);
+      return true;
+    }
 	else if(name == "set_offline"){
       if(arguments.size() != 1 || !arguments[0]->IsBool())
         return false;
@@ -445,6 +457,14 @@ void InitPlugin(){
     "  cef.plugin.__defineSetter__('offline', function(b) {"
     "    native function set_offline();"
     "    set_offline(b);"
+    "  });"
+    "  cef.plugin.__defineGetter__('personal', function() {"
+    "    native function get_personal();"
+    "    return get_personal();"
+    "  });"
+    "  cef.plugin.__defineSetter__('personal', function(b) {"
+    "    native function set_personal();"
+    "    set_personal(b);"
     "  });"
     "  cef.plugin.__defineGetter__('file_type', function() {"
     "    native function get_file_type();"

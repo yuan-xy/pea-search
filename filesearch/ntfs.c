@@ -93,8 +93,9 @@ INLINE pFileEntry initFileEntry(PUSN_RECORD r,int i){
 		ret->ut.v.suffixType = SF_DIR;
 		ret->us.v.dir = 1;
 	}
+	SuffixProcess(ret,NULL);
 	if(is_readonly(r)) ret->us.v.readonly = 1;
-	if(is_hidden(r)) ret->us.v.hidden = 1;
+	if(is_hidden(r) || *(ret->FileName)=='.'  || *(ret->FileName)=='$') ret->us.v.hidden = 1;
 	if(is_system(r)) ret->us.v.system = 1;
 	add2Map(ret,i);
 	ALL_FILE_COUNT +=1;

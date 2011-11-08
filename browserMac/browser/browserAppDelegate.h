@@ -11,11 +11,12 @@
 
 @interface browserAppDelegate : NSObject <NSApplicationDelegate> {
     NSWindow *window;
-    IBOutlet WebView *webView;
+    WebView *webView;
     int order;
     int file_type;
     bool caze;
     bool offline;
+    bool personal;
     NSString *dir;
     int hotkey;
     int	sockfd;

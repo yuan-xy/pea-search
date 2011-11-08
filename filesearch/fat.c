@@ -38,7 +38,7 @@ static pFileEntry initFatFile(WIN32_FIND_DATA *pfd, pFileEntry parent, int i){
 		ret->us.v.dir = 1;
 	}
 	if(is_readonly_ffd(pfd)) ret->us.v.readonly = 1;
-	if(is_hidden_ffd(pfd)) ret->us.v.hidden = 1;
+	if(is_hidden_ffd(pfd) || *(ret->FileName)=='.' || *(ret->FileName)=='$') ret->us.v.hidden = 1;
 	if(is_system_ffd(pfd)) ret->us.v.system = 1;
 	addChildren(parent,ret);
 	SuffixProcess(ret,NULL);

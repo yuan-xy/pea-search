@@ -28,7 +28,7 @@
 
 static char DISK1[][2] = { 0};
 static char DISK2[][3] = { 0};
-static char DISK3[][4] = { "iso","cue","img","cif","nrg","fcd","vcd","mds"};
+static char DISK3[][4] = { "iso","cue","img","dmg","cif","nrg","fcd","vcd","mds"};
 static char DISK4[][5] = { 0};
 
 static char OTHER_ZIP1[][2] = { "z"};
@@ -38,16 +38,16 @@ static char OTHER_ZIP4[][5] = { 0};
 
 static char EXE1[][2] = { 0};
 static char EXE2[][3] = { 0};
-static char EXE3[][4] = { "exe","com","cpl","scr"};
+static char EXE3[][4] = { "exe","cpl","scr","app"};
 static char EXE4[][5] = { 0};
 
 static char SCRIPT1[][2] = { 0};
-static char SCRIPT2[][3] = { 0};
-static char SCRIPT3[][4] = { "js","vbs","cmd","bat","reg","inf"};
-static char SCRIPT4[][5] = { 0};
+static char SCRIPT2[][3] = { "js"};
+static char SCRIPT3[][4] = { "vbs","cmd","bat","reg","inf"};
+static char SCRIPT4[][5] = { "scpt"};
 
-static char LIB1[][2] = { 0};
-static char LIB2[][3] = { 0};
+static char LIB1[][2] = { "a","o"};
+static char LIB2[][3] = { "so"};
 static char LIB3[][4] = { "dll","jar","lib"};
 static char LIB4[][5] = { 0};
 
@@ -59,7 +59,7 @@ static char MUSIC4[][5] = { "flac","midi","ttpl","ttbl","aifc","aiff"};
 static char PHOTO1[][2] = { 0};
 static char PHOTO2[][3] = { 0};
 static char PHOTO3[][4] = { "jpg","jpe","gif","png","bmp","dib","tif","pcx","ico","pcd","psd"};
-static char PHOTO4[][5] = { "jpeg","jeif","tiff"};
+static char PHOTO4[][5] = { "jpeg","jeif","tiff","icns"};
 
 static char VIDEO1[][2] = { 0};
 static char VIDEO2[][3] = { 0};
@@ -131,22 +131,29 @@ unsigned char suffix_type0(char copy[], int len){
 	}else if(len==5){
 		if(strncmp(copy,"shtml",5)==0) return SF_HTM;
 		if(strncmp(copy,"mhtml",5)==0) return SF_HTM;
+        if(strncmp(copy,"xhtml",5)==0) return SF_HTM;
 		if(strncmp(copy,"accdb",5)==0) return SF_OTHER_OFFICE;
 		if(strncmp(copy,"7-zip",5)==0) return SF_OTHER_ZIP;
-	}else{
+        if(strncmp(copy,"dylib",5)==0) return SF_LIB;
+	}else if(len==6){
 		if(strncmp(copy,"mp3pro",6)==0) return SF_MUSIC;
+        if(strncmp(copy,"pbproj",6)==0) return SF_EXE;        
+	}else if(len==9){
+		if(strncmp(copy,"xcodeproj",9)==0) return SF_EXE;   
+		if(strncmp(copy,"framework",9)==0) return SF_LIB;           
 	}
 	return SF_UNKNOWN;
 }
 
-static char last_str[7];
+#define MAX_SUFFIX_LEN 10
+static char last_str[MAX_SUFFIX_LEN];
 static unsigned char last_type;
 
 INLINE unsigned char suffix_type(pUTF8 suffix, int len){
-	char copy[7];
+	char copy[MAX_SUFFIX_LEN];
 	int i=0;
 	if(len==0) return SF_NONE;
-	if(len>6) return SF_UNKNOWN;
+	if(len>=MAX_SUFFIX_LEN) return SF_UNKNOWN;
 	for(;i<len;i++) copy[i] = tolower(*(suffix+i));
 	copy[len]='\0';
 	if(strcmp(last_str,copy)==0) return last_type;
@@ -169,10 +176,20 @@ BOOL include_type(unsigned char clazz, unsigned char file_type){
 	}
 }
 
+BOOL is_important_type(unsigned char file_type){
+    return include_type(SFV_EBOOK,file_type) ||
+        include_type(SFV_OFFICE,file_type) ||
+        include_type(SFV_MEDIA,file_type) ||
+        include_type(SF_EXE,file_type);
+}
+
 void SuffixProcess(pFileEntry file, void *data){
 	int len=file->us.v.FileNameLength;
 	int j=len-2;
 	int OnlyNameLen = 0;
+#ifdef WIN32
+    if(file->us.v.dir) return;
+#endif
 	if(file->FileName[len-1]=='.'){
 		OnlyNameLen = len-1;
 			goto find_dot;
@@ -185,13 +202,14 @@ void SuffixProcess(pFileEntry file, void *data){
 	}
 	OnlyNameLen = file->us.v.FileNameLength;
 find_dot:
-	if(IsDir(file)){
-		file->ut.v.suffixType = SF_DIR;
-	}else if(OnlyNameLen == file->us.v.FileNameLength || OnlyNameLen == file->us.v.FileNameLength-1 ){
+    if(OnlyNameLen == file->us.v.FileNameLength || OnlyNameLen == file->us.v.FileNameLength-1 ){
 		file->ut.v.suffixType = SF_NONE;
 	}else{
 		file->ut.v.suffixType = suffix_type(file->FileName+OnlyNameLen+1,len-OnlyNameLen-1);
 	}
+    if(file->us.v.dir && (file->ut.v.suffixType == SF_NONE || file->ut.v.suffixType == SF_UNKNOWN)){
+        file->ut.v.suffixType = SF_DIR;
+    }
 }
 
 

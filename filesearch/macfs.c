@@ -7,22 +7,27 @@
 #include <limits.h>
 
 static pFileEntry initMacFile(const char *pathname, const struct stat *statptr, char *filename, pFileEntry parent, int i){
-	int len = strlen(filename);
+	int len = strlen(filename);//TODO: 直接传递d_namlen
 	NEW0_FILE(ret,len);
 	ret->us.v.FileNameLength = len;
-	ret->us.v.StrLen = utf8_to_wchar_len(filename,len);
+	//ret->us.v.StrLen = utf8_to_wchar_len(filename,len);
 	strncpy(ret->FileName,filename,len);
 	if(S_ISDIR(statptr->st_mode)) {
-		ret->ut.v.suffixType = SF_DIR;
 		ret->us.v.dir = 1;
+        ret->ut.v.suffixType = SF_DIR;
 	}
-    /*
-	if(is_readonly_ffd(pfd)) ret->us.v.readonly = 1;
-	if(is_hidden_ffd(pfd)) ret->us.v.hidden = 1;
-	if(is_system_ffd(pfd)) ret->us.v.system = 1;
-     */
+    SuffixProcess(ret,NULL);
+    if(*(ret->FileName)=='.') ret->us.v.hidden = 1;
+    if(!is_important_type(ret->ut.v.suffixType)){
+        if(parent->us.v.hidden || *(ret->FileName)=='$' || *(ret->FileName)=='#') ret->us.v.hidden = 1;
+        if(parent->us.v.system || parent->ut.v.suffixType != SF_DIR){
+            ret->us.v.system = 1;
+        }else if(len==7 && memcmp("Library",filename,7)==0){
+            ret->us.v.system = 1; 
+        } 
+    }
+    //TODO: 如果是根目录下的文件，只有Users和Volumes属于文件，其他都属于系统文件
 	addChildren(parent,ret);
-	SuffixProcess(ret,NULL);
 	set_time(ret, statptr->st_mtime);
 	if(IsDir(ret)){
 		SET_SIZE(ret,0);

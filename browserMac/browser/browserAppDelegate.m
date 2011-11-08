@@ -93,6 +93,7 @@ static BOOL connect_unix_socket(int *psock) {
     file_type=0;
     caze=false;
     offline=false;
+    personal=false;
     //NSFontManager *fontManager = [NSFontManager sharedFontManager];
     //[fontManager orderFrontFontPanel:nil];
     NSImage *image = [[NSWorkspace sharedWorkspace] iconForFile:@"/Users/ylt/Downloads/006_macruby.mov"];
@@ -244,6 +245,7 @@ static int MAX_ROW = 30;
 	req.env.order = order;
 	req.env.case_sensitive = caze;
 	req.env.offline = offline? 1:0;
+    req.env.personal = personal? 1:0;
 	req.env.file_type = file_type;
 	req.env.path_len = [dir length];
 	if(req.env.path_len>0){

@@ -111,6 +111,8 @@ extern unsigned char suffix_type(pUTF8 suffix, int len);
  */
 extern BOOL include_type(unsigned char clazz, unsigned char file_type);
 
+extern BOOL is_important_type(unsigned char file_type);
+    
 /**
  * 对文件进行后缀名处理
  * @param file 文件
