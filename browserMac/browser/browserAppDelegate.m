@@ -233,8 +233,19 @@ static BOOL connect_unix_socket(int *psock) {
 	}
 }
 
-static int MAX_ROW = 30;
+static int MAX_ROW = 1000;
 
+static ssize_t read_all(int fildes, char *buf, size_t nbyte){
+    int read_bytes=0;
+    char *buffer = buf;
+    do{
+        int ret = read(fildes,buffer,nbyte);
+        if(ret<=0) return ret;
+        read_bytes+=ret;
+        buffer+=ret;
+    }while(read_bytes<nbyte);
+    return read_bytes;
+}
 - (NSString*) query: (NSString*) query row: (int) row{
     NSLog(query);
     SearchRequest req;
@@ -262,10 +273,13 @@ static int MAX_ROW = 30;
     if(read(sockfd, &resp, sizeof(int))>0){
         char buffer[MAX_RESPONSE_LEN];
         DWORD len = resp.len;
-        printf("%d,", len);
+        int err;
         memset(buffer,(char)0,MAX_RESPONSE_LEN);
-        if(read(sockfd, buffer, len)<=0){
-            printf("scoket read error.");
+        err=read_all(sockfd, buffer, len);
+        printf("---len:%d, read:%d\n", len,err);
+        if(err<=0){
+            printf("scoket read error.\n");
+            return @"error";
         }
         return [NSString stringWithUTF8String: buffer];
     }else{
