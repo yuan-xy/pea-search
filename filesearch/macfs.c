@@ -19,14 +19,17 @@ static pFileEntry initMacFile(const char *pathname, const struct stat *statptr, 
     SuffixProcess(ret,NULL);
     if(*(ret->FileName)=='.') ret->us.v.hidden = 1;
     if(!is_important_type(ret->ut.v.suffixType)){
-        if(parent->us.v.hidden || *(ret->FileName)=='$' || *(ret->FileName)=='#') ret->us.v.hidden = 1;
+        if(parent->us.v.hidden || *(ret->FileName)=='$' || *(ret->FileName)=='#'){
+            ret->us.v.hidden = 1;
+        }
         if(parent->us.v.system || parent->ut.v.suffixType != SF_DIR){
             ret->us.v.system = 1;
         }else if(len==7 && memcmp("Library",filename,7)==0){
             ret->us.v.system = 1; 
-        } 
+        } if(parent->us.v.FileNameLength==0){
+            if(strcmp(filename,"Users")!=0 && strcmp(filename,"Volumes")!=0) ret->us.v.system = 1; 
+        }
     }
-    //TODO: 如果是根目录下的文件，只有Users和Volumes属于文件，其他都属于系统文件
 	addChildren(parent,ret);
 	set_time(ret, statptr->st_mtime);
 	if(IsDir(ret)){

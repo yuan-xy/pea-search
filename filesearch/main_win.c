@@ -27,8 +27,22 @@ BOOL read_build_check(int i){
 	return 1;
 }
 
+void HiddenSystemFilter(pFileEntry ret, void *data){
+	pFileEntry parent = ret->up.parent;
+	if(is_important_type(ret->ut.v.suffixType) || parent==NULL) return;
+	if(parent->us.v.hidden || *(ret->FileName)=='.'  || *(ret->FileName)=='$') ret->us.v.hidden = 1;
+	if(parent->us.v.system){
+        ret->us.v.system = 1;
+    }else if(strncmp(ret->FileName,"Windows",7)==0){
+		ret->us.v.system = 1;
+	}else if(strncmp(ret->FileName,"Program",7)==0){
+		ret->us.v.system = 1;
+	}
+}
+
 void after_build(int i){
 	FilesIterate(g_rootVols[i],FileRemoveFilter,NULL);
+	FilesIterate(g_rootVols[i],HiddenSystemFilter,NULL);
 }
 
 void load_online_db(int i){
