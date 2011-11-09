@@ -33,6 +33,7 @@ ol,ul{list-style:none}
 	font-weight: bold;
 	padding: 3px;
 	margin: 0;
+	margin-top: 45px;
 	text-align: center;
 	overflow: hidden;
 	white-space: nowrap;
@@ -101,7 +102,7 @@ background-color: #FFDDDD;
 
 .topbar{background:url(images/header-bg.png) repeat-x; height:125px;}
 .topbar .iconbox{background:url(images/icon-bg.png) repeat-x; height:44px;}
-.topbar .leftbar{float:left; width:500px; height:44px; }
+.topbar .leftbar{float:left; width:600px; height:44px; }
 .topbar .leftbar ul{padding-left:10px;}
 .topbar .leftbar li{float:left; line-height:44px; text-align:left; font-size:100%; color:#246795;}
 
