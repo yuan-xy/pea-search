@@ -25,6 +25,10 @@ function copy_file(t){
 	var ret = cef.plugin.shell2(path+file, "copy");
 	info_or_error(ret, file, "复制");
 }
+function drag_file(t){
+	get_file_path(t);
+	var ret = cef.plugin.shell2(path+file, "drag");
+}
 function cut_file(t){
 	get_file_path(t);
 	var ret = cef.plugin.shell2(path+file, "cut");

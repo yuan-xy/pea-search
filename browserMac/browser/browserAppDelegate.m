@@ -349,6 +349,12 @@ static BOOL shell_exec(NSString* file, char* param){
         [pb clearContents];
         NSArray *copiedObjects = [NSArray arrayWithObject:[NSURL fileURLWithPath:file]];
         return [pb writeObjects:copiedObjects];
+    }else if([action compare:@"drag"]==NSOrderedSame){
+        NSPasteboard *pb = [NSPasteboard pasteboardWithName:NSDragPboard];
+        [pb declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:self];
+        [pb clearContents];
+        NSArray *copiedObjects = [NSArray arrayWithObject:[NSURL fileURLWithPath:file]];
+        return [pb writeObjects:copiedObjects];
     }else if([action compare:@"delete"]==NSOrderedSame){
         FSRef fsRef;
         FSPathMakeRefWithOptions(
