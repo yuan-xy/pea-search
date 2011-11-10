@@ -263,7 +263,7 @@ var host_backup = "http://60.191.119.190:3333";
 		hs0 = hs.slice(start_index,start_index+num_per_page);
 		$("#historys").processTemplate(hs0);
 		$(".thumbnail-wrapper").bind('click',function(e){
-			dblclick_file(e.currentTarget.parentNode);
+			dblclick_file(e.currentTarget);
 		});
 		$(".thumbnail-wrapper").contextMenu('myMenu1',context_menu_obj);
 		for( var i=0;i<hs0.length;i++){

@@ -1,9 +1,7 @@
 function get_file_path(tr){
-	if(tr.tagName=="DIV"){
-		path = $(tr).find("input")[1].value;
-		file = $(tr).find("input")[0].value;
-	}else if(tr.tagName=="UL"){
-		alert(tr.tagName);
+	if(tr.tagName=="SPAN"){
+		path = $(tr.parentNode).find("input")[1].value;
+		file = $(tr.parentNode).find("input")[0].value;
 	}else{
 		tds = $(tr).find("td");
 		file = tds[0].title;
@@ -72,10 +70,12 @@ var context_menu_obj = {
 */
                   onContextMenu : function(event, menu){
                                   var rowId = $(event.target).parent("tr").attr("id");
-								  if(!has_row_selected(rowId)){
-									grid_batch_unselect();
-									$("#maintable").setSelection(rowId);
-								  }
+								  if(rowId){
+									if(!has_row_selected(rowId)){
+										grid_batch_unselect();
+										$("#maintable").setSelection(rowId);
+									  }
+								   }
                                   return true;
                   },
 				  bindings: {
