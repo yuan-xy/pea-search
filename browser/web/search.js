@@ -457,6 +457,13 @@ var host_backup = "http://60.191.119.190:3333";
 		$(document.body).css('font-size', fontsize+'px');
 		$.cookie('font-size', fontsize, { expires: 356 });
 	}
+	function handleDragEnter(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		e.noexist="noexist"; // js exception to prevent the drop effect.
+	  return false;
+	}
+	
 	$(function() {
 		if($.cookie('font-size') ){
 			$(document.body).css('font-size', $.cookie('font-size'));	
@@ -493,4 +500,5 @@ var host_backup = "http://60.191.119.190:3333";
 		$("#up_later_bt").bind('click',function(){$("#dialog-upgrade").dialog("close");});
 		set_orderby_value(0,0);
 		setTimeout(init_event,1);
+		document.body.addEventListener('dragover', handleDragEnter, false);
 	});
