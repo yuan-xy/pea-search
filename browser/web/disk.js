@@ -406,8 +406,16 @@ function grid_event(){
 		$("#maintable .jqgrow:not(.ped) td:nth-child(1)").bind('dblclick',function(e){
 			dblclick_file($(e.currentTarget).parent("tr"));
 		});
-		$("#maintable .jqgrow:not(.ped) td:nth-child(1)").bind('dragstart',function(e){
-			drag_file($(e.currentTarget).parent("tr"));
+		$.each($("#maintable .jqgrow:not(.ped) td:nth-child(1)"), function (index, ele) { 
+			ele.addEventListener('dragstart', function(e){
+				if(os_win()){
+					get_file_path($(this).parent("tr"));
+					//e.dataTransfer.setData('DownloadURL', "application/octet-stream:"+file+":"+path+file);
+					e.dataTransfer.setData('URL',path+file);
+				}else{
+					drag_file($(e.currentTarget).parent("tr"));
+				}
+			}, false);
 		});
 		$("#maintable .jqgrow:not(.ped) td:nth-child(1)").attr("draggable","true");
 		$("#maintable .jqgrow:not(.ped) td:nth-child(2)").bind('dblclick',function(e){

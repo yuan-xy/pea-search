@@ -18,6 +18,9 @@ var host_backup = "http://60.191.119.190:3333";
 	var history_timeout;
 	var stat_timeout;
 
+	function os_win(){
+		return navigator.platform.match(/Win/i)!=null;
+	}
 	function trim(str, chars) {
 		return ltrim(rtrim(str, chars), chars);
 	}
@@ -415,6 +418,7 @@ var host_backup = "http://60.191.119.190:3333";
 			searchf($("#search").val());
 		});
 		$(document).bind("contextmenu", function(e){
+			if(os_win()) return false;
 			return true;
 		});
 		$("#tabs ul li a").bind('click',function(e){
