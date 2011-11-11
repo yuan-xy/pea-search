@@ -155,6 +155,11 @@ static bool shell2(CefString msg, CefString verb){
 }
 
 static bool term(CefString path, CefString file){
+	//const wchar_t *dir = path.ToWString().c_str();
+	//一个Cef的及其恶心的BUG, 必须分两步获得dir
+	std::wstring s = path.ToWString();
+	const wchar_t *dir = s.c_str();
+	//MessageBoxW (NULL, dir, L"HelloMsg", 0) ;
 	SHELLEXECUTEINFO ShExecInfo ={0};
 	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 	ShExecInfo.fMask = SEE_MASK_INVOKEIDLIST ;
@@ -162,7 +167,7 @@ static bool term(CefString path, CefString file){
 	ShExecInfo.lpVerb = NULL;
 	ShExecInfo.lpFile = L"cmd.exe";
 	ShExecInfo.lpParameters = NULL; 
-	ShExecInfo.lpDirectory = path.ToWString().c_str();
+	ShExecInfo.lpDirectory = dir;
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL; 
 	return ShellExecuteEx(&ShExecInfo);
