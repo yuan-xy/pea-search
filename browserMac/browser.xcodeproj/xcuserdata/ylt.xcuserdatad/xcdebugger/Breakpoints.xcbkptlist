@@ -9,11 +9,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "browser/browserAppDelegate.m"
-         timestampString = "341142924.114793"
+         timestampString = "342673835.047206"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "229"
-         endingLineNumber = "229"
+         startingLineNumber = "201"
+         endingLineNumber = "201"
          landmarkName = "+webScriptNameForSelector:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -23,40 +23,26 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "browser/browserAppDelegate.m"
-         timestampString = "341142924.114793"
+         timestampString = "342673835.047206"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "231"
-         endingLineNumber = "231"
+         startingLineNumber = "203"
+         endingLineNumber = "203"
          landmarkName = "+webScriptNameForSelector:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "browser/browserAppDelegate.m"
-         timestampString = "341142513.272571"
+         timestampString = "342673835.047206"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "155"
-         endingLineNumber = "155"
-         landmarkName = "-webView:didFinishLoadForFrame:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "browser/browserAppDelegate.m"
-         timestampString = "341142513.272571"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "112"
-         endingLineNumber = "112"
-         landmarkName = "-windowWillResize:toSize:"
+         startingLineNumber = "254"
+         endingLineNumber = "254"
+         landmarkName = "-query:row:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

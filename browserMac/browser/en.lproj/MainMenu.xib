@@ -1319,7 +1319,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="WebView" id="839589087">
 							<reference key="NSNextResponder" ref="439893737"/>
-							<int key="NSvFlags">256</int>
+							<int key="NSvFlags">274</int>
 							<object class="NSMutableSet" key="NSDragTypes">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSArray" key="set.sortedObjects">
