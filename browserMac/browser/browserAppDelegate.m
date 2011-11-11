@@ -149,17 +149,8 @@ static BOOL connect_unix_socket(int *psock) {
 }
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame{
-    return;
     id win = [webView windowScriptObject];
-    {
-        NSArray *args = [NSArray arrayWithObjects:
-                         @"search.exe \"/Users/ylt\"",nil];
-        [win callWebScriptMethod:@"init_dir" withArguments:args];
-    }
-    return;
-    {
-        [win evaluateWebScript: @"init_dir('/User/ylt')"];
-    }
+    [win evaluateWebScript: @"init_dir('search.exe \"/Users/ylt\"')"];
 }
 
 - (void)webView:(WebView *)sender runJavaScriptAlertPanelWithMessage:(NSString *)message {
