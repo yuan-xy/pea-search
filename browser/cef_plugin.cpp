@@ -154,7 +154,7 @@ static bool shell2(CefString msg, CefString verb){
 	return shell2_exec(msg.ToWString(), s.c_str());
 }
 
-static bool term(CefString path, CefString file){
+static bool term(CefString path){
 	//const wchar_t *dir = path.ToWString().c_str();
 	//一个Cef的及其恶心的BUG, 必须分两步获得dir
 	std::wstring s = path.ToWString();
@@ -258,9 +258,9 @@ public:
       return true;
     }
     if(name == "term"){
-      if(arguments.size() != 2 || !arguments[0]->IsString() || !arguments[1]->IsString())
+      if(arguments.size() != 1 || !arguments[0]->IsString())
         return false;
-	  bool b = term(arguments[0]->GetStringValue(),arguments[1]->GetStringValue());
+	  bool b = term(arguments[0]->GetStringValue());
 	  retval = CefV8Value::CreateBool(b);
       return true;
     }
@@ -523,9 +523,9 @@ void InitPlugin(){
     "    native function shell2();"
     "    return shell2(b,b2);"
     "  };"
-	"  cef.plugin.term = function(b,b2) {"
+	"  cef.plugin.term = function(b) {"
     "    native function term();"
-    "    return term(b,b2);"
+    "    return term(b);"
     "  };"
 	"  cef.plugin.save = function(b,b2) {"
     "    native function save();"

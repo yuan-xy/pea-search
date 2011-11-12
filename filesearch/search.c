@@ -789,7 +789,7 @@ int print_stat(int * stats, char *buffer){
 	*p++ = '{';
 	for(i=0;i<NON_VIRTUAL_TYPE_SIZE;i++){
 		*p++ ='"';
-		p += print_suffix_type2(i,p);
+		p += print_suffix_type_by_seq_id(i,p);
 		p += sprintf(p,"\":%d,",stats[i]);
 	}
 	p += sprintf(p,"\"all\":%d,", sum_stat(stats,0,NON_VIRTUAL_TYPE_SIZE));

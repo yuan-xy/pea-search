@@ -2,7 +2,7 @@
 #include <ctype.h>
 #include "suffix.h"
 #include "fs_common.h"
-
+#include "search.h"
 
 #define NELEMS(x) ((sizeof (x))/(sizeof ((x)[0])))
 
@@ -162,6 +162,29 @@ INLINE unsigned char suffix_type(pUTF8 suffix, int len){
 	return last_type;
 }
 
+static unsigned char suffix_type_by_filename0(pUTF8 file, int len){
+	int j=len-2;
+	if(file[len-1]=='.'){
+		return suffix_type("",0);
+	}
+	for(;j>=0;j--){
+		if(file[j]=='.'){
+            return suffix_type(file+j+1,len-j-1);
+		}
+	}
+	return SF_NONE;
+}
+
+INLINE unsigned char suffix_type_by_filename(pUTF8 file, int len){
+    //TODO: 这里的file是全路径名
+	unsigned char ret = suffix_type_by_filename0(file,len);
+	if(ret==SF_NONE || ret==SF_UNKNOWN){
+        pFileEntry pf = find_file(file, len);
+        if(pf!=NULL && pf->us.v.dir) return SF_DIR;
+    }
+    return ret;
+}
+
 BOOL include_type(unsigned char clazz, unsigned char file_type){
 	switch(clazz){
 		case SFV_ARCHIVE: return IS_ARCHIVE(file_type);
@@ -184,38 +207,23 @@ BOOL is_important_type(unsigned char file_type){
 }
 
 void SuffixProcess(pFileEntry file, void *data){
-	int len=file->us.v.FileNameLength;
-	int j=len-2;
-	int OnlyNameLen = 0;
 #ifdef WIN32
     if(file->us.v.dir) return;
 #endif
-	if(file->FileName[len-1]=='.'){
-		OnlyNameLen = len-1;
-			goto find_dot;
-	}
-	for(;j>=0;j--){
-		if(file->FileName[j]=='.'){
-			OnlyNameLen = j;
-			goto find_dot;
-		}
-	}
-	OnlyNameLen = file->us.v.FileNameLength;
-find_dot:
-    if(OnlyNameLen == file->us.v.FileNameLength || OnlyNameLen == file->us.v.FileNameLength-1 ){
-		file->ut.v.suffixType = SF_NONE;
-	}else{
-		file->ut.v.suffixType = suffix_type(file->FileName+OnlyNameLen+1,len-OnlyNameLen-1);
-	}
+    file->ut.v.suffixType = suffix_type_by_filename0(file->FileName,file->us.v.FileNameLength);
+#ifndef WIN32
     if(file->us.v.dir && (file->ut.v.suffixType == SF_NONE || file->ut.v.suffixType == SF_UNKNOWN)){
         file->ut.v.suffixType = SF_DIR;
     }
+#endif
 }
 
+int print_suffix_type_by_file(pFileEntry file, char *buffer){
+	return print_suffix_type(file->ut.v.suffixType, buffer);
+}
 
-int print_suffix_type(pFileEntry file, char *buffer){
-	unsigned char clazz = file->ut.v.suffixType;
-	switch(clazz){
+int print_suffix_type(unsigned char file_type, char *buffer){
+	switch(file_type){
 		case SF_NONE: 			strcpy(buffer,"none");return 4;
 		case SF_UNKNOWN: 		strcpy(buffer,"unknown");return 7;
 		case SF_DIR	: 		strcpy(buffer,"dir");return 3;
@@ -247,7 +255,7 @@ int print_suffix_type(pFileEntry file, char *buffer){
 	return 0;
 }
 
-int print_suffix_type2(int index, char *buffer){
+int print_suffix_type_by_seq_id(int index, char *buffer){
 	switch(index){
 		case 0: 	strcpy(buffer,"none");return 4;
 		case 1: 	strcpy(buffer,"unknown");return 7;

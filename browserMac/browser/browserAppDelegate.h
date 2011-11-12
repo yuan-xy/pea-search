@@ -36,7 +36,7 @@
 - (BOOL) shellExplore: (NSString*) file;
 - (BOOL) shell2: (NSString*) file action: (NSString*)action;
 - (BOOL) copyPath: (NSString*) file;
-- (BOOL) term: (NSString*) path File: (NSString*)file;
+- (BOOL) term: (NSString*) path;
 
 - (NSString*) selectDir;
 

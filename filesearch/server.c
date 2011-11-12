@@ -17,6 +17,7 @@
 #include "global.h"
 #include "drive.h"
 #include "sharelib.h"
+#include "suffix.h"
 #include "search.h"
 #include "suffix.h"
 #include "write.h"
@@ -77,7 +78,7 @@ static char * write_file(char *buffer, pFileEntry file){
 	{
 		memcpy(p,"\"type\":\"",8);
 		p += 8;
-		p += print_suffix_type(file, p);
+		p += print_suffix_type_by_file(file, p);
 		*p++ ='"';
 		*p++ =',';
 	}
@@ -301,6 +302,17 @@ static void send_response_char(SockOut hNamedPipe,char c){
 	}
 }
 
+static void send_response_file_type(SockOut hNamedPipe,char *file){
+	char buffer[8192], *p1=buffer+sizeof(int), *p=p1;
+	p+= print_suffix_type(suffix_type_by_filename(file,strlen(file)), p);
+	{
+		DWORD nXfer;
+		pSearchResponse resp = (pSearchResponse)buffer;
+		resp->len = (p-p1);
+		WriteSock(hNamedPipe, resp, (p-buffer), nXfer);
+	}
+}
+
 static void send_response_ok(SockOut hNamedPipe){
 	send_response_char(hNamedPipe,'1');
 }
@@ -394,6 +406,7 @@ static void download_t(void *str){// "http://host/filename?hash&version"
 }
 
 static void command_exec(WCHAR *command, SockOut hNamedPipe){
+    printf("command: %ls\n",command);
 	if(wcsncmp(command,L"index_status",wcslen(L"index_status"))==0){
 		send_response_index_status(hNamedPipe);
 	}else if(wcsncmp(command,L"cache_dbs",wcslen(L"cache_dbs"))==0){
@@ -434,6 +447,11 @@ static void command_exec(WCHAR *command, SockOut hNamedPipe){
 			_beginthread(download_t,0,url);
 			send_response_ok(hNamedPipe);
 		}
+	}else if(wcsncmp(command,L"type",wcslen(L"type"))==0){
+        char buffer[MAX_PATH]={0};
+        wchar_t *filename = command+wcslen(L"type");
+        wchar_to_utf8_nocheck(filename, wcslen(filename), buffer, MAX_PATH);
+		send_response_file_type(hNamedPipe,buffer);
 	}else{
 		send_response_ok(hNamedPipe);
 	}

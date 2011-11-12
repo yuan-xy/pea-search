@@ -136,7 +136,8 @@ if (UNIX)
 	endif (APPLE)
 	add_executable (test_main "test_main.c" )
 	target_link_libraries (test_main "file_search")
-	
+	add_executable (test_server "test_server.c" )
+	target_link_libraries (test_server "file_search")	
 	add_executable (test_np_server "test_np_server.c" )
 	target_link_libraries (test_np_server "file_search")
 	

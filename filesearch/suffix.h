@@ -105,6 +105,12 @@ extern "C" {
 extern unsigned char suffix_type(pUTF8 suffix, int len);
 
 /**
+ * 根据后缀名得到文件的类型
+ * @param file 文件名
+ */
+extern unsigned char suffix_type_by_filename(pUTF8 file, int len);
+    
+/**
  * 后一个文件类型是否是前一个文件类型的子类
  * @param clazz 组合的或者单个的文件类型
  * @file_type 单个的文件类型
@@ -120,8 +126,9 @@ extern BOOL is_important_type(unsigned char file_type);
  */
 extern void SuffixProcess(pFileEntry file, void *data);
 
-extern int print_suffix_type(pFileEntry file, char *p);
-extern int print_suffix_type2(int index, char *buffer);
+extern int print_suffix_type(unsigned char file_type, char *buffer);
+extern int print_suffix_type_by_file(pFileEntry file, char *buffer);
+extern int print_suffix_type_by_seq_id(int index, char *buffer);
 
 #endif  // FILE_SEARCH_SUFFIX_H_
 

@@ -94,11 +94,6 @@ static BOOL connect_unix_socket(int *psock) {
     caze=false;
     offline=false;
     personal=false;
-    //NSFontManager *fontManager = [NSFontManager sharedFontManager];
-    //[fontManager orderFrontFontPanel:nil];
-    NSImage *image = [[NSWorkspace sharedWorkspace] iconForFile:@"/Users/ylt/Downloads/006_macruby.mov"];
-    [image setSize:NSMakeSize(128, 128)];
-    //[imageView setImage:image];
 }
 
 
@@ -185,7 +180,7 @@ static BOOL connect_unix_socket(int *psock) {
 		return @"shell2";
     } else if (sel == @selector(copyPath:)) {
             return @"copyPath";
-	} else if (sel == @selector(term:File:)) {
+	} else if (sel == @selector(term:)) {
         return @"term";
 	}else {
 		return nil;
@@ -338,7 +333,7 @@ static BOOL shell_exec(NSString* file, char* param){
     }
 }
 
-- (BOOL) term: (NSString*) path File: (NSString*)file{
+- (BOOL) term: (NSString*) path{
     return shell_exec(path,"-a Terminal");
 }
 

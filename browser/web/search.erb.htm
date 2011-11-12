@@ -96,7 +96,6 @@
 					 <span class="thumbnail"></span>
 					</span>
 					<input type="hidden" value="{$T.record.name}">
-					<input type="hidden" value="{$T.record.path}">
 				</div>
 			</div>
 			<div style="width:150px;text-align: center;word-break:break-all;">{$T.record.name2}</div>
@@ -163,16 +162,16 @@
   <ul>
 <%if os=='mac' %>	
     <li id="default"><img width="24" height="24" src="./images/app.icns"> 打开</li>
-    <li id="explore"><img  width="24" height="24" src="./images/Finder.icns"> 在Finder中打开</li>
-    <li id="term"><img  width="24" height="24" src="./images/Terminal.png"> 在终端中打开</li>
+    <li id="explore"><img  width="24" height="24" src="./images/Finder.icns"> 在Finder中显示</li>
+    <li id="term"><img  width="24" height="24" src="./images/Terminal.png"> 在终端中显示</li>
     <li id="copy"><img  width="24" height="24" src="./images/copy.ico"> 拷贝</li>
     <li id="delete"><img  width="24" height="24" src="./images/gc.icns"> 删除</li>
     <li id="prop"><img  width="24" height="24" src="./images/info.icns"> 显示简介</li>
 <%else%>
     <li id="default"><img width="16" height="16" src="./images/win.png"> 打开</li>
     <li id="openas"><img width="16" height="16" src="./images/openas.ico"> 打开方式</li>
-    <li id="explore"><img  width="16" height="16" src="./images/explore.ico"> 在资源管理器中打开</li>
-	<li id="term"><img  width="16" height="16" src="./images/Terminal.png"> 在Cmd中打开</li>
+    <li id="explore"><img  width="16" height="16" src="./images/explore.ico"> 在资源管理器中显示</li>
+	<li id="term"><img  width="16" height="16" src="./images/Terminal.png"> 在Cmd中显示</li>
     <li id="copypath"><img  width="16" height="16" src="./images/copypath.ico"> 复制文件路径</li>
     <li id="copy"><img  width="16" height="16" src="./images/copy.ico"> 复制</li>
     <li id="cut"><img  width="16" height="16" src="./images/cut.ico"> 剪切</li>
