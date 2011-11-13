@@ -3,14 +3,13 @@
 <table>
   <tr>
     <th>Ip</th>
+    <th>Time</th>
   </tr>
 
 <% @dcounts.each do |dcount| %>
   <tr>
     <td><%=h dcount.ip %></td>
-    <td><%= link_to 'Show', dcount %></td>
-    <td><%= link_to 'Edit', edit_dcount_path(dcount) %></td>
-    <td><%= link_to 'Destroy', dcount, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%=h dcount.created_at %></td>
   </tr>
 <% end %>
 </table>
