@@ -18,6 +18,7 @@
     bool offline;
     bool personal;
     NSString *dir;
+    int fontSize;
     int hotkey;
     int	sockfd;
 }

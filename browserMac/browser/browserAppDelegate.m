@@ -76,6 +76,24 @@ static BOOL connect_unix_socket(int *psock) {
     }
 }
 
+- (void)setCaze:(bool)b {
+    caze = b;
+    NSUserDefaults *persistentDefaults = [NSUserDefaults standardUserDefaults];
+    [persistentDefaults setObject:[NSNumber numberWithBool:b] forKey:@"caze"];  
+}
+
+- (void)setPersonal:(bool)b {
+    personal = b;
+    NSUserDefaults *persistentDefaults = [NSUserDefaults standardUserDefaults];
+    [persistentDefaults setObject:[NSNumber numberWithBool:b] forKey:@"personal"];  
+}
+
+- (void)setFontSize:(int)size {
+    fontSize = size;
+    NSUserDefaults *persistentDefaults = [NSUserDefaults standardUserDefaults];
+    [persistentDefaults setObject:[NSNumber numberWithInt:size] forKey:@"fontSize"];  
+}
+
 - (void)awakeFromNib {
     setlocale(LC_ALL, "");
     [SpecialProtocol registerSpecialProtocol];
@@ -91,9 +109,13 @@ static BOOL connect_unix_socket(int *psock) {
     //webView.autoresizingMask = (UIViewAutoresizingFlexibleHeight );
     order=0;
     file_type=0;
-    caze=false;
     offline=false;
-    personal=false;
+    NSUserDefaults *persistentDefaults = [NSUserDefaults standardUserDefaults];
+    [persistentDefaults setObject:@"" forKey:@"myDefault"];
+    caze = [[persistentDefaults objectForKey:@"caze"] boolValue];
+    personal = [[persistentDefaults objectForKey:@"personal"] boolValue];
+    fontSize =  [[persistentDefaults objectForKey:@"fontSize"] intValue];
+    if(fontSize<6 || fontSize>18) fontSize=12;
 }
 
 

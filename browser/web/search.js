@@ -448,14 +448,14 @@ var host_backup = "http://60.191.119.190:3333";
 		if(getFontSize()>=18) return;
 		var fontsize = getFontSize()+1;
 		$(document.body).css('font-size', fontsize+'px');
-		$.cookie('font-size', fontsize, { expires: 356 });
+		cef.plugin.fontSize = fontsize;
 	}
 
 	function decFontSize(){
 		if(getFontSize()<=8) return;
 		var fontsize = getFontSize()-1;
 		$(document.body).css('font-size', fontsize+'px');
-		$.cookie('font-size', fontsize, { expires: 356 });
+		cef.plugin.fontSize = fontsize;
 	}
 	function handleDragEnter(e) {
 		e.stopPropagation();
@@ -465,9 +465,7 @@ var host_backup = "http://60.191.119.190:3333";
 	}
 	
 	$(function() {
-		if($.cookie('font-size') ){
-			$(document.body).css('font-size', $.cookie('font-size'));	
-		}
+		$(document.body).css('font-size', cef.plugin.fontSize);	
 		if(cef.plugin.caze){
 			$("#case1").click();
 		}else{
