@@ -445,14 +445,14 @@ var host_backup = "http://60.191.119.190:3333";
 	}
 
 	function incFontSize(){
-		if(getFontSize()>=18) return;
+		if(getFontSize()>=17) return;
 		var fontsize = getFontSize()+1;
 		$(document.body).css('font-size', fontsize+'px');
 		cef.plugin.fontSize = fontsize;
 	}
 
 	function decFontSize(){
-		if(getFontSize()<=8) return;
+		if(getFontSize()<=9) return;
 		var fontsize = getFontSize()-1;
 		$(document.body).css('font-size', fontsize+'px');
 		cef.plugin.fontSize = fontsize;

@@ -19,11 +19,44 @@ static int m_file_type=0;
 static bool m_case=false;
 static bool m_offline=false;
 static bool m_personal=false;
+static int m_fontSize=12;
+#define fontOffset 8
 static CefString m_dir;
 
 #define WIN_ERROR(host)  {\
 	char buffer[1024];\
 	sprintf(buffer,"error code : %d , line %d in '%s'\n",GetLastError(), __LINE__, __FILE__);\
+}
+
+
+int get_key(const wchar_t *name){
+	WCHAR fbuffer[MAX_PATH];
+	WCHAR buffer[MAX_PATH];
+	DWORD size=MAX_PATH;
+	if(GetUserName(fbuffer, &size)){
+		wcscat_s(fbuffer,MAX_PATH,L".ini");
+		get_abs_path(fbuffer,buffer);
+		return GetPrivateProfileInt(L"customize",name,0,buffer);
+	}else{
+		return 0;
+	}
+}
+
+BOOL set_key(const wchar_t *name, int key){
+	WCHAR hotkey[2];
+	WCHAR fbuffer[MAX_PATH];
+	WCHAR buffer[MAX_PATH];
+	DWORD size=MAX_PATH;
+	if(GetUserName(fbuffer, &size)){
+		hotkey[0]=key+L'0';
+		hotkey[1]=L'\0';
+		wcscat_s(fbuffer,MAX_PATH,L".ini");
+		get_abs_path(fbuffer,buffer);
+		return WritePrivateProfileString(L"customize",name,hotkey,buffer);
+	}else{
+		return 0;
+	}
+
 }
 
 BOOL connect_named_pipe(){
@@ -359,12 +392,24 @@ public:
       if(arguments.size() != 1 || !arguments[0]->IsBool())
         return false;
       m_personal = arguments[0]->GetBoolValue();
+	set_key(L"personal",m_personal);
       return true;
     }
 	else if(name == "get_personal"){
       retval = CefV8Value::CreateBool(m_personal);
       return true;
     }
+	else if(name == "set_fontSize"){
+	  if(arguments.size() != 1)
+	    return false;
+	  m_fontSize = arguments[0]->GetIntValue();
+	set_key(L"fontSize",m_fontSize-fontOffset);
+	  return true;
+	}
+	else if(name == "get_fontSize"){
+	  retval = CefV8Value::CreateInt(m_fontSize);
+	  return true;
+	}
 	else if(name == "set_offline"){
       if(arguments.size() != 1 || !arguments[0]->IsBool())
         return false;
@@ -399,6 +444,7 @@ public:
       if(arguments.size() != 1 || !arguments[0]->IsBool())
         return false;
       m_case = arguments[0]->GetBoolValue();
+	set_key(L"caze", m_case);
       return true;
     }
     else if(name == "get_hotkey"){
@@ -471,6 +517,14 @@ void InitPlugin(){
     "    native function set_personal();"
     "    set_personal(b);"
     "  });"
+	"  cef.plugin.__defineGetter__('fontSize', function() {"
+	"    native function get_fontSize();"
+	"    return get_fontSize();"
+	"  });"
+	"  cef.plugin.__defineSetter__('fontSize', function(b) {"
+	"    native function set_fontSize();"
+	"    set_fontSize(b);"
+	"  });"
     "  cef.plugin.__defineGetter__('file_type', function() {"
     "    native function get_file_type();"
     "    return get_file_type();"
@@ -573,4 +627,9 @@ void InitPlugin(){
     "  };"
 	"})();";
   CefRegisterExtension("v8/gigaso.plugin", code, new PluginHandler());
+m_case = get_key(L"caze");
+m_personal = get_key(L"personal");
+m_fontSize = get_key(L"fontSize");
+if(m_fontSize==0) m_fontSize=12;
+else m_fontSize+=fontOffset;
 }
