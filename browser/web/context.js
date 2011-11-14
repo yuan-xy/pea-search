@@ -1,8 +1,9 @@
 function get_file_path(tr){
 	if(tr.tagName=="SPAN"){
 		file = $(tr.parentNode).find("input")[0].value;
-		path = "";
-		ftype = cef.plugin.search("[///type"+file);
+		path = $(tr.parentNode).find("input")[1].value;
+		console.log(path+"  :  "+file);
+		ftype = cef.plugin.search("[///type"+path+file);
 		console.log(ftype);
 	}else{
 		tds = $(tr).find("td");
@@ -96,23 +97,12 @@ var context_menu_obj = {
 					  },
 					  'term': function(t,menuitem) {
 					    get_file_path(t);
-						if(path==""){//history item
-							if(ftype=="dir"){
-								var ret = cef.plugin.term(file);
-								info_or_error(ret, file, "打开");
-							}else{
-								var ret = cef.plugin.term(file.substring(0,file.lastIndexOf("/")));
-								info_or_error(ret, file, "打开");
-							}	
-						}else{// search tr item
-							if(ftype=="dir"){
-								var ret = cef.plugin.term(path+file);
-								info_or_error(ret, file, "打开");
-							}else{
-								console.log(path);
-								var ret = cef.plugin.term(path);
-								info_or_error(ret, file, "打开");
-							}
+						if(ftype=="dir"){
+							var ret = cef.plugin.term(path+file);
+							info_or_error(ret, file, "打开");
+						}else{
+							var ret = cef.plugin.term(path);
+							info_or_error(ret, file, "打开");
 						}
 					  },
 					  'copypath': function(t,menuitem) {

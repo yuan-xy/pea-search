@@ -21,6 +21,9 @@ var host_backup = "http://60.191.119.190:3333";
 	function os_win(){
 		return navigator.platform.match(/Win/i)!=null;
 	}
+	var path_sep="/";
+	if(os_win()) path_sep="\\";
+	
 	function trim(str, chars) {
 		return ltrim(rtrim(str, chars), chars);
 	}
@@ -242,14 +245,14 @@ var host_backup = "http://60.191.119.190:3333";
 		hs=hs.slice(0,num_all_page);
 		for( var i=0;i<num_all_page;i++){
 			var fname = hs[i].name;
-			if(fname.charAt(fname.length-1)=='\\') fname = fname.substr(0,fname.length-1);
+			if(fname.charAt(fname.length-1)==path_sep) fname = fname.substr(0,fname.length-1);
 			function calc_top(x){if(x>=num_per_page) x-=num_per_page;if(x>=num_per_row) return 320;return 120}
 			function calc_left(x){if(x>=num_per_page) x-=num_per_page;return 100+200*(x%num_per_row)}
 			hs[i].id = i;
 			hs[i].left = calc_left(i);
 			hs[i].top = calc_top(i);
-			hs[i].path = fname.substring(0, fname.lastIndexOf("\\")+1);
-			hs[i].name = fname.substring(fname.lastIndexOf("\\")+1,fname.length);
+			hs[i].path = fname.substring(0, fname.lastIndexOf(path_sep)+1);
+			hs[i].name = fname.substring(fname.lastIndexOf(path_sep)+1,fname.length);
 			if(hs[i].name==""){
 				hs[i].thumb = "";
 			}else{
