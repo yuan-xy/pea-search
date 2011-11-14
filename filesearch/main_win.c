@@ -130,7 +130,7 @@ BOOL gigaso_init(){
 	if(4 == sizeof(void *)){
 		my_assert(24 == sizeof(FileEntry), 0);
 	}else{
-		printf("file entry size:%d\n",sizeof(FileEntry));
+		my_assert(40 == sizeof(FileEntry), 0);
 	}
 	if(!WindowsVersionOK()) return 0;
 	breakpad_init();

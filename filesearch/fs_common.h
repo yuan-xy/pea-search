@@ -50,7 +50,7 @@ extern const int ROOT_NUMBER; //NTFS驱动器根目录的FileReferenceNumber的�
 #define IsDir(pFileEntry) (pFileEntry->us.v.dir==1)
 
 
-#define FILE_ENTRY_SIZE_(name_len_bytes) (sizeof(FileEntry)+(name_len_bytes)-sizeof(int))
+#define FILE_ENTRY_SIZE_(name_len_bytes) (sizeof(FileEntry)+(name_len_bytes)-sizeof(void *))
 #define FILE_ENTRY_SIZE(file) FILE_ENTRY_SIZE_(file->us.v.FileNameLength)
 
 

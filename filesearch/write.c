@@ -268,9 +268,6 @@ BOOL readfile(int i, char *filename){
 		}
 		d = (int)fread(&file->us.value,sizeof(file->us),2,fp);
 		if(d<2) goto error;
-		if(file->us.v.FileNameLength == 0){
-			continue;
-		}
 		file = (pFileEntry) realloc_safe(file,FILE_ENTRY_SIZE(file));
 		d = (int)fread(file->FileName,sizeof(char),file->us.v.FileNameLength,fp);
 		if(d<file->us.v.FileNameLength) goto error;

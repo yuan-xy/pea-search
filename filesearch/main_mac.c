@@ -59,7 +59,11 @@ static int get_next_offline_slot(){
 }
 
 BOOL gigaso_init(){
-	printf("file entry size:%d\n",(int) sizeof(FileEntry));
+	if(4 == sizeof(void *)){
+		my_assert(24 == sizeof(FileEntry), 0);
+	}else{
+		my_assert(40 == sizeof(FileEntry), 0);
+	}
 	breakpad_init();
 	//request_dump();
 	init_chinese();
