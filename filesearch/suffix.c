@@ -176,7 +176,6 @@ static unsigned char suffix_type_by_filename0(pUTF8 file, int len){
 }
 
 INLINE unsigned char suffix_type_by_filename(pUTF8 file, int len){
-    //TODO: 这里的file是全路径名
 	unsigned char ret = suffix_type_by_filename0(file,len);
 	if(ret==SF_NONE || ret==SF_UNKNOWN){
         pFileEntry pf = find_file(file, len);

@@ -28,7 +28,7 @@ if "%1" == "sign" goto do_sign
 	goto end
 
 :do_clean
-	rmdir /S /Q ReleaseWin
+	rmdir /S ReleaseWin
 	mkdir ReleaseWin
 :end
 

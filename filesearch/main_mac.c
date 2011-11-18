@@ -70,11 +70,13 @@ BOOL gigaso_init(){
 	setlocale(LC_ALL, "");
 	load_online_db(0);
 	scan(0);
+	StartMonitorThread(0);
 	return 1;
 }
 
 BOOL gigaso_destory(){
 	save_db(0);
+	StopMonitorThread(0);
 	return 1;
 }
 

@@ -151,7 +151,6 @@ extern void renameFile(pFileEntry file, WCHAR *new_name, int name_byte_len);
  */
 void moveFile(pFileEntry file, pFileEntry pnew);
 
-#ifdef WIN32
 /**
  * 启动文件系统变动监视线程。该线程只能被启动一次。
  * @param i 驱动器编号
@@ -164,8 +163,8 @@ extern BOOL StartMonitorThread(int i);
  */
 extern BOOL StopMonitorThread(int i);
 
+#ifdef WIN32
 extern BOOL CloseVolumeHandle(int i);
-
 #endif //WIN32
 
 /**

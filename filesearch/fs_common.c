@@ -6,6 +6,7 @@
 #include "suffix.h"
 #include "ntfs.h"
 #include "fat.h"
+#include "macfs.h"
 
 const int ROOT_NUMBER=5;
 
@@ -240,6 +241,15 @@ BOOL CloseVolumeHandle(int i){
 	if(g_hVols[i]==NULL) return 0;
 	return CloseHandle(g_hVols[i]);
 }
+#else
+BOOL StartMonitorThread(int i){
+	return StartMonitorThreadMAC(i);
+}
+
+BOOL StopMonitorThread(int i){
+	return StopMonitorThreadMAC(i);
+}
+
 #endif //WIN32
 
 void PrintFilenameMB(pFileEntry file){
