@@ -13,8 +13,6 @@ extern "C" {
 #define DIRVE_COUNT 26
 #define DIRVE_COUNT_OFFLINE DIRVE_COUNT*3
 
-extern UTF8 rootNames[26][3];//根驱动器的名字
-
 extern BOOL		g_bVols[];//对应驱动器是否存在
 extern BOOL		g_loaded[];//对应驱动器的磁盘数据库是否已加载
 extern BOOL		g_expires[];//对应驱动器的磁盘数据库是否已过期

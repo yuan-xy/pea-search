@@ -36,7 +36,7 @@ void load_online_db(int i){
 void scan(int i){
 	if(g_loaded[i]) return;
 	resetMap(i);
-	scanMac(genMacRootFileEntry(i),i);
+	scanMac(genRootFileEntry(i),i);
 	after_build(i);
 	g_loaded[i]=1;
 	save_db(i);

@@ -30,7 +30,6 @@ void search0(void *name){
 		size = GET_SIZE(file);
 		print_time(file);
 		print_full_path(file);
-		//PrintFilenameMB(file);
 		printf("\n");
 		if(i>3) break;
 	}

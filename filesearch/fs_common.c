@@ -32,13 +32,20 @@ pFileEntry findFile(KEY frn,KEY pfrn,int i){
 	return SubDirIterateB(parent,match,(void *)&frn);
 }
 
+void set_root_name_offline(pFileEntry offline_drive, int load_index){
+    char root_name[3];
+    _itoa(load_index,root_name,10);
+    memcpy(offline_drive->FileName,root_name,2);
+}
+
+
 pFileEntry genRootFileEntry(int drive){
 	NEW0(FileEntry, ret);
 	ret->FileReferenceNumber = ROOT_NUMBER;
 	ret->up.ParentFileReferenceNumber = 0;
 	ret->us.v.FileNameLength = 2;
 	ret->us.v.StrLen = 2;
-	SET_ROOT_NAME(ret,rootNames[drive]);
+	SET_ROOT_NAME(ret,drive);
 	ret->us.v.dir = 1;
 	ret->ut.v.suffixType = SF_DIR;
 	ret->up.parent = NULL;
@@ -46,28 +53,6 @@ pFileEntry genRootFileEntry(int drive){
 	g_rootVols[drive] = ret;
 	ALL_FILE_COUNT +=1;
 	return ret;
-}
-
-pFileEntry genMacRootFileEntry(int drive){
-	NEW0(FileEntry, ret);
-	ret->FileReferenceNumber = ROOT_NUMBER;
-	ret->up.ParentFileReferenceNumber = 0;
-	ret->us.v.FileNameLength = 0;
-	ret->us.v.StrLen = 0;
-	ret->us.v.dir = 1;
-	ret->ut.v.suffixType = SF_DIR;
-	ret->up.parent = NULL;
-	ret->children = NULL;
-	g_rootVols[drive] = ret;
-	ALL_FILE_COUNT +=1;
-	return ret;
-}
-
-
-int getDrive(pFileEntry file){
-	pFileEntry parent = file;
-	while(parent->up.parent!=NULL) parent = parent->up.parent;
-	return *(parent->FileName) - L'A';
 }
 
 MINUTE GET_TIME(pFileEntry file){
@@ -98,7 +83,7 @@ void print_full_path(pFileEntry pf){
         printf("/");
 #endif
 	}
-	PrintFilenameMB(pf);
+	printf("%s",pf->FileName);
 }
 
 int print_fullpath_str(pFileEntry file, char *p){
@@ -236,11 +221,6 @@ BOOL StopMonitorThread(int i){
 	}
 	return 0;
 }
-
-BOOL CloseVolumeHandle(int i){
-	if(g_hVols[i]==NULL) return 0;
-	return CloseHandle(g_hVols[i]);
-}
 #else
 BOOL StartMonitorThread(int i){
 	return StartMonitorThreadMAC(i);
@@ -251,19 +231,6 @@ BOOL StopMonitorThread(int i){
 }
 
 #endif //WIN32
-
-void PrintFilenameMB(pFileEntry file){
-	char fileName[MAX_PATH] = {0};
-#ifdef WIN32
-	int len;
-	WCHAR *p = utf8_to_wchar(file->FileName,file->us.v.FileNameLength,&len);
-	int flen = WideCharToMultiByte(CP_OEMCP,(DWORD) 0,p,len,fileName,255,NULL,FALSE);
-	fileName[flen]='\0';
-	printf("%s",fileName);
-#else
-	printf("%s",file->FileName);
-#endif //WIN32
-}
 
 
 void FileRemoveFilter(pFileEntry file, void *data){

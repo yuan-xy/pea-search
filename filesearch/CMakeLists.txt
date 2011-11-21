@@ -50,6 +50,7 @@ if (WIN32)
 	SET(SOURCES  ${SOURCES}
 		drive.c
 		drive_change.c
+		fs_common_win.c
 		fat.c	
 		ntfs.c
 		desktop.cpp

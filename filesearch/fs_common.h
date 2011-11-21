@@ -58,21 +58,20 @@ extern const int ROOT_NUMBER; //NTFS驱动器根目录的FileReferenceNumber的�
 		pFileEntry file = (pFileEntry) malloc_safe(FILE_ENTRY_SIZE_(name_len_bytes)); \
 		memset(file,0,FILE_ENTRY_SIZE_(name_len_bytes));
 
-#define SET_ROOT_NAME(root,name) memcpy(root->FileName,name,2)
+/**
+ * 设置离线文件的根目录名称
+ * @param offline_drive 根目录
+ * @param load_index 加载的序号，应该大于26
+ */
+extern void set_root_name_offline(pFileEntry offline_drive, int load_index);
 
+#ifdef WIN32
+#define SET_ROOT_NAME(rootEntry,i) sprintf(rootEntry->FileName,"%c:",i+'A')
+#else
+#define SET_ROOT_NAME(rootEntry,i)  
+#endif //WIN32
+    
 #define FERROR(file)  fprintf(stderr,"error: %s , line %d in '%s'\n",((file==NULL || file->FileName ==NULL)? (char *) "null" : (char *)file->FileName), __LINE__, __FILE__);
-
-/*
- * 得到该文件所属驱动盘编号
- */
-extern int getDrive(pFileEntry file);
-/*
- * 以MultiByte编码打印该文件的文件名
- */
-extern void PrintFilenameMB(pFileEntry file);
-/*
- * 打印该文件的全路径
- */
 
 /*
  * 打印该文件的日期
@@ -84,16 +83,6 @@ extern void print_time(pFileEntry file);
  */
 extern int print_time_str(pFileEntry file, char *buffer);
 extern int print_path_str(pFileEntry file, char *buffer);
-
-#define is_readonly(x) x->FileAttributes&FILE_ATTRIBUTE_READONLY
-#define is_hidden(x)  x->FileAttributes&FILE_ATTRIBUTE_HIDDEN
-#define is_system(x)  x->FileAttributes&FILE_ATTRIBUTE_SYSTEM
-#define is_dir(x)     x->FileAttributes&FILE_ATTRIBUTE_DIRECTORY
-
-#define is_readonly_ffd(find_data) find_data->dwFileAttributes&FILE_ATTRIBUTE_READONLY
-#define is_hidden_ffd(find_data)  find_data->dwFileAttributes&FILE_ATTRIBUTE_HIDDEN
-#define is_system_ffd(find_data)  find_data->dwFileAttributes&FILE_ATTRIBUTE_SYSTEM
-#define is_dir_ffd(find_data)     find_data->dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY
 
 #ifdef WIN32
 	extern MINUTE ConvertSystemTimeToMinute(SYSTEMTIME sysTime);
@@ -117,7 +106,6 @@ extern void print_full_path(pFileEntry file);
  * @param i 驱动器编号
  */
 extern pFileEntry genRootFileEntry(int i);
-extern pFileEntry genMacRootFileEntry(int i);
     
 /**
  * 将文件挂到其父目录的子文件列表中，用于file初始化。
@@ -162,10 +150,6 @@ extern BOOL StartMonitorThread(int i);
  * @param i 驱动器编号
  */
 extern BOOL StopMonitorThread(int i);
-
-#ifdef WIN32
-extern BOOL CloseVolumeHandle(int i);
-#endif //WIN32
 
 /**
  * 根据文件的Key值在Map中找到该文件
@@ -225,6 +209,11 @@ extern void AllFilesIterate(pFileVisitor visitor, void *data, BOOL offline);
 extern void FileRemoveFilter(pFileEntry file, void *data);
 
 extern BOOL check_file_entry(pFileEntry file, void *data);
+
+#ifdef WIN32
+#include "fs_common_win.h"
+#endif //WIN32
+
 
 #endif  // FILE_SEARCH_FS_COMMON_H_
 

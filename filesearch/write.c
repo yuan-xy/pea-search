@@ -275,16 +275,13 @@ BOOL readfile(int i, char *filename){
 		add2Map(file,i);
 		if(!gen_root){
 			if(i<26){
-				if(strncmp(file->FileName,rootNames[i],2)!=0) SET_ROOT_NAME(file,rootNames[i]);
 				#ifdef WIN32
 				if(IsNtfs(i)){
 					if(!IsRoot(file->FileReferenceNumber)) goto error;
 				}
 				#endif
 			}else{
-				char root_name[3];
-				_itoa(i,root_name,10);
-				SET_ROOT_NAME(file,root_name); //离线文件的根目录
+                set_root_name_offline(file,i);
 			}
 			if(file->up.ParentFileReferenceNumber!=0) goto error;
 			g_rootVols[i] = file;
