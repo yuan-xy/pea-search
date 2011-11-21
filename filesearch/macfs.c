@@ -3,6 +3,7 @@
 #include "fs_common.h"
 #include "util.h"
 #include "suffix.h"
+#include "search.h"
 #include <dirent.h>
 #include <limits.h>
 
@@ -14,11 +15,71 @@ static FSEventStreamContext *_context;
 static BOOL _running=0;
 static pthread_t ntid;
 
+BOOL same_file(pFileEntry file, struct dirent * dp){
+    if (dp->d_namlen == file->us.v.FileNameLength && !strcmp(dp->d_name, file->FileName)) {
+        return 1;
+    }   
+    return 0;
+}
+
+static BOOL find_file_in_cur_dir(pFileEntry dir, struct dirent * file){
+    return SubDirIterateB(dir, (pFileVisitorB)same_file, file)!=NULL;
+}
+
+static void add_file(char * dir_name){
+    DIR * dirp = opendir(dir_name);
+    struct dirent * dp;
+    pFileEntry dir = find_file(dir_name,strlen(dir_name));
+    if(dir==NULL) return;
+    while ((dp = readdir(dirp)) != NULL){
+        if (strcmp(dp->d_name, ".") == 0  || strcmp(dp->d_name, "..") == 0) continue;
+        if(!find_file_in_cur_dir(dir,dp)){
+            //add_file(dp->d_name,dp->d_namlen,0);
+            printf("add file: %s\n",dp->d_name);
+        }
+    }
+    closedir(dirp);
+}
 static void feCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[]) {	
     char **paths = eventPaths;
     int i;
+    printf("----%d----\n",numEvents);
     for (i = 0; i < numEvents; i++) {
-		printf("%04x: %s\n", eventFlags[i], paths[i]);
+        FSEventStreamEventFlags flag = eventFlags[i];
+        if (flag & kFSEventStreamEventFlagRootChanged) return;
+        if (flag & kFSEventStreamEventFlagMustScanSubDirs) return;
+        if (flag & kFSEventStreamEventFlagItemCreated && 
+            flag & kFSEventStreamEventFlagItemRenamed){
+            printf("create rename ");  
+            printf("%04x: %s\n", flag, paths[i]);
+            add_file(paths[i]);
+        }else if (flag & kFSEventStreamEventFlagItemCreated){
+            printf("create ");  
+            printf("%04x: %s\n", flag, paths[i]);
+            add_file(paths[i]);
+        }else if (flag & kFSEventStreamEventFlagItemRemoved){
+            printf("remove ");
+            printf("%04x: %s\n", flag, paths[i]);
+        }else if (flag & kFSEventStreamEventFlagItemInodeMetaMod){
+            printf("meta ");
+            printf("%04x: %s\n", flag, paths[i]);
+        }else if (flag & kFSEventStreamEventFlagItemRenamed){
+            if(i+1<numEvents && eventFlags[i+1]==flag){
+                printf("move ");
+                printf("%04x: from: %s\n", flag, paths[i]);
+                printf(" to %s\n",paths[i+1]);
+                i+=1;
+            }else{
+                printf("rename ");
+                printf("%04x: %s\n", flag, paths[i]);
+            }
+        }else if (flag & kFSEventStreamEventFlagMount){
+            printf("mount ");
+            printf("%04x: %s\n", flag, paths[i]);
+        }else if (flag & kFSEventStreamEventFlagUnmount){
+            printf("unmount ");
+            printf("%04x: %s\n", flag, paths[i]);
+        }
    }
 }
 
@@ -64,7 +125,7 @@ BOOL StartMonitorThreadMAC(int i){
 	pthread_create(&ntid,NULL,init,&i);
 }
 
-static pFileEntry initMacFile(const char *pathname, const struct stat *statptr, char *filename, pFileEntry parent, int i){
+static pFileEntry initMacFile(const struct stat *statptr, char *filename, pFileEntry parent, int i){
 	int len = strlen(filename);//TODO: 直接传递d_namlen
 	NEW0_FILE(ret,len);
 	ret->us.v.FileNameLength = len;
@@ -105,7 +166,7 @@ static void dopath(char *fullpath, char *filename, pFileEntry parent, int i){
 	if (lstat(fullpath, &statbuf) >= 0){
 		pFileEntry self;
         if(*filename!='\0'){
-            self = initMacFile(fullpath, &statbuf, filename,parent,i);
+            self = initMacFile(&statbuf, filename,parent,i);
         }else{
             self = parent;
         }

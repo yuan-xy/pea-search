@@ -66,6 +66,7 @@ static pFileEntry find_file_in(pFileEntry parent, pUTF8 name, int whole_len){
 	Strlen strlen;
 	int i, cur_len=whole_len;
 	if(parent==NULL) return NULL;
+    printf("-%s: %s: %d\n",parent->FileName,name,whole_len);
 	for(i=1;i<whole_len;i++){
 		if(*(name+i)=='\\' || *(name+i)=='/'){
 			cur_len=i;
@@ -95,7 +96,7 @@ pFileEntry find_file(pUTF8 name, int len){
 #else
 pFileEntry find_file(pUTF8 name, int len){
 	if(len==0 || *name != '/') return NULL;
-    return find_file_in(g_rootVols[0],name+1,len-1);
+    return find_file_in(g_rootVols[MAC_DRIVE_INDEX],name+1,len-1);
 }
 #endif //WIN32
 

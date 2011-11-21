@@ -68,15 +68,15 @@ BOOL gigaso_init(){
 	//request_dump();
 	init_chinese();
 	setlocale(LC_ALL, "");
-	load_online_db(0);
-	scan(0);
-	StartMonitorThread(0);
+	load_online_db(MAC_DRIVE_INDEX);
+	scan(MAC_DRIVE_INDEX);
+	StartMonitorThread(MAC_DRIVE_INDEX);
 	return 1;
 }
 
 BOOL gigaso_destory(){
-	save_db(0);
-	StopMonitorThread(0);
+	save_db(MAC_DRIVE_INDEX);
+	StopMonitorThread(MAC_DRIVE_INDEX);
 	return 1;
 }
 

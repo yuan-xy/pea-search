@@ -75,6 +75,7 @@ extern "C" {
 	#define IN
 	#define OUT
 	#define WINAPI
+    #define MAC_DRIVE_INDEX 0
 
 	typedef	void	Sigfunc(int);	/* for signal handlers */
 
