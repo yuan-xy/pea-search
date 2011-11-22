@@ -43,5 +43,6 @@ SET( SOURCES2
     )
 
 add_executable(test_history ${SOURCES2} )
+target_link_libraries (test_history "pthread")	
 ADD_TEST(test_history ${CMAKE_CURRENT_BINARY_DIR}/test_history)
 

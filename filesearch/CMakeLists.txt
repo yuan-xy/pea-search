@@ -67,7 +67,7 @@ if (UNIX)
 		#ADD_DEFINITIONS(-Wall)
 		set(SOURCES ${SOURCES}
 		mac_port.c
-		macfs.c
+		unixfs.c
 		main_mac.c
 		download_mac.c
 		error_mac.c
@@ -75,9 +75,14 @@ if (UNIX)
 		exception_dump_mac.cpp
 	)
 endif(UNIX)
-	
+
+if (APPLE) 
+	set(SOURCES ${SOURCES}
+		macfs.c
+	)
+endif (APPLE)
+
 if (WIN32) 
-	
 add_library (file_search STATIC ${SOURCES} )
 #set_target_properties(file_search PROPERTIES LINK_FLAGS "/include:__tcmalloc") 
 target_link_libraries (file_search "${3RD_LIB_PATH}/libtcmalloc_minimal.lib")

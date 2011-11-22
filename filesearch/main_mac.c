@@ -11,7 +11,7 @@
 #include "fs_common.h"
 #include "chinese.h"
 #include "exception_dump.h"
-#include "macfs.h"
+#include "unixfs.h"
 
 BOOL read_build_check(int i){
 	BOOL flag = load_db(i);
@@ -37,7 +37,7 @@ static void scan(){
     int i = MAC_DRIVE_INDEX;
 	if(g_loaded[i]) return;
 	resetMap(i);
-	scanMac(genRootFileEntry(i),i);
+	scanUnix(genRootFileEntry(i),i);
 	after_build(i);
 	g_loaded[i]=1;
 	save_db(i);

@@ -9,12 +9,6 @@ extern "C" {
 #include "fs_common.h"
 
 /**
- * 扫描一个根分区
- * @param root 根分区
- */
-extern int scanMac(pFileEntry root, int i);
-
-/**
  * 启动MAC文件系统变动监视线程。该线程只能被启动一次。
  * @param i 驱动器编号
  */

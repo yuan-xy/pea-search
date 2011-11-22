@@ -222,6 +222,7 @@ BOOL StopMonitorThread(int i){
 	return 0;
 }
 #else
+#ifdef APPLE
 BOOL StartMonitorThread(int i){
 	return StartMonitorThreadMAC(i);
 }
@@ -229,6 +230,15 @@ BOOL StartMonitorThread(int i){
 BOOL StopMonitorThread(int i){
 	return StopMonitorThreadMAC(i);
 }
+#else
+BOOL StartMonitorThread(int i){
+	//TODO: moniter file system on linux
+}
+
+BOOL StopMonitorThread(int i){
+	
+}
+#endif //APPLE
 
 #endif //WIN32
 
