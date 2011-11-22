@@ -33,7 +33,8 @@ void load_online_db(int i){
 	}
 }
 
-void scan(int i){
+static void scan(){
+    int i = MAC_DRIVE_INDEX;
 	if(g_loaded[i]) return;
 	resetMap(i);
 	scanMac(genRootFileEntry(i),i);
@@ -69,7 +70,8 @@ BOOL gigaso_init(){
 	init_chinese();
 	setlocale(LC_ALL, "");
 	load_online_db(MAC_DRIVE_INDEX);
-	scan(MAC_DRIVE_INDEX);
+    //TODO: 根据mount情况得到onlinedb，然后load。
+    printf("scan passed %d ms.\n",time_passed(scan));
 	StartMonitorThread(MAC_DRIVE_INDEX);
 	return 1;
 }

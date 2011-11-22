@@ -35,7 +35,7 @@ static void add_file(char * dir_name){
         if (strcmp(dp->d_name, ".") == 0  || strcmp(dp->d_name, "..") == 0) continue;
         if(!find_file_in_cur_dir(dir,dp)){
             //add_file(dp->d_name,dp->d_namlen,0);
-            printf("add file: %s\n",dp->d_name);
+            printf("***add file: %s\n",dp->d_name);
         }
     }
     closedir(dirp);

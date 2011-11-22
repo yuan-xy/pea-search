@@ -43,9 +43,9 @@ pFileEntry genRootFileEntry(int drive){
 	NEW0(FileEntry, ret);
 	ret->FileReferenceNumber = ROOT_NUMBER;
 	ret->up.ParentFileReferenceNumber = 0;
-	ret->us.v.FileNameLength = 2;
-	ret->us.v.StrLen = 2;
 	SET_ROOT_NAME(ret,drive);
+    ret->us.v.FileNameLength = strlen(ret->FileName);
+    ret->us.v.StrLen = ret->us.v.FileNameLength;
 	ret->us.v.dir = 1;
 	ret->ut.v.suffixType = SF_DIR;
 	ret->up.parent = NULL;
@@ -233,31 +233,43 @@ BOOL StopMonitorThread(int i){
 #endif //WIN32
 
 
+#ifdef WIN32
 void FileRemoveFilter(pFileEntry file, void *data){
     //TODO: ‘$文件’更改为系统文件类型，而不是删除
 	if(IsDir(file)){
 		if(file->FileName[0]=='$'
-				|| (file->us.v.FileNameLength==4 && file->FileName[0]=='.' && file->FileName[1]=='s' && file->FileName[2]=='v'  && file->FileName[3]=='n')
-				|| (file->us.v.FileNameLength==4 && file->FileName[0]=='.' && file->FileName[1]=='g' && file->FileName[2]=='i'  && file->FileName[3]=='t')
-				|| (file->us.v.FileNameLength==3 && file->FileName[0]=='C' && file->FileName[1]=='V' && file->FileName[2]=='S')
-		){
-				file->children=NULL;
+           || (file->us.v.FileNameLength==4 && file->FileName[0]=='.' && file->FileName[1]=='s' && file->FileName[2]=='v'  && file->FileName[3]=='n')
+           || (file->us.v.FileNameLength==4 && file->FileName[0]=='.' && file->FileName[1]=='g' && file->FileName[2]=='i'  && file->FileName[3]=='t')
+           || (file->us.v.FileNameLength==3 && file->FileName[0]=='C' && file->FileName[1]=='V' && file->FileName[2]=='S')
+           ){
+            file->children=NULL;
 		}
 		if((file->us.v.FileNameLength==4 && strncmp(file->FileName,"Temp",4)==0)
-				|| (file->us.v.FileNameLength==24 && strncmp(file->FileName,"Temporary Internet Files",24)==0)
-		){
+           || (file->us.v.FileNameLength==24 && strncmp(file->FileName,"Temporary Internet Files",24)==0)
+           ){
 			if((file->up.parent->us.v.FileNameLength==14 && strncmp(file->up.parent->FileName,"Local Settings",14)==0)
-			){
-					file->children=NULL;
+               ){
+                file->children=NULL;
 			}
 		}
 		if(file->us.v.FileNameLength==5 && strncmp(file->FileName,"cache",5)==0){
 			if(file->up.parent->us.v.FileNameLength==3 && strncmp(file->up.parent->FileName,"var",3)==0){
-					file->children=NULL;
+                file->children=NULL;
 			}
 		}
 	}
 }
+#else
+void FileRemoveFilter(pFileEntry file, void *data){
+    if(IsDir(file)){
+        if(file->us.v.FileNameLength==7 && strncmp(file->FileName,"private",7)==0){
+			if(IsRoot(file->up.parent->FileReferenceNumber)) file->children=NULL;
+		}
+    }
+}
+#endif //WIN32
+
+
 
 
 BOOL check_file_entry(pFileEntry file, void *data){

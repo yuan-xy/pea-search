@@ -249,7 +249,7 @@ static ssize_t read_all(int fildes, char *buf, size_t nbyte){
     if(read(sockfd, &resp, sizeof(int))>0){
         char buffer[MAX_RESPONSE_LEN];
         DWORD len = resp.len;
-        int err;
+        ssize_t err;
         memset(buffer,(char)0,MAX_RESPONSE_LEN);
         err=read_all(sockfd, buffer, len);
         printf("---len:%d, read:%d\n", len,err);

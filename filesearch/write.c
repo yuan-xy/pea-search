@@ -30,7 +30,7 @@ static int ZERO=0;
 #ifdef WIN32
 __declspec (thread) static BOOL is_ntfs_cur_drive=1;
 #else
-static BOOL is_ntfs_cur_drive=1;
+static BOOL is_ntfs_cur_drive=0;
 #endif
 
 #ifdef USE_ZIP
@@ -160,11 +160,9 @@ BOOL save2file0(int i){
 #ifdef WIN32
 	is_ntfs_cur_drive = IsNtfs(i);
 	if(is_ntfs_cur_drive){
-
 		fwrite(&(g_curFirstUSN[i]),sizeof(g_curFirstUSN[i]),1,fp);
 		fwrite(&(g_curNextUSN[i]),sizeof(g_curNextUSN[i]),1,fp);
 		fwrite(&(g_curJournalID[i]),sizeof(g_curJournalID[i]),1,fp);
-
 	}else
 #endif
 	{
@@ -189,6 +187,57 @@ BOOL save_db(int i){
 	#endif
 }
 
+static BOOL readfile_header(int i, FILE *fp){
+    BOOL online = i<DIRVE_COUNT;
+    int d=0;
+    unsigned short magic;
+    unsigned short major_ver;
+    unsigned short minor_ver;
+    DriveInfo info;
+    fread(&magic,MAGIC_LEN,1,fp);
+    if(magic!=MAGIC) goto error;
+    d=(int)fread(&major_ver,1,1,fp);
+    if(d<1) goto error;
+    d=(int)fread(&minor_ver,1,1,fp);
+    if(d<1) goto error;
+    fread(&info,sizeof(DriveInfo),1,fp);
+    if(online){
+        if(info.serialNumber!=g_VolsInfo[i].serialNumber) goto error;
+    }else {
+        g_VolsInfo[i] = info;
+    }
+#ifdef WIN32
+    if(IsNtfs(i)){
+        USN         first_usn;
+        USN         next_usn;
+        DWORDLONG   jid;
+        d=(int)fread(&first_usn,sizeof(USN),1,fp);
+        if(d<1) goto error;
+        d=(int)fread(&next_usn,sizeof(USN),1,fp);
+        if(d<1) goto error;
+        d=(int)fread(&jid,sizeof(DWORDLONG),1,fp);
+        if(d<1) goto error;
+        if(online){
+            if(jid!=g_curJournalID[i]) g_expires[i]=1;
+            my_assert(next_usn<=g_curNextUSN[i],0);
+            if(next_usn < g_curFirstUSN[i]) g_expires[i]=1;
+        }
+    }else
+#endif
+    {
+        time_t last;
+        d=(int)fread(&last,sizeof(time_t),1,fp);
+        if(d<1) goto error;
+        if(online){
+            if(passed_one_day(last)) g_expires[i]=1;
+        }
+    }
+    if(g_expires[i]==1) goto error;
+    return 1;
+error:
+	return 0;
+}
+
 BOOL readfile(int i, char *filename){
 	BOOL gen_root=0;
 	int count=0,d=0;
@@ -200,65 +249,7 @@ BOOL readfile(int i, char *filename){
 		fp = fopen(name, "rb");
 	}
 	if(fp==NULL) return 0;
-	{
-		unsigned short magic;
-		unsigned short major_ver;
-		unsigned short minor_ver;
-		DriveInfo info;
-		fread(&magic,MAGIC_LEN,1,fp);
-		if(magic!=MAGIC) goto error;
-		d=(int)fread(&major_ver,1,1,fp);
-		if(d<1) goto error;
-		d=(int)fread(&minor_ver,1,1,fp);
-		if(d<1) goto error;
-		fread(&info,sizeof(DriveInfo),1,fp);
-		if(i<DIRVE_COUNT){
-			if(info.serialNumber!=g_VolsInfo[i].serialNumber) goto error;
-#ifdef WIN32
-			if(IsNtfs(i)){
-				USN         first_usn;
-				USN         next_usn;
-				DWORDLONG   jid;
-				d=(int)fread(&first_usn,sizeof(USN),1,fp);
-				if(d<1) goto error;
-				d=(int)fread(&next_usn,sizeof(USN),1,fp);
-				if(d<1) goto error;
-				d=(int)fread(&jid,sizeof(DWORDLONG),1,fp);
-				if(d<1) goto error;
-                if(jid!=g_curJournalID[i]) g_expires[i]=1;
-                my_assert(next_usn<=g_curNextUSN[i],0);
-                if(next_usn < g_curFirstUSN[i]) g_expires[i]=1;
-			}else
-#endif
-			{
-				time_t last;
-				d=(int)fread(&last,sizeof(time_t),1,fp);
-				if(d<1) goto error;
-				if(passed_one_day(last)) g_expires[i]=1;
-			}
-			if(g_expires[i]==1) goto error;
-		}else{
-			g_VolsInfo[i] = info;
-#ifdef WIN32
-			if(IsNtfs(i)){
-				USN         first_usn;
-				USN         next_usn;
-				DWORDLONG   jid;
-				d=(int)fread(&first_usn,sizeof(USN),1,fp);
-				if(d<1) goto error;
-				d=(int)fread(&next_usn,sizeof(USN),1,fp);
-				if(d<1) goto error;
-				d=(int)fread(&jid,sizeof(DWORDLONG),1,fp);
-				if(d<1) goto error;
-			}else
-#endif
-			{
-				time_t last;
-				d=(int)fread(&last,sizeof(time_t),1,fp);
-				if(d<1) goto error;
-			}
-		}
-	}
+	if(!readfile_header(i,fp)) goto error;
 	do{
 		NEW0(FileEntry,file);
 		d = (int)fread(file,sizeof(KEY),2,fp);
@@ -268,13 +259,14 @@ BOOL readfile(int i, char *filename){
 		}
 		d = (int)fread(&file->us.value,sizeof(file->us),2,fp);
 		if(d<2) goto error;
+        //printf("%lx,%lx\n",file->FileReferenceNumber,file->up.ParentFileReferenceNumber); 
 		file = (pFileEntry) realloc_safe(file,FILE_ENTRY_SIZE(file));
 		d = (int)fread(file->FileName,sizeof(char),file->us.v.FileNameLength,fp);
 		if(d<file->us.v.FileNameLength) goto error;
 		file->children = NULL;
 		add2Map(file,i);
 		if(!gen_root){
-			if(i<26){
+			if(i<DIRVE_COUNT){
 				#ifdef WIN32
 				if(IsNtfs(i)){
 					if(!IsRoot(file->FileReferenceNumber)) goto error;

@@ -15,8 +15,8 @@ void search0(void *name){
 	sEnv->order=0;
 	sEnv->file_type=0;
     sEnv->personal=1;
-	wcscpy(sEnv->path_name, L"E:\\backup");
-	sEnv->path_len=0;
+	wcscpy(sEnv->path_name, L"/Users/ylt/Documents/");
+	sEnv->path_len=wcslen(L"/Users/ylt/Documents/");
 	#ifdef WIN32
 	{
 		DWORD size=MAX_PATH;

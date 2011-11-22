@@ -107,7 +107,7 @@ extern "C" {
 typedef unsigned char FILE_NAME_LEN; //文件名长度类型
 typedef unsigned int MINUTE; //以分钟表示的时间类型
 typedef unsigned short FSIZE; //文件大小类型
-typedef unsigned char UTF8, *pUTF8; //UTF8类型的字符串
+typedef char UTF8, *pUTF8; //UTF8类型的字符串
 
 
 //排序方式常量定义
