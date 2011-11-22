@@ -189,6 +189,7 @@ BOOL save_db(int i){
 
 static BOOL readfile_header(int i, FILE *fp){
     BOOL online = i<DIRVE_COUNT;
+    BOOL expire = 0;
     int d=0;
     unsigned short magic;
     unsigned short major_ver;
@@ -218,9 +219,9 @@ static BOOL readfile_header(int i, FILE *fp){
         d=(int)fread(&jid,sizeof(DWORDLONG),1,fp);
         if(d<1) goto error;
         if(online){
-            if(jid!=g_curJournalID[i]) g_expires[i]=1;
+            if(jid!=g_curJournalID[i]) expire=1;
             my_assert(next_usn<=g_curNextUSN[i],0);
-            if(next_usn < g_curFirstUSN[i]) g_expires[i]=1;
+            if(next_usn < g_curFirstUSN[i]) expire=1;
         }
     }else
 #endif
@@ -229,10 +230,10 @@ static BOOL readfile_header(int i, FILE *fp){
         d=(int)fread(&last,sizeof(time_t),1,fp);
         if(d<1) goto error;
         if(online){
-            if(passed_one_day(last)) g_expires[i]=1;
+            if(passed_one_day(last)) expire=1;
         }
     }
-    if(g_expires[i]==1) goto error;
+    if(expire) goto error;
     return 1;
 error:
 	return 0;

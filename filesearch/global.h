@@ -15,7 +15,6 @@ extern "C" {
 
 extern BOOL		g_bVols[];//对应驱动器是否存在
 extern BOOL		g_loaded[];//对应驱动器的磁盘数据库是否已加载
-extern BOOL		g_expires[];//对应驱动器的磁盘数据库是否已过期
 extern DriveInfo	g_VolsInfo[]; //驱动器的信息
 extern HANDLE      g_hVols[];//保存A~Z的对应的卷句柄
 
