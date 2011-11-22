@@ -113,11 +113,12 @@ int print_path_str(pFileEntry file, char *p){
 
 //年5b    月4b    日5b     时5b   分5b
 //00000   0000   00000  00000    00000
+
+#ifdef WIN32
+
 #ifndef YEAR_START
 #define YEAR_START 1990
 #endif
-
-#ifdef WIN32
 INLINE MINUTE ConvertSystemTimeToMinute(SYSTEMTIME sysTime)
 {
     MINUTE time32=0;
@@ -147,6 +148,10 @@ void set_time(pFileEntry file, PFILETIME time){
 	SET_TIME(file,ConvertSystemTimeToMinute(st));
 }
 #else
+
+#ifndef YEAR_START
+#define YEAR_START 90
+#endif
 INLINE MINUTE ConvertSystemTimeToMinute(time_t sysTime)
 {
     MINUTE time32=0;
@@ -166,7 +171,7 @@ INLINE void ConvertMinuteToSystemTime(struct tm *st, MINUTE time32)
     st->tm_hour=time32&0x1f;time32>>=5;
     st->tm_mday=time32&0x1f;time32>>=5;
     st->tm_mon=time32&0xf;time32>>=4;
-    st->tm_year=time32+YEAR_START;
+    st->tm_year=time32+YEAR_START+1900;
 }
 
 void set_time(pFileEntry file, time_t time){
