@@ -206,8 +206,6 @@ extern void DirIterateWithoutSelf(pFileEntry file,pFileVisitor visitor, void *da
  */
 extern void AllFilesIterate(pFileVisitor visitor, void *data, BOOL offline);
 
-extern void FileRemoveFilter(pFileEntry file, void *data);
-
 extern BOOL check_file_entry(pFileEntry file, void *data);
 
 #ifdef WIN32

@@ -42,6 +42,18 @@ static pFileEntry initUnixFile(const struct stat *statptr, char *filename, pFile
 	return ret;
 }
 
+BOOL ignore_file(char *fullpath, char *filename){
+    int filenamelen = strlen(filename);
+    if(filenamelen==3 && strncmp(filename,"CVS",3)==0) return 1;
+    if(filenamelen==4 && strncmp(filename,".git",4)==0) return 1;
+    if(filenamelen==4 && strncmp(filename,".svn",4)==0) return 1;
+#ifdef APPLE
+    if(strncmp(fullpath,"/private",8)==0) return 1;
+#else
+    if(strncmp(fullpath,"/tmp",4)==0) return 1;
+#endif
+    return 0;
+}
 
 static void dopath(char *fullpath, char *filename, pFileEntry parent, int i){
 	struct stat		statbuf;
@@ -52,6 +64,7 @@ static void dopath(char *fullpath, char *filename, pFileEntry parent, int i){
         }else{
             self = parent;
         }
+        if(ignore_file(fullpath,filename)) return;
 		if(S_ISDIR(statbuf.st_mode)) {
 			char *ptr;
 			DIR *dp;

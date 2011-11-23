@@ -26,6 +26,8 @@ extern int getDrive(pFileEntry file);
 #define is_system_ffd(find_data)  find_data->dwFileAttributes&FILE_ATTRIBUTE_SYSTEM
 #define is_dir_ffd(find_data)     find_data->dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY
 
+extern void FileRemoveFilter(pFileEntry file, void *data);
+
 extern BOOL CloseVolumeHandle(int i);
 
 #endif  // FILE_SEARCH_FS_COMMON_WIN_H_

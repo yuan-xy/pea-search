@@ -22,12 +22,10 @@ BOOL read_build_check(int i){
 }
 
 void after_build(int i){
-	FilesIterate(g_rootVols[i],FileRemoveFilter,NULL);
 }
 
 void load_online_db(int i){
 	if(read_build_check(i)){
-		after_build(i);
 		g_loaded[i]=1;
 		printf("load drive %c finished.\n",i+'A');
 	}
@@ -38,7 +36,6 @@ static void scan(){
 	if(g_loaded[i]) return;
 	resetMap(i);
 	scanUnix(genRootFileEntry(i),i);
-	after_build(i);
 	g_loaded[i]=1;
 	save_db(i);
 	printf("Scan drive %c finished.\n",i+'A');
@@ -48,15 +45,7 @@ void rescan(int i){
 	if(i<0 || i>=DIRVE_COUNT || g_loaded[i] == 0) return;
 	g_loaded[i] = 0;
 	deleteFile(g_rootVols[i]);
-	scan(i);
-}
-
-static int get_next_offline_slot(){
-	int i;
-	for(i=DIRVE_COUNT;i<DIRVE_COUNT_OFFLINE;i++){
-		if(!g_loaded[i]) return i;
-	}
-	return -1;
+	scan();
 }
 
 BOOL gigaso_init(){
