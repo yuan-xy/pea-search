@@ -6,8 +6,9 @@
 #include "search.h"
 #include <dirent.h>
 #include <limits.h>
+#include "unixfs.h"
 
-static pFileEntry initUnixFile(const struct stat *statptr, char *filename, pFileEntry parent, int i){
+pFileEntry initUnixFile(const struct stat *statptr, char *filename, pFileEntry parent){
 	int len = strlen(filename);//TODO: 直接传递d_namlen
 	NEW0_FILE(ret,len);
 	ret->us.v.FileNameLength = len;
@@ -42,7 +43,7 @@ static pFileEntry initUnixFile(const struct stat *statptr, char *filename, pFile
 	return ret;
 }
 
-BOOL ignore_file(char *fullpath, char *filename){
+BOOL ignore_dir(char *fullpath, char *filename){
     int filenamelen = strlen(filename);
     if(filenamelen==3 && strncmp(filename,"CVS",3)==0) return 1;
     if(filenamelen==4 && strncmp(filename,".git",4)==0) return 1;
@@ -55,22 +56,32 @@ BOOL ignore_file(char *fullpath, char *filename){
     return 0;
 }
 
+BOOL ignore_dir2(char *dir_name){
+    char *dir_only_name = strrchr(dir_name,'/')+1;
+    if(*dir_only_name=='\0'){
+        *(dir_only_name-1) = '\0';
+        dir_only_name = strrchr(dir_name,'/')+1;
+    }
+    return ignore_dir(dir_name,dir_only_name);
+}
+
+
 static void dopath(char *fullpath, char *filename, pFileEntry parent, int i){
 	struct stat		statbuf;
 	if (lstat(fullpath, &statbuf) >= 0){
 		pFileEntry self;
         if(*filename!='\0'){
-            self = initUnixFile(&statbuf, filename,parent,i);
+            self = initUnixFile(&statbuf, filename,parent);
         }else{
             self = parent;
         }
-        if(ignore_file(fullpath,filename)) return;
+        if(ignore_dir(fullpath,filename)) return;
 		if(S_ISDIR(statbuf.st_mode)) {
 			char *ptr;
 			DIR *dp;
 			ptr = fullpath + strlen(fullpath);	/* point to end of fullpath */
 			*ptr++ = '/';
-			*ptr = 0;
+			*ptr = '\0';
 			if ((dp = opendir(fullpath)) != NULL) {
 /*
  TODO: The scandir(3) function returns an array of directory entries that you can quickly iterate through. 
