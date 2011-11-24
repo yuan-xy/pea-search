@@ -8,6 +8,45 @@
 #include <limits.h>
 #include "unixfs.h"
 
+BOOL same_file(pFileEntry file, struct dirent * dp){
+    if (dp->d_namlen == file->us.v.FileNameLength && !strcmp(dp->d_name, file->FileName)) {
+        return 1;
+    }   
+    return 0;
+}
+
+void dir_iterate(char *dir_name, pDirentVisitor visitor, void *data){
+    struct dirent * dp;
+    DIR * dirp = opendir(dir_name);
+    if(dirp==NULL) return;
+    /*
+     TODO: The scandir(3) function returns an array of directory entries that you can quickly iterate through. 
+     This is somewhat easier than reading a directory manually with opendir(3), readdir(3), and so on, and is slightly more efficient since you will always iterate through the entire directory while caching anyway.
+     */
+    while ((dp = readdir(dirp)) != NULL){
+        if (strcmp(dp->d_name, ".") == 0  || strcmp(dp->d_name, "..") == 0) continue;
+        (*visitor)(dir_name,dirp,dp,data);
+    }
+    closedir(dirp);
+}
+
+BOOL dir_iterateB(char *dir_name, pDirentVisitorB visitor, void *data, char *buffer){
+    struct dirent * dp;
+    DIR * dirp = opendir(dir_name);
+    if(dirp==NULL) return NULL;
+    while ((dp = readdir(dirp)) != NULL){
+        if (strcmp(dp->d_name, ".") == 0  || strcmp(dp->d_name, "..") == 0) continue;
+        BOOL flag = (*visitor)(dir_name,dirp,dp,data);
+        if(flag){
+            if(buffer!=NULL) strcpy(buffer, dp->d_name);
+            closedir(dirp); 
+            return 1; 
+        }
+    }
+    closedir(dirp); 
+    return 0;
+}
+
 pFileEntry initUnixFile(const struct stat *statptr, char *filename, pFileEntry parent){
 	int len = strlen(filename);//TODO: 直接传递d_namlen
 	NEW0_FILE(ret,len);
@@ -66,8 +105,25 @@ BOOL ignore_dir2(char *dir_name){
 }
 
 
-static void dopath(char *fullpath, char *filename, pFileEntry parent, int i){
+static char *fullpath;
+struct scan_context{
+    char *last_slash;
+    pFileEntry parent;
+};
+typedef struct scan_context ScanContext, *pScanContext;
+
+
+static void dopath(char *filename, pFileEntry parent);
+
+static void dirent_visitor(char *dir_name, DIR * dirp, struct dirent * dp, void *data){
+    pScanContext ctx = (pScanContext)data;
+    strcpy(ctx->last_slash, dp->d_name);	/* append name after slash */
+    dopath(dp->d_name,ctx->parent);    
+}
+
+static void dopath(char *filename, pFileEntry parent){
 	struct stat		statbuf;
+    //printf("%s, %s, %s\n",fullpath,last_slash, filename);
 	if (lstat(fullpath, &statbuf) >= 0){
 		pFileEntry self;
         if(*filename!='\0'){
@@ -77,25 +133,15 @@ static void dopath(char *fullpath, char *filename, pFileEntry parent, int i){
         }
         if(ignore_dir(fullpath,filename)) return;
 		if(S_ISDIR(statbuf.st_mode)) {
-			char *ptr;
-			DIR *dp;
+            ScanContext ctx;
+            char *ptr;
 			ptr = fullpath + strlen(fullpath);	/* point to end of fullpath */
 			*ptr++ = '/';
 			*ptr = '\0';
-			if ((dp = opendir(fullpath)) != NULL) {
-/*
- TODO: The scandir(3) function returns an array of directory entries that you can quickly iterate through. 
-       This is somewhat easier than reading a directory manually with opendir(3), readdir(3), and so on, and is slightly more efficient since you will always iterate through the entire directory while caching anyway.
-*/
-				struct dirent	*dirp;
-				while ((dirp = readdir(dp)) != NULL) {
-					if (strcmp(dirp->d_name, ".") == 0  || strcmp(dirp->d_name, "..") == 0) continue;
-					strcpy(ptr, dirp->d_name);	/* append name after slash */
-					dopath(fullpath, dirp->d_name,self,i);
-				}
-				ptr[-1] = 0;	/* erase everything from slash onwards */
-				if (closedir(dp) < 0) printf("can't close directory %s", fullpath);
-			}
+            ctx.last_slash = ptr;
+            ctx.parent = self;
+            dir_iterate(fullpath, dirent_visitor, &ctx);
+			ptr[-1] = '\0';	/* erase everything from slash onwards */
 		}
 	}
 }
@@ -103,11 +149,11 @@ static void dopath(char *fullpath, char *filename, pFileEntry parent, int i){
 
 int scanUnix(pFileEntry root, int i){
 	long len = pathconf("/", _PC_PATH_MAX);
-	char *fullpath = (char *)malloc_safe(len);
+	fullpath = (char *)malloc_safe(len);
 	strncpy(fullpath, "/", len);
 	fullpath[len-1] = 0;
 	printf("%d ,%s\n",len,fullpath);
-	dopath(fullpath,"",root,i);
+	dopath("",root);
 	free_safe(fullpath);
 	return ALL_FILE_COUNT;
 }

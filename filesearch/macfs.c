@@ -16,15 +16,19 @@ static FSEventStreamContext *_context;
 static BOOL _running=0;
 static pthread_t ntid;
 
-BOOL same_file(pFileEntry file, struct dirent * dp){
-    if (dp->d_namlen == file->us.v.FileNameLength && !strcmp(dp->d_name, file->FileName)) {
-        return 1;
-    }   
-    return 0;
-}
-
-static BOOL find_file_in_cur_dir(pFileEntry dir, struct dirent * file){
-    return SubDirIterateB(dir, (pFileVisitorB)same_file, file)!=NULL;
+void add_file_visitor(char *dir_name, DIR * dirp, struct dirent * dp, void *data){
+    pFileEntry dir = (pFileEntry)data;
+    if(SubDirIterateB(dir, (pFileVisitorB)same_file, dp)==NULL){
+        struct stat		statbuf;
+        char buffer[MAX_PATH],*p=buffer;
+        p=stpcpy(p,dir_name);
+        p=stpcpy(p,"/");
+        p=stpcpy(p,dp->d_name);
+        if (lstat(buffer, &statbuf) >= 0){
+            pFileEntry pf = initUnixFile(&statbuf,dp->d_name,dir);
+            printf("add file to tree: %s\n", pf->FileName);
+        }
+    }
 }
 
 static void add_file(char * dir_name){
@@ -32,37 +36,23 @@ static void add_file(char * dir_name){
         printf("ignore dir: %s\n", dir_name);
         return; 
     }else{
-        DIR * dirp = opendir(dir_name);
-        struct dirent * dp;
         pFileEntry dir = find_file(dir_name,strlen(dir_name));
-        if(dir==NULL || dirp==NULL) return;
-        while ((dp = readdir(dirp)) != NULL){
-            if (strcmp(dp->d_name, ".") == 0  || strcmp(dp->d_name, "..") == 0) continue;
-            if(!find_file_in_cur_dir(dir,dp)){
-                struct stat		statbuf;
-                char buffer[MAX_PATH],*p=buffer;
-                p=stpcpy(p,dir_name);
-                p=stpcpy(p,"/");
-                p=stpcpy(p,dp->d_name);
-                if (lstat(buffer, &statbuf) >= 0){
-                    pFileEntry pf = initUnixFile(&statbuf,dp->d_name,dir);
-                    printf("add file to tree: %s\n", pf->FileName);
-                }
-            }
-        }
-        closedir(dirp);
+        if(dir==NULL) return;
+        dir_iterate(dir_name, add_file_visitor, dir);
     }
 }
-  
-static void has_file(pFileEntry file, void *data){
-    DIR * dirp = (DIR *)data;
-    struct dirent * dp;
-    while ((dp = readdir(dirp)) != NULL){
-        if (strcmp(dp->d_name, ".") == 0  || strcmp(dp->d_name, "..") == 0) continue;
-        if(same_file(file,dp)) return;
+
+static BOOL same_file_visitor(char *dir_name, DIR * dirp, struct dirent * dp, void *data){
+    pFileEntry file = (pFileEntry)data;
+    return same_file(file,dp);
+}
+
+static void remove_file_visitor(pFileEntry file, void *data){
+    char * dir_name = (char *)data;
+    if(!dir_iterateB(dir_name, same_file_visitor, file, NULL)){
+        printf("delete file: %s\n", file->FileName);
+        deleteFile(file);
     }
-    printf("delete file: %s\n", file->FileName);
-    deleteFile(file);
 }
 
 static void remove_file(char * dir_name){
@@ -70,11 +60,9 @@ static void remove_file(char * dir_name){
         printf("ignore dir: %s\n", dir_name);
         return; 
     }else{
-        DIR * dirp = opendir(dir_name);
         pFileEntry dir = find_file(dir_name,strlen(dir_name));
-        if(dir==NULL || dirp==NULL) return;
-        SubDirIterate(dir, has_file, dirp);
-        closedir(dirp);
+        if(dir==NULL) return;
+        SubDirIterate(dir, remove_file_visitor, dir_name);
     }
 }
 
