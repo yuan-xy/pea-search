@@ -30,14 +30,13 @@ extern int scanUnix(pFileEntry root, int i);
 
     /**
      * 在迭代中访问一个文件
-     * @param dp 迭代的目录名
-     * @param dirp 目录的DIR *指针
+     * @param dir_name 迭代的目录名
      * @param dp 待访问的文件
      * @param args 可变参数
      * @return 是否提前结束循环
      */
-    typedef BOOL (*pDirentVisitorB)(char *dir_name, DIR * dirp, struct dirent * dp, va_list args);
-    typedef void (*pDirentVisitor)(char *dir_name, DIR * dirp, struct dirent * dp, va_list args);
+    typedef BOOL (*pDirentVisitorB)(char *dir_name, struct dirent * dp, va_list args);
+    typedef void (*pDirentVisitor)(char *dir_name, struct dirent * dp, va_list args);
     
     /**
      * 访问一个目录下的所有的文件，执行给定的访问函数

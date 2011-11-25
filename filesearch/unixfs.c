@@ -15,6 +15,33 @@ BOOL same_file(pFileEntry file, struct dirent * dp){
     return 0;
 }
 
+int ignore_filter_scandir(struct dirent *dp){
+    return strcmp(dp->d_name, ".") != 0  && strcmp(dp->d_name, "..") != 0;
+}
+
+static BOOL dir_iterate_bool_alternate(char *dir_name, pDirentVisitorB visitor, va_list args, char *buffer, BOOL breakLoop){
+    struct dirent **namelist;
+    int k,i = scandir(dir_name, &namelist,ignore_filter_scandir,alphasort);
+    //namelist如何释放
+    if(i<0) return 0;
+    for(k=0;k<i;k++){
+        struct dirent *dp = namelist[k];
+        va_list ap2;
+        va_copy(ap2,args);
+        if(breakLoop){
+            BOOL flag = (*visitor)(dir_name,dp,ap2);
+            if(flag){
+                if(buffer!=NULL) strcpy(buffer, dp->d_name);
+                return 1; 
+            } 
+        }else{
+            (*visitor)(dir_name,dp,ap2);
+        }
+        va_end(ap2);
+    }
+    return 0;
+}
+
 static BOOL dir_iterate_bool(char *dir_name, pDirentVisitorB visitor, va_list args, char *buffer, BOOL breakLoop){
     struct dirent * dp;
     DIR * dirp = opendir(dir_name);
@@ -24,14 +51,14 @@ static BOOL dir_iterate_bool(char *dir_name, pDirentVisitorB visitor, va_list ar
         va_list ap2;
         va_copy(ap2,args);
         if(breakLoop){
-            BOOL flag = (*visitor)(dir_name,dirp,dp,ap2);
+            BOOL flag = (*visitor)(dir_name,dp,ap2);
             if(flag){
                 if(buffer!=NULL) strcpy(buffer, dp->d_name);
                 closedir(dirp); 
                 return 1; 
             } 
         }else{
-            (*visitor)(dir_name,dirp,dp,ap2);
+            (*visitor)(dir_name,dp,ap2);
         }
         va_end(ap2);
     }
@@ -117,7 +144,7 @@ static char *fullpath;
 
 static void dopath(char *filename, pFileEntry parent);
 
-static void dirent_visitor(char *dir_name, DIR * dirp, struct dirent * dp, va_list ap){
+static void dirent_visitor(char *dir_name, struct dirent * dp, va_list ap){
     char *last_slash = va_arg(ap, char *);
     pFileEntry parent = va_arg(ap, pFileEntry);
     //printf("%s, %x, %x, %s\n",fullpath,last_slash, fullpath, dp->d_name);

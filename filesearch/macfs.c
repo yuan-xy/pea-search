@@ -17,7 +17,7 @@ static FSEventStreamContext *_context;
 static BOOL _running=0;
 static pthread_t ntid;
 
-void add_file_visitor(char *dir_name, DIR * dirp, struct dirent * dp, va_list ap){
+void add_file_visitor(char *dir_name, struct dirent * dp, va_list ap){
     pFileEntry dir = va_arg(ap, pFileEntry);
     if(SubDirIterateB(dir, (pFileVisitorB)same_file, dp)==NULL){
         struct stat		statbuf;
@@ -43,7 +43,7 @@ static void add_file(char * dir_name){
     }
 }
 
-static BOOL same_file_visitor(char *dir_name, DIR * dirp, struct dirent * dp, va_list ap){
+static BOOL same_file_visitor(char *dir_name, struct dirent * dp, va_list ap){
     pFileEntry file = va_arg(ap, pFileEntry);
     return same_file(file,dp);
 }
