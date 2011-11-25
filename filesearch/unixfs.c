@@ -15,36 +15,44 @@ BOOL same_file(pFileEntry file, struct dirent * dp){
     return 0;
 }
 
-void dir_iterate(char *dir_name, pDirentVisitor visitor, void *data){
+static BOOL dir_iterate_bool(char *dir_name, pDirentVisitorB visitor, va_list args, char *buffer, BOOL breakLoop){
     struct dirent * dp;
     DIR * dirp = opendir(dir_name);
-    if(dirp==NULL) return;
-    /*
-     TODO: The scandir(3) function returns an array of directory entries that you can quickly iterate through. 
-     This is somewhat easier than reading a directory manually with opendir(3), readdir(3), and so on, and is slightly more efficient since you will always iterate through the entire directory while caching anyway.
-     */
+    if(dirp==NULL) return 0;
     while ((dp = readdir(dirp)) != NULL){
         if (strcmp(dp->d_name, ".") == 0  || strcmp(dp->d_name, "..") == 0) continue;
-        (*visitor)(dir_name,dirp,dp,data);
-    }
-    closedir(dirp);
-}
-
-BOOL dir_iterateB(char *dir_name, pDirentVisitorB visitor, void *data, char *buffer){
-    struct dirent * dp;
-    DIR * dirp = opendir(dir_name);
-    if(dirp==NULL) return NULL;
-    while ((dp = readdir(dirp)) != NULL){
-        if (strcmp(dp->d_name, ".") == 0  || strcmp(dp->d_name, "..") == 0) continue;
-        BOOL flag = (*visitor)(dir_name,dirp,dp,data);
-        if(flag){
-            if(buffer!=NULL) strcpy(buffer, dp->d_name);
-            closedir(dirp); 
-            return 1; 
+        va_list ap2;
+        va_copy(ap2,args);
+        if(breakLoop){
+            BOOL flag = (*visitor)(dir_name,dirp,dp,ap2);
+            if(flag){
+                if(buffer!=NULL) strcpy(buffer, dp->d_name);
+                closedir(dirp); 
+                return 1; 
+            } 
+        }else{
+            (*visitor)(dir_name,dirp,dp,ap2);
         }
+        va_end(ap2);
     }
     closedir(dirp); 
     return 0;
+}
+
+void dir_iterate(pDirentVisitor visitor, char *dir_name, ...){
+    va_list args;
+	va_start (args, dir_name);
+    dir_iterate_bool(dir_name, (pDirentVisitorB)visitor, args, NULL, 0);
+    va_end(args);
+}
+
+BOOL dir_iterateB(pDirentVisitorB visitor, char *dir_name, char *buffer, ...){
+    BOOL ret;
+    va_list args;
+	va_start (args, buffer);
+    ret = dir_iterate_bool(dir_name, visitor, args, buffer, 1);
+    va_end(args);
+    return ret;
 }
 
 pFileEntry initUnixFile(const struct stat *statptr, char *filename, pFileEntry parent){
@@ -106,24 +114,19 @@ BOOL ignore_dir2(char *dir_name){
 
 
 static char *fullpath;
-struct scan_context{
-    char *last_slash;
-    pFileEntry parent;
-};
-typedef struct scan_context ScanContext, *pScanContext;
-
 
 static void dopath(char *filename, pFileEntry parent);
 
-static void dirent_visitor(char *dir_name, DIR * dirp, struct dirent * dp, void *data){
-    pScanContext ctx = (pScanContext)data;
-    strcpy(ctx->last_slash, dp->d_name);	/* append name after slash */
-    dopath(dp->d_name,ctx->parent);    
+static void dirent_visitor(char *dir_name, DIR * dirp, struct dirent * dp, va_list ap){
+    char *last_slash = va_arg(ap, char *);
+    pFileEntry parent = va_arg(ap, pFileEntry);
+    //printf("%s, %x, %x, %s\n",fullpath,last_slash, fullpath, dp->d_name);
+    strcpy(last_slash, dp->d_name);	/* append name after slash */
+    dopath(dp->d_name,parent);    
 }
 
 static void dopath(char *filename, pFileEntry parent){
 	struct stat		statbuf;
-    //printf("%s, %s, %s\n",fullpath,last_slash, filename);
 	if (lstat(fullpath, &statbuf) >= 0){
 		pFileEntry self;
         if(*filename!='\0'){
@@ -133,14 +136,11 @@ static void dopath(char *filename, pFileEntry parent){
         }
         if(ignore_dir(fullpath,filename)) return;
 		if(S_ISDIR(statbuf.st_mode)) {
-            ScanContext ctx;
             char *ptr;
 			ptr = fullpath + strlen(fullpath);	/* point to end of fullpath */
 			*ptr++ = '/';
 			*ptr = '\0';
-            ctx.last_slash = ptr;
-            ctx.parent = self;
-            dir_iterate(fullpath, dirent_visitor, &ctx);
+            dir_iterate(dirent_visitor, fullpath, ptr, self);
 			ptr[-1] = '\0';	/* erase everything from slash onwards */
 		}
 	}

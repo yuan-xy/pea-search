@@ -7,6 +7,7 @@
 #include "unixfs.h"
 #include <dirent.h>
 #include <limits.h>
+#include <pthread.h>
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreServices/CoreServices.h>
@@ -16,8 +17,8 @@ static FSEventStreamContext *_context;
 static BOOL _running=0;
 static pthread_t ntid;
 
-void add_file_visitor(char *dir_name, DIR * dirp, struct dirent * dp, void *data){
-    pFileEntry dir = (pFileEntry)data;
+void add_file_visitor(char *dir_name, DIR * dirp, struct dirent * dp, va_list ap){
+    pFileEntry dir = va_arg(ap, pFileEntry);
     if(SubDirIterateB(dir, (pFileVisitorB)same_file, dp)==NULL){
         struct stat		statbuf;
         char buffer[MAX_PATH],*p=buffer;
@@ -38,18 +39,18 @@ static void add_file(char * dir_name){
     }else{
         pFileEntry dir = find_file(dir_name,strlen(dir_name));
         if(dir==NULL) return;
-        dir_iterate(dir_name, add_file_visitor, dir);
+        dir_iterate(add_file_visitor, dir_name, dir);
     }
 }
 
-static BOOL same_file_visitor(char *dir_name, DIR * dirp, struct dirent * dp, void *data){
-    pFileEntry file = (pFileEntry)data;
+static BOOL same_file_visitor(char *dir_name, DIR * dirp, struct dirent * dp, va_list ap){
+    pFileEntry file = va_arg(ap, pFileEntry);
     return same_file(file,dp);
 }
 
 static void remove_file_visitor(pFileEntry file, void *data){
     char * dir_name = (char *)data;
-    if(!dir_iterateB(dir_name, same_file_visitor, file, NULL)){
+    if(!dir_iterateB(same_file_visitor, dir_name, NULL, file)){
         printf("delete file: %s\n", file->FileName);
         deleteFile(file);
     }
@@ -141,13 +142,13 @@ static void init(int i){
 }
 
 BOOL StopMonitorThreadMAC(int i){
-	    if(_running) FSEventStreamStop(_stream);
-	     FSEventStreamInvalidate(_stream); /* will remove from runloop */
-	     FSEventStreamRelease(_stream);
-	     free(_context);
-		pthread_kill(ntid,9);
+    if(_running) FSEventStreamStop(_stream);
+    FSEventStreamInvalidate(_stream); /* will remove from runloop */
+    FSEventStreamRelease(_stream);
+    free(_context);
+    return pthread_kill(ntid,9);
 }
 
 BOOL StartMonitorThreadMAC(int i){
-	pthread_create(&ntid,NULL,init,&i);
+	return pthread_create(&ntid,NULL,init,&i);
 }
