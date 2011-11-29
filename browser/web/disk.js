@@ -194,7 +194,7 @@ function set_hotkey(){
 
 function show_export(){
 	d = new Date();
-	$("#export-filename").val("c:\\gigaso-"+d.getFullYear()+
+	$("#export-filename").val("search-results-"+d.getFullYear()+
 		"-"+(d.getMonth()+1)+"-"+d.getDate() +"'"+d.getSeconds() +".txt");
 	$("#dialog-export").dialog({modal: true, width:600});
 }

@@ -91,15 +91,20 @@ static void feCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo
         }else if (flag & kFSEventStreamEventFlagItemInodeMetaMod){
             printf("meta ");
             printf("%04x: %s\n", flag, paths[i]);
+            //TODO: 忽略meta信息的变化，每隔一个月重新全扫描一次。
         }else if (flag & kFSEventStreamEventFlagItemRenamed){
             if(i+1<numEvents && eventFlags[i+1]==flag){
                 printf("move ");
                 printf("%04x: from: %s\n", flag, paths[i]);
                 printf(" to %s\n",paths[i+1]);
+                remove_file(paths[i]);
+                add_file(paths[i+1]);
                 i+=1;
             }else{
                 printf("rename ");
                 printf("%04x: %s\n", flag, paths[i]);
+                remove_file(paths[i]);
+                add_file(paths[i]);
             }
         }else if (flag & kFSEventStreamEventFlagMount){
             printf("mount ");
