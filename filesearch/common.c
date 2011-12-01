@@ -7,6 +7,11 @@
 
 #ifdef WIN32
 #include <Shlobj.h>
+#else
+#include <sys/utsname.h>
+#endif
+
+#ifdef WIN32
 
 BOOL setPWD(char *lpModuleName){
 	char szFilePath[MAX_PATH]={0};
@@ -220,7 +225,22 @@ BOOL get_user(WCHAR *userbuf){
 
 #else //WIN32
 
+BOOL get_os(WCHAR *osbuf){
+    struct utsname info;
+    if(uname(&info)==0){
+        swprintf(osbuf,MAX_PATH,L"%s %s %s",1,info.sysname,info.release,info.machine);
+		return 1;
+    }
+	return 0;
+}
 
+BOOL get_cpu(WCHAR *cpubuf){
+	return 1;
+}
+
+BOOL get_disk(WCHAR *diskbuf){
+	return 1;
+}
 BOOL get_user(WCHAR *userbuf){
 	//TODO
 	return 1;

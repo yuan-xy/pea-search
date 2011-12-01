@@ -9,10 +9,10 @@
 #include "unixfs.h"
 
 BOOL same_file(pFileEntry file, struct dirent * dp){
-    if (dp->d_namlen == file->us.v.FileNameLength && !strcmp(dp->d_name, file->FileName)) {
-        return 1;
-    }   
-    return 0;
+#ifdef APPLE
+    if(dp->d_namlen != file->us.v.FileNameLength) return 0;
+#endif
+    return strcmp(dp->d_name, file->FileName)==0;
 }
 
 int ignore_filter_scandir(struct dirent *dp){
