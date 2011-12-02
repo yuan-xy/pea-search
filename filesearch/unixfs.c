@@ -42,6 +42,17 @@ static BOOL dir_iterate_bool_alternate(char *dir_name, pDirentVisitorB visitor, 
     return 0;
 }
 
+void dir_iterate_block(char *dir_name, pDirentBlock block){
+    struct dirent * dp;
+    DIR * dirp = opendir(dir_name);
+    if(dirp==NULL) return;
+    while ((dp = readdir(dirp)) != NULL){
+        if (strcmp(dp->d_name, ".") == 0  || strcmp(dp->d_name, "..") == 0) continue;
+        block(dp);
+    }
+    closedir(dirp);  
+}
+
 static BOOL dir_iterate_bool(char *dir_name, pDirentVisitorB visitor, va_list args, char *buffer, BOOL breakLoop){
     struct dirent * dp;
     DIR * dirp = opendir(dir_name);
@@ -169,6 +180,9 @@ static void dopath(char *filename, pFileEntry parent){
 			*ptr = '\0';
             dir_iterate(dirent_visitor, fullpath, ptr, self);
 			ptr[-1] = '\0';	/* erase everything from slash onwards */
+            dir_iterate_block(fullpath, ^(struct dirent * dp){
+                //  
+            });
 		}
 	}
 }

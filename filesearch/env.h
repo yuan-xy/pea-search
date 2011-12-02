@@ -30,9 +30,6 @@ extern "C" {
 	#include <sys/types.h>		/* some systems still require this */
 	#include <sys/stat.h>
 	#include <sys/termios.h>	/* for winsize */
-	#ifndef TIOCGWINSZ
-	#include <sys/ioctl.h>
-	#endif
 	#include <stddef.h>	   
 	#include <string.h>	   
 	#include <strings.h>   

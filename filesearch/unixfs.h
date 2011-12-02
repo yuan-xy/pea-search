@@ -38,6 +38,9 @@ extern int scanUnix(pFileEntry root, int i);
     typedef BOOL (*pDirentVisitorB)(char *dir_name, struct dirent * dp, va_list args);
     typedef void (*pDirentVisitor)(char *dir_name, struct dirent * dp, va_list args);
     
+    typedef void (^pDirentBlock)(struct dirent * dp);
+    extern void dir_iterate_block(char *dir_name, pDirentBlock block);
+    
     /**
      * 访问一个目录下的所有的文件，执行给定的访问函数
      * @param visitor 访问函数
