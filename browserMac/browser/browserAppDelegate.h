@@ -50,6 +50,6 @@
 - (BOOL) term: (NSString*) path;
 
 - (NSString*) selectDir;
-
+- (void) crashTest;
 @end
 

@@ -49,18 +49,6 @@ public:
 		}
       return true;
     }
-    else if(name == "DoUpdate")
-    {
-      if(arguments.size() != 1 || !arguments[0]->IsString())
-        return false;
-		int h = (int)ShellExecuteA(NULL,"open",arguments[0]->GetStringValue().ToString().c_str(),NULL,NULL,SW_SHOWNORMAL);
-		if(h>32){
-			retval = CefV8Value::CreateBool(true);
-		}else{
-			retval = CefV8Value::CreateBool(false);
-		}
-		return true;
-    }
     else if(name == "CrashTest")
     {
 		int *i = (int*) 0x45;  
@@ -145,11 +133,7 @@ void InitExtensionTest()
     "    native function SelectDir();"
     "    return SelectDir();"
     "  };"
-    "  cef.gigaso.do_update = function(b) {"
-    "    native function DoUpdate();"
-    "    return DoUpdate(b);"
-    "  };"
-    "  cef.gigaso.crash_test = function() {"
+    "  cef.gigaso.crashTest = function() {"
     "    native function CrashTest();"
     "    return CrashTest();"
     "  };"

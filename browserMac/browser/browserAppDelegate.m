@@ -240,6 +240,8 @@ static BOOL connect_unix_socket(int *psock) {
             return @"copyPath";
 	} else if (sel == @selector(term:)) {
         return @"term";
+	} else if (sel == @selector(crashTest:)) {
+        return @"crashTest";
 	}else {
 		return nil;
 	}
@@ -415,6 +417,11 @@ static BOOL shell_exec(NSString* file, char* param){
         return [panel filename];
     } 
     return @"";
+}
+
+- (void) crashTest{
+    int *i = (int*) 0x45;  
+    *i = 5;  // crash!  
 }
 
 @end

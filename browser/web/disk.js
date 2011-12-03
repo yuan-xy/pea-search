@@ -292,7 +292,7 @@ function show_upgrade(){
 function do_upgrade(){
 	$("#dialog-upgrade").dialog("close");
 	file = cef.plugin.search("[///upgrade_file");
-	if(file) cef.gigaso.do_update(file);
+	if(file) cef.gigaso.shellDefault(file);
 }
 
 function show_upgrade_info(){

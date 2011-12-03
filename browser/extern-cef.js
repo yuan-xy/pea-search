@@ -31,5 +31,4 @@ cef.gigaso.ver = '';
 cef.gigaso.user = '';
 cef.gigaso.dev_tool = {};
 cef.gigaso.selectDir = {};
-cef.gigaso.do_update = {};
-cef.gigaso.crash_test = {};
+cef.gigaso.crashTest = {};

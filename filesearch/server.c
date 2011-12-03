@@ -366,6 +366,13 @@ static void send_response_update_file(SockOut hNamedPipe){
 				size_t ret = fread(fname,sizeof(char),MAX_PATH,file);
 				if(ret>0 || feof(file) ){
 					memcpy(p,fname,strlen(fname));
+					//TODO: 发送全路径
+					/*
+					char fullpath[MAX_PATH] = {0};
+					get_abs_path(fname,fullpath);
+					memcpy(p,fname,strlen(fullpath));
+                    p += strlen(fullpath);
+					*/
                     p += strlen(fname);
 				}
 			}
