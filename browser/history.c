@@ -1,4 +1,5 @@
 ﻿#include "history.h"
+#include "common.h"
 #include <stdio.h>
 
 static TCHAR his_files[MAX_HISTORY][MAX_PATH] = {{0}};
@@ -193,7 +194,7 @@ TCHAR *history_get(int wi){
 static BOOL get_history_filename(char *fbuffer){
 	DWORD size=MAX_PATH;
 	strcpy(fbuffer,"history");
-	GetUserNameA(fbuffer+strlen("history"), &size);
+	get_user(fbuffer+strlen("history"));
 	return 1;
 }
 

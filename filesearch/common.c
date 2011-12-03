@@ -9,6 +9,9 @@
 #include <Shlobj.h>
 #else
 #include <sys/utsname.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#include <sys/statvfs.h>
 #endif
 
 #ifdef WIN32
@@ -228,21 +231,72 @@ BOOL get_user(WCHAR *userbuf){
 BOOL get_os(WCHAR *osbuf){
     struct utsname info;
     if(uname(&info)==0){
-        swprintf(osbuf,MAX_PATH,L"%s %s %s",1,info.sysname,info.release,info.machine);
+        swprintf(osbuf,MAX_PATH,L"%s %s %s %s",info.sysname,info.nodename, info.release,info.machine);
 		return 1;
     }
 	return 0;
 }
 
+#ifdef APPLE
 BOOL get_cpu(WCHAR *cpubuf){
+    char model[512];
+    uint64_t ncpus;
+    uint64_t physmem;
+    uint64_t pagesize;
+    uint64_t cpuspeed;
+    size_t size;
+    size = sizeof(model);
+    if (sysctlbyname("hw.model", &model, &size, NULL, 0) < 0) {
+        return -1;
+    }
+    size = sizeof(uint64_t);
+    sysctlbyname("hw.ncpus", &ncpus, &size, NULL, 0);
+    sysctlbyname("hw.memsize", &physmem, &size, NULL, 0);
+    sysctlbyname("hw.pagesize", &pagesize, &size, NULL, 0);
+    sysctlbyname("hw.cpufrequency", &cpuspeed, &size, NULL, 0);
+    swprintf(cpubuf,MAX_PATH,L"%d %d %d %d %s ",ncpus, physmem>>20, pagesize, cpuspeed>>20,model);
 	return 1;
 }
+#else
+BOOL get_cpu(WCHAR *cpubuf){
+	int numcpus = 0;
+    char model[255];
+    int  cpuspeed;
+	char line[512];
+	FILE *fpModel = fopen("/proc/cpuinfo", "r");
+	if (fpModel) {
+		while (fgets(line, 511, fpModel) != NULL) {
+			if (strncmp(line, "model name", 10) == 0) {
+				numcpus++;
+				if (numcpus == 1) {
+					char *p = strchr(line, ':') + 2;
+					strcpy(model, p);
+					model[strlen(model)-1] = 0;
+				}
+            } else if (strncmp(line, "cpu MHz", 7) == 0) {
+                if (numcpus == 1) {
+                    sscanf(line, "%*s %*s : %u", &cpuspeed);
+                }
+            }
+        }
+        fclose(fpModel);
+		printf("%d %d %s\n",numcpus, cpuspeed,model);
+        return 0;
+    }
+    return 1;
+}
+#endif
 
 BOOL get_disk(WCHAR *diskbuf){
-	return 1;
+    struct statvfs vbuf;
+    if(statvfs("/", &vbuf)==0){
+		swprintf(diskbuf,MAX_PATH,L"%x",vbuf.f_fsid);
+		return 1;
+	}
+	return 0;
 }
 BOOL get_user(WCHAR *userbuf){
-	//TODO
+	swprintf(userbuf,MAX_PATH,L"%s",getenv("USER"));
 	return 1;
 }
 #endif

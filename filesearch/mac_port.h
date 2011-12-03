@@ -18,8 +18,6 @@ long GetTickCount();
 char* strrev(char* szT);
 
 char* _itoa(int value, char*  str, int radix);
-    
-void GetUserNameA(char *fbuffer, int *size);
 
 #endif  //  FILE_SEARCH_MAC_PORT_H_
 

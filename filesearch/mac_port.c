@@ -87,8 +87,3 @@ char* _itoa(int value, char*  str, int radix)
     str[pos] = '\0' ;
     return strrev(str);
 }
-
-void GetUserNameA(char *fbuffer, int *size){
-    //TODO: GetUserNameA
-    strcpy(fbuffer,"username");
-}
