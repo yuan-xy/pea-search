@@ -19,40 +19,6 @@ int ignore_filter_scandir(struct dirent *dp){
     return strcmp(dp->d_name, ".") != 0  && strcmp(dp->d_name, "..") != 0;
 }
 
-static BOOL dir_iterate_bool_alternate(char *dir_name, pDirentVisitorB visitor, va_list args, char *buffer, BOOL breakLoop){
-    struct dirent **namelist;
-    int k,i = scandir(dir_name, &namelist,ignore_filter_scandir,alphasort);
-    //namelist如何释放
-    if(i<0) return 0;
-    for(k=0;k<i;k++){
-        struct dirent *dp = namelist[k];
-        va_list ap2;
-        va_copy(ap2,args);
-        if(breakLoop){
-            BOOL flag = (*visitor)(dir_name,dp,ap2);
-            if(flag){
-                if(buffer!=NULL) strcpy(buffer, dp->d_name);
-                return 1; 
-            } 
-        }else{
-            (*visitor)(dir_name,dp,ap2);
-        }
-        va_end(ap2);
-    }
-    return 0;
-}
-
-void dir_iterate_block(char *dir_name, pDirentBlock block){
-    struct dirent * dp;
-    DIR * dirp = opendir(dir_name);
-    if(dirp==NULL) return;
-    while ((dp = readdir(dirp)) != NULL){
-        if (strcmp(dp->d_name, ".") == 0  || strcmp(dp->d_name, "..") == 0) continue;
-        block(dp);
-    }
-    closedir(dirp);  
-}
-
 static BOOL dir_iterate_bool(char *dir_name, pDirentVisitorB visitor, va_list args, char *buffer, BOOL breakLoop){
     struct dirent * dp;
     DIR * dirp = opendir(dir_name);
@@ -180,9 +146,6 @@ static void dopath(char *filename, pFileEntry parent){
 			*ptr = '\0';
             dir_iterate(dirent_visitor, fullpath, ptr, self);
 			ptr[-1] = '\0';	/* erase everything from slash onwards */
-            dir_iterate_block(fullpath, ^(struct dirent * dp){
-                //  
-            });
 		}
 	}
 }
