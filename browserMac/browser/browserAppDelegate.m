@@ -1,6 +1,7 @@
 #include "env.h"
 #include "sharelib.h"
 #include "history.h"
+#include "common.h"
 #include <stdio.h>
 #include <locale.h>
 #include	<sys/types.h>	/* basic system data types */
@@ -74,6 +75,41 @@ static BOOL connect_unix_socket(int *psock) {
         [dir release];
         dir = [value copy];
     }
+}
+
+- (NSString *)os {
+    char buf[MAX_PATH];
+    get_os(buf);
+    NSString* ret = [[NSString alloc] initWithUTF8String:buf];
+    return ret;
+}
+
+- (NSString *)cpu {
+    char buf[MAX_PATH];
+    get_cpu(buf);
+    NSString* ret = [[NSString alloc] initWithUTF8String:buf];
+    return ret;
+}
+
+- (NSString *)disk {
+    char buf[MAX_PATH];
+    get_disk(buf);
+    NSString* ret = [[NSString alloc] initWithUTF8String:buf];
+    return ret;
+}
+
+- (NSString *)ver {
+    char buf[MAX_PATH];
+    get_ver(buf);
+    NSString* ret = [[NSString alloc] initWithUTF8String:buf];
+    return ret;
+}
+
+- (NSString *)user {
+    char buf[MAX_PATH];
+    get_user(buf);
+    NSString* ret = [[NSString alloc] initWithUTF8String:buf];
+    return ret;
 }
 
 - (void)setCaze:(bool)b {

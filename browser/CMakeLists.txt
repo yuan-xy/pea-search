@@ -62,7 +62,10 @@ SET( SOURCES1
     test_history.c
     win_misc.h
     win_misc.cpp
-
+    "../filesearch/env.h"
+    "../filesearch/sharelib.h"
+    "../filesearch/common.h"
+    "../filesearch/common.c"
     )
 
 add_executable(test_history ${SOURCES1} )

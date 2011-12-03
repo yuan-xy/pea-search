@@ -226,22 +226,28 @@ BOOL get_user(WCHAR *userbuf){
 	return 1;
 }
 
+BOOL get_ver(TCHAR *verbuf){
+	swprintf(verbuf,MAX_PATH,L"%d.%d.%d",GIGASO_VERSION_MAJOR,GIGASO_VERSION_MINOR,GIGASO_VERSION_BUILD);
+	return 1;
+}
+
 #else //WIN32
 
-BOOL get_os(WCHAR *osbuf){
+BOOL get_os(TCHAR *osbuf){
     struct utsname info;
     if(uname(&info)==0){
-        swprintf(osbuf,MAX_PATH,L"%s %s %s %s",info.sysname,info.nodename, info.release,info.machine);
+        snprintf(osbuf,MAX_PATH,"%s %s %s %s",info.sysname,info.nodename, info.release,info.machine);
 		return 1;
     }
 	return 0;
 }
 
 #ifdef APPLE
-BOOL get_cpu(WCHAR *cpubuf){
+BOOL get_cpu(TCHAR *cpubuf){
     char model[512];
-    uint64_t ncpus;
-    uint64_t physmem;
+    uint64_t core;
+	uint64_t ncpus;
+    uint64_t memsize;
     uint64_t pagesize;
     uint64_t cpuspeed;
     size_t size;
@@ -250,15 +256,16 @@ BOOL get_cpu(WCHAR *cpubuf){
         return -1;
     }
     size = sizeof(uint64_t);
-    sysctlbyname("hw.ncpus", &ncpus, &size, NULL, 0);
-    sysctlbyname("hw.memsize", &physmem, &size, NULL, 0);
+	sysctlbyname("machdep.cpu.core_count", &core, &size, NULL, 0);
+    sysctlbyname("hw.ncpu", &ncpus, &size, NULL, 0);
+    sysctlbyname("hw.memsize", &memsize, &size, NULL, 0);
     sysctlbyname("hw.pagesize", &pagesize, &size, NULL, 0);
     sysctlbyname("hw.cpufrequency", &cpuspeed, &size, NULL, 0);
-    swprintf(cpubuf,MAX_PATH,L"%d %d %d %d %s ",ncpus, physmem>>20, pagesize, cpuspeed>>20,model);
+    snprintf(cpubuf,MAX_PATH,"%d %d %d %d %d %s ",core,ncpus, memsize>>20, pagesize, cpuspeed>>20,model);
 	return 1;
 }
 #else
-BOOL get_cpu(WCHAR *cpubuf){
+BOOL get_cpu(TCHAR *cpubuf){
 	int numcpus = 0;
     char model[255];
     int  cpuspeed;
@@ -280,31 +287,31 @@ BOOL get_cpu(WCHAR *cpubuf){
             }
         }
         fclose(fpModel);
-		printf("%d %d %s\n",numcpus, cpuspeed,model);
+		snprintf(cpubuf, MAX_PATH, "%d %d %s",numcpus, cpuspeed,model);
         return 0;
     }
     return 1;
 }
 #endif
 
-BOOL get_disk(WCHAR *diskbuf){
+BOOL get_disk(TCHAR *diskbuf){
     struct statvfs vbuf;
     if(statvfs("/", &vbuf)==0){
-		swprintf(diskbuf,MAX_PATH,L"%x",vbuf.f_fsid);
+		snprintf(diskbuf,MAX_PATH,"%x",vbuf.f_fsid);
 		return 1;
 	}
 	return 0;
 }
-BOOL get_user(WCHAR *userbuf){
-	swprintf(userbuf,MAX_PATH,L"%s",getenv("USER"));
+BOOL get_user(TCHAR *userbuf){
+	snprintf(userbuf,MAX_PATH,"%s",getenv("USER"));
+	return 1;
+}
+
+BOOL get_ver(TCHAR *verbuf){
+	snprintf(verbuf,MAX_PATH,"%d.%d.%d",GIGASO_VERSION_MAJOR,GIGASO_VERSION_MINOR,GIGASO_VERSION_BUILD);
 	return 1;
 }
 #endif
-
-BOOL get_ver(WCHAR *verbuf){
-	swprintf(verbuf,MAX_PATH,L"%d.%d.%d",GIGASO_VERSION_MAJOR,GIGASO_VERSION_MINOR,GIGASO_VERSION_BUILD);
-	return 1;
-}
 
 BOOL passed_one_day(time_t last){
 	time_t now = time(NULL);

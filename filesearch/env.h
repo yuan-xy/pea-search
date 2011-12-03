@@ -11,6 +11,10 @@ extern "C" {
   #define INLINE
 #endif
 
+#if defined( __APPLE_CC__)
+	#define APPLE
+#endif
+
 	#include <stdio.h>	   
 	#include <stdlib.h>
 	#include <wchar.h>
@@ -36,6 +40,7 @@ extern "C" {
 	#include <unistd.h>	   
 	#include <signal.h>		/* for SIG_ERR */
 	#include <stdint.h>
+    #include <stdarg.h>
 	#include <time.h>
 	#include "mac_port.h"
 	

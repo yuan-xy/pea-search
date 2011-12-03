@@ -21,11 +21,21 @@
     int fontSize;
     int hotkey;
     int	sockfd;
+    NSString *os;
+    NSString *cpu;
+    NSString *disk;
+    NSString *ver;
+    NSString *user;
 }
 
 @property (assign) IBOutlet NSWindow *window;
 @property (nonatomic, retain) IBOutlet WebView *webView;
 @property (nonatomic, copy) NSString *dir;
+@property (nonatomic, copy) NSString *os;
+@property (nonatomic, copy) NSString *cpu;
+@property (nonatomic, copy) NSString *disk;
+@property (nonatomic, copy) NSString *ver;
+@property (nonatomic, copy) NSString *user;
 
 - (NSString*) search: (NSString*) query;
 - (NSString*) stat: (NSString*) query;

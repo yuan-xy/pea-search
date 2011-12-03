@@ -37,15 +37,15 @@ extern void print_debug(WCHAR *fmt, ...);
 extern BOOL WindowsVersionOK();
 
 
-extern BOOL get_os(WCHAR *osbuf);
+extern BOOL get_os(TCHAR *osbuf);
 
-extern BOOL get_cpu(WCHAR *cpubuf);
+extern BOOL get_cpu(TCHAR *cpubuf);
 
-extern BOOL get_disk(WCHAR *diskbuf);
+extern BOOL get_disk(TCHAR *diskbuf);
 
-extern BOOL get_ver(WCHAR *verbuf);
+extern BOOL get_ver(TCHAR *verbuf);
 
-extern BOOL get_user(WCHAR *userbuf);
+extern BOOL get_user(TCHAR *userbuf);
 
 extern BOOL is_admin(void);
 

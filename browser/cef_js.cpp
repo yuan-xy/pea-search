@@ -21,47 +21,7 @@ public:
                        CefRefPtr<CefV8Value>& retval,
                        CefString& exception)
   {
-    if(name == "ZoomIn")
-    {
-        CefRefPtr<CefBrowser> browser;
-		if(g_handler.get()){
-          browser = g_handler->GetBrowser();
-          if(browser.get())
-            browser->SetZoomLevel(browser->GetZoomLevel() + 0.5);
-		}
-      return true;
-    }
-    else if(name == "ZoomOut")
-    {
-        CefRefPtr<CefBrowser> browser;
-		if(g_handler.get()){
-          browser = g_handler->GetBrowser();
-          if(browser.get())
-            browser->SetZoomLevel(browser->GetZoomLevel() - 0.5);
-		}
-      return true;
-    }
-    else if(name == "ZoomReset")
-    {
-        CefRefPtr<CefBrowser> browser;
-		if(g_handler.get()){
-          browser = g_handler->GetBrowser();
-          if(browser.get())
-            browser->SetZoomLevel(0.0);
-		}
-      return true;
-    }
-    else if(name == "ShowDevTools")
-    {
-        CefRefPtr<CefBrowser> browser;
-		if(g_handler.get()){
-          browser = g_handler->GetBrowser();
-          if(browser.get())
-            browser->ShowDevTools();
-		}
-      return true;
-    }
-    else if(name == "SelectDir")
+    if(name == "SelectDir")
     {
 		BROWSEINFO bi;
 		WCHAR Buffer[MAX_PATH];
@@ -76,6 +36,16 @@ public:
 		if(pIDList){
 			SHGetPathFromIDList(pIDList, Buffer);
 			retval = CefV8Value::CreateString(Buffer);
+		}
+      return true;
+    }
+    else if(name == "ShowDevTools")
+    {
+        CefRefPtr<CefBrowser> browser;
+		if(g_handler.get()){
+          browser = g_handler->GetBrowser();
+          if(browser.get())
+            browser->ShowDevTools();
 		}
       return true;
     }
@@ -167,18 +137,6 @@ void InitExtensionTest()
     "    native function GetUser();"
     "    return GetUser();"
     "  });"
-	"  cef.gigaso.zoom_in = function() {"
-    "    native function ZoomIn();"
-    "    return ZoomIn();"
-    "  };"
-    "  cef.gigaso.zoom_out = function() {"
-    "    native function ZoomOut();"
-    "    return ZoomOut();"
-    "  };"
-    "  cef.gigaso.zoom_reset = function() {"
-    "    native function ZoomReset();"
-    "    return ZoomReset();"
-    "  };"
     "  cef.gigaso.dev_tool = function() {"
     "    native function ShowDevTools();"
     "    return ShowDevTools();"
