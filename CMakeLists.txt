@@ -87,6 +87,8 @@ if (WIN32)
 else  (WIN32)
 	include_directories ("${PROJECT_SOURCE_DIR}/browserMac")
 	add_subdirectory (browserMac)
+	include_directories ("${PROJECT_SOURCE_DIR}/browserGtk")
+	add_subdirectory (browserGtk)
 endif (WIN32)
 
 install (FILES "${PROJECT_SOURCE_DIR}/cmake/gigaso.inf"   DESTINATION .)
