@@ -22,6 +22,17 @@
 
 #import <Foundation/Foundation.h>
 #import "SpecialProtocol.h"
+#import <WebKit/WebKit.h>
+
+@interface WebInspector : NSObject
+{
+    WebView *_webView;
+}
+- (id)initWithWebView:(WebView *)webView;
+- (void)detach:(id)sender;
+- (void)show:(id)sender;
+- (void)showConsole:(id)sender;
+@end
 
 static BOOL connect_unix_socket(int *psock) {
 	int	sockfd;
@@ -245,6 +256,8 @@ static BOOL connect_unix_socket(int *psock) {
         return @"term";
 	} else if (sel == @selector(crashTest:)) {
         return @"crashTest";
+	} else if (sel == @selector(devTool:)) {
+        return @"devTool";
 	}else {
 		return nil;
 	}
@@ -427,4 +440,17 @@ static BOOL shell_exec(NSString* file, char* param){
     *i = 5;  // crash!  
 }
 
+- (void) devTool{
+    bool console = false;
+    WebInspector *m_inspector;
+    if ( !webView ) return;
+    m_inspector = [[WebInspector alloc] initWithWebView:webView];
+    [m_inspector detach:webView];
+    if(console){
+        [m_inspector showConsole:webView];
+    }
+    else {
+        [m_inspector show:webView];
+    }
+}
 @end

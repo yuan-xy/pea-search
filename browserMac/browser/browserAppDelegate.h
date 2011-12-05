@@ -51,5 +51,6 @@
 
 - (NSString*) selectDir;
 - (void) crashTest;
+- (void) devTool;
 @end
 
