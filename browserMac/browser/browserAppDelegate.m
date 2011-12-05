@@ -133,10 +133,13 @@ static BOOL connect_unix_socket(int *psock) {
 - (void)awakeFromNib {
     setlocale(LC_ALL, "");
     [SpecialProtocol registerSpecialProtocol];
-	NSString *htmlPath = @"/Users/ylt/Documents/gigaso/browser/web/search2.htm";
+	NSString *htmlPath = @"web/search2.htm";
+    if(access("/Users/ylt/Documents/gigaso/browser/web/search2.htm",0)==0){
+        htmlPath = @"/Users/ylt/Documents/gigaso/browser/web/search2.htm";
+    }
 	[[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
     [window setDelegate:self];
-    [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+    //[window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
     [webView setUIDelegate: self];
     [webView setGroupName:@"Gigaso"];
     [webView setFrameLoadDelegate: self];

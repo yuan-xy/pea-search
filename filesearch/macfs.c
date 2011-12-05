@@ -50,8 +50,9 @@ static BOOL same_file_visitor(char *dir_name, struct dirent * dp, va_list ap){
 
 static void remove_file_visitor(pFileEntry file, void *data){
     char * dir_name = (char *)data;
+    if(file==NULL || data==NULL) return;
     if(!dir_iterateB(same_file_visitor, dir_name, NULL, file)){
-        printf("delete file: %s\n", file->FileName);
+        //printf("delete file: %d- %s\n", file->us.v.FileNameLength,file->FileName);
         deleteFile(file);
     }
 }

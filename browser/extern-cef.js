@@ -29,6 +29,6 @@ cef.gigaso.cpu = '';
 cef.gigaso.disk = '';
 cef.gigaso.ver = '';
 cef.gigaso.user = '';
-cef.gigaso.dev_tool = {};
+cef.gigaso.devTool = {};
 cef.gigaso.selectDir = {};
 cef.gigaso.crashTest = {};

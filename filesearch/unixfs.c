@@ -9,6 +9,7 @@
 #include "unixfs.h"
 
 BOOL same_file(pFileEntry file, struct dirent * dp){
+    if(file==NULL || dp==NULL) return 0;
 #ifdef APPLE
     if(dp->d_namlen != file->us.v.FileNameLength) return 0;
 #endif

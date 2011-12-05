@@ -125,7 +125,7 @@ void InitExtensionTest()
     "    native function GetUser();"
     "    return GetUser();"
     "  });"
-    "  cef.gigaso.dev_tool = function() {"
+    "  cef.gigaso.devTool = function() {"
     "    native function ShowDevTools();"
     "    return ShowDevTools();"
     "  };"
