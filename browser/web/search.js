@@ -69,7 +69,7 @@ var host_backup = "http://60.191.119.190:3333";
 			});
 			$("#maintable .jqgrow:not(.ped)").addClass("ped");
 			icon_replace_index=0;
-			if(!cef.plugin.offline) highlight_timeout = setTimeout(icon_replace,1);
+			if(!cef.offline) highlight_timeout = setTimeout(icon_replace,1);
 			$("#loading").css("visibility","hidden");
 	  }
 
@@ -87,10 +87,10 @@ var host_backup = "http://60.191.119.190:3333";
 			show_error("搜索服务失去响应。请稍后重试！");
 			files = [];
 			view_grid();
-			cef.plugin.start_server();
+			cef.start_server();
 	}
 	function search_and_parse(query){
-		var s = cef.plugin.search(query);
+		var s = cef.search(query);
 		try{
 			files = eval(s);
 		}catch(e){
@@ -98,7 +98,7 @@ var host_backup = "http://60.191.119.190:3333";
 			$("#loading").css("visibility","hidden");
 			return;
 		}
-		if(cef.plugin.offline){
+		if(cef.offline){
 			var d_infos = get_loaded_offline_dbs();
 			for(var f_index=0; f_index<files.length; f_index++)
 				gen_offline_dir_name(files[f_index],d_infos);
@@ -188,7 +188,7 @@ var host_backup = "http://60.191.119.190:3333";
 	function set_orderby_value(col,desc){
 		order_col = col;
 		order_desc = desc;
-		cef.plugin.order = col*2+desc+1;
+		cef.order = col*2+desc+1;
 	}
 	function set_order_arrow(col_add,desc){
 		$(".ui-jqgrid-htable th div span").html("");
@@ -201,7 +201,7 @@ var host_backup = "http://60.191.119.190:3333";
 	}
 	function file_type_search(ft){
 		$("#loading").css("visibility","visible");
-		cef.plugin.file_type=ft;
+		cef.file_type=ft;
 		if($("#search").val()=="") return;
 		clearTimeout(search_timeout);
 		search_timeout = setTimeout(searchf0,5);
@@ -230,7 +230,7 @@ var host_backup = "http://60.191.119.190:3333";
 	function stat_search(){
 		if(changed()) return; //查询已过期
 		if(cur_search=="") return;
-		var s = cef.plugin.stat(cur_search);
+		var s = cef.stat(cur_search);
 		try{
 			var stats = eval("("+s+")");
 			stat_num_set(stats);
@@ -240,7 +240,7 @@ var host_backup = "http://60.191.119.190:3333";
 	}
 	function history_parse(start_index){
 		if(arguments.length==0) start_index=0;
-		var hs = cef.plugin.history().replace(/\\/g,"\\\\");
+		var hs = cef.history().replace(/\\/g,"\\\\");
 		hs = eval(hs);
 		hs=hs.slice(0,num_all_page);
 		for( var i=0;i<num_all_page;i++){
@@ -276,14 +276,14 @@ var host_backup = "http://60.191.119.190:3333";
 				$(p).addClass("pinned");
 				p.title = "取消固定";
 				$(p).bind('click',function(e){
-					cef.plugin.hisUnpin(e.currentTarget.idx);
+					cef.hisUnpin(e.currentTarget.idx);
 					$(e.currentTarget).attr("title",'固定在此显示');
 					$(e.currentTarget).removeClass("pinned");
 				});
 			}else{
 				p.title = "固定在此显示";
 				$(p).bind('click',function(e){
-					cef.plugin.hisPin(e.currentTarget.idx);
+					cef.hisPin(e.currentTarget.idx);
 					$(e.currentTarget).attr("title",'取消固定');
 					$(e.currentTarget).addClass("pinned");
 				});
@@ -292,7 +292,7 @@ var host_backup = "http://60.191.119.190:3333";
 		$(".edit-bar .remove").bind('click',function(e){
 			p = e.currentTarget;
 			i = p.getAttribute("idx") * 1;
-			cef.plugin.hisDel(i);
+			cef.hisDel(i);
 			$(p).parents('.history_file').hide();
 			refresh();
 		});
@@ -361,7 +361,7 @@ var host_backup = "http://60.191.119.190:3333";
 		setTimeout(check_upgrade,1);
 	}
 	function search_dir(ss){
-		cef.plugin.dire = ss;
+		cef.dire = ss;
 		$("#dir").html(ss);
 		var dir_show = ss;
 		if(ss.length>38) dir_show=ss.substring(0, 18)+"..."+ss.substring(ss.length-18,ss.length);
@@ -384,7 +384,7 @@ var host_backup = "http://60.191.119.190:3333";
 		}
 	}
 	function remove_dir(){
-		cef.plugin.dire = '';
+		cef.dire = '';
 		$("#dir").html('');
 		$("#dir2").css("display","none");
 		$("#search").css("width","720px");
@@ -405,19 +405,19 @@ var host_backup = "http://60.191.119.190:3333";
 	}
 	function init_event(){
 		$("#case0").bind('click',function(event,t){
-			cef.plugin.caze = false;
+			cef.caze = false;
 			searchf($("#search").val());
 		});
 		$("#case1").bind('click',function(event,t){
-			cef.plugin.caze = true;
+			cef.caze = true;
 			searchf($("#search").val());
 		});
 		$("#personal0").bind('click',function(event,t){
-			cef.plugin.personal = false;
+			cef.personal = false;
 			searchf($("#search").val());
 		});
 		$("#personal1").bind('click',function(event,t){
-			cef.plugin.personal = true;
+			cef.personal = true;
 			searchf($("#search").val());
 		});
 		$(document).bind("contextmenu", function(e){
@@ -451,14 +451,14 @@ var host_backup = "http://60.191.119.190:3333";
 		if(getFontSize()>=17) return;
 		var fontsize = getFontSize()+1;
 		$(document.body).css('font-size', fontsize+'px');
-		cef.plugin.fontSize = fontsize;
+		cef.fontSize = fontsize;
 	}
 
 	function decFontSize(){
 		if(getFontSize()<=9) return;
 		var fontsize = getFontSize()-1;
 		$(document.body).css('font-size', fontsize+'px');
-		cef.plugin.fontSize = fontsize;
+		cef.fontSize = fontsize;
 	}
 	function handleDragEnter(e) {
 		e.stopPropagation();
@@ -468,13 +468,13 @@ var host_backup = "http://60.191.119.190:3333";
 	}
 	
 	$(function() {
-		$(document.body).css('font-size', cef.plugin.fontSize);	
-		if(cef.plugin.caze){
+		$(document.body).css('font-size', cef.fontSize);	
+		if(cef.caze){
 			$("#case1").click();
 		}else{
 			$("#case0").click();
 		}
-		if(cef.plugin.personal){
+		if(cef.personal){
 			$("#personal1").click();
 		}else{
 			$("#personal0").click();
@@ -493,7 +493,7 @@ var host_backup = "http://60.191.119.190:3333";
 		$("#largefile_bt").bind('click',function(){$('#search')[0].value='*'; searchf('*');orderby(2,true);});
 		$("#offline_bt").bind('click',function(){offline_db()});
 		$("#online_bt").bind('click',function(){online_db()});
-		$("#dir_bt").bind('click',function(){search_dir(cef.gigaso.selectDir())});
+		$("#dir_bt").bind('click',function(){search_dir(cef.selectDir())});
 		$("#his_bt").bind('click',function(){history_switch()});
 		$("#set_hk_bt").bind('click',function(){set_hotkey()});
 		$("#do_exp_bt").bind('click',function(){do_export()});

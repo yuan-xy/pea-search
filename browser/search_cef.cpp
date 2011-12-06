@@ -2,7 +2,6 @@
 #include "../3rd/cef_binary/include/cef.h"
 #include "../filesearch/common.h"
 #include "cef_scheme.h"
-#include "cef_js.h"
 #include "cef_plugin.h"
 #include "client_handler.h"
 #include <sstream>
@@ -58,7 +57,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	}
   CefInitialize(settings);
 	InitSchemeTest();
-	InitExtensionTest();
 	InitPlugin();
 	MyRegisterClass(hInstance);
 	if (!InitInstance (hInstance, nCmdShow)) return FALSE;

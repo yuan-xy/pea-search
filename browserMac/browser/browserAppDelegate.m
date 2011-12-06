@@ -178,8 +178,7 @@ static BOOL connect_unix_socket(int *psock) {
 }
 
 - (void)webView:(WebView *)webView windowScriptObjectAvailable:(WebScriptObject *)windowScriptObject{
-    [windowScriptObject setValue:self forKey:@"plugin"];
-    [windowScriptObject evaluateWebScript: @"cef = {};cef.plugin=plugin;cef.gigaso=plugin;"];
+    [windowScriptObject setValue:self forKey:@"cef"];
     connect_unix_socket(&sockfd);
 }
 

@@ -3,7 +3,7 @@ function get_file_path(tr){
 		file = $(tr.parentNode).find("input")[0].value;
 		path = $(tr.parentNode).find("input")[1].value;
 		console.log(path+"  :  "+file);
-		ftype = cef.plugin.search("[///type"+path+file);
+		ftype = cef.search("[///type"+path+file);
 		console.log(ftype);
 	}else{
 		tds = $(tr).find("td");
@@ -16,29 +16,29 @@ function get_file_path(tr){
 function delete_file(t){
 	get_file_path(t);
 	if(window.confirm("您确定要删除 '"+file+"' 吗?")){
-		var ret = cef.plugin.shell2(path+file, "delete");
+		var ret = cef.shell2(path+file, "delete");
 		refresh();
 		info_or_error(ret, file, "删除");
 	}
 }
 function copy_file(t){
 	get_file_path(t);
-	var ret = cef.plugin.shell2(path+file, "copy");
+	var ret = cef.shell2(path+file, "copy");
 	info_or_error(ret, file, "复制");
 }
 function drag_file(t){
 	get_file_path(t);
-	var ret = cef.plugin.shell2(path+file, "drag");
+	var ret = cef.shell2(path+file, "drag");
 }
 function cut_file(t){
 	get_file_path(t);
-	var ret = cef.plugin.shell2(path+file, "cut");
+	var ret = cef.shell2(path+file, "cut");
 	info_or_error(ret, file, "剪切");
 }
 
 function dblclick_file(target){
 	get_file_path(target);
-	var ret = cef.plugin.shellDefault(path+file);
+	var ret = cef.shellDefault(path+file);
 	info_if_error(ret, file, "打开");
 }
 
@@ -47,10 +47,10 @@ function dblclick_path(target){
 	get_file_path(target);
 	if(path.substr(0,1)=="\\"){
 		file = path.substr(0,path.length-1);
-		var ret = cef.plugin.shellDefault(file);
+		var ret = cef.shellDefault(file);
 		info_if_error(ret, file, "打开");
 	}else{
-		var ret = cef.plugin.shellExplore(path+file);
+		var ret = cef.shellExplore(path+file);
 		info_if_error(ret, path, "资源管理器");
 	}
 }
@@ -84,12 +84,12 @@ var context_menu_obj = {
 				  bindings: {
 					  'default': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = cef.plugin.shellDefault(path+file);
+						var ret = cef.shellDefault(path+file);
 						info_if_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'openas': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = cef.plugin.shell2(path+file,"openas");
+						var ret = cef.shell2(path+file,"openas");
 						info_if_error(ret, file, menuitem.lastChild.data);
 					  },
 					  'explore': function(t,menuitem) {
@@ -98,16 +98,16 @@ var context_menu_obj = {
 					  'term': function(t,menuitem) {
 					    get_file_path(t);
 						if(ftype=="dir"){
-							var ret = cef.plugin.term(path+file);
+							var ret = cef.term(path+file);
 							info_or_error(ret, file, "打开");
 						}else{
-							var ret = cef.plugin.term(path);
+							var ret = cef.term(path);
 							info_or_error(ret, file, "打开");
 						}
 					  },
 					  'copypath': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = cef.plugin.copyPath(path+file);
+						var ret = cef.copyPath(path+file);
 						info_or_error(ret, path+file, menuitem.lastChild.data);
 					  },
 					  'copy': function(t,menuitem) {
@@ -121,7 +121,7 @@ var context_menu_obj = {
 					  },
 					  'prop': function(t,menuitem) {
 					    get_file_path(t);
-						var ret = cef.plugin.shell2(path+file,"properties");
+						var ret = cef.shell2(path+file,"properties");
 						info_if_error(ret, file, menuitem.lastChild.data);
 					  }
 					}
@@ -138,23 +138,23 @@ var context_menu_obj3 = {
 				  bindings: {
 					  'default': function(t,menuitem) {
 						var fs = grid_selectd_files();
-						var ret = cef.plugin.batchOpen(fs);
+						var ret = cef.batchOpen(fs);
 						info_or_error(ret, fs, menuitem.lastChild.data);
 					  },
 					  'copy': function(t,menuitem) {
 						var fs = grid_selectd_files();
-						var ret = cef.plugin.batchCopy(fs);
+						var ret = cef.batchCopy(fs);
 						info_or_error(ret, fs, menuitem.lastChild.data);
 					  },
 					  'cut': function(t,menuitem) {
 						var fs = grid_selectd_files();
-						var ret = cef.plugin.batchCut(fs);
+						var ret = cef.batchCut(fs);
 						info_or_error(ret, fs, menuitem.lastChild.data);
 					  },
 					  'delete': function(t,menuitem) {
 						var fs = grid_selectd_files();
 						if(true || window.confirm("您确定要删除 \n"+grid_selectd_filenames()+"这些文件吗?")){
-							var ret = cef.plugin.batchDelete(fs);
+							var ret = cef.batchDelete(fs);
 							refresh();
 							info_or_error(ret, fs, menuitem.lastChild.data);
 						}

@@ -8,6 +8,7 @@
 #include "desktop_exec.h"
 #include "string_util.h"
 #include "explorer++/FileOperations.h"
+#include <Shlobj.h>
 
 extern CefRefPtr<ClientHandler> g_handler;
 
@@ -265,7 +266,7 @@ static HWND find_listener_window(){
 	  } \
 }
 
-// Implementation of the V8 handler class for the "cef.plugin" extension.
+// Implementation of the V8 handler class for the "cef" extension.
 class PluginHandler : public CefV8Handler{
 public:
   PluginHandler(){}
@@ -461,6 +462,70 @@ public:
 	  SendMessage(wnd,WM_SET_HOTKEY,arguments[0]->GetIntValue(),NULL);
       return true;
     }
+    else if(name == "SelectDir")
+    {
+		BROWSEINFO bi;
+		WCHAR Buffer[MAX_PATH];
+		bi.hwndOwner = NULL;
+		bi.pidlRoot = NULL;
+		bi.pszDisplayName = Buffer;
+		bi.lpszTitle = L"选择目录";
+		bi.ulFlags = BIF_RETURNONLYFSDIRS;
+		bi.lpfn = NULL;
+		bi.iImage = 0;
+		LPITEMIDLIST pIDList = SHBrowseForFolder(&bi);
+		if(pIDList){
+			SHGetPathFromIDList(pIDList, Buffer);
+			retval = CefV8Value::CreateString(Buffer);
+		}
+      return true;
+    }
+    else if(name == "ShowDevTools")
+    {
+        CefRefPtr<CefBrowser> browser;
+		if(g_handler.get()){
+          browser = g_handler->GetBrowser();
+          if(browser.get())
+            browser->ShowDevTools();
+		}
+      return true;
+    }
+    else if(name == "CrashTest")
+    {
+		int *i = (int*) 0x45;  
+        *i = 5;  // crash!  
+	    return true;
+    }
+    else if(name == "GetOs"){
+	  WCHAR buffer[128];
+	  get_os(buffer);
+      retval = CefV8Value::CreateString(buffer);
+      return true;
+    }
+    else if(name == "GetCpu"){
+	  WCHAR buffer[128];
+	  get_cpu(buffer);
+      retval = CefV8Value::CreateString(buffer);
+      return true;
+    }
+    else if(name == "GetDisk"){
+	  WCHAR buffer[128];
+	  get_disk(buffer);
+      retval = CefV8Value::CreateString(buffer);
+      return true;
+    }
+    else if(name == "GetVer"){
+	  WCHAR buffer[128];
+	  get_ver(buffer);
+      retval = CefV8Value::CreateString(buffer);
+      return true;
+    }
+    else if(name == "GetUser"){
+	  WCHAR buffer[128];
+	  get_user(buffer);
+      retval = CefV8Value::CreateString(buffer);
+      return true;
+    }
     return false;
   }
 
@@ -487,143 +552,173 @@ static void aaaa(){
 */
 
 void InitPlugin(){
-  std::string code = "var plugin;"
+  std::string code = "var cef;"
     "if (!cef)"
     "  cef = {};"
-    "if (!cef.plugin)"
-    "  cef.plugin = {};"
     "(function() {"
-    "  cef.plugin.__defineGetter__('order', function() {"
+    "  cef.__defineGetter__('order', function() {"
     "    native function get_order();"
     "    return get_order();"
     "  });"
-    "  cef.plugin.__defineSetter__('order', function(b) {"
+    "  cef.__defineSetter__('order', function(b) {"
     "    native function set_order();"
     "    set_order(b);"
     "  });"
-    "  cef.plugin.__defineGetter__('offline', function() {"
+    "  cef.__defineGetter__('offline', function() {"
     "    native function get_offline();"
     "    return get_offline();"
     "  });"
-    "  cef.plugin.__defineSetter__('offline', function(b) {"
+    "  cef.__defineSetter__('offline', function(b) {"
     "    native function set_offline();"
     "    set_offline(b);"
     "  });"
-    "  cef.plugin.__defineGetter__('personal', function() {"
+    "  cef.__defineGetter__('personal', function() {"
     "    native function get_personal();"
     "    return get_personal();"
     "  });"
-    "  cef.plugin.__defineSetter__('personal', function(b) {"
+    "  cef.__defineSetter__('personal', function(b) {"
     "    native function set_personal();"
     "    set_personal(b);"
     "  });"
-	"  cef.plugin.__defineGetter__('fontSize', function() {"
+	"  cef.__defineGetter__('fontSize', function() {"
 	"    native function get_fontSize();"
 	"    return get_fontSize();"
 	"  });"
-	"  cef.plugin.__defineSetter__('fontSize', function(b) {"
+	"  cef.__defineSetter__('fontSize', function(b) {"
 	"    native function set_fontSize();"
 	"    set_fontSize(b);"
 	"  });"
-    "  cef.plugin.__defineGetter__('file_type', function() {"
+    "  cef.__defineGetter__('file_type', function() {"
     "    native function get_file_type();"
     "    return get_file_type();"
     "  });"
-    "  cef.plugin.__defineSetter__('file_type', function(b) {"
+    "  cef.__defineSetter__('file_type', function(b) {"
     "    native function set_file_type();"
     "    set_file_type(b);"
     "  });"
-    "  cef.plugin.__defineGetter__('caze', function() {"
+    "  cef.__defineGetter__('caze', function() {"
     "    native function get_caze();"
     "    return get_caze();"
     "  });"
-    "  cef.plugin.__defineSetter__('caze', function(b) {"
+    "  cef.__defineSetter__('caze', function(b) {"
     "    native function set_caze();"
     "    set_caze(b);"
     "  });"
-    "  cef.plugin.__defineGetter__('dire', function() {"
+    "  cef.__defineGetter__('dire', function() {"
     "    native function get_dire();"
     "    return get_dire();"
     "  });"
-    "  cef.plugin.__defineSetter__('dire', function(b) {"
+    "  cef.__defineSetter__('dire', function(b) {"
     "    native function set_dire();"
     "    set_dire(b);"
     "  });"
-    "  cef.plugin.__defineGetter__('hotkey', function() {"
+    "  cef.__defineGetter__('hotkey', function() {"
     "    native function get_hotkey();"
     "    return get_hotkey();"
     "  });"
-    "  cef.plugin.__defineSetter__('hotkey', function(b) {"
+    "  cef.__defineSetter__('hotkey', function(b) {"
     "    native function set_hotkey();"
     "    set_hotkey(b);"
     "  });"
-	"  cef.plugin.search = function(b) {"
+	"  cef.search = function(b) {"
     "    native function search();"
     "    return search(b);"
     "  };"
-	"  cef.plugin.stat = function(b) {"
+	"  cef.stat = function(b) {"
     "    native function stat();"
     "    return stat(b);"
     "  };"
-	"  cef.plugin.shellExplore = function(b) {"
+	"  cef.shellExplore = function(b) {"
     "    native function shellExplore();"
     "    return shellExplore(b);"
     "  };"
-	"  cef.plugin.shellDefault = function(b) {"
+	"  cef.shellDefault = function(b) {"
     "    native function shellDefault();"
     "    return shellDefault(b);"
     "  };"
-	"  cef.plugin.shell2 = function(b,b2) {"
+	"  cef.shell2 = function(b,b2) {"
     "    native function shell2();"
     "    return shell2(b,b2);"
     "  };"
-	"  cef.plugin.term = function(b) {"
+	"  cef.term = function(b) {"
     "    native function term();"
     "    return term(b);"
     "  };"
-	"  cef.plugin.save = function(b,b2) {"
+	"  cef.save = function(b,b2) {"
     "    native function save();"
     "    return save(b,b2);"
     "  };"
-	"  cef.plugin.copyPath = function(b) {"
+	"  cef.copyPath = function(b) {"
     "    native function copyPath();"
     "    return copyPath(b);"
     "  };"
-	"  cef.plugin.start_server = function() {"
+	"  cef.start_server = function() {"
     "    native function start_server();"
     "    return start_server();"
     "  };"
-	"  cef.plugin.history = function() {"
+	"  cef.history = function() {"
     "    native function history();"
     "    return history();"
     "  };"
-	"  cef.plugin.hisDel = function(b) {"
+	"  cef.hisDel = function(b) {"
     "    native function hisDel();"
     "    return hisDel(b);"
     "  };"
-	"  cef.plugin.hisPin = function(b) {"
+	"  cef.hisPin = function(b) {"
     "    native function hisPin();"
     "    return hisPin(b);"
     "  };"
-	"  cef.plugin.hisUnpin = function(b) {"
+	"  cef.hisUnpin = function(b) {"
     "    native function hisUnpin();"
     "    return hisUnpin(b);"
     "  };"
-	"  cef.plugin.batchOpen = function(b) {"
+	"  cef.batchOpen = function(b) {"
     "    native function batchOpen();"
     "    return batchOpen(b);"
     "  };"
-	"  cef.plugin.batchCopy = function(b) {"
+	"  cef.batchCopy = function(b) {"
     "    native function batchCopy();"
     "    return batchCopy(b);"
     "  };"
-	"  cef.plugin.batchCut = function(b) {"
+	"  cef.batchCut = function(b) {"
     "    native function batchCut();"
     "    return batchCut(b);"
     "  };"
-	"  cef.plugin.batchDelete = function(b) {"
+	"  cef.batchDelete = function(b) {"
     "    native function batchDelete();"
     "    return batchDelete(b);"
+    "  };"
+    "  cef.__defineGetter__('os', function() {"
+    "    native function GetOs();"
+    "    return GetOs();"
+    "  });"
+    "  cef.__defineGetter__('cpu', function() {"
+    "    native function GetCpu();"
+    "    return GetCpu();"
+    "  });"
+    "  cef.__defineGetter__('disk', function() {"
+    "    native function GetDisk();"
+    "    return GetDisk();"
+    "  });"
+    "  cef.__defineGetter__('ver', function() {"
+    "    native function GetVer();"
+    "    return GetVer();"
+    "  });"
+    "  cef.__defineGetter__('user', function() {"
+    "    native function GetUser();"
+    "    return GetUser();"
+    "  });"
+    "  cef.devTool = function() {"
+    "    native function ShowDevTools();"
+    "    return ShowDevTools();"
+    "  };"
+    "  cef.selectDir = function() {"
+    "    native function SelectDir();"
+    "    return SelectDir();"
+    "  };"
+    "  cef.crashTest = function() {"
+    "    native function CrashTest();"
+    "    return CrashTest();"
     "  };"
 	"})();";
   CefRegisterExtension("v8/gigaso.plugin", code, new PluginHandler());

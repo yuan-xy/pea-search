@@ -39,8 +39,8 @@ function gen_offline_dir_name(file, d_infos){
 }
 
 function get_loaded_offline_dbs(){
-	var done = eval(cef.plugin.search("[///index_status"));
-	var drives = eval(cef.plugin.search("[///get_drives"));
+	var done = eval(cef.search("[///index_status"));
+	var drives = eval(cef.search("[///get_drives"));
 	var offline = [];
 	$.each(done, function (index, ele) { 
 		if(!contain(ele.id,drives)){
@@ -52,11 +52,11 @@ function get_loaded_offline_dbs(){
 
 
 function get_offline_dbs(){
-	var dbs = eval(cef.plugin.search("[///cache_dbs"));
+	var dbs = eval(cef.search("[///cache_dbs"));
 	dbs_name = dbs.map(function(ele){
 		return ele.name;
 	})
-	var drives = eval(cef.plugin.search("[///get_drives"));
+	var drives = eval(cef.search("[///get_drives"));
 	$.each(drives, function (index, ele) { 
 		var i = $.inArray(ele.serialNumber+".db", dbs_name);
 		if(i!=-1) dbs_name.splice(i, 1);
@@ -65,7 +65,7 @@ function get_offline_dbs(){
 }
 
 function add_time_info(objs){
-	var dbs = eval(cef.plugin.search("[///cache_dbs"));
+	var dbs = eval(cef.search("[///cache_dbs"));
 	dbs_name = dbs.map(function(ele){
 		return ele.name;
 	})
@@ -100,8 +100,8 @@ function has_offline_dbs(){
 }
 
 function todo_dirves(){
-	var done = eval(cef.plugin.search("[///index_status"));
-	var drives = eval(cef.plugin.search("[///get_drives"));
+	var done = eval(cef.search("[///index_status"));
+	var drives = eval(cef.search("[///get_drives"));
 	done_sn = done.map(function(ele){
 		return ele.serialNumber;
 	})
@@ -120,7 +120,7 @@ function todo_dirves(){
 }
 
 function is_scan_finish_one(){
-	var dd = eval(cef.plugin.search("[///index_status"));
+	var dd = eval(cef.search("[///index_status"));
 	console.log(dd);
 	return dd.length > 0;
 }
@@ -139,8 +139,8 @@ function scan_img(){
 }
 
 function show_index_status(){
-	var done = eval(cef.plugin.search("[///index_status"));
-	var drives = eval(cef.plugin.search("[///get_drives"));
+	var done = eval(cef.search("[///index_status"));
+	var drives = eval(cef.search("[///get_drives"));
 	$.each(drives, function (index, ele) { 
 		if(!ele.volumeName) ele.volumeName="未命名";
 		ele.panfu = String.fromCharCode(65+ele.id*1);
@@ -178,12 +178,12 @@ function refreash_index_status(){
 }
 
 function show_hotkey(){
-	$("#select-hotkey").val(cef.plugin.hotkey);
+	$("#select-hotkey").val(cef.hotkey);
 	$("#dialog-set-hotkey").dialog({modal: true, width:600});
 }
 function set_hotkey(){
-	cef.plugin.hotkey = $("#select-hotkey").val();
-	if($("#select-hotkey").val()==cef.plugin.hotkey){
+	cef.hotkey = $("#select-hotkey").val();
+	if($("#select-hotkey").val()==cef.hotkey){
 		$("#dialog-set-hotkey").dialog("close");
 		show_info("快捷键设置成功！");
 	}else{
@@ -211,7 +211,7 @@ function do_export(){
 		}
 		s += "\r\n";
 	});
-	cef.plugin.save($("#export-filename").val(),s);
+	cef.save($("#export-filename").val(),s);
 	$("#dialog-export").dialog("close");
 	show_info("查询结果导出成功！");
 }
@@ -219,14 +219,14 @@ function do_export(){
 function rescan(td, i){
 	clearTimeout(refreash_index_dialog_timeout);
 	$(td.parentNode.cells(td.cellIndex-1)).html('<img src="images/spinner.gif">');
-	cef.plugin.search("[///rescan"+i);
+	cef.search("[///rescan"+i);
 	refreash_index_dialog_timeout = setTimeout(refreash_index_status,3000);
 }
 
 function del_offline_db(td,i){
 	$(td).html('<img src="images/spinner.gif">');
 	function rescan0(){
-		cef.plugin.search("[///del_offline_db"+i);
+		cef.search("[///del_offline_db"+i);
 		$("#dialog-index-status").dialog("close");
 		show_index_status();
 	}	
@@ -235,20 +235,20 @@ function del_offline_db(td,i){
 
 function offline_db(){
 	$("#loading").css("visibility","visible");
-	cef.plugin.offline = true;
-	cef.plugin.search("[///load_offline_db");
+	cef.offline = true;
+	cef.search("[///load_offline_db");
 	//判断离线DB是否加载完成
 	setTimeout(refresh,2000);
 }
 function online_db(){
-	cef.plugin.offline = false;
+	cef.offline = false;
 	setTimeout(refresh,10);
 }
 
 var mannual;//更新请求是手动的还是自动的。
 function upgrade_req(up_url){
-	var data = "upgrade[os]="+cef.gigaso.os+"&upgrade[cpu]="+cef.gigaso.cpu+"&upgrade[disk]="
-		+cef.gigaso.disk+"&upgrade[ver]="+cef.gigaso.ver+"&upgrade[user]="+cef.gigaso.user;
+	var data = "upgrade[os]="+cef.os+"&upgrade[cpu]="+cef.cpu+"&upgrade[disk]="
+		+cef.disk+"&upgrade[ver]="+cef.ver+"&upgrade[user]="+cef.user;
 	var jqxhr = $.ajax({
 	  type: 'POST',
 	  url: up_url+"/upgrades.js",
@@ -258,9 +258,9 @@ function upgrade_req(up_url){
     .success(function(data, textStatus, jqXHR) { 
 		console.log(data);
 		if(data.status==1){
-			cef.plugin.search("[///upgrade"+up_url+data.url+"?"+data.hash+"&"+data.version);
+			cef.search("[///upgrade"+up_url+data.url+"?"+data.hash+"&"+data.version);
 		}else{
-			cef.plugin.search("[///upgrade_none");
+			cef.search("[///upgrade_none");
 		}
 		setTimeout(show_upgrade_info,10);
 	 })
@@ -271,7 +271,7 @@ function upgrade_req(up_url){
 }
 
 function ver_new(){
-	file = cef.plugin.search("[///upgrade_file");
+	file = cef.search("[///upgrade_file");
 	file.match(/PeaSearch-([\d\.]+)-x86.exe/i)[1]
 }
 
@@ -283,7 +283,7 @@ function show_upgrade(){
 	})
     .success(function(data, textStatus, jqXHR) { 
 	    $('#upgrade_desc').html(data.desc);
-		$("#old_version").html(cef.gigaso.ver);
+		$("#old_version").html(cef.ver);
 		$("#new_version").html(ver_new());
 		$("#dialog-upgrade").dialog({modal: true, width:600});
 	 });
@@ -291,13 +291,13 @@ function show_upgrade(){
 
 function do_upgrade(){
 	$("#dialog-upgrade").dialog("close");
-	file = cef.plugin.search("[///upgrade_file");
-	if(file) cef.gigaso.shellDefault(file);
+	file = cef.search("[///upgrade_file");
+	if(file) cef.shellDefault(file);
 }
 
 function show_upgrade_info(){
 	if(mannual){
-		switch(cef.plugin.search("[///upgrade_status")*1){
+		switch(cef.search("[///upgrade_status")*1){
 			case 0:  show_info("正在检查更新...");break;
 			case 1:  show_info("已经更新到最新。");break;
 			case 2:  show_info("安装更新...");break;
@@ -310,7 +310,7 @@ function show_upgrade_info(){
 function check_upgrade(by_hand){
    if(arguments.length==0) mannual=false;
    else mannual = by_hand;
-   var update_status = cef.plugin.search("[///upgrade_status")*1;
+   var update_status = cef.search("[///upgrade_status")*1;
    if(mannual || update_status==0){
    	upgrade_req(host_main);
    }else if(update_status==2){
@@ -401,7 +401,7 @@ function grid_event(){
 			cut_file($(".jqgrow", "#maintable")[this.id-1]);
 		}
 	});
-	if(!cef.plugin.offline){
+	if(!cef.offline){
 		$("#maintable .jqgrow:not(.ped)").contextMenu('myMenu1', context_menu_obj);
 		$("#maintable .jqgrow:not(.ped) td:nth-child(1)").bind('dblclick',function(e){
 			dblclick_file($(e.currentTarget).parent("tr"));
