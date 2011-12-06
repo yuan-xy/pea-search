@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <webkit/webkit.h>
 #include <JavaScriptCore/JavaScript.h>
+#include "inspector.h"
 
 static WebKitWebView  *webview;
 
@@ -27,9 +28,8 @@ JSValueRef cef_Print(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObj
 }
 
 void cef_devTool(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception){
-	WebKitWebInspector * inspector = webkit_web_view_get_inspector(webview);
-	webkit_web_inspector_show(inspector);
-	printf("dev tool:%x\n",inspector);
+	//可以通过右键访问devTool，但是直接编程访问不行。
+	//printf("dev tool:%x\n",inspector);
 }
 
 JSClassRef Cef_ClassCreate(JSContextRef ctx){
