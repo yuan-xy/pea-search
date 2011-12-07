@@ -1,3 +1,5 @@
+#include "env.h"
+#include "sharelib.h"
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <webkit/webkit.h>
@@ -13,6 +15,7 @@ static bool caze=false;
 static bool offline=false;
 static bool personal=false;
 static int fontSize=12;
+static char *dir;
 
 JSValueRef cef_get_order(JSContextRef ctx, JSObjectRef  object, JSStringRef  name, JSValueRef  *e){
 	return JSValueMakeNumber(ctx, order);
@@ -92,12 +95,44 @@ void cef_devTool(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject,
 	//JSEvaluateScript(ctx, JSStringCreateWithUTF8CString("alert('ok')"), NULL, NULL, 1, NULL);
 }
 
+extern int	sockfd;
+
+JSValueRef cef_search(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
+	if(argumentCount!=1) return;
+	JSStringRef str = JSValueToStringCopy(ctx, arguments[0], e);
+	char query_str[MAX_PATH];
+	JSStringGetUTF8CString(str,query_str,MAX_PATH);
+	SearchRequest req;
+    char buffer[MAX_RESPONSE_LEN];
+	memset(buffer,(char)0,MAX_RESPONSE_LEN);
+	memset(&req,0,sizeof(SearchRequest));
+	req.from = 0;
+	req.rows = MAX_RESPONSE_LEN;
+	req.env.order = order;
+	req.env.case_sensitive = caze;
+	req.env.offline = offline? 1:0;
+    req.env.personal = personal? 1:0;
+	req.env.file_type = file_type;
+	req.env.path_len = 0; //strlen(dir);
+	if(req.env.path_len>0){
+		strncpy(req.env.path_name, dir, MAX_PATH);
+    }
+	if(strlen(query_str)==0) return;
+	mbstowcs(req.str, query_str, MAX_PATH);
+	printf("query:%s\n",query_str);
+	query(sockfd, &req, buffer);
+	printf("result:%s\n",buffer);
+	JSStringRef s = JSStringCreateWithUTF8CString(buffer);
+    return JSValueMakeString(ctx, s);
+}
+
 JSClassRef Cef_ClassCreate(JSContextRef ctx){
     static JSClassRef cefClass = NULL;
     if (cefClass) {
         return cefClass;
     }
     JSStaticFunction cefStaticFunctions[] = {
+		{ "search",           cef_search,           kJSPropertyAttributeNone },
         { "print",           cef_Print,           kJSPropertyAttributeNone },
         { "devTool",           cef_devTool,           kJSPropertyAttributeNone },
         { NULL, 0, 0 },
