@@ -25,6 +25,8 @@ SET( SOURCES
     "../filesearch/common.c"
     "../filesearch/mac_port.h"
     "../filesearch/mac_port.c"
+    "../filesearch/unix_domain_client.h"
+    "../filesearch/unix_domain_client.c"
     "../browser/history.c"
     "../browser/history.h"
     )

@@ -2,23 +2,9 @@
 #include "sharelib.h"
 #include "history.h"
 #include "common.h"
+#include "unix_domain_client.h"
 #include <stdio.h>
 #include <locale.h>
-#include	<sys/types.h>	/* basic system data types */
-#include	<sys/socket.h>	/* basic socket definitions */
-#include	<sys/time.h>	/* timeval{} for select() */
-#include	<time.h>		/* timespec{} for pselect() */
-#include	<netinet/in.h>	/* sockaddr_in{} and other Internet defns */
-#include	<arpa/inet.h>	/* inet(3) functions */
-#include	<errno.h>
-#include	<fcntl.h>		/* for nonblocking */
-#include	<netdb.h>
-#include	<signal.h>
-#include	<sys/stat.h>	/* for S_xxx file mode constants */
-#include	<sys/uio.h>		/* for iovec{} and readv/writev */
-#include	<unistd.h>
-#include	<sys/wait.h>
-#include	<sys/un.h>		/* for Unix domain sockets */
 
 #import <Foundation/Foundation.h>
 #import "SpecialProtocol.h"
@@ -34,26 +20,6 @@
 - (void)showConsole:(id)sender;
 @end
 
-static BOOL connect_unix_socket(int *psock) {
-	int	sockfd;
-	sockfd = socket(AF_LOCAL, SOCK_STREAM, 0);
-	if(sockfd<0) {
-		printf("unix domain socket error");
-		return 0;
-	}else{
-		struct sockaddr_un	servaddr;
-		bzero(&servaddr, sizeof(servaddr));
-		servaddr.sun_family = AF_LOCAL;
-		strcpy(servaddr.sun_path, UNIXSTR_PATH);
-		if(connect(sockfd, (SA *) &servaddr, sizeof(servaddr))!=0 ) {
-			printf("connect error");
-			return 0;
-		}else{
-			*psock = sockfd;
-			return 1;
-		}
-	}
-}
 
 #import "browserAppDelegate.h"
 
@@ -262,23 +228,11 @@ static BOOL connect_unix_socket(int *psock) {
 	}
 }
 
-static int MAX_ROW = 1000;
-
-static ssize_t read_all(int fildes, char *buf, size_t nbyte){
-    int read_bytes=0;
-    char *buffer = buf;
-    do{
-        int ret = read(fildes,buffer,nbyte);
-        if(ret<=0) return ret;
-        read_bytes+=ret;
-        buffer+=ret;
-    }while(read_bytes<nbyte);
-    return read_bytes;
-}
-- (NSString*) query: (NSString*) query row: (int) row{
-    NSLog(query);
+- (NSString*) query: (NSString*) query_str row: (int) row{
+    NSLog(query_str);
     SearchRequest req;
-	SearchResponse resp;
+    char buffer[MAX_RESPONSE_LEN];
+    memset(buffer,(char)0,MAX_RESPONSE_LEN);
 	memset(&req,0,sizeof(SearchRequest));
 	req.from = 0;
 	req.rows = row;
@@ -292,31 +246,15 @@ static ssize_t read_all(int fildes, char *buf, size_t nbyte){
         const char * dutf8 = [dir UTF8String];
 		strncpy(req.env.path_name, dutf8, MAX_PATH);
     }
-	if([query length]==0) return @"";
-    const char * qutf8 = [query UTF8String];
+	if([query_str length]==0) return @"";
+    const char * qutf8 = [query_str UTF8String];
 	mbsnrtowcs(req.str, (const char **)&qutf8,  strlen(qutf8), MAX_PATH, NULL);
-    if (write(sockfd, &req, sizeof(SearchRequest))<=0) {
-        printf("scoket write error");
-        return @"error";
-    }
-    if(read(sockfd, &resp, sizeof(int))>0){
-        char buffer[MAX_RESPONSE_LEN];
-        DWORD len = resp.len;
-        ssize_t err;
-        memset(buffer,(char)0,MAX_RESPONSE_LEN);
-        err=read_all(sockfd, buffer, len);
-        printf("---len:%d, read:%d\n", len,err);
-        if(err<=0){
-            printf("scoket read error.\n");
-            return @"error";
-        }
-        return [NSString stringWithUTF8String: buffer];
-    }else{
-        printf("scoket read error");
-        return @"error";
-    }
+    query(sockfd, &req, buffer);
+    return [NSString stringWithUTF8String: buffer];
 }
 
+
+static int MAX_ROW = 1000;
 - (NSString*) search: (NSString*) query{
     return [self query:query row:MAX_ROW];
 }

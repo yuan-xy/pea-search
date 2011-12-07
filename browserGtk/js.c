@@ -7,6 +7,61 @@
 
 static WebKitWebView  *webview;
 
+static int order=0;
+static int file_type=0;
+static bool caze=false;
+static bool offline=false;
+static bool personal=false;
+static int fontSize=12;
+
+JSValueRef cef_get_order(JSContextRef ctx, JSObjectRef  object, JSStringRef  name, JSValueRef  *e){
+	return JSValueMakeNumber(ctx, order);
+}
+bool cef_set_order(JSContextRef ctx, JSObjectRef object, JSStringRef name, JSValueRef value, JSValueRef* e){
+	order = (int) JSValueToNumber(ctx, value, e);
+	return true;
+}
+
+JSValueRef cef_get_caze(JSContextRef ctx, JSObjectRef  object, JSStringRef  name, JSValueRef  *e){
+	return JSValueMakeBoolean(ctx, caze);
+}
+bool cef_set_caze(JSContextRef ctx, JSObjectRef object, JSStringRef name, JSValueRef value, JSValueRef* e){
+	caze = (bool) JSValueToBoolean(ctx, value);
+	return true;
+}
+
+JSValueRef cef_get_offline(JSContextRef ctx, JSObjectRef  object, JSStringRef  name, JSValueRef  *e){
+	return JSValueMakeBoolean(ctx, offline);
+}
+bool cef_set_offline(JSContextRef ctx, JSObjectRef object, JSStringRef name, JSValueRef value, JSValueRef* e){
+	offline = (bool) JSValueToBoolean(ctx, value);
+	return true;
+}
+
+JSValueRef cef_get_personal(JSContextRef ctx, JSObjectRef  object, JSStringRef  name, JSValueRef  *e){
+	return JSValueMakeBoolean(ctx, personal);
+}
+bool cef_set_personal(JSContextRef ctx, JSObjectRef object, JSStringRef name, JSValueRef value, JSValueRef* e){
+	personal = (bool) JSValueToBoolean(ctx, value);
+	return true;
+}
+
+JSValueRef cef_get_file_type(JSContextRef ctx, JSObjectRef  object, JSStringRef  name, JSValueRef  *e){
+	return JSValueMakeNumber(ctx, file_type);
+}
+bool cef_set_file_type(JSContextRef ctx, JSObjectRef object, JSStringRef name, JSValueRef value, JSValueRef* e){
+	file_type = (int) JSValueToNumber(ctx, value, e);
+	return true;
+}
+
+JSValueRef cef_get_fontSize(JSContextRef ctx, JSObjectRef  object, JSStringRef  name, JSValueRef  *e){
+	return JSValueMakeNumber(ctx, fontSize);
+}
+bool cef_set_fontSize(JSContextRef ctx, JSObjectRef object, JSStringRef name, JSValueRef value, JSValueRef* e){
+	fontSize = (int) JSValueToNumber(ctx, value, e);
+	return true;
+}
+
 #define GEN_CEF_PROP(x) \
 JSValueRef cef_##x(JSContextRef ctx, JSObjectRef  object, JSStringRef  propertyName, JSValueRef  *exception){ \
 	char buf[MAX_PATH]; \
@@ -34,7 +89,7 @@ JSValueRef cef_Print(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObj
 
 void cef_devTool(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception){
 	//可以通过右键访问devTool，但是直接编程访问不行。
-	//printf("dev tool:%x\n",inspector);
+	//JSEvaluateScript(ctx, JSStringCreateWithUTF8CString("alert('ok')"), NULL, NULL, 1, NULL);
 }
 
 JSClassRef Cef_ClassCreate(JSContextRef ctx){
@@ -48,6 +103,12 @@ JSClassRef Cef_ClassCreate(JSContextRef ctx){
         { NULL, 0, 0 },
     };
     JSStaticValue cefStaticValues[] = {
+		{ "order",   cef_get_order,  cef_set_order,  kJSPropertyAttributeDontDelete },	
+		{ "file_type",   cef_get_file_type,  cef_set_file_type,  kJSPropertyAttributeDontDelete },	
+		{ "caze",   cef_get_caze,  cef_set_caze,  kJSPropertyAttributeDontDelete },	
+		{ "offline",   cef_get_offline,  cef_set_offline,  kJSPropertyAttributeDontDelete },	
+		{ "personal",   cef_get_personal,  cef_set_personal,  kJSPropertyAttributeDontDelete },	
+		{ "fontSize",   cef_get_fontSize,  cef_set_fontSize,  kJSPropertyAttributeDontDelete },			
 		{ "os",   cef_os,  NULL,  kJSPropertyAttributeDontDelete | kJSPropertyAttributeReadOnly },
 		{ "cpu",   cef_cpu,  NULL,  kJSPropertyAttributeDontDelete | kJSPropertyAttributeReadOnly },
 		{ "disk",   cef_disk,  NULL,  kJSPropertyAttributeDontDelete | kJSPropertyAttributeReadOnly },

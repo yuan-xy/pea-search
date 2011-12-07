@@ -73,6 +73,7 @@ if (UNIX)
 		error_mac.c
 		serverUD.c
 		exception_dump_mac.cpp
+		unix_domain_client.c
 	)
 endif(UNIX)
 
@@ -106,6 +107,7 @@ set_target_properties(test_np_server PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level
 #install (TARGETS test_np_server  DESTINATION .)
 
 add_executable(test_np_client test_np_client.c)
+target_link_libraries (test_np_client "file_search")
 set_target_properties(test_np_client PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
 #install (TARGETS test_np_client DESTINATION .)
 
@@ -155,4 +157,5 @@ if (UNIX)
 	target_link_libraries (test_np_server "file_search")
 	
 	add_executable(test_np_client test_np_client_mac.c)
+	target_link_libraries (test_np_client "file_search")	
 endif(UNIX)

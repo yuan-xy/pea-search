@@ -4,6 +4,7 @@
 #include <JavaScriptCore/JavaScript.h>
 #include "js.h"
 #include "inspector.h"
+#include "unix_domain_client.h"
 
 static void hello( GtkWidget *widget, gpointer   data ) {
 	gtk_main_quit();
@@ -38,6 +39,8 @@ int main (int argc, char *argv[]){
 	g_signal_connect(G_OBJECT (web_view), "window-object-cleared", G_CALLBACK(register_js), web_view);
 	g_signal_connect(G_OBJECT (web_view), "load-committed", G_CALLBACK (load_commit_cb), web_view);
 	setup_inspector(web_view);
+	int	sockfd;
+	connect_unix_socket(&sockfd);
 	gtk_main ();
 	return 0;
 }
