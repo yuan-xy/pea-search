@@ -468,7 +468,7 @@ var host_backup = "http://60.191.119.190:3333";
 	}
 	
 	$(function() {
-		$(document.body).css('font-size', cef.fontSize);	
+		if(cef.fontSize>=9 && cef.fontSize<=17) $(document.body).css('font-size', cef.fontSize);	
 		if(cef.caze){
 			$("#case1").click();
 		}else{

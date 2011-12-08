@@ -29,6 +29,7 @@ int main (int argc, char *argv[]){
 	gtk_window_set_default_size(GTK_WINDOW (window), 1000, 768);
 	gtk_container_add (GTK_CONTAINER (window), web_view);
 	gtk_widget_show_all (window);
+	load_config ();
 	if (argc < 2 && (uri = getenv("PWD")) != 0 && *uri == '/') {
 		//sprintf(cbuf, "file://%s/text.html", uri);
 		//uri = cbuf;

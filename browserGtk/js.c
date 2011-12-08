@@ -1,6 +1,7 @@
 #include "env.h"
 #include "sharelib.h"
 #include <gtk/gtk.h>
+#include <glib.h>
 #include <stdlib.h>
 #include <webkit/webkit.h>
 #include <JavaScriptCore/JavaScript.h>
@@ -17,6 +18,40 @@ static bool personal=false;
 static int fontSize=12;
 static char dir[MAX_PATH];
 
+#define KEY_FILE "keyfile.conf"
+#define GROUPNAME "defalut-group"
+void load_config (){
+  GKeyFile *keyfile;
+  GKeyFileFlags flags;
+  GError *error = NULL;
+  gsize length;
+  keyfile = g_key_file_new ();
+  flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
+  if (!g_key_file_load_from_file (keyfile, KEY_FILE, flags, &error)) return;
+  fontSize = g_key_file_get_integer(keyfile,GROUPNAME,"fontSize",NULL);
+  caze = g_key_file_get_integer(keyfile,GROUPNAME,"caze",NULL)!=0;
+  personal = g_key_file_get_integer(keyfile,GROUPNAME,"personal",NULL)!=0;  
+  g_key_file_free(keyfile);
+}
+
+void set_config (char *name, int value){
+  GKeyFile *keyfile;
+  GKeyFileFlags flags;
+  GError *error = NULL;
+  gsize length;
+  keyfile = g_key_file_new ();
+  flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
+  if (!g_key_file_load_from_file (keyfile, KEY_FILE, flags, &error)){
+	system("touch "KEY_FILE);
+  }
+  g_key_file_set_integer(keyfile,GROUPNAME,name,value);
+gchar *buf = g_key_file_to_data(keyfile, &length, NULL);
+printf("set: %s\n",buf);
+  g_file_set_contents(KEY_FILE, buf, length, NULL);
+  g_key_file_free(keyfile);
+}
+
+
 JSValueRef cef_get_order(JSContextRef ctx, JSObjectRef  object, JSStringRef  name, JSValueRef  *e){
 	return JSValueMakeNumber(ctx, order);
 }
@@ -30,6 +65,7 @@ JSValueRef cef_get_caze(JSContextRef ctx, JSObjectRef  object, JSStringRef  name
 }
 bool cef_set_caze(JSContextRef ctx, JSObjectRef object, JSStringRef name, JSValueRef value, JSValueRef* e){
 	caze = (bool) JSValueToBoolean(ctx, value);
+	set_config("caze",caze);
 	return true;
 }
 
@@ -46,6 +82,7 @@ JSValueRef cef_get_personal(JSContextRef ctx, JSObjectRef  object, JSStringRef  
 }
 bool cef_set_personal(JSContextRef ctx, JSObjectRef object, JSStringRef name, JSValueRef value, JSValueRef* e){
 	personal = (bool) JSValueToBoolean(ctx, value);
+	set_config("personal",personal);
 	return true;
 }
 
@@ -62,6 +99,7 @@ JSValueRef cef_get_fontSize(JSContextRef ctx, JSObjectRef  object, JSStringRef  
 }
 bool cef_set_fontSize(JSContextRef ctx, JSObjectRef object, JSStringRef name, JSValueRef value, JSValueRef* e){
 	fontSize = (int) JSValueToNumber(ctx, value, e);
+	set_config("fontSize",fontSize);
 	return true;
 }
 

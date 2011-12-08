@@ -10,3 +10,5 @@ extern void register_js(
             gpointer        ctx,
             gpointer        arg3,
 			gpointer        user_data);
+
+extern void load_config ();
