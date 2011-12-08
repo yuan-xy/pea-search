@@ -50,8 +50,13 @@ function dblclick_path(target){
 		var ret = cef.shellDefault(file);
 		info_if_error(ret, file, "打开");
 	}else{
-		var ret = cef.shellExplore(path+file);
-		info_if_error(ret, path, "资源管理器");
+		if(os_linux()){
+			var ret = cef.shellDefault(path);
+			info_if_error(ret, path, "资源管理器");
+		}else{
+			var ret = cef.shellExplore(path+file);
+			info_if_error(ret, path, "资源管理器");
+		}
 	}
 }
 
@@ -108,7 +113,7 @@ var context_menu_obj = {
 					  'copypath': function(t,menuitem) {
 					    get_file_path(t);
 						var ret = cef.copyPath(path+file);
-						info_or_error(ret, path+file, menuitem.lastChild.data);
+						info_or_error(ret, path+file, "复制文件路径");
 					  },
 					  'copy': function(t,menuitem) {
 						copy_file(t);

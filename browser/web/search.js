@@ -21,6 +21,9 @@ var host_backup = "http://60.191.119.190:3333";
 	function os_win(){
 		return navigator.platform.match(/Win/i)!=null;
 	}
+	function os_linux(){
+		return navigator.platform.match(/Linux/i)!=null;
+	}
 	var path_sep="/";
 	if(os_win()) path_sep="\\";
 	

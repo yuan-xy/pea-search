@@ -7,6 +7,7 @@
 #include <JavaScriptCore/JavaScript.h>
 #include "inspector.h"
 #include "common.h"
+#include "../browser/history.h"
 
 static WebKitWebView  *webview;
 
@@ -208,6 +209,93 @@ JSValueRef cef_selectDir(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 	}
 }
 
+JSValueRef cef_shellDefault(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
+	if(argumentCount!=1) return JSValueMakeNull(ctx);
+	JSStringRef str = JSValueToStringCopy(ctx, arguments[0], e);
+	char buf[MAX_PATH], *p;
+	bzero(buf,MAX_PATH);
+	p = stpcpy(buf,"gnome-open ");
+	JSStringGetUTF8CString(str,p,MAX_PATH);
+    return JSValueMakeBoolean(ctx, system(buf)!=-1);
+}
+
+void GetNoOp(GtkClipboard* clipboard,
+            GtkSelectionData* selection_data,
+            guint info,
+            gpointer user_data) {
+}
+
+void ClearNoOp(GtkClipboard* clipboard,
+              gpointer user_data) {
+}
+
+JSValueRef cef_shell2(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
+	if(argumentCount!=2) return JSValueMakeNull(ctx);
+	JSStringRef str = JSValueToStringCopy(ctx, arguments[0], e);
+	JSStringRef actionj = JSValueToStringCopy(ctx, arguments[1], e);
+	char buf[MAX_PATH];
+	char action[MAX_PATH];
+	JSStringGetUTF8CString(str,buf,MAX_PATH);
+	JSStringGetUTF8CString(actionj,action,MAX_PATH);
+	printf("%s,%d\n",buf, strcmp(action,"copy"));
+	if(strcmp(action,"copy")==0){
+		GtkClipboard* clipboard = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+		GtkTargetEntry targets[] = {{"x-special/gnome-copied-files", 0, 0},{"text/uri-list", 0, 0}};
+		gtk_clipboard_set_with_data(clipboard, targets, 2, GetNoOp, ClearNoOp, buf); //如何设置文件路径,buf似乎不行
+		return JSValueMakeBoolean(ctx, true);
+	}
+    return JSValueMakeBoolean(ctx, false);
+}
+
+JSValueRef cef_copyPath(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
+	if(argumentCount!=1) return JSValueMakeNull(ctx);
+	JSStringRef str = JSValueToStringCopy(ctx, arguments[0], e);
+	char buf[MAX_PATH];
+	JSStringGetUTF8CString(str,buf,MAX_PATH);
+	GtkClipboard* clipboard = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+	gtk_clipboard_set_text(clipboard, buf, -1);
+	printf("copy: %s\n",buf);
+    return JSValueMakeBoolean(ctx, true);
+}
+
+JSValueRef cef_term(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
+	if(argumentCount!=1) return JSValueMakeNull(ctx);
+	JSStringRef str = JSValueToStringCopy(ctx, arguments[0], e);
+	char buf[MAX_PATH], *p;
+	bzero(buf,MAX_PATH);
+	p = stpcpy(buf,"gnome-terminal --working-directory ");
+	JSStringGetUTF8CString(str,p,MAX_PATH);
+    return JSValueMakeBoolean(ctx, system(buf)!=-1);
+}
+
+JSValueRef cef_history(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
+	TCHAR buffer[VIEW_HISTORY*MAX_PATH];
+	int len;
+	history_load();
+	len = history_to_json(buffer);
+	JSStringRef s = JSStringCreateWithUTF8CString(buffer);
+    return JSValueMakeString(ctx, s); 
+}
+
+JSValueRef cef_hisDel(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
+	if(argumentCount!=1) return JSValueMakeNull(ctx);
+	history_delete(JSValueToNumber(ctx, arguments[0], e));
+    return JSValueMakeBoolean(ctx, history_save());
+}
+
+JSValueRef cef_hisPin(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
+	if(argumentCount!=1) return JSValueMakeNull(ctx);
+	history_pin(JSValueToNumber(ctx, arguments[0], e));
+    return JSValueMakeBoolean(ctx, history_save());
+}
+
+JSValueRef cef_hisUnpin(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
+	if(argumentCount!=1) return JSValueMakeNull(ctx);
+	history_unpin(JSValueToNumber(ctx, arguments[0], e));
+    return JSValueMakeBoolean(ctx, history_save());
+}
+
+
 JSClassRef Cef_ClassCreate(JSContextRef ctx){
     static JSClassRef cefClass = NULL;
     if (cefClass) {
@@ -217,8 +305,15 @@ JSClassRef Cef_ClassCreate(JSContextRef ctx){
 		{ "search",           cef_search,           kJSPropertyAttributeNone },
 		{ "stat",           cef_stat,           kJSPropertyAttributeNone },
 		{ "selectDir",           cef_selectDir,           kJSPropertyAttributeNone },
-        { "print",           cef_Print,           kJSPropertyAttributeNone },
         { "devTool",           cef_devTool,           kJSPropertyAttributeNone },
+		{ "shellDefault",           cef_shellDefault,           kJSPropertyAttributeNone },
+		{ "shell2",           cef_shell2,           kJSPropertyAttributeNone },
+		{ "term",           cef_term,           kJSPropertyAttributeNone },
+		{ "copyPath",           cef_copyPath,           kJSPropertyAttributeNone },
+		{ "history",           cef_history,           kJSPropertyAttributeNone },
+		{ "hisDel",           cef_hisDel,           kJSPropertyAttributeNone },
+		{ "hisPin",           cef_hisPin,           kJSPropertyAttributeNone },
+		{ "hisUnpin",           cef_hisUnpin,           kJSPropertyAttributeNone },
         { NULL, 0, 0 },
     };
     JSStaticValue cefStaticValues[] = {
