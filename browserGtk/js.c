@@ -219,29 +219,27 @@ JSValueRef cef_shellDefault(JSContextRef ctx, JSObjectRef function, JSObjectRef 
     return JSValueMakeBoolean(ctx, system(buf)!=-1);
 }
 
-void GetNoOp(GtkClipboard* clipboard,
-            GtkSelectionData* selection_data,
-            guint info,
-            gpointer user_data) {
+static char clipfiles[MAX_PATH];
+
+void GetFile(GtkClipboard *clipboard, GtkSelectionData *selection_data,guint info,gpointer user_data_or_owner){
+	gtk_selection_data_set (selection_data,selection_data->target, 8, (guchar *)clipfiles, strlen(clipfiles)+1);
 }
 
-void ClearNoOp(GtkClipboard* clipboard,
-              gpointer user_data) {
-}
+void ClearNoOp(GtkClipboard* clipboard, gpointer user_data) {}
 
 JSValueRef cef_shell2(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
 	if(argumentCount!=2) return JSValueMakeNull(ctx);
 	JSStringRef str = JSValueToStringCopy(ctx, arguments[0], e);
 	JSStringRef actionj = JSValueToStringCopy(ctx, arguments[1], e);
-	char buf[MAX_PATH];
-	char action[MAX_PATH];
-	JSStringGetUTF8CString(str,buf,MAX_PATH);
+	char action[MAX_PATH],*p;
 	JSStringGetUTF8CString(actionj,action,MAX_PATH);
-	printf("%s,%d\n",buf, strcmp(action,"copy"));
-	if(strcmp(action,"copy")==0){
+	if(strcmp(action,"copy")==0 || strcmp(action,"cut")==0 ){
+		p = stpcpy(clipfiles,action);
+		p = stpcpy(p,"\nfile://");
+		JSStringGetUTF8CString(str,p,MAX_PATH);
 		GtkClipboard* clipboard = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
 		GtkTargetEntry targets[] = {{"x-special/gnome-copied-files", 0, 0},{"text/uri-list", 0, 0}};
-		gtk_clipboard_set_with_data(clipboard, targets, 2, GetNoOp, ClearNoOp, buf); //如何设置文件路径,buf似乎不行
+		gtk_clipboard_set_with_data(clipboard, targets, 2, GetFile, ClearNoOp, clipfiles);
 		return JSValueMakeBoolean(ctx, true);
 	}
     return JSValueMakeBoolean(ctx, false);
