@@ -12,7 +12,6 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     explorer++/[^.]*.h
     [^.]*.cpp
     [^.]*.h
-    "history.c"
     )
 
 SET_SOURCE_FILES_PROPERTIES(
@@ -33,6 +32,8 @@ SET( SOURCES
     "../filesearch/sharelib.h"
     "../filesearch/common.h"
     "../filesearch/common.c"
+    "../filesearch/history.h"
+    "../filesearch/history.c"
     "../filesearch/desktop_exec.h"
     "../filesearch/desktop_exec.cpp"
     "../filesearch/exception_dump.cpp"
@@ -54,23 +55,6 @@ install (TARGETS peasrch DESTINATION .)
 #install (FILES "${CEF_DLL_DIR}/avutil-50.dll" DESTINATION .)
 install (FILES "${CEF_DLL_DIR}/icudt.dll" DESTINATION .)
 install (FILES "${CEF_DLL_DIR}/libcef.dll" DESTINATION .)
-
-
-SET( SOURCES1
-    history.h
-    history.c
-    test_history.c
-    win_misc.h
-    win_misc.cpp
-    "../filesearch/env.h"
-    "../filesearch/sharelib.h"
-    "../filesearch/common.h"
-    "../filesearch/common.c"
-    )
-
-add_executable(test_history ${SOURCES1} )
-set_target_properties(test_history PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='asInvoker' uiAccess='false'\"") 
-ADD_TEST(test_history ${CMAKE_CURRENT_BINARY_DIR}/test_history)
 
 SET( SOURCES2
     bitmap.h

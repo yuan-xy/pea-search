@@ -232,6 +232,13 @@
     NSLog(query_str);
     SearchRequest req;
     char buffer[MAX_RESPONSE_LEN];
+    char s1[]="测试", *ps1=s1;
+    wchar_t s2[]=L"测试";
+    wchar_t s3[8];
+    setlocale(LC_ALL, "");
+    mbstowcs(s3, s1, 8);
+    setlocale(LC_ALL, "C");
+    mbsnrtowcs(s3, (const char **)&ps1,  strlen(s1), 8, NULL);
     memset(buffer,(char)0,MAX_RESPONSE_LEN);
 	memset(&req,0,sizeof(SearchRequest));
 	req.from = 0;

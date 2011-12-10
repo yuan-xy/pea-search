@@ -7,7 +7,7 @@
 #include <JavaScriptCore/JavaScript.h>
 #include "inspector.h"
 #include "common.h"
-#include "../browser/history.h"
+#include "history.h"
 
 static WebKitWebView  *webview;
 

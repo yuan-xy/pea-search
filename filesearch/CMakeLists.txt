@@ -16,7 +16,6 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	chinese.c
 	fs_common.c
 	global.c
-	history.c
 	main.c
 	search.c
 	server.c
@@ -159,3 +158,6 @@ if (UNIX)
 	add_executable(test_np_client test_np_client_mac.c)
 	target_link_libraries (test_np_client "file_search")	
 endif(UNIX)
+
+add_executable(test_history "common.c" "history.c" "test_history.c")
+ADD_TEST(test_history ${CMAKE_CURRENT_BINARY_DIR}/test_history)

@@ -23,10 +23,10 @@ SET( SOURCES
     "../filesearch/sharelib.h"
     "../filesearch/common.h"
     "../filesearch/common.c"
+    "../filesearch/history.h"
+    "../filesearch/history.c"
     "../filesearch/mac_port.h"
     "../filesearch/mac_port.c"
-    "../browser/history.c"
-    "../browser/history.h"
     )
 
 set_source_files_properties(${GENERAL} PROPERTIES COMPILE_FLAGS "-x objective-c+")
@@ -36,13 +36,4 @@ MARK_AS_ADVANCED(COCOA_LIBRARY)
 #add_executable (peasrch MACOSX_BUNDLE ${SOURCES})
 #target_link_libraries (peasrch "Webkit" ${COCOA_LIBRARY})
 #install (TARGETS peasrch BUNDLE DESTINATION .)
-
-SET( SOURCES2
-	${SOURCES}
-	"../browser/test_history.c"
-    )
-
-add_executable(test_history ${SOURCES2} )
-target_link_libraries (test_history "pthread")	
-ADD_TEST(test_history ${CMAKE_CURRENT_BINARY_DIR}/test_history)
 

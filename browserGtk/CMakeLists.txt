@@ -23,12 +23,12 @@ SET( SOURCES
     "../filesearch/sharelib.h"
     "../filesearch/common.h"
     "../filesearch/common.c"
+    "../filesearch/history.h"
+    "../filesearch/history.c"
     "../filesearch/mac_port.h"
     "../filesearch/mac_port.c"
     "../filesearch/unix_domain_client.h"
     "../filesearch/unix_domain_client.c"
-    "../browser/history.c"
-    "../browser/history.h"
     )
 
 
