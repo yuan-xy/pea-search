@@ -227,6 +227,42 @@ void GetFile(GtkClipboard *clipboard, GtkSelectionData *selection_data,guint inf
 
 void ClearNoOp(GtkClipboard* clipboard, gpointer user_data) {}
 
+enum {
+        TARGET_STRING,
+        TARGET_URIS,
+        TARGET_ROOTWIN
+};
+
+/* datatype (string), restrictions on DnD (GtkTargetFlags), datatype (int) */
+static GtkTargetEntry target_list[] = {
+        { "STRING",     0, TARGET_STRING },     
+        { "text/plain", 0, TARGET_STRING },
+	{ "text/uri-list", 0, TARGET_URIS },
+        { "application/x-rootwindow-drop", 0, TARGET_ROOTWIN }
+};
+
+static guint n_targets = G_N_ELEMENTS (target_list);
+
+static void drag_data_get_handl(GtkWidget *widget, GdkDragContext *context, GtkSelectionData *selection_data,
+        guint target_type, guint time, gpointer user_data)
+{
+	const gchar *name = gtk_widget_get_name (widget);
+    g_print ("%s: drag_data_get_handl\n", name);
+	if(TARGET_ROOTWIN==target_type){
+            g_print ("Dropped on the root window!\n");
+			return;
+    }
+	gtk_selection_data_set (selection_data,selection_data->target, 8, (guchar *)clipfiles, strlen(clipfiles)+1);
+}
+
+static void
+drag_begin_handl
+(GtkWidget *widget, GdkDragContext *context, gpointer user_data)
+{
+        const gchar *name = gtk_widget_get_name (widget);
+        g_print ("%s: drag_begin_handl\n", name);
+}
+
 JSValueRef cef_shell2(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
 	if(argumentCount!=2) return JSValueMakeNull(ctx);
 	JSStringRef str = JSValueToStringCopy(ctx, arguments[0], e);
@@ -234,6 +270,7 @@ JSValueRef cef_shell2(JSContextRef ctx, JSObjectRef function, JSObjectRef thisOb
 	char action[MAX_PATH],*p;
 	JSStringGetUTF8CString(actionj,action,MAX_PATH);
 	if(strcmp(action,"copy")==0 || strcmp(action,"cut")==0 ){
+		bzero(clipfiles, MAX_PATH);
 		p = stpcpy(clipfiles,action);
 		p = stpcpy(p,"\nfile://");
 		JSStringGetUTF8CString(str,p,MAX_PATH);
@@ -241,6 +278,27 @@ JSValueRef cef_shell2(JSContextRef ctx, JSObjectRef function, JSObjectRef thisOb
 		GtkTargetEntry targets[] = {{"x-special/gnome-copied-files", 0, 0},{"text/uri-list", 0, 0}};
 		gtk_clipboard_set_with_data(clipboard, targets, 2, GetFile, ClearNoOp, clipfiles);
 		return JSValueMakeBoolean(ctx, true);
+	}else if(strcmp(action,"drag")==0){
+		bzero(clipfiles, MAX_PATH);
+		p = stpcpy(clipfiles,action);
+		p = stpcpy(p,"\nfile://");
+		JSStringGetUTF8CString(str,p,MAX_PATH);
+		gtk_drag_source_set(
+                webview,            /* widget will be drag-able */
+                GDK_BUTTON1_MASK,       /* modifier that will start a drag */
+                target_list,            /* lists of target to support */
+                n_targets,              /* size of list */
+                GDK_ACTION_COPY         /* what to do with data after dropped */
+        );
+		//TODO: gtk_drag_source_set设置与否似乎都不起作用
+		g_signal_connect (webview, "drag-begin",G_CALLBACK (drag_begin_handl), NULL);
+    	g_signal_connect (webview, "drag-data-get", G_CALLBACK (drag_data_get_handl), NULL);
+		return JSValueMakeBoolean(ctx, true);
+	}else if(strcmp(action,"delete")==0){
+		char buf[MAX_PATH], *p;
+		p = stpcpy(buf,"gvfs-trash ");
+		JSStringGetUTF8CString(str,p,MAX_PATH);
+		return JSValueMakeBoolean(ctx, system(buf)!=-1);
 	}
     return JSValueMakeBoolean(ctx, false);
 }
