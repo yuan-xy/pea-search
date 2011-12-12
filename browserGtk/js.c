@@ -216,7 +216,11 @@ JSValueRef cef_shellDefault(JSContextRef ctx, JSObjectRef function, JSObjectRef 
 	bzero(buf,MAX_PATH);
 	p = stpcpy(buf,"gnome-open ");
 	JSStringGetUTF8CString(str,p,MAX_PATH);
-    return JSValueMakeBoolean(ctx, system(buf)!=-1);
+	bool flag = system(buf)!=-1;
+	if(flag){
+		if( history_add(p) ) history_save();
+	}
+    return JSValueMakeBoolean(ctx, flag);
 }
 
 static char clipfiles[MAX_PATH];
