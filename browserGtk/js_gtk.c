@@ -6,6 +6,7 @@
 #include <webkit/webkit.h>
 #include <JavaScriptCore/JavaScript.h>
 #include "inspector.h"
+#include "icon_gtk.h"
 #include "common.h"
 #include "history.h"
 
@@ -140,9 +141,9 @@ JSValueRef cef_Print(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObj
  return JSValueMakeNull(ctx);
 }
 
+
 void cef_devTool(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *exception){
-	//可以通过右键访问devTool，但是直接编程访问不行。
-	//JSEvaluateScript(ctx, JSStringCreateWithUTF8CString("alert('ok')"), NULL, NULL, 1, NULL);
+	gen_icon_image("file:///home/ylt/a.c","test.png");
 }
 
 extern int	sockfd;

@@ -44,3 +44,10 @@ target_link_libraries(peasrch ${WEBKIT_LIBRARIES})
 
 #install (TARGETS peasrch BUNDLE DESTINATION .)
 
+SET( SOURCES2 
+	icon_gtk.h
+	icon_gtk.c
+	test_icon.cpp
+)
+add_executable(test_icon ${SOURCES2} )
+target_link_libraries(test_icon ${WEBKIT_LIBRARIES})

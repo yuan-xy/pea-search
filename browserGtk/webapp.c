@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <webkit/webkit.h>
 #include <JavaScriptCore/JavaScript.h>
-#include "js.h"
+#include "js_gtk.h"
 #include "inspector.h"
 #include "unix_domain_client.h"
 
