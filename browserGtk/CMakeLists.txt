@@ -4,6 +4,8 @@ install (DIRECTORY "${PROJECT_SOURCE_DIR}/browser/web"   DESTINATION . PATTERN "
 file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     [^.]*.c
     [^.]*.h
+	base64/base64.h
+	base64/base64.c
     )
 
 SET_SOURCE_FILES_PROPERTIES(
@@ -47,6 +49,8 @@ target_link_libraries(peasrch ${WEBKIT_LIBRARIES})
 SET( SOURCES2 
 	icon_gtk.h
 	icon_gtk.c
+	base64/base64.h
+	base64/base64.c
 	test_icon.cpp
 )
 add_executable(test_icon ${SOURCES2} )

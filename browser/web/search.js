@@ -259,9 +259,13 @@ var host_backup = "http://60.191.119.190:3333";
 			if(hs[i].name==""){
 				hs[i].thumb = "";
 			}else{
+				if(os_linux()){
+					hs[i].thumb = cef.iconOfFile("file://"+hs[i].path+hs[i].name);
+				}else{
 					hs[i].thumb = "gigaso://thumb/"+hs[i].path+hs[i].name;
 					hs[i].thumb = hs[i].thumb.replace(/\\/g,"\\\\");
 					hs[i].thumb = hs[i].thumb.replace(/ /g,"%20");
+				}
 			}
 		}
 		file_name_trim2(hs);

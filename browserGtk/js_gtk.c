@@ -146,6 +146,18 @@ void cef_devTool(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject,
 	gen_icon_image("file:///home/ylt/a.c","test.png");
 }
 
+JSValueRef cef_iconOfFile(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
+	if(argumentCount!=1) return JSValueMakeNull(ctx);
+	JSStringRef file = JSValueToStringCopy(ctx, arguments[0], e);
+	char file_buf[MAX_PATH];
+	JSStringGetUTF8CString(file,file_buf,MAX_PATH);
+	char icon_buf[81920];
+	int out_len;
+	gen_icon_base64_url(file_buf, icon_buf,&out_len);
+    JSStringRef s = JSStringCreateWithUTF8CString(icon_buf);
+    return JSValueMakeString(ctx, s);
+}
+
 extern int	sockfd;
 
 static JSValueRef do_query(JSContextRef ctx, JSStringRef str, int row){
@@ -375,6 +387,7 @@ JSClassRef Cef_ClassCreate(JSContextRef ctx){
 		{ "hisDel",           cef_hisDel,           kJSPropertyAttributeNone },
 		{ "hisPin",           cef_hisPin,           kJSPropertyAttributeNone },
 		{ "hisUnpin",           cef_hisUnpin,           kJSPropertyAttributeNone },
+		{ "iconOfFile",           cef_iconOfFile,           kJSPropertyAttributeNone },
         { NULL, 0, 0 },
     };
     JSStaticValue cefStaticValues[] = {
