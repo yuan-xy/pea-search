@@ -238,23 +238,26 @@ JSValueRef cef_shellDefault(JSContextRef ctx, JSObjectRef function, JSObjectRef 
 
 static char clipfiles[MAX_PATH];
 
-void GetFile(GtkClipboard *clipboard, GtkSelectionData *selection_data,guint info,gpointer user_data_or_owner){
+static void set_selection_data(GtkSelectionData *selection_data){
 	gtk_selection_data_set (selection_data,selection_data->target, 8, (guchar *)clipfiles, strlen(clipfiles)+1);
+}
+void GetFile(GtkClipboard *clipboard, GtkSelectionData *selection_data,guint info,gpointer user_data_or_owner){
+	set_selection_data(selection_data);
 }
 
 void ClearNoOp(GtkClipboard* clipboard, gpointer user_data) {}
 
 enum {
-        TARGET_STRING,
         TARGET_URIS,
+        TARGET_STRING,
         TARGET_ROOTWIN
 };
 
 /* datatype (string), restrictions on DnD (GtkTargetFlags), datatype (int) */
-static GtkTargetEntry target_list[] = {
-        { "STRING",     0, TARGET_STRING },     
-        { "text/plain", 0, TARGET_STRING },
+static GtkTargetEntry target_list[] = {    
+    {"x-special/gnome-copied-files", 0, TARGET_URIS},
 	{ "text/uri-list", 0, TARGET_URIS },
+	{ "text/plain", 0, TARGET_STRING },
         { "application/x-rootwindow-drop", 0, TARGET_ROOTWIN }
 };
 
@@ -269,15 +272,12 @@ static void drag_data_get_handl(GtkWidget *widget, GdkDragContext *context, GtkS
             g_print ("Dropped on the root window!\n");
 			return;
     }
-	gtk_selection_data_set (selection_data,selection_data->target, 8, (guchar *)clipfiles, strlen(clipfiles)+1);
+	set_selection_data(selection_data);
 }
 
-static void
-drag_begin_handl
-(GtkWidget *widget, GdkDragContext *context, gpointer user_data)
-{
-        const gchar *name = gtk_widget_get_name (widget);
-        g_print ("%s: drag_begin_handl\n", name);
+static void drag_begin_handl(GtkWidget *widget, GdkDragContext *context, gpointer user_data){
+	const gchar *name = gtk_widget_get_name (widget);
+	g_print ("%s: drag_begin_handl\n", name);
 }
 
 JSValueRef cef_shell2(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef *e){
@@ -292,13 +292,12 @@ JSValueRef cef_shell2(JSContextRef ctx, JSObjectRef function, JSObjectRef thisOb
 		p = stpcpy(p,"\nfile://");
 		JSStringGetUTF8CString(str,p,MAX_PATH);
 		GtkClipboard* clipboard = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
-		GtkTargetEntry targets[] = {{"x-special/gnome-copied-files", 0, 0},{"text/uri-list", 0, 0}};
-		gtk_clipboard_set_with_data(clipboard, targets, 2, GetFile, ClearNoOp, clipfiles);
+		gtk_clipboard_set_with_data(clipboard, target_list, n_targets, GetFile, ClearNoOp, clipfiles);
 		return JSValueMakeBoolean(ctx, true);
 	}else if(strcmp(action,"drag")==0){
 		bzero(clipfiles, MAX_PATH);
-		p = stpcpy(clipfiles,action);
-		p = stpcpy(p,"\nfile://");
+		p = stpcpy(clipfiles,"copy");
+		p = stpcpy(clipfiles,"\nfile://");
 		JSStringGetUTF8CString(str,p,MAX_PATH);
 		gtk_drag_source_set(
                 webview,            /* widget will be drag-able */
