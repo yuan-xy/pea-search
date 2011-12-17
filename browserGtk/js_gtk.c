@@ -425,4 +425,23 @@ void register_js(
     JSObjectRef obj = JSObjectMake(ctx, Cef_ClassCreate(ctx), NULL);
     // Set the property
     JSObjectSetProperty(ctx, JSContextGetGlobalObject(ctx), name, obj,kJSPropertyAttributeNone, NULL);
+	printf("register js\n");
+}
+
+static void print_js_error(JSContextRef ctx, JSValueRef exception){
+	printf("FAIL: script threw exception:\n");
+    JSStringRef exceptionIString = JSValueToStringCopy(ctx, exception, NULL);
+    size_t exceptionUTF8Size = JSStringGetMaximumUTF8CStringSize(exceptionIString);
+    char* exceptionUTF8 = (char*)malloc(exceptionUTF8Size);
+    JSStringGetUTF8CString(exceptionIString, exceptionUTF8, exceptionUTF8Size);
+    printf("%s\n", exceptionUTF8);
+    free(exceptionUTF8);
+    JSStringRelease(exceptionIString);
+}
+
+void eval_js(JSContextRef ctx, char* script){
+	JSValueRef exception;
+	JSValueRef result = JSEvaluateScript(ctx, JSStringCreateWithUTF8CString(script),
+		JSContextGetGlobalObject(ctx), NULL, 1, &exception);
+	if (!result) print_js_error(ctx,exception);
 }

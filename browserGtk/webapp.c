@@ -12,11 +12,11 @@ static void hello( GtkWidget *widget, gpointer   data ) {
 	gtk_main_quit();
 }
 
-static void
-load_commit_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data)
-{
+static void load_finished_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data){
     const gchar* uri = webkit_web_frame_get_uri(frame);
-	printf("load %s done!\n",uri);
+	printf("load %s finished!\n",uri);
+	JSGlobalContextRef context = webkit_web_frame_get_global_context(frame);
+	eval_js(context,"init_dir('')");
 }
 
 int main (int argc, char *argv[]){
@@ -42,7 +42,8 @@ int main (int argc, char *argv[]){
 	webkit_web_view_open (WEBKIT_WEB_VIEW (web_view), uri);
 	gtk_widget_grab_focus(GTK_WIDGET(web_view));
 	g_signal_connect(G_OBJECT (web_view), "window-object-cleared", G_CALLBACK(register_js), web_view);
-	g_signal_connect(G_OBJECT (web_view), "load-committed", G_CALLBACK (load_commit_cb), web_view);
+	//g_signal_connect(G_OBJECT (web_view), "load-committed", G_CALLBACK (load_commit_cb), web_view);
+	g_signal_connect(G_OBJECT(web_view), "load-finished", G_CALLBACK(load_finished_cb), web_view);
 	setup_inspector(web_view);
 	connect_unix_socket(&sockfd);
 	gtk_main ();

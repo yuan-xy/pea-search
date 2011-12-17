@@ -21,6 +21,7 @@ extern void register_js(
 
 extern void load_config ();
 
+extern void eval_js(JSContextRef ctx, char* script);
 
 #ifdef __cplusplus
 }
