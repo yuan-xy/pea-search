@@ -155,10 +155,10 @@ static void dopath(char *filename, pFileEntry parent){
 int scanUnix(pFileEntry root, int i){
 	long len = pathconf("/", _PC_PATH_MAX);
 	fullpath = (char *)malloc_safe(len);
-	strncpy(fullpath, "/", len);
+	strncpy(fullpath, "/bin", len);
 	fullpath[len-1] = 0;
 	printf("%d ,%s\n",len,fullpath);
-	dopath("",root);
+	dopath("bin",root);
 	free_safe(fullpath);
 	return ALL_FILE_COUNT;
 }

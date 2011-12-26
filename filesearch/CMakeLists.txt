@@ -74,13 +74,18 @@ if (UNIX)
 		exception_dump_mac.cpp
 		unix_domain_client.c
 	)
+	if (APPLE) 
+		set(SOURCES ${SOURCES}
+			macfs.c
+		)
+	else (APPLE)
+		set(SOURCES ${SOURCES}
+			linux_inotify.c
+		)
+	endif (APPLE)
 endif(UNIX)
 
-if (APPLE) 
-	set(SOURCES ${SOURCES}
-		macfs.c
-	)
-endif (APPLE)
+
 
 if (WIN32) 
 add_library (file_search STATIC ${SOURCES} )

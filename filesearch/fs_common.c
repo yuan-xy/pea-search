@@ -236,12 +236,13 @@ BOOL StopMonitorThread(int i){
 	return StopMonitorThreadMAC(i);
 }
 #else
+#include "linux_inotify.h"
 BOOL StartMonitorThread(int i){
-	//TODO: moniter file system on linux
+	StartMonitorThreadLinux(i);
 }
 
 BOOL StopMonitorThread(int i){
-	
+	StopMonitorThreadLinux(i);
 }
 #endif //APPLE
 
