@@ -6,7 +6,7 @@
 #include "search.h"
 #include <dirent.h>
 #include <limits.h>
-#include "unixfs.h"
+#include "posixfs.h"
 
 BOOL same_file(pFileEntry file, struct dirent * dp){
     if(file==NULL || dp==NULL) return 0;

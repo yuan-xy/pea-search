@@ -11,7 +11,7 @@
 #include "fs_common.h"
 #include "chinese.h"
 #include "exception_dump.h"
-#include "unixfs.h"
+#include "posixfs.h"
 
 BOOL read_build_check(int i){
 	BOOL flag = load_db(i);

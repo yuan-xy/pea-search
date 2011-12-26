@@ -4,7 +4,7 @@
 #include "util.h"
 #include "suffix.h"
 #include "search.h"
-#include "unixfs.h"
+#include "posixfs.h"
 #include <dirent.h>
 #include <limits.h>
 #include <pthread.h>

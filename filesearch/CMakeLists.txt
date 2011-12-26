@@ -65,8 +65,8 @@ endif (WIN32)
 if (UNIX) 
 		#ADD_DEFINITIONS(-Wall)
 		set(SOURCES ${SOURCES}
-		mac_port.c
-		unixfs.c
+		posix_port.c
+		posixfs.c
 		main_mac.c
 		download_mac.c
 		error_mac.c

@@ -42,7 +42,7 @@ extern "C" {
 	#include <stdint.h>
     #include <stdarg.h>
 	#include <time.h>
-	#include "mac_port.h"
+	#include "posix_port.h"
 	
 	#define strnicmp strncasecmp
 	#define stricmp strcasecmp

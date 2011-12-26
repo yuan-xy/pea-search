@@ -1,7 +1,7 @@
 #include "env.h"
 #include "global.h"
 #include "fs_common.h"
-#include "unixfs.h"
+#include "posixfs.h"
 #include <dirent.h>
 #include <limits.h>
 #include <errno.h>

@@ -9,7 +9,7 @@
     #include <io.h>
     #include <process.h>
 #else
-#include "mac_port.h"
+#include "posix_port.h"
 #endif
 
 #include "util.h"
