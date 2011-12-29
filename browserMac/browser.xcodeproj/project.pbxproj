@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		351A5DE014506BA2006F1D7C /* logo.icns in Resources */ = {isa = PBXBuildFile; fileRef = 351A5DDF14506BA2006F1D7C /* logo.icns */; };
-		3553434F1456F82E005A48AE /* mac_port.c in Sources */ = {isa = PBXBuildFile; fileRef = 3553434C1456F82E005A48AE /* mac_port.c */; };
-		355343521456F84A005A48AE /* history.c in Sources */ = {isa = PBXBuildFile; fileRef = 355343501456F84A005A48AE /* history.c */; };
 		359D3E4A1464D3FA00F16678 /* NSImage+QuickLook.m in Sources */ = {isa = PBXBuildFile; fileRef = 359D3E471464D3FA00F16678 /* NSImage+QuickLook.m */; };
 		359D3E4B1464D3FA00F16678 /* SpecialProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 359D3E491464D3FA00F16678 /* SpecialProtocol.m */; };
 		359D3E4E1464D41900F16678 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 359D3E4D1464D41900F16678 /* QuickLook.framework */; };
+		35E5740914AC8247002D9F01 /* posix_port.c in Sources */ = {isa = PBXBuildFile; fileRef = 35E5740714AC8247002D9F01 /* posix_port.c */; };
+		35E5740C14AC8256002D9F01 /* history.c in Sources */ = {isa = PBXBuildFile; fileRef = 35E5740A14AC8256002D9F01 /* history.c */; };
 		35E8D33F148F6C3700108F38 /* unix_domain_client.c in Sources */ = {isa = PBXBuildFile; fileRef = 35E8D33D148F6C3700108F38 /* unix_domain_client.c */; };
 		35E960A2148A437200E66F05 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = 35E960A0148A437200E66F05 /* common.c */; };
 		35EA25F114506021007233F5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35EA25F014506021007233F5 /* Cocoa.framework */; };
@@ -42,17 +42,17 @@
 /* Begin PBXFileReference section */
 		351A5DDF14506BA2006F1D7C /* logo.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = logo.icns; sourceTree = "<group>"; };
 		3553434B1456F82E005A48AE /* env.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = env.h; path = ../filesearch/env.h; sourceTree = "<group>"; };
-		3553434C1456F82E005A48AE /* mac_port.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mac_port.c; path = ../filesearch/mac_port.c; sourceTree = "<group>"; };
-		3553434D1456F82E005A48AE /* mac_port.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mac_port.h; path = ../filesearch/mac_port.h; sourceTree = "<group>"; };
 		3553434E1456F82E005A48AE /* sharelib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sharelib.h; path = ../filesearch/sharelib.h; sourceTree = "<group>"; };
-		355343501456F84A005A48AE /* history.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = history.c; path = ../browser/history.c; sourceTree = "<group>"; };
-		355343511456F84A005A48AE /* history.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = history.h; path = ../browser/history.h; sourceTree = "<group>"; };
 		355343531456F8D0005A48AE /* GIGASOConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIGASOConfig.h; path = ../DebugMac/GIGASOConfig.h; sourceTree = "<group>"; };
 		359D3E461464D3FA00F16678 /* NSImage+QuickLook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSImage+QuickLook.h"; path = "browser/NSImage+QuickLook.h"; sourceTree = "<group>"; };
 		359D3E471464D3FA00F16678 /* NSImage+QuickLook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSImage+QuickLook.m"; path = "browser/NSImage+QuickLook.m"; sourceTree = "<group>"; };
 		359D3E481464D3FA00F16678 /* SpecialProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SpecialProtocol.h; path = browser/SpecialProtocol.h; sourceTree = "<group>"; };
 		359D3E491464D3FA00F16678 /* SpecialProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SpecialProtocol.m; path = browser/SpecialProtocol.m; sourceTree = "<group>"; };
 		359D3E4D1464D41900F16678 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
+		35E5740714AC8247002D9F01 /* posix_port.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = posix_port.c; path = ../filesearch/posix_port.c; sourceTree = "<group>"; };
+		35E5740814AC8247002D9F01 /* posix_port.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = posix_port.h; path = ../filesearch/posix_port.h; sourceTree = "<group>"; };
+		35E5740A14AC8256002D9F01 /* history.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = history.c; path = ../filesearch/history.c; sourceTree = "<group>"; };
+		35E5740B14AC8256002D9F01 /* history.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = history.h; path = ../filesearch/history.h; sourceTree = "<group>"; };
 		35E8D33D148F6C3700108F38 /* unix_domain_client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = unix_domain_client.c; path = ../filesearch/unix_domain_client.c; sourceTree = "<group>"; };
 		35E8D33E148F6C3700108F38 /* unix_domain_client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unix_domain_client.h; path = ../filesearch/unix_domain_client.h; sourceTree = "<group>"; };
 		35E960A0148A437200E66F05 /* common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = common.c; path = ../filesearch/common.c; sourceTree = "<group>"; };
@@ -105,21 +105,21 @@
 		35EA25E114506020007233F5 = {
 			isa = PBXGroup;
 			children = (
+				35E5740A14AC8256002D9F01 /* history.c */,
+				35E5740B14AC8256002D9F01 /* history.h */,
+				35E5740714AC8247002D9F01 /* posix_port.c */,
+				35E5740814AC8247002D9F01 /* posix_port.h */,
 				35E8D33D148F6C3700108F38 /* unix_domain_client.c */,
 				35E8D33E148F6C3700108F38 /* unix_domain_client.h */,
 				35E960A0148A437200E66F05 /* common.c */,
 				35E960A1148A437200E66F05 /* common.h */,
 				359D3E4D1464D41900F16678 /* QuickLook.framework */,
 				355343531456F8D0005A48AE /* GIGASOConfig.h */,
-				355343501456F84A005A48AE /* history.c */,
 				359D3E461464D3FA00F16678 /* NSImage+QuickLook.h */,
 				359D3E471464D3FA00F16678 /* NSImage+QuickLook.m */,
 				359D3E481464D3FA00F16678 /* SpecialProtocol.h */,
 				359D3E491464D3FA00F16678 /* SpecialProtocol.m */,
-				355343511456F84A005A48AE /* history.h */,
 				3553434B1456F82E005A48AE /* env.h */,
-				3553434C1456F82E005A48AE /* mac_port.c */,
-				3553434D1456F82E005A48AE /* mac_port.h */,
 				3553434E1456F82E005A48AE /* sharelib.h */,
 				35EA262514506079007233F5 /* WebKit.framework */,
 				35EA25F614506021007233F5 /* browser */,
@@ -309,12 +309,12 @@
 			files = (
 				35EA25FD14506021007233F5 /* main.m in Sources */,
 				35EA260414506021007233F5 /* browserAppDelegate.m in Sources */,
-				3553434F1456F82E005A48AE /* mac_port.c in Sources */,
-				355343521456F84A005A48AE /* history.c in Sources */,
 				359D3E4A1464D3FA00F16678 /* NSImage+QuickLook.m in Sources */,
 				359D3E4B1464D3FA00F16678 /* SpecialProtocol.m in Sources */,
 				35E960A2148A437200E66F05 /* common.c in Sources */,
 				35E8D33F148F6C3700108F38 /* unix_domain_client.c in Sources */,
+				35E5740914AC8247002D9F01 /* posix_port.c in Sources */,
+				35E5740C14AC8256002D9F01 /* history.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -181,26 +181,20 @@ static char * print_drive_info(char *buffer,int id){
 		*p++ ='"';
 		*p++ =',';
 	}
-	if(wcslen(g_VolsInfo[id].volumeName)>0){
-		pUTF8 str;
-		int str_len;
-		str = wchar_to_utf8(g_VolsInfo[id].volumeName,wcslen(g_VolsInfo[id].volumeName),&str_len);
+	{
+		int str_len = strlen(g_VolsInfo[id].volumeName);
 		memcpy(p,"\"volumeName\":\"",14);
 		p += 14;
-		memcpy(p,str,str_len);
-		free_safe(str);
+		memcpy(p,g_VolsInfo[id].volumeName,str_len);
 		p += str_len;
 		*p++ ='"';
 		*p++ =',';
 	}
-	if(wcslen(g_VolsInfo[id].fsName)>0){
-		pUTF8 str;
-		int str_len;
-		str = wchar_to_utf8(g_VolsInfo[id].fsName,wcslen(g_VolsInfo[id].fsName),&str_len);
+	{
+		int str_len = strlen(g_VolsInfo[id].fsName);
 		memcpy(p,"\"fsName\":\"",10);
 		p += 10;
-		memcpy(p,str,str_len);
-		free_safe(str);
+		memcpy(p,g_VolsInfo[id].fsName,str_len);
 		p += str_len;
 		*p++ ='"';
 	}

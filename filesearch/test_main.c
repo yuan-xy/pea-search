@@ -39,6 +39,8 @@ void search0(void *name){
 
 int main(){
 	WCHAR ss[64];
+#include "drive.h"
+    InitDrives();
 	gigaso_init();
 	#ifdef WIN32
 	scan_desktop();

@@ -14,6 +14,7 @@ endif (WIN32)
 file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	[^.]*.h
 	chinese.c
+	drive.c
 	fs_common.c
 	global.c
 	main.c
@@ -47,8 +48,8 @@ SET( SOURCES
 
 if (WIN32) 
 	SET(SOURCES  ${SOURCES}
-		drive.c
 		drive_change.c
+		drive_win.c
 		fs_common_win.c
 		fat.c	
 		ntfs.c
@@ -76,6 +77,7 @@ if (UNIX)
 	)
 	if (APPLE) 
 		set(SOURCES ${SOURCES}
+			drive_mac.c
 			macfs.c
 		)
 	else (APPLE)
