@@ -2,6 +2,55 @@
 #include "drive.h"
 #include "global.h"
 
+static BOOL IsUsbDriver(int i){
+	HANDLE hDevice;
+    WCHAR tcsDrvName[] = L"\\\\.\\X:";
+    tcsDrvName[4] = i+L'A';
+    hDevice = CreateFile( tcsDrvName,
+                                 GENERIC_READ,
+                                 FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                 NULL,
+                                 OPEN_EXISTING,
+                                 FILE_ATTRIBUTE_NORMAL,
+                                 NULL
+                                );
+    if ( hDevice == INVALID_HANDLE_VALUE ) {
+        return FALSE;
+    }else{
+		DWORD dwOutLen;
+		BOOL res;
+	    BYTE buff[1024] = {0};
+	    PSTORAGE_DEVICE_DESCRIPTOR pDevDesc;
+		STORAGE_PROPERTY_QUERY StoragePropertyQuery;
+	    StoragePropertyQuery.PropertyId = StorageDeviceProperty;
+	    StoragePropertyQuery.QueryType = PropertyStandardQuery;
+
+	    pDevDesc = (PSTORAGE_DEVICE_DESCRIPTOR)buff;
+	    pDevDesc->Size = sizeof(buff);
+	    
+	    res = DeviceIoControl( hDevice,
+	                                IOCTL_STORAGE_QUERY_PROPERTY,
+	                                &StoragePropertyQuery,
+	                                sizeof(STORAGE_PROPERTY_QUERY),
+	                                pDevDesc,
+	                                pDevDesc->Size,
+	                                &dwOutLen,
+	                                NULL
+	                               );
+	    CloseHandle(hDevice);
+
+	    if (res) {
+	        return pDevDesc->BusType == BusTypeUsb;
+	    } else {
+	        return FALSE;
+	    }
+	}
+
+
+    
+}
+
+
 void get_drive_space(int i){
 	ULARGE_INTEGER TotalNumberOfBytes, TotalNumberOfFreeBytes;
 	WCHAR name[4];
@@ -17,6 +66,9 @@ void InitDrive(int i){
 	g_bVols[i]=1;
 	swprintf(name,4,L"%c:\\",i+'A');
 	g_VolsInfo[i].type = GetDriveType(name);
+	if(g_VolsInfo[i].type==DRIVE_FIXED){
+		if(IsUsbDriver(i)) g_VolsInfo[i].type=DRIVE_REMOVABLE;
+	}
 	{
 		WCHAR volumeName[32];
 		WCHAR fsName[8];

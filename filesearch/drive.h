@@ -41,13 +41,8 @@ extern BOOL is_removable_drive(int i);
 struct driveInfo{
 #ifdef APPLE
 	uint32_t	bsize;	/* fundamental file system block size */ 
-	uint64_t	blocks;	/* total data blocks in file system */ 
-	uint64_t	bfree;	/* free blocks in fs */ 
-	fsid_t		fsid;		/* file system id */ 
 	uid_t		owner;	/* user that mounted the filesystem */ 
 	uint32_t	flags;	/* copy of mount exported flags */ 
-	uint32_t	fssubtype;	/* fs sub-type (flavor) */ 
-	char		fstypename[MFSTYPENAMELEN];	/* fs type name */ 
 	char		mntonname[MAXPATHLEN];	/* directory on which mounted */ 
 	char		mntfromname[MAXPATHLEN];	/* mounted filesystem */
 #endif
